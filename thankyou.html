@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gaming Odyssey - Thank You for Your Order</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      background-color: #1a1a2e;
+      color: #E0E0E0;
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+    .neon-border {
+      border: 1px solid #00B7D4;
+      box-shadow: 0 0 10px #00B7D4, 0 0 20px #D500F9;
+    }
+    .neon-glow:hover {
+      box-shadow: 0 0 15px #00B7D4, 0 0 25px #D500F9;
+      transform: translateY(-2px);
+      transition: all 0.3s ease;
+    }
+    .content-bg {
+      background: linear-gradient(45deg, rgba(0, 183, 212, 0.1), rgba(213, 0, 249, 0.1));
+      position: relative;
+      overflow: hidden;
+    }
+    .content-bg::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="#00B7D4" opacity="0.3"/></svg>') repeat;
+      animation: particles 20s linear infinite;
+      opacity: 0.5;
+    }
+    @keyframes particles {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-100px); }
+    }
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="bg-[#0f0f1a] py-4 px-6 neon-border">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center">
+      <h1 class="text-2xl font-bold text-white font-orbitron mb-4 md:mb-0">Gaming Odyssey</h1>
+      <nav class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-6 text-lg">
+        <a href="index.html" class="hover:text-[#00B7D4] transition">Home</a>
+        <a href="store.html" class="text-[#00B7D4] font-bold">Store</a>
+        <a href="#" class="hover:text-[#00B7D4] transition">Tournaments</a>
+        <a href="#" class="hover:text-[#00B7D4] transition">Track Order</a>
+        <a href="#" class="hover:text-[#00B7D4] transition">Contact Us</a>
+        <a href="aboutus.html" class="hover:text-[#00B7D4] transition">About Us</a>
+        <a href="signin.html" class="hover:text-[#00B7D4] transition">Sign In</a>
+        <a href="createaccount.html" class="hover:text-[#00B7D4] transition">Create Account</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <section class="content-bg py-16 px-6">
+    <div class="max-w-2xl mx-auto bg-[#0f0f1a] p-8 rounded-lg neon-border fade-in text-center">
+      <h1 class="text-4xl font-bold text-white font-orbitron mb-4">Thank You for Your Order! 🎮</h1>
+      <p class="text-xl text-[#E0E0E0] mb-6">
+        Your gaming adventure awaits! We're thrilled to have you on board with <span class="text-[#00B7D4]">Gaming Odyssey</span>. Your order has been successfully placed and is now being processed.
+      </p>
+      <div class="mb-6">
+        <p class="text-[#E0E0E0] mb-2">Order ID: <span id="orderId" class="text-[#00B7D4]">ORDER123</span></p>
+        <p class="text-[#E0E0E0] mb-4">Total: <span id="amount" class="text-[#00B7D4]">₹1.00</span></p>
+      </div>
+      <p class="text-[#E0E0E0] mb-6">
+        <strong>UPI Payments</strong>: Your payment is pending manual verification. You'll receive a confirmation soon.<br>
+        <strong>Cash on Delivery</strong>: Please have the exact amount ready for delivery.<br>
+        Track your order or contact us at <a href="mailto:businessgamingodyssey@gmail.com" class="text-[#00B7D4] hover:text-[#D500F9]">businessgamingodyssey@gmail.com</a> or 6290994382 for assistance.
+      </p>
+      <div class="flex justify-center space-x-4">
+        <a href="#" class="bg-[#00B7D4] text-[#0f0f1a] font-bold py-2 px-6 rounded neon-glow">Track Order</a>
+        <a href="index.html" class="bg-[#D500F9] text-[#0f0f1a] font-bold py-2 px-6 rounded neon-glow">Back to Home</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-[#0f0f1a] py-12 px-6">
+    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div>
+        <h3 class="text-xl font-bold text-white font-orbitron mb-4">Contact</h3>
+        <p class="text-[#E0E0E0]">📧 businessgamingodyssey@gmail.com</p>
+        <p class="text-[#E0E0E0]">📞 6290994382</p>
+      </div>
+      <div>
+        <h3 class="text-xl font-bold text-white font-orbitron mb-4">Useful Links</h3>
+        <ul class="space-y-2">
+          <li><a href="index.html" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">Home</a></li>
+          <li><a href="store.html" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">Store</a></li>
+          <li><a href="#" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">Tournaments</a></li>
+          <li><a href="#" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">Track Order</a></li>
+          <li><a href="#" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">Contact Us</a></li>
+          <li><a href="aboutus.html" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">About Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-xl font-bold text-white font-orbitron mb-4">Follow Us</h3>
+        <div class="flex space-x-4">
+          <a href="#" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
+          </a>
+          <a href="#" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
+          </a>
+          <a href="#" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <p class="text-center text-[#E0E0E0] mt-8">© 2025 Gaming Odyssey. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Fade-in Animation
+    const fadeIns = document.querySelectorAll('.fade-in');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+    fadeIns.forEach(element => observer.observe(element));
+
+    // Display order details
+    const urlParams = new URLSearchParams(window.location.search);
+    const orderId = urlParams.get('orderId') || 'ORDER123';
+    const amount = parseFloat(urlParams.get('amount')) || 1.00;
+    const formattedAmount = amount.toFixed(2);
+
+    document.getElementById('orderId').textContent = orderId;
+    document.getElementById('amount').textContent = `₹${formattedAmount}`;
+  </script>
+</body>
+</html>

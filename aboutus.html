@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gaming Odyssey - About Us</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      background-color: #1a1a2e;
+      color: #E0E0E0;
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+    .neon-border {
+      border: 1px solid #00E5FF;
+      box-shadow: 0 0 10px #00E5FF, 0 0 20px #D500F9;
+    }
+    .neon-glow:hover {
+      box-shadow: 0 0 15px #00E5FF, 0 0 25px #D500F9;
+      transform: translateY(-2px);
+      transition: all 0.3s ease;
+    }
+    .content-bg {
+      background: linear-gradient(45deg, rgba(0, 229, 255, 0.1), rgba(213, 0, 249, 0.1));
+      position: relative;
+      overflow: hidden;
+    }
+    .content-bg::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="#00E5FF" opacity="0.3"/></svg>') repeat;
+      animation: particles 20s linear infinite;
+      opacity: 0.5;
+    }
+    @keyframes particles {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-100px); }
+    }
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="bg-[#0f0f1a] py-4 px-6 neon-border">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center">
+      <h1 class="text-2xl font-bold text-white font-orbitron mb-4 md:mb-0">Gaming Odyssey</h1>
+      <nav class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-6 text-lg">
+        <a href="index.html" class="hover:text-[#00E5FF] transition">Home</a>
+        <a href="store.html" class="hover:text-[#00E5FF] transition">Store</a>
+        <a href="#" class="hover:text-[#00E5FF] transition">Tournaments</a>
+        <a href="#" class="hover:text-[#00E5FF] transition">Track Order</a>
+        <a href="#" class="hover:text-[#00E5FF] transition">Contact Us</a>
+        <a href="aboutus.html" class="text-[#00E5FF] font-bold">About Us</a>
+        <a href="signin.html" class="hover:text-[#00E5FF] transition">Sign In</a>
+        <a href="createaccount.html" class="hover:text-[#00E5FF] transition">Create Account</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <section class="content-bg py-16 px-6">
+    <div class="max-w-4xl mx-auto bg-[#0f0f1a] p-8 rounded-lg neon-border fade-in">
+      <h1 class="text-4xl font-bold text-white font-orbitron text-center mb-8">About Us 🎮</h1>
+      
+      <p class="text-[#E0E0E0] text-lg mb-6">
+        Welcome to <span class="text-[#00E5FF]">Gaming Odyssey</span>, your ultimate destination for competitive gaming, exclusive gear, and an immersive esports experience. 🚀
+      </p>
+      
+      <p class="text-[#E0E0E0] text-lg mb-6">
+        At Gaming Odyssey, we’re not just passionate about gaming; we are committed to providing gamers and enthusiasts with top-tier equipment, exciting tournaments, and a community-driven platform to level up your experience. 🌟
+      </p>
+      
+      <h2 class="text-2xl font-bold text-white font-orbitron mb-4">Our Mission</h2>
+      <p class="text-[#E0E0E0] text-lg mb-6">
+        Our mission is to connect gamers worldwide by offering a platform for competitive gaming, access to high-quality gaming gear, and exclusive tournaments where players can showcase their skills. Whether you’re a casual gamer or a pro player, we provide everything you need to build your dream gaming setup and compete for glory. 🏆
+      </p>
+      
+      <h2 class="text-2xl font-bold text-white font-orbitron mb-4">What We Offer</h2>
+      <ul class="list-disc list-inside text-[#E0E0E0] text-lg mb-6 space-y-2">
+        <li>
+          <span class="text-[#00E5FF]">Exclusive Gaming Gear 🖱️</span>: We offer a curated selection of the latest gaming accessories, from high-performance PCs to cutting-edge peripherals.
+        </li>
+        <li>
+          <span class="text-[#00E5FF]">Thrilling Tournaments 🏆</span>: Our gaming tournaments are designed to bring together the best players for epic battles, exciting rewards, and bragging rights.
+        </li>
+        <li>
+          <span class="text-[#00E5FF]">Community 🌐</span>: Join a passionate community of gamers who share your love for gaming. Connect, compete, and grow together.
+        </li>
+        <li>
+          <span class="text-[#00E5FF]">Custom PC Builds 💻</span>: Our experts build custom PCs tailored to your needs, ensuring maximum performance and style.
+        </li>
+      </ul>
+      
+      <p class="text-[#E0E0E0] text-lg mb-6">
+        We believe in providing a futuristic, high-performance gaming experience for everyone. Gaming Odyssey is not just about playing games; it’s about building an unforgettable journey in the world of gaming. 🎯
+      </p>
+      
+      <p class="text-[#E0E0E0] text-lg mb-8">
+        Join us, and let’s create history — one game at a time. 🎮
+      </p>
+      
+      <div class="text-center">
+        <a href="createaccount.html" class="inline-block bg-[#00E5FF] text-[#0f0f1a] font-bold py-3 px-6 rounded neon-glow">Join Now</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-[#0f0f1a] py-12 px-6">
+    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div>
+        <h3 class="text-xl font-bold text-white font-orbitron mb-4">Contact</h3>
+        <p class="text-[#E0E0E0]">📧 businessgamingodyssey@gmail.com</p>
+        <p class="text-[#E0E0E0]">📞 6289119156</p>
+      </div>
+      <div>
+        <h3 class="text-xl font-bold text-white font-orbitron mb-4">Useful Links</h3>
+        <ul class="space-y-2">
+          <li><a href="index.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Home</a></li>
+          <li><a href="store.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Store</a></li>
+          <li><a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Tournaments</a></li>
+          <li><a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Track Order</a></li>
+          <li><a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Contact Us</a></li>
+          <li><a href="aboutus.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">About Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-xl font-bold text-white font-orbitron mb-4">Follow Us</h3>
+        <div class="flex space-x-4">
+          <a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
+          </a>
+          <a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.-t-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
+          </a>
+          <a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <p class="text-center text-[#E0E0E0] mt-8">© 2025 Gaming Odyssey. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Fade-in Animation
+    const fadeIns = document.querySelectorAll('.fade-in');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+    fadeIns.forEach(element => observer.observe(element));
+  </script>
+</body>
+</html>

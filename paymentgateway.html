@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gaming Odyssey - Secure Payment</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      background-color: #1a1a2e;
+      color: #E0E0E0;
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+    .neon-border {
+      border: 1px solid #00E5FF;
+      box-shadow: 0 0 10px #00E5FF, 0 0 20px #D500F9;
+    }
+    .neon-glow:hover {
+      box-shadow: 0 0 15px #00E5FF, 0 0 25px #D500F9;
+      transform: translateY(-2px);
+      transition: all 0.3s ease;
+    }
+    .content-bg {
+      background: linear-gradient(45deg, rgba(0, 229, 255, 0.1), rgba(213, 0, 249, 0.1));
+      position: relative;
+      overflow: hidden;
+    }
+    .content-bg::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="#00E5FF" opacity="0.3"/></svg>') repeat;
+      animation: particles 20s linear infinite;
+      opacity: 0.5;
+    }
+    @keyframes particles {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-100px); }
+    }
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .payment-form {
+      display: none;
+    }
+    .payment-form.active {
+      display: block;
+    }
+    .payment-card.selected {
+      background-color: #00E5FF;
+      color: #0f0f1a;
+    }
+    .payment-card.selected .neon-border {
+      box-shadow: 0 0 15px #00E5FF, 0 0 25px #D500F9;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="bg-[#0f0f1a] py-4 px-6 neon-border">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center">
+      <h1 class="text-2xl font-bold text-white font-orbitron mb-4 md:mb-0">Gaming Odyssey</h1>
+      <nav class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-6 text-lg">
+        <a href="index.html" class="hover:text-[#00E5FF] transition">Home</a>
+        <a href="store.html" class="text-[#00E5FF] font-bold">Store</a>
+        <a href="#" class="hover:text-[#00E5FF] transition">Tournaments</a>
+        <a href="#" class="hover:text-[#00E5FF] transition">Track Order</a>
+        <a href="#" class="hover:text-[#00E5FF] transition">Contact Us</a>
+        <a href="aboutus.html" class="hover:text-[#00E5FF] transition">About Us</a>
+        <a href="signin.html" class="hover:text-[#00E5FF] transition">Sign In</a>
+        <a href="createaccount.html" class="hover:text-[#00E5FF] transition">Create Account</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <section class="content-bg py-16 px-6">
+    <div class="max-w-4xl mx-auto flex flex-col md:flex-row gap-8">
+      <!-- Payment Options -->
+      <div class="flex-1 bg-[#0f0f1a] p-8 rounded-lg neon-border fade-in">
+        <h1 class="text-4xl font-bold text-white font-orbitron text-center mb-8">Secure Payment 💳</h1>
+        
+        <!-- Payment Options List -->
+        <div class="space-y-4">
+          <div class="payment-card bg-[#0f0f1a] p-4 rounded-lg neon-border neon-glow cursor-pointer selected" data-target="upi">
+            <label class="flex items-center space-x-3">
+              <input type="radio" name="payment-method" value="upi" class="form-radio h-5 w-5 text-[#00E5FF] border-[#00E5FF]" checked>
+              <span class="text-2xl">📱</span>
+              <div>
+                <h3 class="text-xl font-bold text-white font-orbitron">UPI</h3>
+                <p class="text-[#E0E0E0]">Pay using your UPI ID or scan a QR code.</p>
+              </div>
+            </label>
+            <div id="upi-form" class="payment-form active mt-4">
+              <form action="/process-payment" method="POST" class="space-y-4">
+                <input type="hidden" name="orderId" value="ORDER123">
+                <input type="hidden" name="amount" value="XXXX.XX">
+                <input type="hidden" name="method" value="UPI">
+                <div>
+                  <label class="block text-[#E0E0E0] mb-2" for="upi-id">UPI ID (e.g., name@bank)</label>
+                  <input type="text" id="upi-id" name="upiId" class="w-full p-2 bg-[#0f0f1a] border border-[#00E5FF] rounded neon-border" placeholder="Enter UPI ID" required>
+                </div>
+                <div class="text-center">
+                  <img src="https://via.placeholder.com/150?text=QR+Code" alt="UPI QR Code" class="mx-auto mb-4">
+                  <p class="text-[#E0E0E0] mb-4">Scan this QR code with your UPI app. Replace with your merchant QR code.</p>
+                </div>
+                <button type="submit" class="w-full bg-[#00E5FF] text-[#0f0f1a] font-bold py-2 rounded neon-glow">Pay Now</button>
+              </form>
+            </div>
+          </div>
+          
+          <div class="payment-card bg-[#0f0f1a] p-4 rounded-lg neon-border neon-glow cursor-pointer" data-target="debit">
+            <label class="flex items-center space-x-3">
+              <input type="radio" name="payment-method" value="debit" class="form-radio h-5 w-5 text-[#00E5FF] border-[#00E5FF]">
+              <span class="text-2xl">💳</span>
+              <div>
+                <h3 class="text-xl font-bold text-white font-orbitron">Debit Card</h3>
+                <p class="text-[#E0E0E0]">Pay using your debit card details.</p>
+              </div>
+            </label>
+            <div id="debit-form" class="payment-form mt-4">
+              <form action="/process-payment" method="POST" class="space-y-4">
+                <input type="hidden" name="orderId" value="ORDER123">
+                <input type="hidden" name="amount" value="XXXX.XX">
+                <input type="hidden" name="method" value="Debit Card">
+                <div>
+                  <label class="block text-[#E0E0E0] mb-2" for="debit-number">Card Number</label>
+                  <input type="text" id="debit-number" name="cardNumber" class="w-full p-2 bg-[#0f0f1a] border border-[#00E5FF] rounded neon-border" placeholder="1234 5678 9012 3456" required>
+                </div>
+                <div class="flex space-x-4">
+                  <div class="w-1/2">
+                    <label class="block text-[#E0E0E0] mb-2" for="debit-expiry">Expiry Date</label>
+                    <input type="text" id="debit-expiry" name="expiry" class="w-full p-2 bg-[#0f0f1a] border border-[#00E5FF] rounded neon-border" placeholder="MM/YY" required>
+                  </div>
+                  <div class="w-1/2">
+                    <label class="block text-[#E0E0E0] mb-2" for="debit-cvv">CVV</label>
+                    <input type="text" id="debit-cvv" name="cvv" class="w-full p-2 bg-[#0f0f1a] border border-[#00E5FF] rounded neon-border" placeholder="123" required>
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-[#E0E0E0] mb-2" for="debit-name">Cardholder Name</label>
+                  <input type="text" id="debit-name" name="cardholderName" class="w-full p-2 bg-[#0f0f1a] border border-[#00E5FF] rounded neon-border" placeholder="John Doe" required>
+                </div>
+                <button type="submit" class="w-full bg-[#00E5FF] text-[#0f0f1a] font-bold py-2 rounded neon-glow">Pay Now</button>
+              </form>
+              <p class="text-[#E0E0E0] mt-4">Note: Redirect to bank’s payment page in production.</p>
+            </div>
+          </div>
+          
+          <div class="payment-card bg-[#0f0f1a] p-4 rounded-lg neon-border neon-glow cursor-pointer" data-target="credit">
+            <label class="flex items-center space-x-3">
+              <input type="radio" name="payment-method" value="credit" class="form-radio h-5 w-5 text-[#00E5FF] border-[#00E5FF]">
+              <span class="text-2xl">💳</span>
+              <div>
+                <h3 class="text-xl font-bold text-white font-orbitron">Credit Card</h3>
+                <p class="text-[#E0E0E0]">Pay using your credit card. RuPay supported.</p>
+              </div>
+            </label>
+            <div id="credit-form" class="payment-form mt-4">
+              <form action="/process-payment" method="POST" class="space-y-4">
+                <input type="hidden" name="orderId" value="ORDER123">
+                <input type="hidden" name="amount" value="XXXX.XX">
+                <input type="hidden" name="method" value="Credit Card">
+                <div>
+                  <label class="block text-[#E0E0E0] mb-2" for="credit-number">Card Number</label>
+                  <input type="text" id="credit-number" name="cardNumber" class="w-full p-2 bg-[#0f0f1a] border border-[#00E5FF] rounded neon-border" placeholder="1234 5678 9012 3456" required>
+                </div>
+                <div class="flex space-x-4">
+                  <div class="w-1/2">
+                    <label class="block text-[#E0E0E0] mb-2" for="credit-expiry">Expiry Date</label>
+                    <input type="text" id="credit-expiry" name="expiry" class="w-full p-2 bg-[#0f0f1a] border border-[#00E5FF] rounded neon-border" placeholder="MM/YY" required>
+                  </div>
+                  <div class="w-1/2">
+                    <label class="block text-[#E0E0E0] mb-2" for="credit-cvv">CVV</label>
+                    <input type="text" id="credit-cvv" name="cvv" class="w-full p-2 bg-[#0f0f1a] border border-[#00E5FF] rounded neon-border" placeholder="123" required>
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-[#E0E0E0] mb-2" for="credit-name">Cardholder Name</label>
+                  <input type="text" id="credit-name" name="cardholderName" class="w-full p-2 bg-[#0f0f1a] border border-[#00E5FF] rounded neon-border" placeholder="John Doe" required>
+                </div>
+                <button type="submit" class="w-full bg-[#00E5FF] text-[#0f0f1a] font-bold py-2 rounded neon-glow">Pay Now</button>
+              </form>
+              <p class="text-[#E0E0E0] mt-4">Note: Redirect to bank’s payment page in production.</p>
+            </div>
+          </div>
+          
+          <div class="payment-card bg-[#0f0f1a] p-4 rounded-lg neon-border neon-glow cursor-pointer" data-target="netbanking">
+            <label class="flex items-center space-x-3">
+              <input type="radio" name="payment-method" value="netbanking" class="form-radio h-5 w-5 text-[#00E5FF] border-[#00E5FF]">
+              <span class="text-2xl">🌐</span>
+              <div>
+                <h3 class="text-xl font-bold text-white font-orbitron">Net Banking</h3>
+                <p class="text-[#E0E0E0]">Pay using your bank’s online portal.</p>
+              </div>
+            </label>
+            <div id="netbanking-form" class="payment-form mt-4">
+              <form action="/process-payment" method="POST" class="space-y-4">
+                <input type="hidden" name="orderId" value="ORDER123">
+                <input type="hidden" name="amount" value="XXXX.XX">
+                <input type="hidden" name="method" value="Net Banking">
+                <div>
+                  <label class="block text-[#E0E0E0] mb-2" for="bank">Select Bank</label>
+                  <select id="bank" name="bank" class="w-full p-2 bg-[#0f0f1a] border border-[#00E5FF] rounded neon-border" required>
+                    <option value="">Select a bank</option>
+                    <option value="sbi">State Bank of India</option>
+                    <option value="hdfc">HDFC Bank</option>
+                    <option value="icici">ICICI Bank</option>
+                    <option value="axis">Axis Bank</option>
+                    <option value="kotak">Kotak Mahindra Bank</option>
+                  </select>
+                </div>
+                <button type="submit" class="w-full bg-[#00E5FF] text-[#0f0f1a] font-bold py-2 rounded neon-glow">Proceed to Bank</button>
+              </form>
+              <p class="text-[#E0E0E0] mt-4">Note: Redirect to bank’s login page in production.</p>
+            </div>
+          </div>
+          
+          <div class="payment-card bg-[#0f0f1a] p-4 rounded-lg neon-border neon-glow cursor-pointer" data-target="upiapps">
+            <label class="flex items-center space-x-3">
+              <input type="radio" name="payment-method" value="upiapps" class="form-radio h-5 w-5 text-[#00E5FF] border-[#00E5FF]">
+              <span class="text-2xl">📱</span>
+              <div>
+                <h3 class="text-xl font-bold text-white font-orbitron">UPI Apps</h3>
+                <p class="text-[#E0E0E0]">Pay using Google Pay, PhonePe, Paytm, or BHIM.</p>
+              </div>
+            </label>
+            <div id="upiapps-form" class="payment-form mt-4">
+              <div class="grid grid-cols-2 gap-4 mb-4">
+                <a href="upi://pay?pa=gamingodyssey@sbi&pn=Gaming%20Odyssey&am=XXXX.XX&cu=INR&tn=ORDER123" class="block bg-[#0f0f1a] text-[#E0E0E0] font-bold py-2 rounded neon-border neon-glow text-center">Google Pay</a>
+                <a href="upi://pay?pa=gamingodyssey@sbi&pn=Gaming%20Odyssey&am=XXXX.XX&cu=INR&tn=ORDER123" class="block bg-[#0f0f1a] text-[#E0E0E0] font-bold py-2 rounded neon-border neon-glow text-center">PhonePe</a>
+                <a href="upi://pay?pa=gamingodyssey@sbi&pn=Gaming%20Odyssey&am=XXXX.XX&cu=INR&tn=ORDER123" class="block bg-[#0f0f1a] text-[#E0E0E0] font-bold py-2 rounded neon-border neon-glow text-center">Paytm</a>
+                <a href="upi://pay?pa=gamingodyssey@sbi&pn=Gaming%20Odyssey&am=XXXX.XX&cu=INR&tn=ORDER123" class="block bg-[#0f0f1a] text-[#E0E0E0] font-bold py-2 rounded neon-border neon-glow text-center">BHIM</a>
+              </div>
+              <form action="/process-payment" method="POST" class="space-y-4">
+                <input type="hidden" name="orderId" value="ORDER123">
+                <input type="hidden" name="amount" value="XXXX.XX">
+                <input type="hidden" name="method" value="UPI Apps">
+                <button type="submit" class="w-full bg-[#00E5FF] text-[#0f0f1a] font-bold py-2 rounded neon-glow">Confirm Payment</button>
+              </form>
+              <p class="text-[#E0E0E0] mt-4">Note: Replace amount and order ID with dynamic values.</p>
+            </div>
+          </div>
+          
+          <div class="payment-card bg-[#0f0f1a] p-4 rounded-lg neon-border neon-glow cursor-pointer" data-target="cod">
+            <label class="flex items-center space-x-3">
+              <input type="radio" name="payment-method" value="cod" class="form-radio h-5 w-5 text-[#00E5FF] border-[#00E5FF]">
+              <span class="text-2xl">💵</span>
+              <div>
+                <h3 class="text-xl font-bold text-white font-orbitron">Cash on Delivery</h3>
+                <p class="text-[#E0E0E0]">Pay when you receive your order.</p>
+              </div>
+            </label>
+            <div id="cod-form" class="payment-form mt-4">
+              <p class="text-[#E0E0E0] mb-4">Please ensure you have the exact amount ready for delivery. Our agent will confirm the order upon receipt.</p>
+              <form action="/process-payment" method="POST" class="space-y-4">
+                <input type="hidden" name="orderId" value="ORDER123">
+                <input type="hidden" name="amount" value="XXXX.XX">
+                <input type="hidden" name="method" value="COD">
+                <button type="submit" class="w-full bg-[#00E5FF] text-[#0f0f1a] font-bold py-2 rounded neon-glow">Confirm Order</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        
+        <p class="text-[#E0E0E0] text-center mt-6">
+          Payments will be verified manually. Contact us at businessgamingodyssey@gmail.com for support.
+        </p>
+      </div>
+      
+      <!-- Order Summary -->
+      <div class="md:w-1/3 bg-[#0f0f1a] p-6 rounded-lg neon-border fade-in">
+        <h2 class="text-2xl font-bold text-white font-orbitron mb-4">Order Summary</h2>
+        <p class="text-[#E0E0E0] mb-2">Order ID: ORDER123</p>
+        <p class="text-[#E0E0E0] mb-4">Total: <span class="text-[#00E5FF]">₹X,XXX.XX</span></p>
+        <p class="text-[#E0E0E0] text-sm">Note: Replace with actual order details in production.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-[#0f0f1a] py-12 px-6">
+    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div>
+        <h3 class="text-xl font-bold text-white font-orbitron mb-4">Contact</h3>
+        <p class="text-[#E0E0E0]">📧 businessgamingodyssey@gmail.com</p>
+        <p class="text-[#E0E0E0]">📞 6289119156</p>
+      </div>
+      <div>
+        <h3 class="text-xl font-bold text-white font-orbitron mb-4">Useful Links</h3>
+        <ul class="space-y-2">
+          <li><a href="index.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Home</a></li>
+          <li><a href="store.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Store</a></li>
+          <li><a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Tournaments</a></li>
+          <li><a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Track Order</a></li>
+          <li><a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Contact Us</a></li>
+          <li><a href="aboutus.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">About Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-xl font-bold text-white font-orbitron mb-4">Follow Us</h3>
+        <div class="flex space-x-4">
+          <a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
+          </a>
+          <a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
+          </a>
+          <a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <p class="text-center text-[#E0E0E0] mt-8">© 2025 Gaming Odyssey. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Fade-in Animation
+    const fadeIns = document.querySelectorAll('.fade-in');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+    fadeIns.forEach(element => observer.observe(element));
+
+    // Payment Card Selection
+    const cards = document.querySelectorAll('.payment-card');
+    const forms = document.querySelectorAll('.payment-form');
+    
+    cards.forEach(card => {
+      card.addEventListener('click', () => {
+        // Remove selected styles
+        cards.forEach(c => {
+          c.classList.remove('selected');
+          c.querySelector('input[type="radio"]').checked = false;
+        });
+        forms.forEach(f => f.classList.remove('active'));
+        
+        // Add selected styles
+        card.classList.add('selected');
+        card.querySelector('input[type="radio"]').checked = true;
+        const form = card.querySelector('.payment-form');
+        if (form) form.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
