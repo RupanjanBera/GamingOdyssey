@@ -170,6 +170,41 @@
       font-size: 0.875rem;
       margin-top: 0.25rem;
     }
+    footer {
+      background: #0c0c14;
+    }
+    footer h3 {
+      color: #00E5FF;
+    }
+    footer .contact-text {
+      color: #B0B0C0;
+    }
+    footer .footer-link {
+      color: #B0B0C0;
+      position: relative;
+      background-image: linear-gradient(#D500F9, #D500F9);
+      background-size: 0 2px;
+      background-repeat: no-repeat;
+      background-position: 0 100%;
+      transition: all 0.3s ease;
+    }
+    footer .footer-link:hover {
+      color: #D500F9;
+      background-size: 100% 2px;
+      transform: scale(1.05);
+    }
+    footer .social-logo {
+      filter: grayscale(100%);
+      transition: all 0.3s ease;
+    }
+    footer .social-logo:hover {
+      filter: none;
+      transform: scale(1.2);
+      box-shadow: 0 0 10px #00E5FF, 0 0 15px #D500F9;
+    }
+    footer .copyright {
+      color: #B0B0C0;
+    }
     @media (max-width: 640px) {
       .submit-btn {
         width: 100%;
@@ -205,7 +240,7 @@
           <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Tournaments</span>
         </a>
-        <a href="#" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
+        <a href="trackorder.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
           <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Track Order</span>
         </a>
@@ -244,7 +279,7 @@
       <a href="index.html" class="block text-lg text-[#00E5FF] font-bold">Home</a>
       <a href="store.html" class="block text-lg hover:text-[#00E5FF] transition">Store</a>
       <a href="tournaments.html" class="block text-lg hover:text-[#00E5FF] transition">Tournaments</a>
-      <a href="#" class="block text-lg hover:text-[#00E5FF] transition">Track Order</a>
+      <a href="trackorder.html" class="block text-lg hover:text-[#00E5FF] transition">Track Order</a>
       <a href="contactus.html" class="block text-lg hover:text-[#00E5FF] transition">Contact Us</a>
       <a href="aboutus.html" class="block text-lg hover:text-[#00E5FF] transition">About Us</a>
       <a href="signin.html" class="block text-lg hover:text-[#00E5FF] transition">Sign In</a>
@@ -436,40 +471,40 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-[#0f0f1a] py-12 px-6">
+    <footer class="py-12 px-6 neon-border">
       <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
         <div>
-          <h3 class="text-xl font-bold text-white font-orbitron mb-4">Contact</h3>
-          <p class="text-[#E0E0E0]">📧 businessgamingodyssey@gmail.com</p>
-          <p class="text-[#E0E0E0]">📞 6290994382</p>
+          <h3 class="text-xl font-bold font-orbitron mb-4">Contact</h3>
+          <p class="contact-text">📧 businessgamingodyssey@gmail.com</p>
+          <p class="contact-text">📞 6290994382</p>
         </div>
         <div>
-          <h3 class="text-xl font-bold text-white font-orbitron mb-4">Useful Links</h3>
+          <h3 class="text-xl font-bold font-orbitron mb-4">Useful Links</h3>
           <ul class="space-y-2">
-            <li><a href="index.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Home</a></li>
-            <li><a href="store.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Store</a></li>
-            <li><a href="tournaments.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Tournaments</a></li>
-            <li><a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Track Order</a></li>
-            <li><a href="contactus.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Contact Us</a></li>
-            <li><a href="aboutus.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">About Us</a></li>
+            <li><a href="index.html" class="footer-link">Home</a></li>
+            <li><a href="store.html" class="footer-link">Store</a></li>
+            <li><a href="tournaments.html" class="footer-link">Tournaments</a></li>
+            <li><a href="trackorder.html" class="footer-link">Track Order</a></li>
+            <li><a href="contactus.html" class="footer-link">Contact Us</a></li>
+            <li><a href="aboutus.html" class="footer-link">About Us</a></li>
           </ul>
         </div>
         <div>
-          <h3 class="text-xl font-bold text-white font-orbitron mb-4">Follow Us</h3>
+          <h3 class="text-xl font-bold font-orbitron mb-4">Follow Us</h3>
           <div class="flex space-x-4">
-            <a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">
-              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
+            <a href="https://www.instagram.com/noticedveil" aria-label="Follow us on Instagram">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram" class="w-8 h-8 social-logo">
             </a>
-            <a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">
-              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
+            <a href="https://www.youtube.com/@I_N0713dVeil" aria-label="Follow us on YouTube">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" alt="YouTube" class="w-8 h-8 social-logo">
             </a>
-            <a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">
-              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
+            <a href="#" aria-label="Follow us on Facebook">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook" class="w-8 h-8 social-logo">
             </a>
           </div>
         </div>
       </div>
-      <p class="text-center text-[#E0E0E0] mt-8">© 2025 Gaming Odyssey. All rights reserved.</p>
+      <p class="text-center copyright mt-8">© 2025 Gaming Odyssey. All rights reserved.</p>
     </footer>
   </div>
 
