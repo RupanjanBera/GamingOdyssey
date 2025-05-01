@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tournaments - Gaming Odyssey</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      background-color: #1a1a2e;
+      color: #E0E0E0;
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+    .neon-border {
+      border: 1px solid #00E5FF;
+      box-shadow: 0 0 10px #00E5FF, 0 0 20px #D500F9;
+    }
+    .neon-glow:hover {
+      box-shadow: 0 0 15px #00E5FF, 0 0 25px #D500F9;
+      transform: translateY(-5px);
+      transition: all 0.3s ease;
+    }
+    .sidebar {
+      background-color: #0f0f1a;
+      transition: all 0.3s ease;
+    }
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .tournament-card {
+      background: #1a1a2e;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    .tournament-card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 0.375rem;
+      margin-bottom: 1rem;
+    }
+    .join-btn {
+      background: linear-gradient(45deg, #00E5FF, #D500F9);
+      color: #0f0f1a;
+      font-weight: 600;
+      font-family: 'Orbitron', sans-serif;
+      padding: 0.5rem 1.5rem;
+      border-radius: 0.375rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      font-size: 0.875rem;
+      line-height: 1.25;
+      text-align: center;
+      display: inline-block;
+      width: auto;
+      white-space: nowrap;
+    }
+    .join-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: 0.5s;
+    }
+    .join-btn:hover::before {
+      left: 100%;
+    }
+    .join-btn:hover {
+      transform: translateY(-2px) rotate(2deg);
+      box-shadow: 0 0 20px #00E5FF, 0 0 30px #D500F9;
+    }
+    .heading-neon {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 3rem;
+      font-weight: 700;
+      color: #00E5FF;
+      text-align: center;
+      padding: 0.5rem 1rem;
+      border: 2px solid #00E5FF;
+      border-radius: 0.5rem;
+      position: relative;
+      animation: neonPulse 1.5s infinite alternate;
+      margin-bottom: 2rem;
+    }
+    @keyframes neonPulse {
+      from {
+        box-shadow: 0 0 10px #00E5FF, 0 0 20px #D500F9;
+      }
+      to {
+        box-shadow: 0 0 20px #00E5FF, 0 0 40px #D500F9;
+      }
+    }
+    .heading-neon:hover {
+      transform: scale(1.05);
+      transition: all 0.3s ease;
+    }
+    footer {
+      background: #0c0c14;
+    }
+    footer h3 {
+      color: #00E5FF;
+    }
+    footer .contact-text {
+      color: #B0B0C0;
+    }
+    footer .footer-link {
+      color: #B0B0C0;
+      position: relative;
+      background-image: linear-gradient(#D500F9, #D500F9);
+      background-size: 0 2px;
+      background-repeat: no-repeat;
+      background-position: 0 100%;
+      transition: all 0.3s ease;
+    }
+    footer .footer-link:hover {
+      color: #D500F9;
+      background-size: 100% 2px;
+      transform: scale(1.05);
+    }
+    footer .social-logo {
+      filter: grayscale(100%);
+      transition: all 0.3s ease;
+    }
+    footer .social-logo:hover {
+      filter: none;
+      transform: scale(1.2);
+      box-shadow: 0 0 10px #00E5FF, 0 0 15px #D500F9;
+    }
+    footer .copyright {
+      color: #B0B0C0;
+    }
+    @media (max-width: 640px) {
+      .tournament-grid {
+        grid-template-columns: 1fr;
+      }
+      .join-btn {
+        font-size: 0.75rem;
+      }
+      .heading-neon {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="fixed top-0 left-0 h-full w-64 sidebar neon-border z-20 hidden md:block">
+    <div class="p-6">
+      <h1 class="text-2xl font-bold text-white font-orbitron">Gaming Odyssey</h1>
+      <nav class="mt-10 space-y-4">
+        <a href="index.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
+          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Home</span>
+        </a>
+        <a href="store.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
+          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Store</span>
+        </a>
+        <a href="tournaments.html" class="flex items-center space-x-2 text-lg text-[#00E5FF] font-bold">
+          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Tournaments</span>
+        </a>
+        <a href="trackorder.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
+          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Track Order</span>
+        </a>
+        <a href="contactus.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
+          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Contact Us</span>
+        </a>
+        <a href="aboutus.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
+          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>About Us</span>
+        </a>
+        <a href="signin.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
+          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Sign In</span>
+        </a>
+        <a href="createaccount.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
+          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Create Account</span>
+        </a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Mobile Hamburger Menu -->
+  <div class="md:hidden fixed top-0 left-0 w-full bg-[#0f0f1a] z-30 p-4 flex justify-between items-center neon-border">
+    <h1 class="text-xl font-bold text-white font-orbitron">Gaming Odyssey</h1>
+    <button id="hamburger" class="text-[#00E5FF]">
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+  </div>
+  <div id="mobile-menu" class="hidden md:hidden fixed top-0 left-0 w-full h-full bg-[#0f0f1a] z-20 p-6">
+    <button id="close-menu" class="absolute top-4 right-4 text-[#00E5FF] neon-border rounded-full p-2 transition-transform">
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+    <nav class="space-y-4 mt-12">
+      <a href="index.html" class="block text-lg hover:text-[#00E5FF] transition">Home</a>
+      <a href="store.html" class="block text-lg hover:text-[#00E5FF] transition">Store</a>
+      <a href="tournaments.html" class="block text-lg text-[#00E5FF] font-bold">Tournaments</a>
+      <a href="trackorder.html" class="block text-lg hover:text-[#00E5FF] transition">Track Order</a>
+      <a href="contactus.html" class="block text-lg hover:text-[#00E5FF] transition">Contact Us</a>
+      <a href="aboutus.html" class="block text-lg hover:text-[#00E5FF] transition">About Us</a>
+      <a href="signin.html" class="block text-lg hover:text-[#00E5FF] transition">Sign In</a>
+      <a href="createaccount.html" class="block text-lg hover:text-[#00E5FF] transition">Create Account</a>
+    </nav>
+  </div>
+
+  <!-- Main Content -->
+  <div class="md:ml-64">
+    <!-- Tournaments Section -->
+    <section class="py-16 px-6 bg-[#0f0f1a] min-h-screen">
+      <h2 class="heading-neon">Gaming Odyssey Tournaments</h2>
+      <div class="tournament-grid max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <!-- Tournament 1 -->
+        <div class="tournament-card neon-border neon-glow fade-in">
+          <img src="https://via.placeholder.com/300x150" alt="Cyber Arena Showdown">
+          <h3 class="text-xl font-bold text-white mt-2">Cyber Arena Showdown</h3>
+          <p class="text-[#B0B0C0] mt-2">Blast through rivals in a pulse-pounding FPS frenzy!</p>
+          <p class="text-[#E0E0E0] mt-1"><strong>Entry:</strong> $50</p>
+          <p class="text-[#E0E0E0] mt-1"><strong>Prize:</strong> $25,000</p>
+          <p class="text-[#E0E0E0] mt-1"><strong>Starts:</strong> May 10, 2025</p>
+          <div class="flex justify-center mt-4">
+            <a href="#" class="join-btn" onclick="joinTournament('Cyber Arena Showdown')">Join Now</a>
+          </div>
+        </div>
+        <!-- Tournament 2 -->
+        <div class="tournament-card neon-border neon-glow fade-in">
+          <img src="https://via.placeholder.com/300x150" alt="Neon Battle Royale">
+          <h3 class="text-xl font-bold text-white mt-2">Neon Battle Royale</h3>
+          <p class="text-[#B0B0C0] mt-2">Unleash chaos in a neon-lit survival arena!</p>
+          <p class="text-[#E0E0E0] mt-1"><strong>Entry:</strong> $30</p>
+          <p class="text-[#E0E0E0] mt-1"><strong>Prize:</strong> $15,000</p>
+          <p class="text-[#E0E0E0] mt-1"><strong>Starts:</strong> May 20, 2025</p>
+          <div class="flex justify-center mt-4">
+            <a href="#" class="join-btn" onclick="joinTournament('Neon Battle Royale')">Join Now</a>
+          </div>
+        </div>
+        <!-- Tournament 3 -->
+        <div class="tournament-card neon-border neon-glow fade-in">
+          <img src="https://via.placeholder.com/300x150" alt="Quantum League">
+          <h3 class="text-xl font-bold text-white mt-2">Quantum League</h3>
+          <p class="text-[#B0B0C0] mt-2">Bend time and outwit foes in a strategic showdown!</p>
+          <p class="text-[#E0E0E0] mt-1"><strong>Entry:</strong> $20</p>
+          <p class="text-[#E0E0E0] mt-1"><strong>Prize:</strong> $10,000</p>
+          <p class="text-[#E0E0E0] mt-1"><strong>Starts:</strong> May 25, 2025</p>
+          <div class="flex justify-center mt-4">
+            <a href="#" class="join-btn" onclick="joinTournament('Quantum League')">Join Now</a>
+          </div>
+        </div>
+        <!-- Tournament 4 -->
+        <div class="tournament-card neon-border neon-glow fade-in">
+          <img src="https://via.placeholder.com/300x150" alt="Eclipse Tournament">
+          <h3 class="text-xl font-bold text-white mt-2">Eclipse Tournament</h3>
+          <p class="text-[#B0B0C0] mt-2">Crush your enemies in a galactic MOBA conquest!</p>
+          <p class="text-[#E0E0E0] mt-1"><strong>Entry:</strong> $40</p>
+          <p class="text-[#E0E0E0] mt-1"><strong>Prize:</strong> $30,000</p>
+          <p class="text-[#E0E0E0] mt-1"><strong>Starts:</strong> June 1, 2025</p>
+          <div class="flex justify-center mt-4">
+            <a href="#" class="join-btn" onclick="joinTournament('Eclipse Tournament')">Join Now</a>
+          </div>
+        </div>
+        <!-- Tournament 5 -->
+        <div class="tournament-card neon-border neon-glow fade-in">
+          <img src="https://via.placeholder.com/300x150" alt="Galactic Wars">
+          <h3 class="text-xl font-bold text-white mt-2">Galactic Wars</h3>
+          <p class="text-[#B0B0C0] mt-2">Lead epic fleets to triumph in a cosmic war!</p>
+          <p class="text-[#E0E0E0] mt-1"><strong>Entry:</strong> $25</p>
+          <p class="text-[#E0E0E0] mt-1"><strong>Prize:</strong> $12,000</p>
+          <p class="text-[#E0E0E0] mt-1"><strong>Starts:</strong> June 5, 2025</p>
+          <div class="flex justify-center mt-4">
+            <a href="#" class="join-btn" onclick="joinTournament('Galactic Wars')">Join Now</a>
+          </div>
+        </div>
+        <!-- Tournament 6 -->
+        <div class="tournament-card neon-border neon-glow fade-in">
+          <img src="https://via.placeholder.com/300x150" alt="Phantom Clash">
+          <h3 class="text-xl font-bold text-white mt-2">Phantom Clash</h3>
+          <p class="text-[#B0B0C0] mt-2">Strike fast in a heart-pounding martial arts brawl!</p>
+          <p class="text-[#E0E0E0] mt-1"><strong>Entry:</strong> $15</p>
+          <p class="text-[#E0E0E0] mt-1"><strong>Prize:</strong> $8,000</p>
+          <p class="text-[#E0E0E0] mt-1"><strong>Starts:</strong> June 10, 2025</p>
+          <div class="flex justify-center mt-4">
+            <a href="#" class="join-btn" onclick="joinTournament('Phantom Clash')">Join Now</a>
+          </div>
+        </div>
+        <!-- Tournament 7 -->
+        <div class="tournament-card neon-border neon-glow fade-in">
+          <img src="https://via.placeholder.com/300x150" alt="Astral Showdown">
+          <h3 class="text-xl font-bold text-white mt-2">Astral Showdown</h3>
+          <p class="text-[#B0B0C0] mt-2">Forge your legend in an epic RPG adventure!</p>
+          <p class="text-[#E0E0E0] mt-1"><strong>Entry:</strong> $35</p>
+          <p class="text-[#E0E0E0] mt-1"><strong>Prize:</strong> $20,000</p>
+          <p class="text-[#E0E0E0] mt-1"><strong>Starts:</strong> June 15, 2025</p>
+          <div class="flex justify-center mt-4">
+            <a href="#" class="join-btn" onclick="joinTournament('Astral Showdown')">Join Now</a>
+          </div>
+        </div>
+        <!-- Tournament 8 -->
+        <div class="tournament-card neon-border neon-glow fade-in">
+          <img src="https://via.placeholder.com/300x150" alt="Void Champions">
+          <h3 class="text-xl font-bold text-white mt-2">Void Champions</h3>
+          <p class="text-[#B0B0C0] mt-2">Rise to glory in a futuristic sports spectacle!</p>
+          <p class="text-[#E0E0E0] mt-1"><strong>Entry:</strong> $10</p>
+          <p class="text-[#E0E0E0] mt-1"><strong>Prize:</strong> $5,000</p>
+          <p class="text-[#E0E0E0] mt-1"><strong>Starts:</strong> June 20, 2025</p>
+          <div class="flex justify-center mt-4">
+            <a href="#" class="join-btn" onclick="joinTournament('Void Champions')">Join Now</a>
+          </div>
+        </div>
+        <!-- Tournament 9 -->
+        <div class="tournament-card neon-border neon-glow fade-in">
+          <img src="https://via.placeholder.com/300x150" alt="Inferno League">
+          <h3 class="text-xl font-bold text-white mt-2">Inferno League</h3>
+          <p class="text-[#B0B0C0] mt-2">Burn up the tracks in a fiery racing showdown!</p>
+          <p class="text-[#E0E0E0] mt-1"><strong>Entry:</strong> $45</p>
+          <p class="text-[#E0E0E0] mt-1"><strong>Prize:</strong> $35,000</p>
+          <p class="text-[#E0E0E0] mt-1"><strong>Starts:</strong> June 25, 2025</p>
+          <div class="flex justify-center mt-4">
+            <a href="#" class="join-btn" onclick="joinTournament('Inferno League')">Join Now</a>
+          </div>
+        </div>
+        <!-- Tournament 10 -->
+        <div class="tournament-card neon-border neon-glow fade-in">
+          <img src="https://via.placeholder.com/300x150" alt="Celestial Gauntlet">
+          <h3 class="text-xl font-bold text-white mt-2">Celestial Gauntlet</h3>
+          <p class="text-[#B0B0C0] mt-2">Unravel cosmic mysteries in a puzzle-packed battle!</p>
+          <p class="text-[#E0E0E0] mt-1"><strong>Entry:</strong> $20</p>
+          <p class="text-[#E0E0E0] mt-1"><strong>Prize:</strong> $7,000</p>
+          <p class="text-[#E0E0E0] mt-1"><strong>Starts:</strong> July 1, 2025</p>
+          <div class="flex justify-center mt-4">
+            <a href="#" class="join-btn" onclick="joinTournament('Celestial Gauntlet')">Join Now</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 px-6 neon-border">
+      <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <h3 class="text-xl font-bold font-orbitron mb-4">Contact</h3>
+          <p class="contact-text">📧 businessgamingodyssey@gmail.com</p>
+          <p class="contact-text">📞 6290994382</p>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold font-orbitron mb-4">Useful Links</h3>
+          <ul class="space-y-2">
+            <li><a href="index.html" class="footer-link">Home</a></li>
+            <li><a href="store.html" class="footer-link">Store</a></li>
+            <li><a href="tournaments.html" class="footer-link">Tournaments</a></li>
+            <li><a href="trackorder.html" class="footer-link">Track Order</a></li>
+            <li><a href="contactus.html" class="footer-link">Contact Us</a></li>
+            <li><a href="aboutus.html" class="footer-link">About Us</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold font-orbitron mb-4">Follow Us</h3>
+          <div class="flex space-x-4">
+            <a href="https://www.instagram.com/noticedveil" aria-label="Follow us on Instagram">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram" class="w-8 h-8 social-logo">
+            </a>
+            <a href="https://www.youtube.com/@I_N0713dVeil" aria-label="Follow us on YouTube">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" alt="YouTube" class="w-8 h-8 social-logo">
+            </a>
+            <a href="#" aria-label="Follow us on Facebook">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook" class="w-8 h-8 social-logo">
+            </a>
+          </div>
+        </div>
+      </div>
+      <p class="text-center copyright mt-8">© 2025 Gaming Odyssey. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <script>
+    // Hamburger Menu Toggle
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const closeMenu = document.getElementById('close-menu');
+    hamburger.addEventListener('click', () => {
+      mobileMenu.classList.remove('hidden');
+    });
+    closeMenu.addEventListener('click', () => {
+      mobileMenu.classList.add('hidden');
+    });
+
+    // Fade-in Animation on Scroll
+    const fadeIns = document.querySelectorAll('.fade-in');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+    fadeIns.forEach(element => observer.observe(element));
+
+    // Mock Tournament Join
+    function joinTournament(tournamentName) {
+      alert(`Joined ${tournamentName}! Check your email for confirmation.`);
+      console.log(`User joined: ${tournamentName}`);
+    }
+  </script>
+</body>
+</html>
