@@ -84,6 +84,21 @@
       z-index: 50;
       text-align: center;
     }
+    /* Cart Icon Styling */
+    .cart-icon-container {
+      position: relative;
+    }
+    .cart-count {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background-color: #D500F9;
+      color: #0f0f1a;
+      font-size: 0.75rem;
+      font-weight: bold;
+      border-radius: 50%;
+      padding: 2px 6px;
+    }
   </style>
 </head>
 <body>
@@ -127,6 +142,11 @@
           <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Create Account</span>
         </a>
+        <a href="cart.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition cart-icon-container">
+          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M0 1h3l2 11h10l2-9H5l-.5-2H0v1zm6 15a2 2 0 100 4 2 2 0 000-4zm9 0a2 2 0 100 4 2 2 0 000-4z"/></svg>
+          <span>Cart</span>
+          <span id="cart-count-sidebar" class="cart-count">0</span>
+        </a>
       </nav>
     </div>
   </div>
@@ -134,9 +154,15 @@
   <!-- Mobile Hamburger Menu -->
   <div class="md:hidden fixed top-0 left-0 w-full bg-[#0f0f1a] z-30 p-4 flex justify-between items-center neon-border">
     <h1 class="text-xl font-bold text-white font-orbitron">Gaming Odyssey</h1>
-    <button id="hamburger" class="text-[#00E5FF]">
-      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-    </button>
+    <div class="flex items-center space-x-4">
+      <a href="cart.html" class="cart-icon-container">
+        <svg class="w-6 h-6 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M0 1h3l2 11h10l2-9H5l-.5-2H0v1zm6 15a2 2 0 100 4 2 2 0 000-4zm9 0a2 2 0 100 4 2 2 0 000-4z"/></svg>
+        <span id="cart-count-mobile" class="cart-count">0</span>
+      </a>
+      <button id="hamburger" class="text-[#00E5FF]">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
   </div>
   <div id="mobile-menu" class="hidden md:hidden fixed top-0 left-0 w-full h-full bg-[#0f0f1a] z-20 p-6">
     <nav class="space-y-4">
@@ -148,6 +174,9 @@
       <a href="aboutus.html" class="block text-lg hover:text-[#00E5FF] transition">About Us</a>
       <a href="signin.html" class="block text-lg hover:text-[#00E5FF] transition">Sign In</a>
       <a href="createaccount.html" class="block text-lg hover:text-[#00E5FF] transition">Create Account</a>
+      <a href="cart.html" class="block text-lg hover:text-[#00E5FF] transition cart-icon-container">
+        Cart <span id="cart-count-mobile-menu" class="cart-count">0</span>
+      </a>
     </nav>
   </div>
 
@@ -249,7 +278,7 @@
           <p class="text-[#E0E0E0] mb-4">$79.99</p>
           <div class="flex space-x-2">
             <a href="#" class="flex-1 text-center bg-[#00E5FF] text-[#0f0f1a] font-bold py-2 rounded neon-glow">Buy Now</a>
-            <a href="#" class="flex-1 text-center bg-[#D500F9] text-white font-bold py-2 rounded neon-glow">Add to Cart</a>
+            <button class="add-to-cart flex-1 text-center bg-[#D500F9] text-white font-bold py-2 rounded neon-glow" data-name="Razer DeathAdder V3" data-price="79.99">Add to Cart</button>
           </div>
         </div>
         <div class="bg-[#0f0f1a] p-6 rounded-lg neon-border neon-glow fade-in">
@@ -258,7 +287,7 @@
           <p class="text-[#E0E0E0] mb-4">$129.99</p>
           <div class="flex space-x-2">
             <a href="#" class="flex-1 text-center bg-[#00E5FF] text-[#0f0f1a] font-bold py-2 rounded neon-glow">Buy Now</a>
-            <a href="#" class="flex-1 text-center bg-[#D500F9] text-white font-bold py-2 rounded neon-glow">Add to Cart</a>
+            <button class="add-to-cart flex-1 text-center bg-[#D500F9] text-white font-bold py-2 rounded neon-glow" data-name="Logitech G Pro X" data-price="129.99">Add to Cart</button>
           </div>
         </div>
         <div class="bg-[#0f0f1a] p-6 rounded-lg neon-border neon-glow fade-in">
@@ -267,7 +296,7 @@
           <p class="text-[#E0E0E0] mb-4">$149.99</p>
           <div class="flex space-x-2">
             <a href="#" class="flex-1 text-center bg-[#00E5FF] text-[#0f0f1a] font-bold py-2 rounded neon-glow">Buy Now</a>
-            <a href="#" class="flex-1 text-center bg-[#D500F9] text-white font-bold py-2 rounded neon-glow">Add to Cart</a>
+            <button class="add-to-cart flex-1 text-center bg-[#D500F9] text-white font-bold py-2 rounded neon-glow" data-name="Roccat Vulcan II" data-price="149.99">Add to Cart</button>
           </div>
         </div>
         <div class="bg-[#0f0f1a] p-6 rounded-lg neon-border neon-glow fade-in">
@@ -276,7 +305,7 @@
           <p class="text-[#E0E0E0] mb-4">$599.99</p>
           <div class="flex space-x-2">
             <a href="#" class="flex-1 text-center bg-[#00E5FF] text-[#0f0f1a] font-bold py-2 rounded neon-glow">Buy Now</a>
-            <a href="#" class="flex-1 text-center bg-[#D500F9] text-white font-bold py-2 rounded neon-glow">Add to Cart</a>
+            <button class="add-to-cart flex-1 text-center bg-[#D500F9] text-white font-bold py-2 rounded neon-glow" data-name="ASUS ROG Swift" data-price="599.99">Add to Cart</button>
           </div>
         </div>
         <div class="bg-[#0f0f1a] p-6 rounded-lg neon-border neon-glow fade-in">
@@ -285,7 +314,7 @@
           <p class="text-[#E0E0E0] mb-4">$149.99</p>
           <div class="flex space-x-2">
             <a href="#" class="flex-1 text-center bg-[#00E5FF] text-[#0f0f1a] font-bold py-2 rounded neon-glow">Buy Now</a>
-            <a href="#" class="flex-1 text-center bg-[#D500F9] text-white font-bold py-2 rounded neon-glow">Add to Cart</a>
+            <button class="add-to-cart flex-1 text-center bg-[#D500F9] text-white font-bold py-2 rounded neon-glow" data-name="Bose Companion 2" data-price="149.99">Add to Cart</button>
           </div>
         </div>
         <div class="bg-[#0f0f1a] p-6 rounded-lg neon-border neon-glow fade-in">
@@ -294,7 +323,7 @@
           <p class="text-[#E0E0E0] mb-4">$99.99</p>
           <div class="flex space-x-2">
             <a href="#" class="flex-1 text-center bg-[#00E5FF] text-[#0f0f1a] font-bold py-2 rounded neon-glow">Buy Now</a>
-            <a href="#" class="flex-1 text-center bg-[#D500F9] text-white font-bold py-2 rounded neon-glow">Add to Cart</a>
+            <button class="add-to-cart flex-1 text-center bg-[#D500F9] text-white font-bold py-2 rounded neon-glow" data-name="Logitech C920" data-price="99.99">Add to Cart</button>
           </div>
         </div>
       </div>
@@ -305,7 +334,7 @@
       <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
         <div>
           <h3 class="text-xl font-bold text-white font-orbitron mb-4">Contact</h3>
-          <p class="text-[#E0E0E0]">📧 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="634056574a4d46505044424e4a4d444c475a5050465a63444e424a4f0d404c4e">[email&#160;protected]</a></p>
+          <p class="text-[#E0E0E0]">📧 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="230561574a4d46505044424e4a4d444c475a5050465a63444e424a4f0d404c4e">[email&#160;protected]</a></p>
           <p class="text-[#E0E0E0]">📞 6290994382</p>
         </div>
         <div>
@@ -390,7 +419,54 @@
         comingSoon.style.display = 'none';
       }, 5000);
     });
+
+    // Cart Functionality
+    const addToCartButtons = document.querySelectorAll('.add-to-cart');
+    const cartCountElements = {
+      sidebar: document.getElementById('cart-count-sidebar'),
+      mobile: document.getElementById('cart-count-mobile'),
+      mobileMenu: document.getElementById('cart-count-mobile-menu')
+    };
+
+    // Load cart from localStorage
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    // Update cart count on page load
+    function updateCartCount() {
+      const count = cart.reduce((total, item) => total + item.quantity, 0);
+      cartCountElements.sidebar.textContent = count;
+      cartCountElements.mobile.textContent = count;
+      cartCountElements.mobileMenu.textContent = count;
+    }
+
+    // Add to cart function
+    addToCartButtons.forEach(button => {
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        const name = button.getAttribute('data-name');
+        const price = parseFloat(button.getAttribute('data-price'));
+
+        // Check if item already exists in cart
+        const existingItem = cart.find(item => item.name === name);
+        if (existingItem) {
+          existingItem.quantity += 1;
+        } else {
+          cart.push({ name, price, quantity: 1 });
+        }
+
+        // Save cart to localStorage
+        localStorage.setItem('cart', JSON.stringify(cart));
+
+        // Update cart count
+        updateCartCount();
+
+        // Alert user
+        alert(`${name} has been added to your cart!`);
+      });
+    });
+
+    // Update cart count on page load
+    updateCartCount();
   </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'938f8e5b7b7ab067',t:'MTc0NjEwNTQxNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>
