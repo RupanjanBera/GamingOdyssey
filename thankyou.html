@@ -62,9 +62,9 @@
       <nav class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-6 text-lg">
         <a href="index.html" class="hover:text-[#00B7D4] transition">Home</a>
         <a href="store.html" class="text-[#00B7D4] font-bold">Store</a>
-        <a href="#" class="hover:text-[#00B7D4] transition">Tournaments</a>
+        <a href="tournaments.html" class="hover:text-[#00B7D4] transition">Tournaments</a>
         <a href="#" class="hover:text-[#00B7D4] transition">Track Order</a>
-        <a href="#" class="hover:text-[#00B7D4] transition">Contact Us</a>
+        <a href="contactus.html" class="hover:text-[#00B7D4] transition">Contact Us</a>
         <a href="aboutus.html" class="hover:text-[#00B7D4] transition">About Us</a>
         <a href="signin.html" class="hover:text-[#00B7D4] transition">Sign In</a>
         <a href="createaccount.html" class="hover:text-[#00B7D4] transition">Create Account</a>
@@ -81,13 +81,14 @@
       </p>
       <div class="mb-6">
         <p class="text-[#E0E0E0] mb-2">Order ID: <span id="orderId" class="text-[#00B7D4]">ORDER123</span></p>
-        <p class="text-[#E0E0E0] mb-4">Total: <span id="amount" class="text-[#00B7D4]">₹1.00</span></p>
+        <p class="text-[#E0E0E0] mb-2">Total: <span id="amount" class="text-[#00B7D4]">$1.00</span></p>
+        <p class="text-[#E0E0E0] mb-4">Payment Method: <span id="paymentMethod" class="text-[#00B7D4]">UPI</span></p>
       </div>
-      <p class="text-[#E0E0E0] mb-6">
-        <strong>UPI Payments</strong>: Your payment is pending manual verification. You'll receive a confirmation soon.<br>
-        <strong>Cash on Delivery</strong>: Please have the exact amount ready for delivery.<br>
-        Track your order or contact us at <a href="mailto:businessgamingodyssey@gmail.com" class="text-[#00B7D4] hover:text-[#D500F9]">businessgamingodyssey@gmail.com</a> or 6290994382 for assistance.
-      </p>
+      <div id="paymentMessage" class="text-[#E0E0E0] mb-6">
+        <p id="upiMessage" class="hidden"><strong>UPI Payment</strong>: Your payment is pending manual verification. You'll receive a confirmation soon.</p>
+        <p id="codMessage" class="hidden"><strong>Cash on Delivery</strong>: Please have the exact amount ready for delivery.</p>
+        <p id="defaultMessage">Track your order or contact us at <a href="mailto:support@gamingodyssey.com" class="text-[#00B7D4] hover:text-[#D500F9]">support@gamingodyssey.com</a> or 6290994382 for assistance.</p>
+      </div>
       <div class="flex justify-center space-x-4">
         <a href="#" class="bg-[#00B7D4] text-[#0f0f1a] font-bold py-2 px-6 rounded neon-glow">Track Order</a>
         <a href="index.html" class="bg-[#D500F9] text-[#0f0f1a] font-bold py-2 px-6 rounded neon-glow">Back to Home</a>
@@ -100,7 +101,7 @@
     <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
       <div>
         <h3 class="text-xl font-bold text-white font-orbitron mb-4">Contact</h3>
-        <p class="text-[#E0E0E0]">📧 businessgamingodyssey@gmail.com</p>
+        <p class="text-[#E0E0E0]">📧 <a href="mailto:support@gamingodyssey.com">support@gamingodyssey.com</a></p>
         <p class="text-[#E0E0E0]">📞 6290994382</p>
       </div>
       <div>
@@ -108,9 +109,9 @@
         <ul class="space-y-2">
           <li><a href="index.html" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">Home</a></li>
           <li><a href="store.html" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">Store</a></li>
-          <li><a href="#" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">Tournaments</a></li>
+          <li><a href="tournaments.html" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">Tournaments</a></li>
           <li><a href="#" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">Track Order</a></li>
-          <li><a href="#" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">Contact Us</a></li>
+          <li><a href="contactus.html" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">Contact Us</a></li>
           <li><a href="aboutus.html" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">About Us</a></li>
         </ul>
       </div>
@@ -148,10 +149,21 @@
     const urlParams = new URLSearchParams(window.location.search);
     const orderId = urlParams.get('orderId') || 'ORDER123';
     const amount = parseFloat(urlParams.get('amount')) || 1.00;
+    const paymentMethod = urlParams.get('method') || 'UPI';
     const formattedAmount = amount.toFixed(2);
 
     document.getElementById('orderId').textContent = orderId;
-    document.getElementById('amount').textContent = `₹${formattedAmount}`;
+    document.getElementById('amount').textContent = `$${formattedAmount}`;
+    document.getElementById('paymentMethod').textContent = paymentMethod;
+
+    // Show appropriate message based on payment method
+    const upiMessage = document.getElementById('upiMessage');
+    const codMessage = document.getElementById('codMessage');
+    if (paymentMethod === 'UPI' || paymentMethod === 'Netbanking' || paymentMethod === 'Debit Card' || paymentMethod === 'Credit Card') {
+      upiMessage.classList.remove('hidden');
+    } else if (paymentMethod === 'Cash on Delivery') {
+      codMessage.classList.remove('hidden');
+    }
   </script>
 </body>
 </html>
