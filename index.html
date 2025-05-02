@@ -170,6 +170,36 @@
       font-size: 0.875rem;
       margin-top: 0.25rem;
     }
+    /* Video Overlay Styles */
+    #video-overlay {
+      display: flex;
+      opacity: 1;
+      transition: opacity 0.5s ease;
+    }
+    #video-overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    #intro-video {
+      max-width: 100%;
+      max-height: 100%;
+    }
+    #skip-video {
+      transition: all 0.3s ease;
+    }
+    #skip-video:hover {
+      background: #D500F9;
+      box-shadow: 0 0 15px #D500F9;
+      transform: translateY(-2px);
+    }
+    /* Hide main content while video plays */
+    .main-content {
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    .main-content.visible {
+      opacity: 1;
+    }
     @media (max-width: 640px) {
       .submit-btn {
         width: 100%;
@@ -184,300 +214,351 @@
       .slide-content p {
         font-size: 1rem;
       }
+      #skip-video {
+        bottom: 4rem;
+        right: 1rem;
+        font-size: 0.875rem;
+        padding: 0.5rem 1rem;
+      }
     }
   </style>
 </head>
 <body>
-  <!-- Sidebar -->
-  <div class="fixed top-0 left-0 h-full w-64 sidebar neon-border z-20 hidden md:block">
-    <div class="p-6">
-      <h1 class="text-2xl font-bold text-white font-orbitron">Gaming Odyssey</h1>
-      <nav class="mt-10 space-y-4">
-        <a href="index.html" class="flex items-center space-x-2 text-lg text-[#00E5FF] font-bold">
-          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>Home</span>
-        </a>
-        <a href="store.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
-          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>Store</span>
-        </a>
-        <a href="tournaments.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
-          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>Tournaments</span>
-        </a>
-        <a href="trackorder.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
-          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>Track Order</span>
-        </a>
-        <a href="contactus.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
-          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>Contact Us</span>
-        </a>
-        <a href="aboutus.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
-          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>About Us</span>
-        </a>
-        <a href="signin.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
-          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>Sign In</span>
-        </a>
-        <a href="createaccount.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
-          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>Create Account</span>
-        </a>
+  <!-- Video Overlay -->
+  <div id="video-overlay" class="fixed inset-0 bg-[#0f0f1a] z-50 flex items-center justify-center">
+    <video id="intro-video" class="w-full h-full object-cover" muted playsinline>
+      <source src="intro_montage.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <button id="skip-video" class="absolute bottom-8 right-8 bg-[#00E5FF] text-[#0f0f1a] font-bold py-2 px-4 rounded neon-glow font-orbitron">
+      Skip Video
+    </button>
+  </div>
+
+  <!-- Main Content Wrapper -->
+  <div class="main-content">
+    <!-- Sidebar -->
+    <div class="fixed top-0 left-0 h-full w-64 sidebar neon-border z-20 hidden md:block">
+      <div class="p-6">
+        <h1 class="text-2xl font-bold text-white font-orbitron">Gaming Odyssey</h1>
+        <nav class="mt-10 space-y-4">
+          <a href="index.html" class="flex items-center space-x-2 text-lg text-[#00E5FF] font-bold">
+            <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+            <span>Home</span>
+          </a>
+          <a href="store.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
+            <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+            <span>Store</span>
+          </a>
+          <a href="tournaments.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
+            <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+            <span>Tournaments</span>
+          </a>
+          <a href="trackorder.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
+            <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+            <span>Track Order</span>
+          </a>
+          <a href="contactus.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
+            <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+            <span>Contact Us</span>
+          </a>
+          <a href="aboutus.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
+            <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+            <span>About Us</span>
+          </a>
+          <a href="signin.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
+            <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+            <span>Sign In</span>
+          </a>
+          <a href="createaccount.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
+            <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+            <span>Create Account</span>
+          </a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Mobile Hamburger Menu -->
+    <div class="md:hidden fixed top-0 left-0 w-full bg-[#0f0f1a] z-30 p-4 flex justify-between items-center neon-border">
+      <h1 class="text-xl font-bold text-white font-orbitron">Gaming Odyssey</h1>
+      <button id="hamburger" class="text-[#00E5FF]">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+    <div id="mobile-menu" class="hidden md:hidden fixed top-0 left-0 w-full h-full bg-[#0f0f1a] z-20 p-6">
+      <button id="close-menu" class="absolute top-4 right-4 text-[#00E5FF] neon-border rounded-full p-2 transition-transform">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      <nav class="space-y-4 mt-12">
+        <a href="index.html" class="block text-lg text-[#00E5FF] font-bold">Home</a>
+        <a href="store.html" class="block text-lg hover:text-[#00E5FF] transition">Store</a>
+        <a href="tournaments.html" class="block text-lg hover:text-[#00E5FF] transition">Tournaments</a>
+        <a href="trackorder.html" class="block text-lg hover:text-[#00E5FF] transition">Track Order</a>
+        <a href="contactus.html" class="block text-lg hover:text-[#00E5FF] transition">Contact Us</a>
+        <a href="aboutus.html" class="block text-lg hover:text-[#00E5FF] transition">About Us</a>
+        <a href="signin.html" class="block text-lg hover:text-[#00E5FF] transition">Sign In</a>
+        <a href="createaccount.html" class="block text-lg hover:text-[#00E5FF] transition">Create Account</a>
       </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="md:ml-64">
+      <!-- Hero Section -->
+      <section class="hero-bg min-h-screen flex items-center justify-center text-center p-6">
+        <div class="fade-in">
+          <h1 class="text-5xl md:text-7xl font-bold text-white font-orbitron mb-4">Gaming Odyssey</h1>
+          <p class="text-xl md:text-2xl text-[#E0E0E0] mb-8">Where Gaming Meets Glory.</p>
+          <div class="space-x-4">
+            <a href="createaccount.html" class="inline-block bg-[#00E5FF] text-[#0f0f1a] font-bold py-3 px-6 rounded neon-glow">Join Now</a>
+            <a href="tournaments.html" class="inline-block bg-[#D500F9] text-white font-bold py-3 px-6 rounded neon-glow">View Tournaments</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slideshow Section -->
+      <section class="py-16 px-6">
+        <div class="slideshow-container">
+          <div class="slides-wrapper">
+            <!-- Slide 1: Recent Products -->
+            <div class="slide flex items-center justify-center md:flex-row flex-col gap-8 active">
+              <img src="https://via.placeholder.com/600x400" alt="Recent Products" class="w-full md:w-1/2 h-64 object-cover rounded-lg neon-border neon-glow">
+              <div class="slide-content text-center md:text-left">
+                <h3 class="text-3xl font-bold text-white font-orbitron mb-4">Discover Our Latest Gaming Gear</h3>
+                <p class="text-lg text-[#E0E0E0] mb-6">Explore the newest controllers, keyboards, and headsets designed for ultimate performance.</p>
+                <a href="store.html" class="inline-block submit-btn">Shop Now</a>
+              </div>
+            </div>
+            <!-- Slide 2: Minecraft Server -->
+            <div class="slide flex items-center justify-center md:flex-row flex-col gap-8">
+              <img src="https://via.placeholder.com/600x400" alt="Minecraft Server" class="w-full md:w-1/2 h-64 object-cover rounded-lg neon-border neon-glow">
+              <div class="slide-content text-center md:text-left">
+                <h3 class="text-3xl font-bold text-white font-orbitron mb-4">Join Our Minecraft Server</h3>
+                <p class="text-lg text-[#E0E0E0] mb-6">Dive into epic adventures on our server at <code>play.gamingodyssey.in</code>. Build, battle, and connect!</p>
+                <a href="http://play.gamingodyssey.in" class="inline-block submit-btn">Join Server</a>
+              </div>
+            </div>
+            <!-- Slide 3: Server Ranks -->
+            <div class="slide flex items-center justify-center md:flex-row flex-col gap-8">
+              <img src="https://via.placeholder.com/600x400" alt="Server Ranks" class="w-full md:w-1/2 h-64 object-cover rounded-lg neon-border neon-glow">
+              <div class="slide-content text-center md:text-left">
+                <h3 class="text-3xl font-bold text-white font-orbitron mb-4">Unlock Exclusive Server Ranks</h3>
+                <p class="text-lg text-[#E0E0E0] mb-6">Earn ranks like Legend, Hero, and Elite with unique perks. Level up your Minecraft experience!</p>
+                <a href="#" class="inline-block submit-btn">Learn More</a>
+              </div>
+            </div>
+            <!-- Slide 4: Gaming Odyssey Store -->
+            <div class="slide flex items-center justify-center md:flex-row flex-col gap-8">
+              <img src="https://via.placeholder.com/600x400" alt="Gaming Odyssey Store" class="w-full md:w-1/2 h-64 object-cover rounded-lg neon-border neon-glow">
+              <div class="slide-content text-center md:text-left">
+                <h3 class="text-3xl font-bold text-white font-orbitron mb-4">Shop at Gaming Odyssey Store</h3>
+                <p class="text-lg text-[#E0E0E0] mb-6">From RGB peripherals to esports apparel, find everything you need to dominate.</p>
+                <a href="store.html" class="inline-block submit-btn">Visit Store</a>
+              </div>
+            </div>
+            <!-- Slide 5: Custom PC Building -->
+            <div class="slide flex items-center justify-center md:flex-row flex-col gap-8">
+              <img src="https://via.placeholder.com/600x400" alt="Custom PC Building" class="w-full md:w-1/2 h-64 object-cover rounded-lg neon-border neon-glow">
+              <div class="slide-content text-center md:text-left">
+                <h3 class="text-3xl font-bold text-white font-orbitron mb-4">Build Your Dream Gaming PC</h3>
+                <p class="text-lg text-[#E0E0E0] mb-6">Customize your rig with our expert PC building service. Power up your gameplay!</p>
+                <a href="#" class="inline-block submit-btn">Start Building</a>
+              </div>
+            </div>
+          </div>
+          <!-- Navigation Arrows -->
+          <div class="arrow prev">
+            <svg class="w-6 h-6 text-[#0f0f1a]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+          </div>
+          <div class="arrow next">
+            <svg class="w-6 h-6 text-[#0f0f1a]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </div>
+          <!-- Dots -->
+          <div class="dots">
+            <span class="dot active"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Featured Products Section -->
+      <section class="py-16 px-6">
+        <h2 class="text-4xl font-bold text-white font-orbitron text-center mb-12">Featured Gaming Gear</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+          <div class="bg-[#0f0f1a] p-6 rounded-lg neon-border neon-glow fade-in">
+            <img src="https://via.placeholder.com/200" alt="Product" class="w-full h-48 object-cover rounded mb-4">
+            <h3 class="text-xl font-bold text-white">Neon Controller</h3>
+            <p class="text-[#E0E0E0] mb-4">$99.99</p>
+            <a href="store.html" class="block text-center bg-[#00E5FF] text-[#0f0f1a] font-bold py-2 rounded neon-glow">Shop Now</a>
+          </div>
+          <div class="bg-[#0f0f1a] p-6 rounded-lg neon-border neon-glow fade-in">
+            <img src="https://via.placeholder.com/200" alt="Product" class="w-full h-48 object-cover rounded mb-4">
+            <h3 class="text-xl font-bold text-white">RGB Keyboard</h3>
+            <p class="text-[#E0E0E0] mb-4">$129.99</p>
+            <a href="store.html" class="block text-center bg-[#00E5FF] text-[#0f0f1a] font-bold py-2 rounded neon-glow">Shop Now</a>
+          </div>
+          <div class="bg-[#0f0f1a] p-6 rounded-lg neon-border neon-glow fade-in">
+            <img src="https://via.placeholder.com/200" alt="Product" class="w-full h-48 object-cover rounded mb-4">
+            <h3 class="text-xl font-bold text-white">Gaming Mouse</h3>
+            <p class="text-[#E0E0E0] mb-4">$79.99</p>
+            <a href="store.html" class="block text-center bg-[#00E5FF] text-[#0f0f1a] font-bold py-2 rounded neon-glow">Shop Now</a>
+          </div>
+          <div class="bg-[#0f0f1a] p-6 rounded-lg neon-border neon-glow fade-in">
+            <img src="https://via.placeholder.com/200" alt="Product" class="w-full h-48 object-cover rounded mb-4">
+            <h3 class="text-xl font-bold text-white">Headset Pro</h3>
+            <p class="text-[#E0E0E0] mb-4">$149.99</p>
+            <a href="store.html" class="block text-center bg-[#00E5FF] text-[#0f0f1a] font-bold py-2 rounded neon-glow">Shop Now</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Upcoming Tournaments Section -->
+      <section class="py-16 px-6 bg-[#0f0f1a]">
+        <h2 class="text-4xl font-bold text-white font-orbitron text-center mb-12">Upcoming Tournaments</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div class="bg-[#1a1a2e] p-6 rounded-lg neon-border neon-glow fade-in">
+            <h3 class="text-xl font-bold text-white">Cyber Clash 2025</h3>
+            <p class="text-[#E0E0E0] mb-2">Game: Valorant</p>
+            <p class="text-[#E0E0E0] mb-2">Date: May 15, 2025</p>
+            <p class="text-[#E0E0E0] mb-4">Prize: $10,000</p>
+            <a href="tournaments.html" class="block text-center bg-[#D500F9] text-white font-bold py-2 rounded neon-glow">Register</a>
+          </div>
+          <div class="bg-[#1a1a2e] p-6 rounded-lg neon-border neon-glow fade-in">
+            <h3 class="text-xl font-bold text-white">Neon Strike</h3>
+            <p class="text-[#E0E0E0] mb-2">Game: Overwatch</p>
+            <p class="text-[#E0E0E0] mb-2">Date: June 10, 2025</p>
+            <p class="text-[#E0E0E0] mb-4">Prize: $15,000</p>
+            <a href="tournaments.html" class="block text-center bg-[#D500F9] text-white font-bold py-2 rounded neon-glow">Register</a>
+          </div>
+          <div class="bg-[#1a1a2e] p-6 rounded-lg neon-border neon-glow fade-in">
+            <h3 class="text-xl font-bold text-white">Odyssey League</h3>
+            <p class="text-[#E0E0E0] mb-2">Game: League of Legends</p>
+            <p class="text-[#E0E0E0] mb-2">Date: July 5, 2025</p>
+            <p class="text-[#E0E0E0] mb-4">Prize: $20,000</p>
+            <a href="tournaments.html" class="block text-center bg-[#D500F9] text-white font-bold py-2 rounded neon-glow">Register</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- About Us Section -->
+      <section class="py-16 px-6 text-center">
+        <h2 class="text-4xl font-bold text-white font-orbitron mb-8">About Gaming Odyssey</h2>
+        <div class="max-w-2xl mx-auto fade-in">
+          <p class="text-lg text-[#E0E0E0] mb-6">Gaming Odyssey is your gateway to competitive gaming. From thrilling tournaments to top-tier gaming gear, we bring the future of esports directly to you. Join a community of passionate gamers and level up your experience!</p>
+          <svg class="w-16 h-16 mx-auto text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        </div>
+      </section>
+
+      <!-- Contact Us Section -->
+      <section class="py-16 px-6 bg-[#0f0f1a]">
+        <h2 class="text-4xl font-bold text-white font-orbitron text-center mb-12">Contact Us</h2>
+        <div class="max-w-lg mx-auto bg-[#1a1a2e] p-8 rounded-lg neon-border fade-in">
+          <form id="contact-form">
+            <div class="mb-4">
+              <label for="name" class="block text-[#E0E0E0] mb-2">Name</label>
+              <input type="text" id="name" name="name" required placeholder="Your name" />
+              <p id="name-error" class="error hidden">Please enter your name</p>
+            </div>
+            <div class="mb-4">
+              <label for="email" class="block text-[#E0E0E0] mb-2">Email</label>
+              <input type="email" id="email" name="email" required placeholder="Your email" />
+              <p id="email-error" class="error hidden">Please enter a valid email</p>
+            </div>
+            <div class="mb-4">
+              <label for="subject" class="block text-[#E0E0E0] mb-2">Subject</label>
+              <input type="text" id="subject" name="subject" required placeholder="Subject" />
+              <p id="subject-error" class="error hidden">Please enter a subject</p>
+            </div>
+            <div class="mb-4">
+              <label for="message" class="block text-[#E0E0E0] mb-2">Message</label>
+              <textarea id="message" name="message" rows="5" required placeholder="Your message"></textarea>
+              <p id="message-error" class="error hidden">Please enter a message</p>
+            </div>
+            <div class="text-center">
+              <button type="submit" class="submit-btn">Send Message</button>
+              <p id="form-status" class="mt-4"></p>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="bg-[#0f0f1a] py-12 px-6">
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div>
+            <h3 class="text-xl font-bold text-white font-orbitron mb-4">Contact</h3>
+            <p class="text-[#E0E0E0]">📧 <a href="mailto:businessgamingodyssey@gmail.com" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">businessgamingodyssey@gmail.com</a></p>
+            <p class="text-[#E0E0E0]">📞 6290994382</p>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold text-white font-orbitron mb-4">Useful Links</h3>
+            <ul class="space-y-2">
+              <li><a href="index.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Home</a></li>
+              <li><a href="store.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Store</a></li>
+              <li><a href="tournaments.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Tournaments</a></li>
+              <li><a href="trackorder.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Track Order</a></li>
+              <li><a href="contactus.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Contact Us</a></li>
+              <li><a href="aboutus.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">About Us</a></li>
+              <li><a href="terms.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Terms & Conditions</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold text-white font-orbitron mb-4">Follow Us</h3>
+            <div class="flex space-x-4">
+              <a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
+              </a>
+              <a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
+              </a>
+              <a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+        <p class="text-center text-[#E0E0E0] mt-8">© 2025 Gaming Odyssey. All rights reserved.</p>
+      </footer>
     </div>
   </div>
 
-  <!-- Mobile Hamburger Menu -->
-  <div class="md:hidden fixed top-0 left-0 w-full bg-[#0f0f1a] z-30 p-4 flex justify-between items-center neon-border">
-    <h1 class="text-xl font-bold text-white font-orbitron">Gaming Odyssey</h1>
-    <button id="hamburger" class="text-[#00E5FF]">
-      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-    </button>
-  </div>
-  <div id="mobile-menu" class="hidden md:hidden fixed top-0 left-0 w-full h-full bg-[#0f0f1a] z-20 p-6">
-    <button id="close-menu" class="absolute top-4 right-4 text-[#00E5FF] neon-border rounded-full p-2 transition-transform">
-      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-    </button>
-    <nav class="space-y-4 mt-12">
-      <a href="index.html" class="block text-lg text-[#00E5FF] font-bold">Home</a>
-      <a href="store.html" class="block text-lg hover:text-[#00E5FF] transition">Store</a>
-      <a href="tournaments.html" class="block text-lg hover:text-[#00E5FF] transition">Tournaments</a>
-      <a href="trackorder.html" class="block text-lg hover:text-[#00E5FF] transition">Track Order</a>
-      <a href="contactus.html" class="block text-lg hover:text-[#00E5FF] transition">Contact Us</a>
-      <a href="aboutus.html" class="block text-lg hover:text-[#00E5FF] transition">About Us</a>
-      <a href="signin.html" class="block text-lg hover:text-[#00E5FF] transition">Sign In</a>
-      <a href="createaccount.html" class="block text-lg hover:text-[#00E5FF] transition">Create Account</a>
-    </nav>
-  </div>
-
-  <!-- Main Content -->
-  <div class="md:ml-64">
-    <!-- Hero Section -->
-    <section class="hero-bg min-h-screen flex items-center justify-center text-center p-6">
-      <div class="fade-in">
-        <h1 class="text-5xl md:text-7xl font-bold text-white font-orbitron mb-4">Gaming Odyssey</h1>
-        <p class="text-xl md:text-2xl text-[#E0E0E0] mb-8">Where Gaming Meets Glory.</p>
-        <div class="space-x-4">
-          <a href="createaccount.html" class="inline-block bg-[#00E5FF] text-[#0f0f1a] font-bold py-3 px-6 rounded neon-glow">Join Now</a>
-          <a href="tournaments.html" class="inline-block bg-[#D500F9] text-white font-bold py-3 px-6 rounded neon-glow">View Tournaments</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Slideshow Section -->
-    <section class="py-16 px-6">
-      <div class="slideshow-container">
-        <div class="slides-wrapper">
-          <!-- Slide 1: Recent Products -->
-          <div class="slide flex items-center justify-center md:flex-row flex-col gap-8 active">
-            <img src="https://via.placeholder.com/600x400" alt="Recent Products" class="w-full md:w-1/2 h-64 object-cover rounded-lg neon-border neon-glow">
-            <div class="slide-content text-center md:text-left">
-              <h3 class="text-3xl font-bold text-white font-orbitron mb-4">Discover Our Latest Gaming Gear</h3>
-              <p class="text-lg text-[#E0E0E0] mb-6">Explore the newest controllers, keyboards, and headsets designed for ultimate performance.</p>
-              <a href="store.html" class="inline-block submit-btn">Shop Now</a>
-            </div>
-          </div>
-          <!-- Slide 2: Minecraft Server -->
-          <div class="slide flex items-center justify-center md:flex-row flex-col gap-8">
-            <img src="https://via.placeholder.com/600x400" alt="Minecraft Server" class="w-full md:w-1/2 h-64 object-cover rounded-lg neon-border neon-glow">
-            <div class="slide-content text-center md:text-left">
-              <h3 class="text-3xl font-bold text-white font-orbitron mb-4">Join Our Minecraft Server</h3>
-              <p class="text-lg text-[#E0E0E0] mb-6">Dive into epic adventures on our server at <code>play.gamingodyssey.in</code>. Build, battle, and connect!</p>
-              <a href="http://play.gamingodyssey.in" class="inline-block submit-btn">Join Server</a>
-            </div>
-          </div>
-          <!-- Slide 3: Server Ranks -->
-          <div class="slide flex items-center justify-center md:flex-row flex-col gap-8">
-            <img src="https://via.placeholder.com/600x400" alt="Server Ranks" class="w-full md:w-1/2 h-64 object-cover rounded-lg neon-border neon-glow">
-            <div class="slide-content text-center md:text-left">
-              <h3 class="text-3xl font-bold text-white font-orbitron mb-4">Unlock Exclusive Server Ranks</h3>
-              <p class="text-lg text-[#E0E0E0] mb-6">Earn ranks like Legend, Hero, and Elite with unique perks. Level up your Minecraft experience!</p>
-              <a href="#" class="inline-block submit-btn">Learn More</a>
-            </div>
-          </div>
-          <!-- Slide 4: Gaming Odyssey Store -->
-          <div class="slide flex items-center justify-center md:flex-row flex-col gap-8">
-            <img src="https://via.placeholder.com/600x400" alt="Gaming Odyssey Store" class="w-full md:w-1/2 h-64 object-cover rounded-lg neon-border neon-glow">
-            <div class="slide-content text-center md:text-left">
-              <h3 class="text-3xl font-bold text-white font-orbitron mb-4">Shop at Gaming Odyssey Store</h3>
-              <p class="text-lg text-[#E0E0E0] mb-6">From RGB peripherals to esports apparel, find everything you need to dominate.</p>
-              <a href="store.html" class="inline-block submit-btn">Visit Store</a>
-            </div>
-          </div>
-          <!-- Slide 5: Custom PC Building -->
-          <div class="slide flex items-center justify-center md:flex-row flex-col gap-8">
-            <img src="https://via.placeholder.com/600x400" alt="Custom PC Building" class="w-full md:w-1/2 h-64 object-cover rounded-lg neon-border neon-glow">
-            <div class="slide-content text-center md:text-left">
-              <h3 class="text-3xl font-bold text-white font-orbitron mb-4">Build Your Dream Gaming PC</h3>
-              <p class="text-lg text-[#E0E0E0] mb-6">Customize your rig with our expert PC building service. Power up your gameplay!</p>
-              <a href="#" class="inline-block submit-btn">Start Building</a>
-            </div>
-          </div>
-        </div>
-        <!-- Navigation Arrows -->
-        <div class="arrow prev">
-          <svg class="w-6 h-6 text-[#0f0f1a]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-        </div>
-        <div class="arrow next">
-          <svg class="w-6 h-6 text-[#0f0f1a]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-        </div>
-        <!-- Dots -->
-        <div class="dots">
-          <span class="dot active"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-        </div>
-      </div>
-    </section>
-
-    <!-- Featured Products Section -->
-    <section class="py-16 px-6">
-      <h2 class="text-4xl font-bold text-white font-orbitron text-center mb-12">Featured Gaming Gear</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
-        <div class="bg-[#0f0f1a] p-6 rounded-lg neon-border neon-glow fade-in">
-          <img src="https://via.placeholder.com/200" alt="Product" class="w-full h-48 object-cover rounded mb-4">
-          <h3 class="text-xl font-bold text-white">Neon Controller</h3>
-          <p class="text-[#E0E0E0] mb-4">$99.99</p>
-          <a href="store.html" class="block text-center bg-[#00E5FF] text-[#0f0f1a] font-bold py-2 rounded neon-glow">Shop Now</a>
-        </div>
-        <div class="bg-[#0f0f1a] p-6 rounded-lg neon-border neon-glow fade-in">
-          <img src="https://via.placeholder.com/200" alt="Product" class="w-full h-48 object-cover rounded mb-4">
-          <h3 class="text-xl font-bold text-white">RGB Keyboard</h3>
-          <p class="text-[#E0E0E0] mb-4">$129.99</p>
-          <a href="store.html" class="block text-center bg-[#00E5FF] text-[#0f0f1a] font-bold py-2 rounded neon-glow">Shop Now</a>
-        </div>
-        <div class="bg-[#0f0f1a] p-6 rounded-lg neon-border neon-glow fade-in">
-          <img src="https://via.placeholder.com/200" alt="Product" class="w-full h-48 object-cover rounded mb-4">
-          <h3 class="text-xl font-bold text-white">Gaming Mouse</h3>
-          <p class="text-[#E0E0E0] mb-4">$79.99</p>
-          <a href="store.html" class="block text-center bg-[#00E5FF] text-[#0f0f1a] font-bold py-2 rounded neon-glow">Shop Now</a>
-        </div>
-        <div class="bg-[#0f0f1a] p-6 rounded-lg neon-border neon-glow fade-in">
-          <img src="https://via.placeholder.com/200" alt="Product" class="w-full h-48 object-cover rounded mb-4">
-          <h3 class="text-xl font-bold text-white">Headset Pro</h3>
-          <p class="text-[#E0E0E0] mb-4">$149.99</p>
-          <a href="store.html" class="block text-center bg-[#00E5FF] text-[#0f0f1a] font-bold py-2 rounded neon-glow">Shop Now</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Upcoming Tournaments Section -->
-    <section class="py-16 px-6 bg-[#0f0f1a]">
-      <h2 class="text-4xl font-bold text-white font-orbitron text-center mb-12">Upcoming Tournaments</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-        <div class="bg-[#1a1a2e] p-6 rounded-lg neon-border neon-glow fade-in">
-          <h3 class="text-xl font-bold text-white">Cyber Clash 2025</h3>
-          <p class="text-[#E0E0E0] mb-2">Game: Valorant</p>
-          <p class="text-[#E0E0E0] mb-2">Date: May 15, 2025</p>
-          <p class="text-[#E0E0E0] mb-4">Prize: $10,000</p>
-          <a href="tournaments.html" class="block text-center bg-[#D500F9] text-white font-bold py-2 rounded neon-glow">Register</a>
-        </div>
-        <div class="bg-[#1a1a2e] p-6 rounded-lg neon-border neon-glow fade-in">
-          <h3 class="text-xl font-bold text-white">Neon Strike</h3>
-          <p class="text-[#E0E0E0] mb-2">Game: Overwatch</p>
-          <p class="text-[#E0E0E0] mb-2">Date: June 10, 2025</p>
-          <p class="text-[#E0E0E0] mb-4">Prize: $15,000</p>
-          <a href="tournaments.html" class="block text-center bg-[#D500F9] text-white font-bold py-2 rounded neon-glow">Register</a>
-        </div>
-        <div class="bg-[#1a1a2e] p-6 rounded-lg neon-border neon-glow fade-in">
-          <h3 class="text-xl font-bold text-white">Odyssey League</h3>
-          <p class="text-[#E0E0E0] mb-2">Game: League of Legends</p>
-          <p class="text-[#E0E0E0] mb-2">Date: July 5, 2025</p>
-          <p class="text-[#E0E0E0] mb-4">Prize: $20,000</p>
-          <a href="tournaments.html" class="block text-center bg-[#D500F9] text-white font-bold py-2 rounded neon-glow">Register</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- About Us Section -->
-    <section class="py-16 px-6 text-center">
-      <h2 class="text-4xl font-bold text-white font-orbitron mb-8">About Gaming Odyssey</h2>
-      <div class="max-w-2xl mx-auto fade-in">
-        <p class="text-lg text-[#E0E0E0] mb-6">Gaming Odyssey is your gateway to competitive gaming. From thrilling tournaments to top-tier gaming gear, we bring the future of esports directly to you. Join a community of passionate gamers and level up your experience!</p>
-        <svg class="w-16 h-16 mx-auto text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-      </div>
-    </section>
-
-    <!-- Contact Us Section -->
-    <section class="py-16 px-6 bg-[#0f0f1a]">
-      <h2 class="text-4xl font-bold text-white font-orbitron text-center mb-12">Contact Us</h2>
-      <div class="max-w-lg mx-auto bg-[#1a1a2e] p-8 rounded-lg neon-border fade-in">
-        <form id="contact-form">
-          <div class="mb-4">
-            <label for="name" class="block text-[#E0E0E0] mb-2">Name</label>
-            <input type="text" id="name" name="name" required placeholder="Your name" />
-            <p id="name-error" class="error hidden">Please enter your name</p>
-          </div>
-          <div class="mb-4">
-            <label for="email" class="block text-[#E0E0E0] mb-2">Email</label>
-            <input type="email" id="email" name="email" required placeholder="Your email" />
-            <p id="email-error" class="error hidden">Please enter a valid email</p>
-          </div>
-          <div class="mb-4">
-            <label for="subject" class="block text-[#E0E0E0] mb-2">Subject</label>
-            <input type="text" id="subject" name="subject" required placeholder="Subject" />
-            <p id="subject-error" class="error hidden">Please enter a subject</p>
-          </div>
-          <div class="mb-4">
-            <label for="message" class="block text-[#E0E0E0] mb-2">Message</label>
-            <textarea id="message" name="message" rows="5" required placeholder="Your message"></textarea>
-            <p id="message-error" class="error hidden">Please enter a message</p>
-          </div>
-          <div class="text-center">
-            <button type="submit" class="submit-btn">Send Message</button>
-            <p id="form-status" class="mt-4"></p>
-          </div>
-        </form>
-      </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-[#0f0f1a] py-12 px-6">
-      <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div>
-          <h3 class="text-xl font-bold text-white font-orbitron mb-4">Contact</h3>
-          <p class="text-[#E0E0E0]">📧 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="ff9d8a8c96919a8c8c989e92969198909b868c8c9a86bf98929e9693d19c9092">[email&#160;protected]</a></p>
-          <p class="text-[#E0E0E0]">📞 6290994382</p>
-        </div>
-        <div>
-          <h3 class="text-xl font-bold text-white font-orbitron mb-4">Useful Links</h3>
-          <ul class="space-y-2">
-            <li><a href="index.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Home</a></li>
-            <li><a href="store.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Store</a></li>
-            <li><a href="tournaments.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Tournaments</a></li>
-            <li><a href="trackorder.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Track Order</a></li>
-            <li><a href="contactus.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Contact Us</a></li>
-            <li><a href="aboutus.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">About Us</a></li>
-          </ul>
-        </div>
-        <div>
-          <h3 class="text-xl font-bold text-white font-orbitron mb-4">Follow Us</h3>
-          <div class="flex space-x-4">
-            <a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">
-              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
-            </a>
-            <a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">
-              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
-            </a>
-            <a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">
-              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
-            </a>
-          </div>
-        </div>
-      </div>
-      <p class="text-center text-[#E0E0E0] mt-8">© 2025 Gaming Odyssey. All rights reserved.</p>
-    </footer>
-  </div>
-
   <!-- EmailJS SDK -->
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <script>
     // Initialize EmailJS
     emailjs.init('__S5AyIeoL526kGwQ');
+
+    // Video Overlay Logic
+    const videoOverlay = document.getElementById('video-overlay');
+    const introVideo = document.getElementById('intro-video');
+    const skipVideoButton = document.getElementById('skip-video');
+    const mainContent = document.querySelector('.main-content');
+
+    function hideVideoOverlay() {
+      videoOverlay.classList.add('hidden');
+      mainContent.classList.add('visible');
+      introVideo.pause();
+      sessionStorage.setItem('videoPlayed', 'true');
+    }
+
+    // Check if video has already played in this session
+    if (sessionStorage.getItem('videoPlayed') !== 'true') {
+      introVideo.play().catch((error) => {
+        console.error('Video playback failed:', error);
+        hideVideoOverlay(); // Fallback if autoplay is blocked
+      });
+    } else {
+      videoOverlay.classList.add('hidden');
+      mainContent.classList.add('visible');
+    }
+
+    // Hide overlay when video ends
+    introVideo.addEventListener('ended', hideVideoOverlay);
+
+    // Hide overlay when skip button is clicked
+    skipVideoButton.addEventListener('click', hideVideoOverlay);
 
     // Hamburger Menu Toggle
     const hamburger = document.getElementById('hamburger');
@@ -617,5 +698,5 @@
     // Update slideshow on window resize
     window.addEventListener('resize', updateSlides);
   </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'938dbd134e90dd25',t:'MTc0NjA4NjM1Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
