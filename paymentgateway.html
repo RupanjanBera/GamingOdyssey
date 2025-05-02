@@ -75,9 +75,9 @@
       <nav class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-6 text-lg">
         <a href="index.html" class="hover:text-[#00E5FF] transition">Home</a>
         <a href="store.html" class="text-[#00E5FF] font-bold">Store</a>
-        <a href="#" class="hover:text-[#00E5FF] transition">Tournaments</a>
+        <a href="tournaments.html" class="hover:text-[#00E5FF] transition">Tournaments</a>
         <a href="#" class="hover:text-[#00E5FF] transition">Track Order</a>
-        <a href="#" class="hover:text-[#00E5FF] transition">Contact Us</a>
+        <a href="contactus.html" class="hover:text-[#00E5FF] transition">Contact Us</a>
         <a href="aboutus.html" class="hover:text-[#00E5FF] transition">About Us</a>
         <a href="signin.html" class="hover:text-[#00E5FF] transition">Sign In</a>
         <a href="createaccount.html" class="hover:text-[#00E5FF] transition">Create Account</a>
@@ -100,24 +100,30 @@
               <span class="text-2xl">📱</span>
               <div>
                 <h3 class="text-xl font-bold text-white font-orbitron">UPI</h3>
-                <p class="text-[#E0E0E0]">Pay using your UPI ID or scan a QR code.</p>
+                <p class="text-[#E0E0E0]">Pay using your UPI app or enter your UPI ID.</p>
               </div>
             </label>
             <div id="upi-form" class="payment-form active mt-4">
-              <form action="/process-payment" method="POST" class="space-y-4">
-                <input type="hidden" name="orderId" value="ORDER123">
-                <input type="hidden" name="amount" value="XXXX.XX">
-                <input type="hidden" name="method" value="UPI">
-                <div>
-                  <label class="block text-[#E0E0E0] mb-2" for="upi-id">UPI ID (e.g., name@bank)</label>
-                  <input type="text" id="upi-id" name="upiId" class="w-full p-2 bg-[#0f0f1a] border border-[#00E5FF] rounded neon-border" placeholder="Enter UPI ID" required>
-                </div>
+              <div class="space-y-4">
                 <div class="text-center">
-                  <img src="https://via.placeholder.com/150?text=QR+Code" alt="UPI QR Code" class="mx-auto mb-4">
-                  <p class="text-[#E0E0E0] mb-4">Scan this QR code with your UPI app. Replace with your merchant QR code.</p>
+                  <h4 class="text-lg font-bold text-white font-orbitron mb-2">Scan to Pay</h4>
+                  <img id="upi-qr-code" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=rupanjanbera5-1@okicici&pn=Gaming Odyssey&am=0&cu=INR" alt="UPI QR Code" class="mx-auto mb-4">
+                  <p class="text-[#E0E0E0] mb-4">Scan this QR code with your UPI app to pay <span id="upi-qr-amount">$0.00</span>.</p>
                 </div>
-                <button type="submit" class="w-full bg-[#00E5FF] text-[#0f0f1a] font-bold py-2 rounded neon-glow">Pay Now</button>
-              </form>
+                <div class="border-t border-[#00E5FF] pt-4">
+                  <h4 class="text-lg font-bold text-white font-orbitron mb-2">Or Enter Your UPI ID</h4>
+                  <form action="thankyou.html" method="GET" class="space-y-4">
+                    <input type="hidden" name="orderId" id="upi-order-id">
+                    <input type="hidden" name="amount" id="upi-amount">
+                    <input type="hidden" name="method" value="UPI">
+                    <div>
+                      <label class="block text-[#E0E0E0] mb-2" for="upi-id">Your UPI ID (e.g., name@bank)</label>
+                      <input type="text" id="upi-id" name="upiId" class="w-full p-2 bg-[#0f0f1a] border border-[#00E5FF] rounded neon-border" placeholder="Enter UPI ID" required>
+                    </div>
+                    <button type="submit" class="w-full bg-[#00E5FF] text-[#0f0f1a] font-bold py-2 rounded neon-glow">Pay Now</button>
+                  </form>
+                </div>
+              </div>
             </div>
           </div>
           
@@ -131,9 +137,9 @@
               </div>
             </label>
             <div id="debit-form" class="payment-form mt-4">
-              <form action="/process-payment" method="POST" class="space-y-4">
-                <input type="hidden" name="orderId" value="ORDER123">
-                <input type="hidden" name="amount" value="XXXX.XX">
+              <form action="thankyou.html" method="GET" class="space-y-4">
+                <input type="hidden" name="orderId" id="debit-order-id">
+                <input type="hidden" name="amount" id="debit-amount">
                 <input type="hidden" name="method" value="Debit Card">
                 <div>
                   <label class="block text-[#E0E0E0] mb-2" for="debit-number">Card Number</label>
@@ -169,9 +175,9 @@
               </div>
             </label>
             <div id="credit-form" class="payment-form mt-4">
-              <form action="/process-payment" method="POST" class="space-y-4">
-                <input type="hidden" name="orderId" value="ORDER123">
-                <input type="hidden" name="amount" value="XXXX.XX">
+              <form action="thankyou.html" method="GET" class="space-y-4">
+                <input type="hidden" name="orderId" id="credit-order-id">
+                <input type="hidden" name="amount" id="credit-amount">
                 <input type="hidden" name="method" value="Credit Card">
                 <div>
                   <label class="block text-[#E0E0E0] mb-2" for="credit-number">Card Number</label>
@@ -196,96 +202,69 @@
               <p class="text-[#E0E0E0] mt-4">Note: Redirect to bank’s payment page in production.</p>
             </div>
           </div>
-          
+
           <div class="payment-card bg-[#0f0f1a] p-4 rounded-lg neon-border neon-glow cursor-pointer" data-target="netbanking">
             <label class="flex items-center space-x-3">
               <input type="radio" name="payment-method" value="netbanking" class="form-radio h-5 w-5 text-[#00E5FF] border-[#00E5FF]">
-              <span class="text-2xl">🌐</span>
+              <span class="text-2xl">🏦</span>
               <div>
-                <h3 class="text-xl font-bold text-white font-orbitron">Net Banking</h3>
-                <p class="text-[#E0E0E0]">Pay using your bank’s online portal.</p>
+                <h3 class="text-xl font-bold text-white font-orbitron">Netbanking</h3>
+                <p class="text-[#E0E0E0]">Pay using your online banking account.</p>
               </div>
             </label>
             <div id="netbanking-form" class="payment-form mt-4">
-              <form action="/process-payment" method="POST" class="space-y-4">
-                <input type="hidden" name="orderId" value="ORDER123">
-                <input type="hidden" name="amount" value="XXXX.XX">
-                <input type="hidden" name="method" value="Net Banking">
+              <form action="thankyou.html" method="GET" class="space-y-4">
+                <input type="hidden" name="orderId" id="netbanking-order-id">
+                <input type="hidden" name="amount" id="netbanking-amount">
+                <input type="hidden" name="method" value="Netbanking">
                 <div>
-                  <label class="block text-[#E0E0E0] mb-2" for="bank">Select Bank</label>
-                  <select id="bank" name="bank" class="w-full p-2 bg-[#0f0f1a] border border-[#00E5FF] rounded neon-border" required>
-                    <option value="">Select a bank</option>
-                    <option value="sbi">State Bank of India</option>
-                    <option value="hdfc">HDFC Bank</option>
-                    <option value="icici">ICICI Bank</option>
-                    <option value="axis">Axis Bank</option>
-                    <option value="kotak">Kotak Mahindra Bank</option>
+                  <label class="block text-[#E0E0E0] mb-2" for="bank-select">Select Bank</label>
+                  <select id="bank-select" name="bank" class="w-full p-2 bg-[#0f0f1a] border border-[#00E5FF] rounded neon-border" required>
+                    <option value="" disabled selected>Select your bank</option>
+                    <option value="SBI">State Bank of India (SBI)</option>
+                    <option value="HDFC">HDFC Bank</option>
+                    <option value="ICICI">ICICI Bank</option>
+                    <option value="Axis">Axis Bank</option>
+                    <option value="Other">Other</option>
                   </select>
                 </div>
-                <button type="submit" class="w-full bg-[#00E5FF] text-[#0f0f1a] font-bold py-2 rounded neon-glow">Proceed to Bank</button>
+                <button type="submit" class="w-full bg-[#00E5FF] text-[#0f0f1a] font-bold py-2 rounded neon-glow">Pay Now</button>
               </form>
-              <p class="text-[#E0E0E0] mt-4">Note: Redirect to bank’s login page in production.</p>
+              <p class="text-[#E0E0E0] mt-4">Note: You will be redirected to your bank’s login page.</p>
             </div>
           </div>
-          
-          <div class="payment-card bg-[#0f0f1a] p-4 rounded-lg neon-border neon-glow cursor-pointer" data-target="upiapps">
-            <label class="flex items-center space-x-3">
-              <input type="radio" name="payment-method" value="upiapps" class="form-radio h-5 w-5 text-[#00E5FF] border-[#00E5FF]">
-              <span class="text-2xl">📱</span>
-              <div>
-                <h3 class="text-xl font-bold text-white font-orbitron">UPI Apps</h3>
-                <p class="text-[#E0E0E0]">Pay using Google Pay, PhonePe, Paytm, or BHIM.</p>
-              </div>
-            </label>
-            <div id="upiapps-form" class="payment-form mt-4">
-              <div class="grid grid-cols-2 gap-4 mb-4">
-                <a href="upi://pay?pa=gamingodyssey@sbi&pn=Gaming%20Odyssey&am=XXXX.XX&cu=INR&tn=ORDER123" class="block bg-[#0f0f1a] text-[#E0E0E0] font-bold py-2 rounded neon-border neon-glow text-center">Google Pay</a>
-                <a href="upi://pay?pa=gamingodyssey@sbi&pn=Gaming%20Odyssey&am=XXXX.XX&cu=INR&tn=ORDER123" class="block bg-[#0f0f1a] text-[#E0E0E0] font-bold py-2 rounded neon-border neon-glow text-center">PhonePe</a>
-                <a href="upi://pay?pa=gamingodyssey@sbi&pn=Gaming%20Odyssey&am=XXXX.XX&cu=INR&tn=ORDER123" class="block bg-[#0f0f1a] text-[#E0E0E0] font-bold py-2 rounded neon-border neon-glow text-center">Paytm</a>
-                <a href="upi://pay?pa=gamingodyssey@sbi&pn=Gaming%20Odyssey&am=XXXX.XX&cu=INR&tn=ORDER123" class="block bg-[#0f0f1a] text-[#E0E0E0] font-bold py-2 rounded neon-border neon-glow text-center">BHIM</a>
-              </div>
-              <form action="/process-payment" method="POST" class="space-y-4">
-                <input type="hidden" name="orderId" value="ORDER123">
-                <input type="hidden" name="amount" value="XXXX.XX">
-                <input type="hidden" name="method" value="UPI Apps">
-                <button type="submit" class="w-full bg-[#00E5FF] text-[#0f0f1a] font-bold py-2 rounded neon-glow">Confirm Payment</button>
-              </form>
-              <p class="text-[#E0E0E0] mt-4">Note: Replace amount and order ID with dynamic values.</p>
-            </div>
-          </div>
-          
+
           <div class="payment-card bg-[#0f0f1a] p-4 rounded-lg neon-border neon-glow cursor-pointer" data-target="cod">
             <label class="flex items-center space-x-3">
               <input type="radio" name="payment-method" value="cod" class="form-radio h-5 w-5 text-[#00E5FF] border-[#00E5FF]">
-              <span class="text-2xl">💵</span>
+              <span class="text-2xl">🚚</span>
               <div>
                 <h3 class="text-xl font-bold text-white font-orbitron">Cash on Delivery</h3>
                 <p class="text-[#E0E0E0]">Pay when you receive your order.</p>
               </div>
             </label>
             <div id="cod-form" class="payment-form mt-4">
-              <p class="text-[#E0E0E0] mb-4">Please ensure you have the exact amount ready for delivery. Our agent will confirm the order upon receipt.</p>
-              <form action="/process-payment" method="POST" class="space-y-4">
-                <input type="hidden" name="orderId" value="ORDER123">
-                <input type="hidden" name="amount" value="XXXX.XX">
-                <input type="hidden" name="method" value="COD">
+              <form action="thankyou.html" method="GET" class="space-y-4">
+                <input type="hidden" name="orderId" id="cod-order-id">
+                <input type="hidden" name="amount" id="cod-amount">
+                <input type="hidden" name="method" value="Cash on Delivery">
+                <p class="text-[#E0E0E0] mb-4">Please have the exact amount of <span id="cod-amount-display">$0.00</span> ready upon delivery.</p>
                 <button type="submit" class="w-full bg-[#00E5FF] text-[#0f0f1a] font-bold py-2 rounded neon-glow">Confirm Order</button>
               </form>
             </div>
           </div>
         </div>
-        
-        <p class="text-[#E0E0E0] text-center mt-6">
-          Payments will be verified manually. Contact us at businessgamingodyssey@gmail.com for support.
-        </p>
       </div>
-      
+
       <!-- Order Summary -->
-      <div class="md:w-1/3 bg-[#0f0f1a] p-6 rounded-lg neon-border fade-in">
-        <h2 class="text-2xl font-bold text-white font-orbitron mb-4">Order Summary</h2>
-        <p class="text-[#E0E0E0] mb-2">Order ID: ORDER123</p>
-        <p class="text-[#E0E0E0] mb-4">Total: <span class="text-[#00E5FF]">₹X,XXX.XX</span></p>
-        <p class="text-[#E0E0E0] text-sm">Note: Replace with actual order details in production.</p>
+      <div class="flex-1 bg-[#0f0f1a] p-8 rounded-lg neon-border fade-in">
+        <h2 class="text-3xl font-bold text-white font-orbitron mb-6">Order Summary</h2>
+        <p class="text-[#E0E0E0] mb-4">Order ID: <span id="order-id">N/A</span></p>
+        <div id="order-items" class="space-y-4 mb-6"></div>
+        <div class="border-t border-[#00E5FF] pt-4">
+          <p class="text-2xl font-bold text-white font-orbitron">Total: <span id="order-total">$0.00</span></p>
+        </div>
+        <a href="cart.html" class="block mt-4 text-center bg-[#D500F9] text-white font-bold py-2 rounded neon-glow">Back to Cart</a>
       </div>
     </div>
   </section>
@@ -295,17 +274,17 @@
     <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
       <div>
         <h3 class="text-xl font-bold text-white font-orbitron mb-4">Contact</h3>
-        <p class="text-[#E0E0E0]">📧 businessgamingodyssey@gmail.com</p>
-        <p class="text-[#E0E0E0]">📞 6289119156</p>
+        <p class="text-[#E0E0E0]">📧 <a href="mailto:support@gamingodyssey.com">support@gamingodyssey.com</a></p>
+        <p class="text-[#E0E0E0]">📞 6290994382</p>
       </div>
       <div>
         <h3 class="text-xl font-bold text-white font-orbitron mb-4">Useful Links</h3>
         <ul class="space-y-2">
           <li><a href="index.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Home</a></li>
           <li><a href="store.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Store</a></li>
-          <li><a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Tournaments</a></li>
+          <li><a href="tournaments.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Tournaments</a></li>
           <li><a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Track Order</a></li>
-          <li><a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Contact Us</a></li>
+          <li><a href="contactus.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Contact Us</a></li>
           <li><a href="aboutus.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">About Us</a></li>
         </ul>
       </div>
@@ -328,7 +307,90 @@
   </footer>
 
   <script>
-    // Fade-in Animation
+    // Payment Method Toggle
+    const paymentCards = document.querySelectorAll('.payment-card');
+    paymentCards.forEach(card => {
+      card.addEventListener('click', () => {
+        paymentCards.forEach(c => {
+          c.classList.remove('selected');
+          c.querySelector('.payment-form').classList.remove('active');
+        });
+        card.classList.add('selected');
+        const targetForm = card.getAttribute('data-target');
+        document.getElementById(`${targetForm}-form`).classList.add('active');
+      });
+    });
+
+    // Load Order Details
+    const orderItemsContainer = document.getElementById('order-items');
+    const orderIdElement = document.getElementById('order-id');
+    const orderTotalElement = document.getElementById('order-total');
+    const upiOrderId = document.getElementById('upi-order-id');
+    const upiAmount = document.getElementById('upi-amount');
+    const upiQrAmount = document.getElementById('upi-qr-amount');
+    const debitOrderId = document.getElementById('debit-order-id');
+    const debitAmount = document.getElementById('debit-amount');
+    const creditOrderId = document.getElementById('credit-order-id');
+    const creditAmount = document.getElementById('credit-amount');
+    const netbankingOrderId = document.getElementById('netbanking-order-id');
+    const netbankingAmount = document.getElementById('netbanking-amount');
+    const codOrderId = document.getElementById('cod-order-id');
+    const codAmount = document.getElementById('cod-amount');
+    const codAmountDisplay = document.getElementById('cod-amount-display');
+
+    // Load order from localStorage
+    const order = JSON.parse(localStorage.getItem('order')) || { orderId: 'N/A', total: 0, items: [] };
+
+    // Update order details
+    orderIdElement.textContent = order.orderId;
+    orderTotalElement.textContent = `$${order.total.toFixed(2)}`;
+    upiQrAmount.textContent = `$${order.total.toFixed(2)}`;
+    codAmountDisplay.textContent = `$${order.total.toFixed(2)}`;
+
+    // Update form hidden inputs
+    upiOrderId.value = order.orderId;
+    upiAmount.value = order.total.toFixed(2);
+    debitOrderId.value = order.orderId;
+    debitAmount.value = order.total.toFixed(2);
+    creditOrderId.value = order.orderId;
+    creditAmount.value = order.total.toFixed(2);
+    netbankingOrderId.value = order.orderId;
+    netbankingAmount.value = order.total.toFixed(2);
+    codOrderId.value = order.orderId;
+    codAmount.value = order.total.toFixed(2);
+
+    // Update UPI QR code with amount
+    const qrCodeImage = document.getElementById('upi-qr-code');
+    const totalAmount = order.total.toFixed(2);
+    qrCodeImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=rupanjanbera5-1@okicici&pn=Gaming Odyssey&am=${totalAmount}&cu=INR`;
+
+    // Render order items
+    if (order.items.length === 0) {
+      orderItemsContainer.innerHTML = '<p class="text-[#E0E0E0]">No items in your order.</p>';
+    } else {
+      order.items.forEach(item => {
+        const itemElement = document.createElement('div');
+        itemElement.className = 'flex justify-between items-center';
+        itemElement.innerHTML = `
+          <div>
+            <h3 class="text-lg font-bold text-white">${item.name}</h3>
+            <p class="text-[#E0E0E0]">$${item.price.toFixed(2)} x ${item.quantity}</p>
+          </div>
+          <p class="text-[#E0E0E0] font-bold">$${(item.price * item.quantity).toFixed(2)}</p>
+        `;
+        orderItemsContainer.appendChild(itemElement);
+      });
+    }
+
+    // Clear cart after payment
+    document.querySelectorAll('form').forEach(form => {
+      form.addEventListener('submit', () => {
+        localStorage.removeItem('cart');
+        localStorage.removeItem('order');
+      });
+    });
+
+    // Fade-in Animation on Scroll
     const fadeIns = document.querySelectorAll('.fade-in');
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -338,27 +400,6 @@
       });
     }, { threshold: 0.1 });
     fadeIns.forEach(element => observer.observe(element));
-
-    // Payment Card Selection
-    const cards = document.querySelectorAll('.payment-card');
-    const forms = document.querySelectorAll('.payment-form');
-    
-    cards.forEach(card => {
-      card.addEventListener('click', () => {
-        // Remove selected styles
-        cards.forEach(c => {
-          c.classList.remove('selected');
-          c.querySelector('input[type="radio"]').checked = false;
-        });
-        forms.forEach(f => f.classList.remove('active'));
-        
-        // Add selected styles
-        card.classList.add('selected');
-        card.querySelector('input[type="radio"]').checked = true;
-        const form = card.querySelector('.payment-form');
-        if (form) form.classList.add('active');
-      });
-    });
   </script>
 </body>
 </html>
