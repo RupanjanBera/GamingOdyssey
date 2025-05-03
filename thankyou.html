@@ -80,12 +80,12 @@
         Your gaming adventure awaits! We're thrilled to have you on board with <span class="text-[#00B7D4]">Gaming Odyssey</span>. Your order has been successfully placed and is now being processed.
       </p>
       <div class="mb-6">
-        <p class="text-[#E0E0E0] mb-2">Order ID: <span id="orderId" class="text-[#00B7D4]">ORDER123</span></p>
-        <p class="text-[#E0E0E0] mb-2">Total: <span id="amount" class="text-[#00B7D4]">$1.00</span></p>
-        <p class="text-[#E0E0E0] mb-4">Payment Method: <span id="paymentMethod" class="text-[#00B7D4]">UPI</span></p>
+        <p class="text-[#E0E0E0] mb-2">Order ID: <span id="orderId" class="text-[#00B7D4]">Not Available</span></p>
+        <p class="text-[#E0E0E0] mb-2">Total: <span id="amount" class="text-[#00B7D4]">$0.00</span></p>
+        <p class="text-[#E0E0E0] mb-4">Payment Method: <span id="paymentMethod" class="text-[#00B7D4]">Not Specified</span></p>
         <div class="text-left border-t border-[#00B7D4] pt-4">
           <h3 class="text-xl font-bold text-white font-orbitron mb-2">Shipping Address</h3>
-          <p id="shipping-address-name" class="text-[#E0E0E0]"></p>
+          <p id="shipping-address-name" class="text-[#E0E0E0]">Not Provided</p>
           <p id="shipping-address-line1" class="text-[#E0E0E0]"></p>
           <p id="shipping-address-line2" class="text-[#E0E0E0]"></p>
           <p id="shipping-address-city-state-zip" class="text-[#E0E0E0]"></p>
@@ -119,4 +119,89 @@
           <li><a href="index.html" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">Home</a></li>
           <li><a href="store.html" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">Store</a></li>
           <li><a href="tournaments.html" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">Tournaments</a></li>
-          <li
+          <li><a href="#" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">Track Order</a></li>
+          <li><a href="contactus.html" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">Contact Us</a></li>
+          <li><a href="aboutus.html" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">About Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-xl font-bold text-white font-orbitron mb-4">Follow Us</h3>
+        <div class="flex space-x-4">
+          <a href="#" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
+          </a>
+          <a href="#" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
+          </a>
+          <a href="#" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <p class="text-center text-[#E0E0E0] mt-8">© 2025 Gaming Odyssey. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Get URL query parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const orderId = urlParams.get('orderId') || 'Not Available';
+    const amount = urlParams.get('amount') || '0.00';
+    const paymentMethod = urlParams.get('method') || 'Not Specified';
+
+    // Update order details
+    document.getElementById('orderId').textContent = orderId;
+    document.getElementById('amount').textContent = `$${parseFloat(amount).toFixed(2)}`;
+    document.getElementById('paymentMethod').textContent = paymentMethod;
+
+    // Show payment-specific messages
+    const upiMessage = document.getElementById('upiMessage');
+    const codMessage = document.getElementById('codMessage');
+    const defaultMessage = document.getElementById('defaultMessage');
+
+    if (paymentMethod === 'UPI') {
+      upiMessage.classList.remove('hidden');
+      defaultMessage.classList.add('hidden');
+    } else if (paymentMethod === 'Cash on Delivery') {
+      codMessage.classList.remove('hidden');
+      defaultMessage.classList.add('hidden');
+    }
+
+    // Load and display shipping address
+    const shippingAddress = JSON.parse(localStorage.getItem('finalShippingAddress')) || {};
+    console.log('Shipping Address from localStorage:', shippingAddress); // Debug log
+
+    const nameElement = document.getElementById('shipping-address-name');
+    const line1Element = document.getElementById('shipping-address-line1');
+    const line2Element = document.getElementById('shipping-address-line2');
+    const cityStateZipElement = document.getElementById('shipping-address-city-state-zip');
+    const countryElement = document.getElementById('shipping-address-country');
+    const phoneElement = document.getElementById('shipping-address-phone');
+
+    nameElement.textContent = shippingAddress.name || 'Not Provided';
+    line1Element.textContent = shippingAddress.addressLine1 || '';
+    line2Element.textContent = shippingAddress.addressLine2 || '';
+    cityStateZipElement.textContent = `${shippingAddress.city || ''}${shippingAddress.city && shippingAddress.state ? ', ' : ''}${shippingAddress.state || ''}${shippingAddress.state && shippingAddress.zip ? ' ' : ''}${shippingAddress.zip || ''}`.trim() || 'Not Provided';
+    countryElement.textContent = shippingAddress.country || '';
+    phoneElement.textContent = shippingAddress.phone || '';
+
+    // Hide empty fields
+    if (!line1Element.textContent) line1Element.classList.add('hidden');
+    if (!line2Element.textContent) line2Element.classList.add('hidden');
+    if (!cityStateZipElement.textContent || cityStateZipElement.textContent === 'Not Provided') cityStateZipElement.classList.add('hidden');
+    if (!countryElement.textContent) countryElement.classList.add('hidden');
+    if (!phoneElement.textContent) phoneElement.classList.add('hidden');
+
+    // Fade-in Animation on Scroll
+    const fadeIns = document.querySelectorAll('.fade-in');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+    fadeIns.forEach(element => observer.observe(element));
+  </script>
+</body>
+</html>
