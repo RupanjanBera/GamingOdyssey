@@ -161,7 +161,6 @@
       margin: 0;
       color: #E0E0E0;
     }
-    /* Rich Text Editor Styles */
     .editor-toolbar {
       display: flex;
       flex-wrap: wrap;
@@ -205,9 +204,27 @@
       outline: none;
       box-shadow: 0 0 15px #00E5FF;
     }
+    #description-editor:empty:before {
+      content: attr(data-placeholder);
+      color: #999;
+    }
     #description-editor ul {
       list-style-type: disc;
       margin-left: 1.5rem;
+    }
+    .cart-icon-container {
+      position: relative;
+    }
+    .cart-count {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background-color: #D500F9;
+      color: #0f0f1a;
+      font-size: 0.75rem;
+      font-weight: bold;
+      border-radius: 50%;
+      padding: 2px 6px;
     }
   </style>
 </head>
@@ -266,12 +283,10 @@
   <div class="md:ml-64 py-16 px-6">
     <!-- Options Section -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-      <!-- Add a New Product Box -->
       <div class="option-box neon-border neon-glow">
         <h3>Add a New Product</h3>
         <button id="show-add-form-btn">Go to Form</button>
       </div>
-      <!-- Show Current Products Box -->
       <div class="option-box neon-border neon-glow">
         <h3>Show Current Products</h3>
         <button id="show-products-btn">View Products</button>
@@ -323,7 +338,7 @@
             <option value="linear-gradient(135deg, #00E5FF 0%, #0f0f1a 50%, #1a1a2e 100%)">Cyan Fade</option>
           </select>
         </div>
-        <div id="description-editor" contenteditable="true" placeholder="Enter product description"></div>
+        <div id="description-editor" contenteditable="true" data-placeholder="Enter product description"></div>
       </div>
       <div>
         <label for="product-price">Price</label>
@@ -396,7 +411,7 @@
         name: "Logitech C920",
         price: 99.99,
         images: ["https://via.placeholder.com/200"],
-        description: "The Logitech C920 is a high-definition webcam ideal for streaming and video calls. It offers 108p video at 30fps, dual stereo microphones for clear audio, and automatic low-light correction. Compact and easy to use, it's a must-have for gamers and content creators looking to enhance their setup."
+        description: "The Logitech C920 is a high-definition webcam ideal for streaming and video calls. It offers 1080p video at 30fps, dual stereo microphones for clear audio, and automatic low-light correction. Compact and easy to use, it's a must-have for gamers and content creators looking to enhance their setup."
       }
     ];
 
@@ -418,25 +433,11 @@
     showProductsBtn.addEventListener('click', () => {
       productsSection.classList.add('visible');
       addFormSection.classList.remove('visible');
-      renderProducts(allProducts); // Render products when section is opened
+      renderProducts(allProducts);
     });
 
     // Rich Text Editor Functionality
     const descriptionEditor = document.getElementById('description-editor');
-
-    // Placeholder simulation for contenteditable
-    descriptionEditor.addEventListener('focus', () => {
-      if (descriptionEditor.innerHTML === '' || descriptionEditor.innerHTML === '<div><br></div>') {
-        descriptionEditor.innerHTML = '';
-      }
-    });
-
-    descriptionEditor.addEventListener('blur', () => {
-      if (descriptionEditor.innerHTML === '' || descriptionEditor.innerHTML === '<div><br></div>') {
-        descriptionEditor.innerHTML = '';
-        descriptionEditor.setAttribute('placeholder', 'Enter product description');
-      }
-    });
 
     function formatText(command) {
       document.execCommand(command, false, null);
@@ -452,7 +453,7 @@
     function changeFontSize() {
       const size = document.getElementById('font-size').value;
       if (size) {
-        document.execCommand('fontSize', false, '7'); // Use a large size as base
+        document.execCommand('fontSize', false, '7');
         const fontElements = descriptionEditor.querySelectorAll('font[size="7"]');
         fontElements.forEach(element => {
           element.removeAttribute('size');
@@ -464,11 +465,7 @@
 
     function applyGradient() {
       const gradient = document.getElementById('gradient-select').value;
-      if (gradient) {
-        descriptionEditor.style.background = gradient;
-      } else {
-        descriptionEditor.style.background = '#1a1a2e';
-      }
+      descriptionEditor.style.background = gradient || '#1a1a2e';
       descriptionEditor.focus();
     }
 
@@ -487,7 +484,6 @@
       });
     }
 
-    // Attach remove listener to the initial input
     attachRemoveListener(imageInputsContainer.querySelector('.image-input-container'));
 
     addImageBtn.addEventListener('click', () => {
@@ -507,29 +503,19 @@
       const description = descriptionEditor.innerHTML.trim();
       const price = parseFloat(document.getElementById('product-price').value);
       const imageInputs = document.querySelectorAll('.image-input');
-      const images = Array.from(imageInputs).map(input => input.value.trim());
+      const images = Array.from(imageInputs).map(input => input.value.trim()).filter(url => url);
 
-      // Validation
-      if (!name || description === '' || description === '<div><br></div>' || isNaN(price) || price <= 0 || images.length === 0 || images.some(img => !img)) {
+      if (!name || description === '' || description === '<div><br></div>' || isNaN(price) || price <= 0 || images.length === 0) {
         alert('Please fill in all fields correctly. Price must be a positive number, and at least one valid image URL is required.');
         return;
       }
 
-      // Save all images with the product
-      const product = {
-        name,
-        description,
-        price,
-        images
-      };
-
-      // Save to localStorage and update allProducts
+      const product = { name, description, price, images };
       storedProducts.push(product);
       localStorage.setItem('products', JSON.stringify(storedProducts));
       allProducts = [...defaultProducts, ...storedProducts];
 
       alert('Product added successfully!');
-      // Clear form
       document.getElementById('product-name').value = '';
       descriptionEditor.innerHTML = '';
       document.getElementById('product-price').value = '';
@@ -561,13 +547,11 @@
         currentProductsContainer.appendChild(productItem);
       });
 
-      // Attach event listeners to remove buttons
       const removeButtons = document.querySelectorAll('.remove-product-btn');
       removeButtons.forEach(button => {
         button.addEventListener('click', (e) => {
           const index = parseInt(e.target.getAttribute('data-index'));
           const productToRemove = allProducts[index];
-          // Only allow removal of non-default products (those after the initial 6)
           if (index >= defaultProducts.length) {
             allProducts.splice(index, 1);
             const updatedStoredProducts = allProducts.slice(defaultProducts.length);
@@ -581,7 +565,6 @@
       });
     }
 
-    // Search Functionality for Products
     searchProductsInput.addEventListener('input', () => {
       const searchTerm = searchProductsInput.value.toLowerCase();
       const filteredProducts = allProducts.filter(product =>
@@ -590,7 +573,6 @@
       renderProducts(filteredProducts);
     });
 
-    // Initial state: both sections hidden
     addFormSection.classList.remove('visible');
     productsSection.classList.remove('visible');
   </script>
