@@ -83,6 +83,15 @@
         <p class="text-[#E0E0E0] mb-2">Order ID: <span id="orderId" class="text-[#00B7D4]">ORDER123</span></p>
         <p class="text-[#E0E0E0] mb-2">Total: <span id="amount" class="text-[#00B7D4]">$1.00</span></p>
         <p class="text-[#E0E0E0] mb-4">Payment Method: <span id="paymentMethod" class="text-[#00B7D4]">UPI</span></p>
+        <div class="text-left border-t border-[#00B7D4] pt-4">
+          <h3 class="text-xl font-bold text-white font-orbitron mb-2">Shipping Address</h3>
+          <p id="shipping-address-name" class="text-[#E0E0E0]"></p>
+          <p id="shipping-address-line1" class="text-[#E0E0E0]"></p>
+          <p id="shipping-address-line2" class="text-[#E0E0E0]"></p>
+          <p id="shipping-address-city-state-zip" class="text-[#E0E0E0]"></p>
+          <p id="shipping-address-country" class="text-[#E0E0E0]"></p>
+          <p id="shipping-address-phone" class="text-[#E0E0E0]"></p>
+        </div>
       </div>
       <div id="paymentMessage" class="text-[#E0E0E0] mb-6">
         <p id="upiMessage" class="hidden"><strong>UPI Payment</strong>: Your payment is pending manual verification. You'll receive a confirmation soon.</p>
@@ -110,60 +119,4 @@
           <li><a href="index.html" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">Home</a></li>
           <li><a href="store.html" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">Store</a></li>
           <li><a href="tournaments.html" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">Tournaments</a></li>
-          <li><a href="#" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">Track Order</a></li>
-          <li><a href="contactus.html" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">Contact Us</a></li>
-          <li><a href="aboutus.html" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">About Us</a></li>
-        </ul>
-      </div>
-      <div>
-        <h3 class="text-xl font-bold text-white font-orbitron mb-4">Follow Us</h3>
-        <div class="flex space-x-4">
-          <a href="#" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">
-            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
-          </a>
-          <a href="#" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">
-            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
-          </a>
-          <a href="#" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">
-            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
-          </a>
-        </div>
-      </div>
-    </div>
-    <p class="text-center text-[#E0E0E0] mt-8">© 2025 Gaming Odyssey. All rights reserved.</p>
-  </footer>
-
-  <script>
-    // Fade-in Animation
-    const fadeIns = document.querySelectorAll('.fade-in');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.1 });
-    fadeIns.forEach(element => observer.observe(element));
-
-    // Display order details
-    const urlParams = new URLSearchParams(window.location.search);
-    const orderId = urlParams.get('orderId') || 'ORDER123';
-    const amount = parseFloat(urlParams.get('amount')) || 1.00;
-    const paymentMethod = urlParams.get('method') || 'UPI';
-    const formattedAmount = amount.toFixed(2);
-
-    document.getElementById('orderId').textContent = orderId;
-    document.getElementById('amount').textContent = `$${formattedAmount}`;
-    document.getElementById('paymentMethod').textContent = paymentMethod;
-
-    // Show appropriate message based on payment method
-    const upiMessage = document.getElementById('upiMessage');
-    const codMessage = document.getElementById('codMessage');
-    if (paymentMethod === 'UPI' || paymentMethod === 'Netbanking' || paymentMethod === 'Debit Card' || paymentMethod === 'Credit Card') {
-      upiMessage.classList.remove('hidden');
-    } else if (paymentMethod === 'Cash on Delivery') {
-      codMessage.classList.remove('hidden');
-    }
-  </script>
-</body>
-</html>
+          <li
