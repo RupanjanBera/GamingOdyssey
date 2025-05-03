@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gaming Odyssey - Add Product</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600&family=Calibri&family=Arial&family=Times+New+Roman&family=Comic+Sans+MS&family=Courier+New&family=Georgia&family=Helvetica&family=Impact&family=Tahoma&family=Trebuchet+MS&family=Verdana&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
@@ -88,7 +88,6 @@
       display: block;
     }
     .form-container input,
-    .form-container textarea,
     .products-container input {
       width: 100%;
       padding: 0.75rem;
@@ -98,16 +97,11 @@
       border-radius: 0.5rem;
       margin-bottom: 1rem;
       box-shadow: inset 0 0 10px #00E5FF;
-      resize: vertical;
     }
     .form-container input:focus,
-    .form-container textarea:focus,
     .products-container input:focus {
       outline: none;
       box-shadow: 0 0 15px #00E5FF;
-    }
-    .form-container .image-input {
-      margin-bottom: 0.5rem;
     }
     .form-container .image-input-container {
       margin-bottom: 1rem;
@@ -163,6 +157,54 @@
     .products-container .product-item p {
       margin: 0;
       color: #E0E0E0;
+    }
+    .editor-container {
+      background: #1a1a2e;
+      border: 1px solid #00E5FF;
+      border-radius: 0.5rem;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      box-shadow: inset 0 0 10px #00E5FF;
+    }
+    .editor-toolbar {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.5rem;
+    }
+    .editor-toolbar button,
+    .editor-toolbar select {
+      background: #00E5FF;
+      color: #0f0f1a;
+      padding: 0.3rem 0.8rem;
+      border-radius: 0.3rem;
+      font-family: 'Orbitron', sans-serif;
+      transition: all 0.3s ease;
+    }
+    .editor-toolbar button:hover,
+    .editor-toolbar select:hover {
+      background: #D500F9;
+      color: white;
+    }
+    #product-description {
+      min-height: 150px;
+      background: #1a1a2e;
+      color: #E0E0E0;
+      padding: 0.75rem;
+      border: 1px solid #00E5FF;
+      border-radius: 0.5rem;
+      outline: none;
+    }
+    #product-description:focus {
+      box-shadow: 0 0 15px #00E5FF;
+    }
+    .color-preview {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      margin-left: 5px;
+      border: 1px solid #E0E0E0;
+      vertical-align: middle;
     }
   </style>
 </head>
@@ -242,7 +284,150 @@
       </div>
       <div>
         <label for="product-description">Description</label>
-        <textarea id="product-description" placeholder="Enter product description" rows="4" required></textarea>
+        <div class="editor-container">
+          <div class="editor-toolbar">
+            <button onclick="formatText('bold')">Bold</button>
+            <button onclick="formatText('underline')">Underline</button>
+            <button onclick="formatText('italic')">Italic</button>
+            <select onchange="formatText('fontName', this.value)">
+              <option value="">Font</option>
+              <option value="Calibri">Calibri</option>
+              <option value="Arial">Arial</option>
+              <option value="Times New Roman">Times New Roman</option>
+              <option value="Comic Sans MS">Comic Sans MS</option>
+              <option value="Courier New">Courier New</option>
+              <option value="Georgia">Georgia</option>
+              <option value="Helvetica">Helvetica</option>
+              <option value="Impact">Impact</option>
+              <option value="Tahoma">Tahoma</option>
+              <option value="Trebuchet MS">Trebuchet MS</option>
+              <option value="Verdana">Verdana</option>
+            </select>
+            <select onchange="formatText('fontSize', this.value)">
+              <option value="">Font Size</option>
+              <option value="12px">12px</option>
+              <option value="14px">14px</option>
+              <option value="16px">16px</option>
+              <option value="18px">18px</option>
+              <option value="20px">20px</option>
+              <option value="24px">24px</option>
+              <option value="28px">28px</option>
+              <option value="32px">32px</option>
+            </select>
+            <select onchange="formatText('color', this.value)">
+              <option value="">Color</option>
+              <option value="#000000">Black <span class="color-preview" style="background: #000000;"></span></option>
+              <option value="#FFFFFF">White <span class="color-preview" style="background: #FFFFFF;"></span></option>
+              <option value="#FF0000">Red <span class="color-preview" style="background: #FF0000;"></span></option>
+              <option value="#00FF00">Green <span class="color-preview" style="background: #00FF00;"></span></option>
+              <option value="#0000FF">Blue <span class="color-preview" style="background: #0000FF;"></span></option>
+              <option value="#FFFF00">Yellow <span class="color-preview" style="background: #FFFF00;"></span></option>
+              <option value="#FF00FF">Magenta <span class="color-preview" style="background: #FF00FF;"></span></option>
+              <option value="#00FFFF">Cyan <span class="color-preview" style="background: #00FFFF;"></span></option>
+              <option value="#800000">Maroon <span class="color-preview" style="background: #800000;"></span></option>
+              <option value="#008000">Dark Green <span class="color-preview" style="background: #008000;"></span></option>
+              <option value="#000080">Navy <span class="color-preview" style="background: #000080;"></span></option>
+              <option value="#808000">Olive <span class="color-preview" style="background: #808000;"></span></option>
+              <option value="#800080">Purple <span class="color-preview" style="background: #800080;"></span></option>
+              <option value="#008080">Teal <span class="color-preview" style="background: #008080;"></span></option>
+              <option value="#C0C0C0">Silver <span class="color-preview" style="background: #C0C0C0;"></span></option>
+              <option value="#808080">Gray <span class="color-preview" style="background: #808080;"></span></option>
+              <option value="#FFA500">Orange <span class="color-preview" style="background: #FFA500;"></span></option>
+              <option value="#FFC0CB">Pink <span class="color-preview" style="background: #FFC0CB;"></span></option>
+              <option value="#FFD700">Gold <span class="color-preview" style="background: #FFD700;"></span></option>
+              <option value="#F0F8FF">Alice Blue <span class="color-preview" style="background: #F0F8FF;"></span></option>
+              <option value="#FAEBD7">Antique White <span class="color-preview" style="background: #FAEBD7;"></span></option>
+              <option value="#7FFFD4">Aquamarine <span class="color-preview" style="background: #7FFFD4;"></span></option>
+              <option value="#F0FFFF">Azure <span class="color-preview" style="background: #F0FFFF;"></span></option>
+              <option value="#F5F5DC">Beige <span class="color-preview" style="background: #F5F5DC;"></span></option>
+              <option value="#FFE4C4">Bisque <span class="color-preview" style="background: #FFE4C4;"></span></option>
+              <option value="#FFEBCD">Blanched Almond <span class="color-preview" style="background: #FFEBCD;"></span></option>
+              <option value="#8A2BE2">Blue Violet <span class="color-preview" style="background: #8A2BE2;"></span></option>
+              <option value="#A52A2A">Brown <span class="color-preview" style="background: #A52A2A;"></span></option>
+              <option value="#DEB887">Burlywood <span class="color-preview" style="background: #DEB887;"></span></option>
+              <option value="#5F9EA0">Cadet Blue <span class="color-preview" style="background: #5F9EA0;"></span></option>
+              <option value="#7FFF00">Chartreuse <span class="color-preview" style="background: #7FFF00;"></span></option>
+              <option value="#D2691E">Chocolate <span class="color-preview" style="background: #D2691E;"></span></option>
+              <option value="#FF7F50">Coral <span class="color-preview" style="background: #FF7F50;"></span></option>
+              <option value="#6495ED">Cornflower Blue <span class="color-preview" style="background: #6495ED;"></span></option>
+              <option value="#FFF8DC">Cornsilk <span class="color-preview" style="background: #FFF8DC;"></span></option>
+              <option value="#DC143C">Crimson <span class="color-preview" style="background: #DC143C;"></span></option>
+              <option value="#00CED1">Dark Cyan <span class="color-preview" style="background: #00CED1;"></span></option>
+              <option value="#B8860B">Dark Goldenrod <span class="color-preview" style="background: #B8860B;"></span></option>
+              <option value="#A9A9A9">Dark Gray <span class="color-preview" style="background: #A9A9A9;"></span></option>
+              <option value="#006400">Dark Green <span class="color-preview" style="background: #006400;"></span></option>
+              <option value="#BDB76B">Dark Khaki <span class="color-preview" style="background: #BDB76B;"></span></option>
+              <option value="#8B008B">Dark Magenta <span class="color-preview" style="background: #8B008B;"></span></option>
+              <option value="#556B2F">Dark Olive Green <span class="color-preview" style="background: #556B2F;"></span></option>
+              <option value="#FF8C00">Dark Orange <span class="color-preview" style="background: #FF8C00;"></span></option>
+              <option value="#9932CC">Dark Orchid <span class="color-preview" style="background: #9932CC;"></span></option>
+              <option value="#8B0000">Dark Red <span class="color-preview" style="background: #8B0000;"></span></option>
+              <option value="#E9967A">Dark Salmon <span class="color-preview" style="background: #E9967A;"></span></option>
+              <option value="#8FBC8F">Dark Sea Green <span class="color-preview" style="background: #8FBC8F;"></span></option>
+              <option value="#483D8B">Dark Slate Blue <span class="color-preview" style="background: #483D8B;"></span></option>
+              <option value="#2F4F4F">Dark Slate Gray <span class="color-preview" style="background: #2F4F4F;"></span></option>
+              <option value="#00B7EB">Dark Turquoise <span class="color-preview" style="background: #00B7EB;"></span></option>
+              <option value="#9400D3">Dark Violet <span class="color-preview" style="background: #9400D3;"></span></option>
+              <option value="#FF1493">Deep Pink <span class="color-preview" style="background: #FF1493;"></span></option>
+              <option value="#00BFFF">Deep Sky Blue <span class="color-preview" style="background: #00BFFF;"></span></option>
+              <option value="#696969">Dim Gray <span class="color-preview" style="background: #696969;"></span></option>
+              <option value="#1E90FF">Dodger Blue <span class="color-preview" style="background: #1E90FF;"></span></option>
+              <option value="#B22222">Firebrick <span class="color-preview" style="background: #B22222;"></span></option>
+              <option value="#FFFAF0">Floral White <span class="color-preview" style="background: #FFFAF0;"></span></option>
+              <option value="#228B22">Forest Green <span class="color-preview" style="background: #228B22;"></span></option>
+              <option value="#FF00FF">Fuchsia <span class="color-preview" style="background: #FF00FF;"></span></option>
+              <option value="#DCDCDC">Gainsboro <span class="color-preview" style="background: #DCDCDC;"></span></option>
+              <option value="#F8F8FF">Ghost White <span class="color-preview" style="background: #F8F8FF;"></span></option>
+              <option value="#FFD700">Gold <span class="color-preview" style="background: #FFD700;"></span></option>
+              <option value="#DAA520">Goldenrod <span class="color-preview" style="background: #DAA520;"></span></option>
+              <option value="#ADFF2F">Green Yellow <span class="color-preview" style="background: #ADFF2F;"></span></option>
+              <option value="#F0FFF0">Honeydew <span class="color-preview" style="background: #F0FFF0;"></span></option>
+              <option value="#FF69B4">Hot Pink <span class="color-preview" style="background: #FF69B4;"></span></option>
+              <option value="#CD5C5C">Indian Red <span class="color-preview" style="background: #CD5C5C;"></span></option>
+              <option value="#4B0082">Indigo <span class="color-preview" style="background: #4B0082;"></span></option>
+              <option value="#FFFFF0">Ivory <span class="color-preview" style="background: #FFFFF0;"></span></option>
+              <option value="#F0E68C">Khaki <span class="color-preview" style="background: #F0E68C;"></span></option>
+              <option value="#E6E6FA">Lavender <span class="color-preview" style="background: #E6E6FA;"></span></option>
+              <option value="#FFF0F5">Lavender Blush <span class="color-preview" style="background: #FFF0F5;"></span></option>
+              <option value="#7CFC00">Lawn Green <span class="color-preview" style="background: #7CFC00;"></span></option>
+              <option value="#FFFACD">Lemon Chiffon <span class="color-preview" style="background: #FFFACD;"></span></option>
+              <option value="#ADD8E6">Light Blue <span class="color-preview" style="background: #ADD8E6;"></span></option>
+              <option value="#F08080">Light Coral <span class="color-preview" style="background: #F08080;"></span></option>
+              <option value="#E0FFFF">Light Cyan <span class="color-preview" style="background: #E0FFFF;"></span></option>
+              <option value="#FAFAD2">Light Goldenrod Yellow <span class="color-preview" style="background: #FAFAD2;"></span></option>
+              <option value="#D3D3D3">Light Gray <span class="color-preview" style="background: #D3D3D3;"></span></option>
+              <option value="#90EE90">Light Green <span class="color-preview" style="background: #90EE90;"></span></option>
+              <option value="#FFB6C1">Light Pink <span class="color-preview" style="background: #FFB6C1;"></span></option>
+              <option value="#FFA07A">Light Salmon <span class="color-preview" style="background: #FFA07A;"></span></option>
+              <option value="#20B2AA">Light Sea Green <span class="color-preview" style="background: #20B2AA;"></span></option>
+              <option value="#87CEFA">Light Sky Blue <span class="color-preview" style="background: #87CEFA;"></span></option>
+              <option value="#778899">Light Slate Gray <span class="color-preview" style="background: #778899;"></span></option>
+              <option value="#B0C4DE">Light Steel Blue <span class="color-preview" style="background: #B0C4DE;"></span></option>
+              <option value="#FFFFE0">Light Yellow <span class="color-preview" style="background: #FFFFE0;"></span></option>
+              <option value="#32CD32">Lime Green <span class="color-preview" style="background: #32CD32;"></span></option>
+              <option value="#FAF0E6">Linen <span class="color-preview" style="background: #FAF0E6;"></span></option>
+              <option value="linear-gradient(to right, #FF0000, #FFFF00)">Red-Yellow Gradient <span class="color-preview" style="background: linear-gradient(to right, #FF0000, #FFFF00);"></span></option>
+              <option value="linear-gradient(to right, #00FF00, #0000FF)">Green-Blue Gradient <span class="color-preview" style="background: linear-gradient(to right, #00FF00, #0000FF);"></span></option>
+              <option value="linear-gradient(to right, #FF00FF, #00FFFF)">Magenta-Cyan Gradient <span class="color-preview" style="background: linear-gradient(to right, #FF00FF, #00FFFF);"></span></option>
+              <option value="linear-gradient(to right, #FFA500, #800080)">Orange-Purple Gradient <span class="color-preview" style="background: linear-gradient(to right, #FFA500, #800080);"></span></option>
+            </select>
+            <select onchange="formatText('rotate', this.value)">
+              <option value="">Orientation</option>
+              <option value="rotate(0deg)">Normal</option>
+              <option value="rotate(45deg)">45°</option>
+              <option value="rotate(90deg)">90°</option>
+              <option value="rotate(-45deg)">-45°</option>
+              <option value="rotate(-90deg)">-90°</option>
+            </select>
+            <select onchange="formatText('justify', this.value)">
+              <option value="">Align</option>
+              <option value="left">Left</option>
+              <option value="center">Center</option>
+              <option value="right">Right</option>
+            </select>
+          </div>
+          <div id="product-description" contenteditable="true" placeholder="Enter product description"></div>
+        </div>
       </div>
       <div>
         <label for="product-price">Price</label>
@@ -252,7 +437,12 @@
         <label>Images</label>
         <div id="image-inputs">
           <div class="image-input-container">
-            <input type="url" class="image-input" placeholder="Enter image URL" required>
+            <select class="image-type" onchange="toggleImageInput(this)">
+              <option value="url">URL</option>
+              <option value="file">Upload File</option>
+            </select>
+            <input type="url" class="image-input image-url" placeholder="Enter image URL" required>
+            <input type="file" class="image-input image-file" accept="image/*" style="display: none;">
             <button class="remove-btn">Remove</button>
           </div>
         </div>
@@ -279,7 +469,7 @@
     const cartCountSidebar = document.getElementById('cart-count-sidebar');
     cartCountSidebar.textContent = cart.reduce((total, item) => total + item.quantity, 0);
 
-    // Default products (same as in store.html)
+    // Default products
     const defaultProducts = [
       {
         name: "Razer DeathAdder V3",
@@ -337,12 +527,83 @@
     showProductsBtn.addEventListener('click', () => {
       productsSection.classList.add('visible');
       addFormSection.classList.remove('visible');
-      renderProducts(allProducts); // Render products when section is opened
+      renderProducts(allProducts);
     });
 
-    // Add Product Form Functionality
+    // Text Formatting Functionality
+    function formatText(command, value = null) {
+      const editor = document.getElementById('product-description');
+      const selection = window.getSelection();
+      
+      if (!selection.rangeCount) return;
+      
+      const range = selection.getRangeAt(0);
+      
+      if (command === 'rotate') {
+        const selectedText = selection.toString();
+        if (selectedText) {
+          const span = document.createElement('span');
+          span.style.display = 'inline-block';
+          span.style.transform = value;
+          span.textContent = selectedText;
+          range.deleteContents();
+          range.insertNode(span);
+          selection.removeAllRanges();
+        }
+      } else if (command === 'fontName' || command === 'fontSize') {
+        document.execCommand('styleWithCSS', false, true);
+        document.execCommand(command, false, value);
+      } else if (command === 'color') {
+        if (value.includes('linear-gradient')) {
+          const selectedText = selection.toString();
+          if (selectedText) {
+            const span = document.createElement('span');
+            span.style.background = value;
+            span.style.color = '#FFFFFF';
+            span.style.padding = '2px 5px';
+            span.textContent = selectedText;
+            range.deleteContents();
+            range.insertNode(span);
+            selection.removeAllRanges();
+          }
+        } else {
+          document.execCommand('styleWithCSS', false, true);
+          document.execCommand('foreColor', false, value);
+        }
+      } else if (command === 'justify') {
+        document.execCommand('styleWithCSS', false, true);
+        const commands = {
+          left: 'justifyLeft',
+          center: 'justifyCenter',
+          right: 'justifyRight'
+        };
+        document.execCommand(commands[value] || 'justifyLeft', false, null);
+      } else {
+        document.execCommand(command, false, null);
+      }
+      editor.focus();
+    }
+
+    // Image Input Functionality
     const imageInputsContainer = document.getElementById('image-inputs');
     const addImageBtn = document.querySelector('.add-image-btn');
+
+    function toggleImageInput(selectElement) {
+      const container = selectElement.closest('.image-input-container');
+      const urlInput = container.querySelector('.image-url');
+      const fileInput = container.querySelector('.image-file');
+      if (selectElement.value === 'url') {
+        urlInput.style.display = 'block';
+        fileInput.style.display = 'none';
+        urlInput.required = true;
+        fileInput.required = false;
+      } else {
+        urlInput.style.display = 'none';
+        fileInput.style.display = 'block';
+        urlInput.required = false;
+        fileInput.required = true;
+      }
+    }
 
     function attachRemoveListener(container) {
       const removeBtn = container.querySelector('.remove-btn');
@@ -362,24 +623,45 @@
       const newInputContainer = document.createElement('div');
       newInputContainer.className = 'image-input-container';
       newInputContainer.innerHTML = `
-        <input type="url" class="image-input" placeholder="Enter image URL" required>
+        <select class="image-type" onchange="toggleImageInput(this)">
+          <option value="url">URL</option>
+          <option value="file">Upload File</option>
+        </select>
+        <input type="url" class="image-input image-url" placeholder="Enter image URL" required>
+        <input type="file" class="image-input image-file" accept="image/*" style="display: none;">
         <button class="remove-btn">Remove</button>
       `;
       imageInputsContainer.appendChild(newInputContainer);
       attachRemoveListener(newInputContainer);
     });
 
+    // Add Product Form Functionality
     const submitBtn = document.querySelector('.submit-btn');
     submitBtn.addEventListener('click', () => {
       const name = document.getElementById('product-name').value.trim();
-      const description = document.getElementById('product-description').value.trim();
+      const description = document.getElementById('product-description').innerHTML.trim();
       const price = parseFloat(document.getElementById('product-price').value);
-      const imageInputs = document.querySelectorAll('.image-input');
-      const images = Array.from(imageInputs).map(input => input.value.trim());
+      const imageContainers = document.querySelectorAll('.image-input-container');
+      const images = [];
+
+      imageContainers.forEach(container => {
+        const type = container.querySelector('.image-type').value;
+        if (type === 'url') {
+          const url = container.querySelector('.image-url').value.trim();
+          if (url) images.push(url);
+        } else {
+          const file = container.querySelector('.image-file').files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = () => images.push(reader.result);
+            reader.readAsDataURL(file);
+          }
+        }
+      });
 
       // Validation
-      if (!name || !description || isNaN(price) || price <= 0 || images.length === 0 || images.some(img => !img)) {
-        alert('Please fill in all fields correctly. Price must be a positive number, and at least one valid image URL is required.');
+      if (!name || !description || isNaN(price) || price <= 0 || images.length === 0) {
+        alert('Please fill in all fields correctly. Price must be a positive number, and at least one image is required.');
         return;
       }
 
@@ -399,11 +681,16 @@
       alert('Product added successfully!');
       // Clear form
       document.getElementById('product-name').value = '';
-      document.getElementById('product-description').value = '';
+      document.getElementById('product-description').innerHTML = '';
       document.getElementById('product-price').value = '';
       imageInputsContainer.innerHTML = `
         <div class="image-input-container">
-          <input type="url" class="image-input" placeholder="Enter image URL" required>
+          <select class="image-type" onchange="toggleImageInput(this)">
+            <option value="url">URL</option>
+            <option value="file">Upload File</option>
+          </select>
+          <input type="url" class="image-input image-url" placeholder="Enter image URL" required>
+          <input type="file" class="image-input image-file" accept="image/*" style="display: none;">
           <button class="remove-btn">Remove</button>
         </div>
       `;
@@ -432,7 +719,6 @@
         button.addEventListener('click', (e) => {
           const index = parseInt(e.target.getAttribute('data-index'));
           const productToRemove = allProducts[index];
-          // Only allow removal of non-default products (those after the initial 6)
           if (index >= defaultProducts.length) {
             allProducts.splice(index, 1);
             const updatedStoredProducts = allProducts.slice(defaultProducts.length);
