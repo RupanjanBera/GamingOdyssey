@@ -382,11 +382,15 @@
       });
     }
 
-    // Clear cart after payment
+    // Clear cart after payment and ensure shipping address is preserved
     document.querySelectorAll('form').forEach(form => {
       form.addEventListener('submit', () => {
+        // Preserve shipping address in localStorage
+        const shippingAddress = JSON.parse(localStorage.getItem('shippingAddress')) || {};
+        localStorage.setItem('finalShippingAddress', JSON.stringify(shippingAddress));
         localStorage.removeItem('cart');
         localStorage.removeItem('order');
+        localStorage.removeItem('shippingAddress');
       });
     });
 
