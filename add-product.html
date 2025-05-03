@@ -375,49 +375,8 @@
     const cartCountSidebar = document.getElementById('cart-count-sidebar');
     cartCountSidebar.textContent = cart.reduce((total, item) => total + item.quantity, 0);
 
-    // Default products (same as in store.html)
-    const defaultProducts = [
-      {
-        name: "Razer DeathAdder V3",
-        price: 79.99,
-        images: ["https://via.placeholder.com/200"],
-        description: "The Razer DeathAdder V3 is an ergonomic gaming mouse designed for precision and speed. Featuring a 30K DPI optical sensor, lightweight design at 59g, and Razer's Speedflex cable for minimal drag, it ensures seamless control in intense gaming sessions. Perfect for FPS gamers seeking accuracy and comfort."
-      },
-      {
-        name: "Logitech G Pro X",
-        price: 129.99,
-        images: ["https://via.placeholder.com/200"],
-        description: "The Logitech G Pro X is a mechanical keyboard built for esports professionals. It features swappable pro-grade switches, customizable RGB lighting, and a compact tenkeyless design for maximum desk space. With a durable aluminum frame and programmable keys, it's ideal for competitive gaming."
-      },
-      {
-        name: "Roccat Vulcan II",
-        price: 149.99,
-        images: ["https://via.placeholder.com/200"],
-        description: "The Roccat Vulcan II offers a stunning visual experience with its transparent switch housing and vibrant RGB lighting. Equipped with Titan II optical switches for ultra-fast response times, it combines style and performance. The aluminum top plate ensures durability, making it a top choice for gamers."
-      },
-      {
-        name: "ASUS ROG Swift",
-        price: 599.99,
-        images: ["https://via.placeholder.com/200"],
-        description: "The ASUS ROG Swift is a 27-inch 4K gaming monitor with a 144Hz refresh rate and 1ms response time. Featuring HDR10 and a wide color gamut, it delivers stunning visuals for immersive gaming. Adaptive-sync technology ensures smooth gameplay, perfect for competitive and casual gamers alike."
-      },
-      {
-        name: "Bose Companion 2",
-        price: 149.99,
-        images: ["https://via.placeholder.com/200"],
-        description: "The Bose Companion 2 speakers deliver rich, room-filling sound for your gaming setup. With TrueSpace stereo technology, they provide a wide soundstage and clear audio. Compact yet powerful, these speakers are perfect for gamers who want immersive sound without taking up much desk space."
-      },
-      {
-        name: "Logitech C920",
-        price: 99.99,
-        images: ["https://via.placeholder.com/200"],
-        description: "The Logitech C920 is a high-definition webcam ideal for streaming and video calls. It offers 1080p video at 30fps, dual stereo microphones for clear audio, and automatic low-light correction. Compact and easy to use, it's a must-have for gamers and content creators looking to enhance their setup."
-      }
-    ];
-
-    // Load all products (default + stored)
-    const storedProducts = JSON.parse(localStorage.getItem('products')) || [];
-    let allProducts = [...defaultProducts, ...storedProducts];
+    // Load all products from localStorage (no default products)
+    let allProducts = JSON.parse(localStorage.getItem('products')) || [];
 
     // Section toggle functionality
     const addFormSection = document.getElementById('add-form-section');
@@ -511,9 +470,8 @@
       }
 
       const product = { name, description, price, images };
-      storedProducts.push(product);
-      localStorage.setItem('products', JSON.stringify(storedProducts));
-      allProducts = [...defaultProducts, ...storedProducts];
+      allProducts.push(product);
+      localStorage.setItem('products', JSON.stringify(allProducts));
 
       alert('Product added successfully!');
       document.getElementById('product-name').value = '';
@@ -552,15 +510,10 @@
         button.addEventListener('click', (e) => {
           const index = parseInt(e.target.getAttribute('data-index'));
           const productToRemove = allProducts[index];
-          if (index >= defaultProducts.length) {
-            allProducts.splice(index, 1);
-            const updatedStoredProducts = allProducts.slice(defaultProducts.length);
-            localStorage.setItem('products', JSON.stringify(updatedStoredProducts));
-            renderProducts(allProducts);
-            alert(`${productToRemove.name} has been removed!`);
-          } else {
-            alert('Default products cannot be removed.');
-          }
+          allProducts.splice(index, 1);
+          localStorage.setItem('products', JSON.stringify(allProducts));
+          renderProducts(allProducts);
+          alert(`${productToRemove.name} has been removed!`);
         });
       });
     }
