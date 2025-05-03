@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gaming Odyssey - Add Product</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      background-color: #1a1a2e;
+      color: #E0E0E0;
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+    .neon-border {
+      border: 1px solid #00E5FF;
+      box-shadow: 0 0 10px #00E5FF, 0 0 20px #D500F9;
+    }
+    .neon-glow:hover {
+      box-shadow: 0 0 15px #00E5FF, 0 0 25px #D500F9;
+      transform: translateY(-5px);
+      transition: all 0.3s ease;
+    }
+    .sidebar {
+      background-color: #0f0f1a;
+      transition: all 0.3s ease;
+    }
+    .form-container {
+      background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #2a1a3e 100%);
+      border-radius: 1rem;
+      padding: 2rem;
+      max-width: 600px;
+      margin: 0 auto;
+      box-shadow: 0 0 30px #00E5FF, 0 0 50px #D500F9;
+    }
+    .form-container h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.5rem;
+      color: #00E5FF;
+      text-shadow: 0 0 10px #00E5FF;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .form-container label {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.25rem;
+      color: #00E5FF;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+    .form-container input,
+    .form-container textarea {
+      width: 100%;
+      padding: 0.75rem;
+      background: #1a1a2e;
+      color: #E0E0E0;
+      border: 1px solid #00E5FF;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+      box-shadow: inset 0 0 10px #00E5FF;
+      resize: vertical;
+    }
+    .form-container input:focus,
+    .form-container textarea:focus {
+      outline: none;
+      box-shadow: 0 0 15px #00E5FF;
+    }
+    .form-container .image-input {
+      margin-bottom: 0.5rem;
+    }
+    .form-container .image-input-container {
+      margin-bottom: 1rem;
+    }
+    .form-container .remove-btn {
+      background: #D500F9;
+      color: #0f0f1a;
+      padding: 0.3rem 0.8rem;
+      border-radius: 0.3rem;
+      margin-left: 0.5rem;
+      transition: all 0.3s ease;
+    }
+    .form-container .remove-btn:hover {
+      background: #00E5FF;
+      box-shadow: 0 0 10px #00E5FF;
+    }
+    .form-container .add-image-btn,
+    .form-container .submit-btn {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: bold;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+      display: block;
+      margin: 1rem auto;
+      text-align: center;
+    }
+    .form-container .add-image-btn {
+      background: #00E5FF;
+      color: #0f0f1a;
+    }
+    .form-container .submit-btn {
+      background: #D500F9;
+      color: white;
+    }
+    .form-container .add-image-btn:hover,
+    .form-container .submit-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 20px #00E5FF, 0 0 30px #D500F9;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar (Navigation Menu) -->
+  <div class="fixed top-0 left-0 h-full w-64 sidebar neon-border z-20 hidden md:block">
+    <div class="p-6">
+      <h1 class="text-2xl font-bold text-white font-orbitron">Gaming Odyssey</h1>
+      <nav class="mt-10 space-y-4">
+        <a href="index.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
+          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Home</span>
+        </a>
+        <a href="store.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
+          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Store</span>
+        </a>
+        <a href="tournaments.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
+          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Tournaments</span>
+        </a>
+        <a href="#" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
+          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Track Order</span>
+        </a>
+        <a href="contactus.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
+          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Contact Us</span>
+        </a>
+        <a href="aboutus.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
+          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>About Us</span>
+        </a>
+        <a href="signin.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
+          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Sign In</span>
+        </a>
+        <a href="createaccount.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
+          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Create Account</span>
+        </a>
+        <a href="cart.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition cart-icon-container">
+          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M0 1h3l2 11h10l2-9H5l-.5-2H0v1zm6 15a2 2 0 100 4 2 2 0 000-4zm9 0a2 2 0 100 4 2 2 0 000-4z"/></svg>
+          <span>Cart</span>
+          <span id="cart-count-sidebar" class="cart-count">0</span>
+        </a>
+        <a href="add-product.html" class="flex items-center space-x-2 text-lg text-[#00E5FF] font-bold">
+          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Add Product</span>
+        </a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="md:ml-64 py-16 px-6">
+    <div class="form-container">
+      <h2>Add New Product</h2>
+      <div>
+        <label for="product-name">Product Name</label>
+        <input type="text" id="product-name" placeholder="Enter product name" required>
+      </div>
+      <div>
+        <label for="product-description">Description</label>
+        <textarea id="product-description" placeholder="Enter product description" rows="4" required></textarea>
+      </div>
+      <div>
+        <label for="product-price">Price</label>
+        <input type="number" id="product-price" placeholder="Enter price" step="0.01" required>
+      </div>
+      <div>
+        <label>Images</label>
+        <div id="image-inputs">
+          <div class="image-input-container">
+            <input type="url" class="image-input" placeholder="Enter image URL" required>
+            <button class="remove-btn">Remove</button>
+          </div>
+        </div>
+        <button class="add-image-btn">Add Another Image</button>
+      </div>
+      <button class="submit-btn">Add Product</button>
+    </div>
+  </div>
+
+  <script>
+    // Load cart count for sidebar
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const cartCountSidebar = document.getElementById('cart-count-sidebar');
+    cartCountSidebar.textContent = cart.reduce((total, item) => total + item.quantity, 0);
+
+    // Dynamically add/remove image input fields
+    const imageInputsContainer = document.getElementById('image-inputs');
+    const addImageBtn = document.querySelector('.add-image-btn');
+
+    addImageBtn.addEventListener('click', () => {
+      const newInputContainer = document.createElement('div');
+      newInputContainer.className = 'image-input-container';
+      newInputContainer.innerHTML = `
+        <input type="url" class="image-input" placeholder="Enter image URL" required>
+        <button class="remove-btn">Remove</button>
+      `;
+      imageInputsContainer.appendChild(newInputContainer);
+
+      // Add event listener to the new remove button
+      newInputContainer.querySelector('.remove-btn').addEventListener('click', () => {
+        if (imageInputsContainer.children.length > 1) {
+          newInputContainer.remove();
+        } else {
+          alert('At least one image is required.');
+        }
+      });
+    });
+
+    // Remove image input functionality for the first input
+    imageInputsContainer.querySelector('.remove-btn').addEventListener('click', () => {
+      if (imageInputsContainer.children.length > 1) {
+        imageInputsContainer.children[0].remove();
+      } else {
+        alert('At least one image is required.');
+      }
+    });
+
+    // Handle form submission
+    const submitBtn = document.querySelector('.submit-btn');
+    submitBtn.addEventListener('click', () => {
+      const name = document.getElementById('product-name').value.trim();
+      const description = document.getElementById('product-description').value.trim();
+      const price = parseFloat(document.getElementById('product-price').value);
+      const imageInputs = document.querySelectorAll('.image-input');
+      const images = Array.from(imageInputs).map(input => input.value.trim());
+
+      // Validation
+      if (!name || !description || isNaN(price) || price <= 0 || images.length === 0 || images.some(img => !img)) {
+        alert('Please fill in all fields correctly. Price must be a positive number, and at least one valid image URL is required.');
+        return;
+      }
+
+      // Use the first image for display (you can enhance this later for multiple images)
+      const product = {
+        name,
+        description,
+        price,
+        image: images[0] // For now, using the first image
+      };
+
+      // Save to localStorage
+      const storedProducts = JSON.parse(localStorage.getItem('products')) || [];
+      storedProducts.push(product);
+      localStorage.setItem('products', JSON.stringify(storedProducts));
+
+      alert('Product added successfully!');
+      window.location.href = 'store.html';
+    });
+  </script>
+</body>
+</html>
