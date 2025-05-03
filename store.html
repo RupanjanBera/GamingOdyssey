@@ -62,13 +62,11 @@
       opacity: 1;
       transform: translateY(0);
     }
-    /* Ensure category menu is visible on desktop */
     @media (min-width: 768px) {
       .category-menu {
         transform: translateX(0);
       }
     }
-    /* Coming Soon Message Styling */
     #coming-soon {
       position: fixed;
       top: 50%;
@@ -84,7 +82,6 @@
       z-index: 50;
       text-align: center;
     }
-    /* Cart Icon Styling */
     .cart-icon-container {
       position: relative;
     }
@@ -99,7 +96,6 @@
       border-radius: 50%;
       padding: 2px 6px;
     }
-    /* Product Overlay Styling */
     #product-overlay {
       position: fixed;
       top: 0;
@@ -151,29 +147,44 @@
       box-shadow: 0 0 30px #00E5FF, 0 0 50px #D500F9;
     }
     @keyframes zoomIn {
-      0% {
-        transform: translate(-50%, -50%) scale(0.8);
-        opacity: 0;
-      }
-      100% {
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 1;
-      }
+      0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+      100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
     }
-    .product-detail .product-image-container {
+    .image-container {
+      position: relative;
       width: 100%;
-      height: 400px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      max-height: 400px;
       margin-bottom: 1.5rem;
     }
     .product-detail img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
+      width: 100%;
+      max-height: 400px;
+      object-fit: cover;
       border-radius: 0.5rem;
       box-shadow: 0 0 15px #00E5FF;
+    }
+    .arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #D500F9;
+      color: #0f0f1a;
+      padding: 0.5rem;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1.5rem;
+      z-index: 10;
+    }
+    .arrow:hover {
+      background: #00E5FF;
+      box-shadow: 0 0 10px #00E5FF;
+    }
+    .left-arrow {
+      left: 1rem;
+    }
+    .right-arrow {
+      right: 1rem;
     }
     .product-detail h3 {
       font-family: 'Orbitron', sans-serif;
@@ -202,7 +213,7 @@
       color: #00E5FF;
       margin-bottom: 0.5rem;
     }
-    .product-detail .description p {
+    .product-detail .description div {
       font-size: 1rem;
       color: #E0E0E0;
       line-height: 1.6;
@@ -235,19 +246,8 @@
       transform: translateY(-3px);
       box-shadow: 0 0 20px #00E5FF, 0 0 30px #D500F9;
     }
-    .product-card .product-image-container {
-      width: 100%;
-      height: 200px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 1rem;
-    }
     .product-card img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-      border-radius: 0.5rem;
+      transition: opacity 0.5s ease;
     }
     @media (max-width: 640px) {
       .product-detail {
@@ -260,8 +260,8 @@
       .product-detail .price {
         font-size: 1.25rem;
       }
-      .product-detail .product-image-container {
-        height: 300px;
+      .product-detail img {
+        max-height: 300px;
       }
       .product-detail .buttons {
         flex-direction: column;
@@ -272,8 +272,9 @@
         padding: 0.3rem 0.8rem;
         font-size: 0.9rem;
       }
-      .product-card .product-image-container {
-        height: 150px;
+      .arrow {
+        padding: 0.3rem;
+        font-size: 1rem;
       }
     }
   </style>
@@ -286,14 +287,16 @@
   <div id="product-overlay">
     <button class="close-btn">Close</button>
     <div class="product-detail">
-      <div class="product-image-container">
+      <div class="image-container">
+        <button class="arrow left-arrow" onclick="changeImage(-1)">❮</button>
         <img id="product-image" src="" alt="Product Image">
+        <button class="arrow right-arrow" onclick="changeImage(1)">❯</button>
       </div>
       <h3 id="product-name"></h3>
       <div class="price" id="product-price"></div>
       <div class="description">
         <h4>Product Description</h4>
-        <p id="product-description"></p>
+        <div id="product-description"></div>
       </div>
       <div class="buttons">
         <button class="add-to-cart" id="overlay-add-to-cart">Add to Cart</button>
@@ -469,11 +472,8 @@
     <section class="py-16 px-6">
       <h2 class="text-4xl font-bold text-white font-orbitron text-center mb-12">Store</h2>
       <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-        <!-- Default Products -->
-        <div class="bg-[#0f0f1a] p-6 rounded-lg neon-border neon-glow fade-in product-card cursor-pointer" data-name="Razer DeathAdder V3" data-price="79.99" data-image="https://via.placeholder.com/200" data-description="The Razer DeathAdder V3 is an ergonomic gaming mouse designed for precision and speed. Featuring a 30K DPI optical sensor, lightweight design at 59g, and Razer's Speedflex cable for minimal drag, it ensures seamless control in intense gaming sessions. Perfect for FPS gamers seeking accuracy and comfort.">
-          <div class="product-image-container">
-            <img src="https://via.placeholder.com/200" alt="Product">
-          </div>
+        <div class="bg-[#0f0f1a] p-6 rounded-lg neon-border neon-glow fade-in product-card cursor-pointer" data-name="Razer DeathAdder V3" data-price="79.99" data-images='["https://via.placeholder.com/200"]' data-description="The Razer DeathAdder V3 is an ergonomic gaming mouse designed for precision and speed. Featuring a 30K DPI optical sensor, lightweight design at 59g, and Razer's Speedflex cable for minimal drag, it ensures seamless control in intense gaming sessions. Perfect for FPS gamers seeking accuracy and comfort.">
+          <img src="https://via.placeholder.com/200" alt="Product" class="w-full h-48 object-cover rounded mb-4">
           <h3 class="text-xl font-bold text-white">Razer DeathAdder V3</h3>
           <p class="text-[#E0E0E0] mb-4">$79.99</p>
           <div class="flex space-x-2">
@@ -481,10 +481,8 @@
             <button class="add-to-cart flex-1 text-center bg-[#D500F9] text-white font-bold py-2 rounded neon-glow" data-name="Razer DeathAdder V3" data-price="79.99">Add to Cart</button>
           </div>
         </div>
-        <div class="bg-[#0f0f1a] p-6 rounded-lg neon-border neon-glow fade-in product-card cursor-pointer" data-name="Logitech G Pro X" data-price="129.99" data-image="https://via.placeholder.com/200" data-description="The Logitech G Pro X is a mechanical keyboard built for esports professionals. It features swappable pro-grade switches, customizable RGB lighting, and a compact tenkeyless design for maximum desk space. With a durable aluminum frame and programmable keys, it's ideal for competitive gaming.">
-          <div class="product-image-container">
-            <img src="https://via.placeholder.com/200" alt="Product">
-          </div>
+        <div class="bg-[#0f0f1a] p-6 rounded-lg neon-border neon-glow fade-in product-card cursor-pointer" data-name="Logitech G Pro X" data-price="129.99" data-images='["https://via.placeholder.com/200"]' data-description="The Logitech G Pro X is a mechanical keyboard built for esports professionals. It features swappable pro-grade switches, customizable RGB lighting, and a compact tenkeyless design for maximum desk space. With a durable aluminum frame and programmable keys, it's ideal for competitive gaming.">
+          <img src="https://via.placeholder.com/200" alt="Product" class="w-full h-48 object-cover rounded mb-4">
           <h3 class="text-xl font-bold text-white">Logitech G Pro X</h3>
           <p class="text-[#E0E0E0] mb-4">$129.99</p>
           <div class="flex space-x-2">
@@ -492,10 +490,8 @@
             <button class="add-to-cart flex-1 text-center bg-[#D500F9] text-white font-bold py-2 rounded neon-glow" data-name="Logitech G Pro X" data-price="129.99">Add to Cart</button>
           </div>
         </div>
-        <div class="bg-[#0f0f1a] p-6 rounded-lg neon-border neon-glow fade-in product-card cursor-pointer" data-name="Roccat Vulcan II" data-price="149.99" data-image="https://via.placeholder.com/200" data-description="The Roccat Vulcan II offers a stunning visual experience with its transparent switch housing and vibrant RGB lighting. Equipped with Titan II optical switches for ultra-fast response times, it combines style and performance. The aluminum top plate ensures durability, making it a top choice for gamers.">
-          <div class="product-image-container">
-            <img src="https://via.placeholder.com/200" alt="Product">
-          </div>
+        <div class="bg-[#0f0f1a] p-6 rounded-lg neon-border neon-glow fade-in product-card cursor-pointer" data-name="Roccat Vulcan II" data-price="149.99" data-images='["https://via.placeholder.com/200"]' data-description="The Roccat Vulcan II offers a stunning visual experience with its transparent switch housing and vibrant RGB lighting. Equipped with Titan II optical switches for ultra-fast response times, it combines style and performance. The aluminum top plate ensures durability, making it a top choice for gamers.">
+          <img src="https://via.placeholder.com/200" alt="Product" class="w-full h-48 object-cover rounded mb-4">
           <h3 class="text-xl font-bold text-white">Roccat Vulcan II</h3>
           <p class="text-[#E0E0E0] mb-4">$149.99</p>
           <div class="flex space-x-2">
@@ -503,10 +499,8 @@
             <button class="add-to-cart flex-1 text-center bg-[#D500F9] text-white font-bold py-2 rounded neon-glow" data-name="Roccat Vulcan II" data-price="149.99">Add to Cart</button>
           </div>
         </div>
-        <div class="bg-[#0f0f1a] p-6 rounded-lg neon-border neon-glow fade-in product-card cursor-pointer" data-name="ASUS ROG Swift" data-price="599.99" data-image="https://via.placeholder.com/200" data-description="The ASUS ROG Swift is a 27-inch 4K gaming monitor with a 144Hz refresh rate and 1ms response time. Featuring HDR10 and a wide color gamut, it delivers stunning visuals for immersive gaming. Adaptive-sync technology ensures smooth gameplay, perfect for competitive and casual gamers alike.">
-          <div class="product-image-container">
-            <img src="https://via.placeholder.com/200" alt="Product">
-          </div>
+        <div class="bg-[#0f0f1a] p-6 rounded-lg neon-border neon-glow fade-in product-card cursor-pointer" data-name="ASUS ROG Swift" data-price="599.99" data-images='["https://via.placeholder.com/200"]' data-description="The ASUS ROG Swift is a 27-inch 4K gaming monitor with a 144Hz refresh rate and 1ms response time. Featuring HDR10 and a wide color gamut, it delivers stunning visuals for immersive gaming. Adaptive-sync technology ensures smooth gameplay, perfect for competitive and casual gamers alike.">
+          <img src="https://via.placeholder.com/200" alt="Product" class="w-full h-48 object-cover rounded mb-4">
           <h3 class="text-xl font-bold text-white">ASUS ROG Swift</h3>
           <p class="text-[#E0E0E0] mb-4">$599.99</p>
           <div class="flex space-x-2">
@@ -514,10 +508,8 @@
             <button class="add-to-cart flex-1 text-center bg-[#D500F9] text-white font-bold py-2 rounded neon-glow" data-name="ASUS ROG Swift" data-price="599.99">Add to Cart</button>
           </div>
         </div>
-        <div class="bg-[#0f0f1a] p-6 rounded-lg neon-border neon-glow fade-in product-card cursor-pointer" data-name="Bose Companion 2" data-price="149.99" data-image="https://via.placeholder.com/200" data-description="The Bose Companion 2 speakers deliver rich, room-filling sound for your gaming setup. With TrueSpace stereo technology, they provide a wide soundstage and clear audio. Compact yet powerful, these speakers are perfect for gamers who want immersive sound without taking up much desk space.">
-          <div class="product-image-container">
-            <img src="https://via.placeholder.com/200" alt="Product">
-          </div>
+        <div class="bg-[#0f0f1a] p-6 rounded-lg neon-border neon-glow fade-in product-card cursor-pointer" data-name="Bose Companion 2" data-price="149.99" data-images='["https://via.placeholder.com/200"]' data-description="The Bose Companion 2 speakers deliver rich, room-filling sound for your gaming setup. With TrueSpace stereo technology, they provide a wide soundstage and clear audio. Compact yet powerful, these speakers are perfect for gamers who want immersive sound without taking up much desk space.">
+          <img src="https://via.placeholder.com/200" alt="Product" class="w-full h-48 object-cover rounded mb-4">
           <h3 class="text-xl font-bold text-white">Bose Companion 2</h3>
           <p class="text-[#E0E0E0] mb-4">$149.99</p>
           <div class="flex space-x-2">
@@ -525,10 +517,8 @@
             <button class="add-to-cart flex-1 text-center bg-[#D500F9] text-white font-bold py-2 rounded neon-glow" data-name="Bose Companion 2" data-price="149.99">Add to Cart</button>
           </div>
         </div>
-        <div class="bg-[#0f0f1a] p-6 rounded-lg neon-border neon-glow fade-in product-card cursor-pointer" data-name="Logitech C920" data-price="99.99" data-image="https://via.placeholder.com/200" data-description="The Logitech C920 is a high-definition webcam ideal for streaming and video calls. It offers 1080p video at 30fps, dual stereo microphones for clear audio, and automatic low-light correction. Compact and easy to use, it's a must-have for gamers and content creators looking to enhance their setup.">
-          <div class="product-image-container">
-            <img src="https://via.placeholder.com/200" alt="Product">
-          </div>
+        <div class="bg-[#0f0f1a] p-6 rounded-lg neon-border neon-glow fade-in product-card cursor-pointer" data-name="Logitech C920" data-price="99.99" data-images='["https://via.placeholder.com/200"]' data-description="The Logitech C920 is a high-definition webcam ideal for streaming and video calls. It offers 1080p video at 30fps, dual stereo microphones for clear audio, and automatic low-light correction. Compact and easy to use, it's a must-have for gamers and content creators looking to enhance their setup.">
+          <img src="https://via.placeholder.com/200" alt="Product" class="w-full h-48 object-cover rounded mb-4">
           <h3 class="text-xl font-bold text-white">Logitech C920</h3>
           <p class="text-[#E0E0E0] mb-4">$99.99</p>
           <div class="flex space-x-2">
@@ -544,7 +534,7 @@
       <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
         <div>
           <h3 class="text-xl font-bold text-white font-orbitron mb-4">Contact</h3>
-          <p class="text-[#E0E0E0]">📧 <a href="mailto:businessgamingodyssey@gmail.com">businessgamingodyssey@gmail.com</a></p>
+          <p class="text-[#E0E0E0]">📧 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="230561574a4d46505044424e4a4d444c475a5050465a63444e424a4f0d404c4e">[email protected]</a></p>
           <p class="text-[#E0E0E0]">📞 6290994382</p>
         </div>
         <div>
@@ -577,7 +567,6 @@
     </footer>
   </div>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
   <script>
     // Hamburger Menu Toggle
     const hamburger = document.getElementById('hamburger');
@@ -636,19 +625,13 @@
       mobile: document.getElementById('cart-count-mobile'),
       mobileMenu: document.getElementById('cart-count-mobile-menu')
     };
-
-    // Load cart from localStorage
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-    // Update cart count on page load
     function updateCartCount() {
       const count = cart.reduce((total, item) => total + item.quantity, 0);
       cartCountElements.sidebar.textContent = count;
       cartCountElements.mobile.textContent = count;
       cartCountElements.mobileMenu.textContent = count;
     }
-
-    // Add to cart function
     function addToCart(name, price) {
       const existingItem = cart.find(item => item.name === name);
       if (existingItem) {
@@ -670,15 +653,25 @@
     const overlayAddToCart = document.getElementById('overlay-add-to-cart');
     const overlayBuyNow = document.getElementById('overlay-buy-now');
     const closeBtn = document.querySelector('.close-btn');
+    let currentImages = [];
+    let currentImageIndex = 0;
 
-    function openProductOverlay(name, price, image, description) {
-      productImage.src = image;
+    function openProductOverlay(name, price, images, description) {
+      currentImages = images;
+      currentImageIndex = 0;
+      productImage.src = images[0];
       productName.textContent = name;
       productPrice.textContent = `$${price}`;
-      productDescription.textContent = description;
+      productDescription.innerHTML = description;
       overlayAddToCart.setAttribute('data-name', name);
       overlayAddToCart.setAttribute('data-price', price);
       productOverlay.classList.add('visible');
+    }
+
+    function changeImage(direction) {
+      if (currentImages.length <= 1) return;
+      currentImageIndex = (currentImageIndex + direction + currentImages.length) % currentImages.length;
+      productImage.src = currentImages[currentImageIndex];
     }
 
     closeBtn.addEventListener('click', () => {
@@ -694,20 +687,15 @@
     // Load products from localStorage and render them
     const productsGrid = document.getElementById('products-grid');
     let allProducts = [];
-
-    // Default products (from HTML)
     const defaultProducts = Array.from(productsGrid.querySelectorAll('.product-card')).map(card => ({
       name: card.getAttribute('data-name'),
       price: parseFloat(card.getAttribute('data-price')),
-      image: card.getAttribute('data-image'),
+      images: JSON.parse(card.getAttribute('data-images')),
       description: card.getAttribute('data-description')
     }));
-
-    // Load additional products from localStorage
     const storedProducts = JSON.parse(localStorage.getItem('products')) || [];
     allProducts = [...defaultProducts, ...storedProducts];
 
-    // Render all products
     function renderProducts(products) {
       productsGrid.innerHTML = '';
       products.forEach(product => {
@@ -715,12 +703,10 @@
         card.className = 'bg-[#0f0f1a] p-6 rounded-lg neon-border neon-glow fade-in product-card cursor-pointer';
         card.setAttribute('data-name', product.name);
         card.setAttribute('data-price', product.price);
-        card.setAttribute('data-image', product.image);
+        card.setAttribute('data-images', JSON.stringify(product.images));
         card.setAttribute('data-description', product.description);
         card.innerHTML = `
-          <div class="product-image-container">
-            <img src="${product.image}" alt="Product">
-          </div>
+          <img src="${product.images[0]}" alt="Product" class="w-full h-48 object-cover rounded mb-4">
           <h3 class="text-xl font-bold text-white">${product.name}</h3>
           <p class="text-[#E0E0E0] mb-4">$${product.price}</p>
           <div class="flex space-x-2">
@@ -729,18 +715,39 @@
           </div>
         `;
         productsGrid.appendChild(card);
+
+        // Auto-scroll images on hover
+        let imageIndex = 0;
+        let intervalId = null;
+        const cardImage = card.querySelector('img');
+        card.addEventListener('mouseenter', () => {
+          if (product.images.length > 1) {
+            intervalId = setInterval(() => {
+              imageIndex = (imageIndex + 1) % product.images.length;
+              cardImage.src = product.images[imageIndex];
+            }, 2000);
+          }
+        });
+        card.addEventListener('mouseleave', () => {
+          if (intervalId) {
+            clearInterval(intervalId);
+            intervalId = null;
+            imageIndex = 0;
+            cardImage.src = product.images[0];
+          }
+        });
       });
 
-      // Re-attach event listeners for new product cards
+      // Re-attach event listeners for product cards
       const productCards = document.querySelectorAll('.product-card');
       productCards.forEach(card => {
         card.addEventListener('click', (e) => {
           if (e.target.classList.contains('add-to-cart') || e.target.classList.contains('buy-now-btn')) return;
           const name = card.getAttribute('data-name');
           const price = card.getAttribute('data-price');
-          const image = card.getAttribute('data-image');
+          const images = JSON.parse(card.getAttribute('data-images'));
           const description = card.getAttribute('data-description');
-          openProductOverlay(name, price, image, description);
+          openProductOverlay(name, price, images, description);
         });
       });
 
@@ -767,7 +774,6 @@
         });
       });
 
-      // Re-observe for fade-in animation
       productCards.forEach(card => observer.observe(card));
     }
 
@@ -793,13 +799,11 @@
       let filteredProducts = products;
       const minPrice = parseFloat(minPriceInput.value) || 0;
       const maxPrice = parseFloat(maxPriceInput.value) || Infinity;
-
       if (minPrice || maxPrice !== Infinity) {
         filteredProducts = filteredProducts.filter(product => 
           product.price >= minPrice && product.price <= maxPrice
         );
       }
-
       renderProducts(filteredProducts);
     }
 
