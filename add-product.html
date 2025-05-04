@@ -422,9 +422,10 @@
       descriptionEditor.focus();
     }
 
+    let selectedGradient = '';
     function applyGradient() {
-      const gradient = document.getElementById('gradient-select').value;
-      descriptionEditor.style.background = gradient || '#1a1a2e';
+      selectedGradient = document.getElementById('gradient-select').value;
+      descriptionEditor.style.background = selectedGradient || '#1a1a2e';
       descriptionEditor.focus();
     }
 
@@ -469,7 +470,7 @@
         return;
       }
 
-      const product = { name, description, price, images };
+      const product = { name, description, price, images, gradient: selectedGradient };
       allProducts.push(product);
       localStorage.setItem('products', JSON.stringify(allProducts));
 
@@ -480,6 +481,7 @@
       document.getElementById('font-size').value = '';
       document.getElementById('gradient-select').value = '';
       descriptionEditor.style.background = '#1a1a2e';
+      selectedGradient = '';
       imageInputsContainer.innerHTML = `
         <div class="image-input-container">
           <input type="url" class="image-input" placeholder="Enter image URL" required>
