@@ -170,6 +170,25 @@
       font-size: 0.875rem;
       margin-top: 0.25rem;
     }
+    /* Gradient Underline Effect for Menu Items */
+    .nav-link, #mobile-menu a {
+      position: relative;
+      display: inline-block;
+      transition: color 0.3s ease;
+    }
+    .nav-link::after, #mobile-menu a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -2px;
+      left: 0;
+      background: linear-gradient(to right, #00E5FF, #D500F9);
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover::after, #mobile-menu a:hover::after {
+      width: 100%;
+    }
     @media (max-width: 640px) {
       .submit-btn {
         width: 100%;
@@ -214,14 +233,14 @@
           <span>Contact Us</span>
         </a>
         <a href="#" data-link="aboutus.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition nav-link">
-          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2 inserting authentication logic
+          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>About Us</span>
         </a>
-        <a href="signin.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
+        <a href="signin.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition nav-link">
           <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Sign In</span>
         </a>
-        <a href="createaccount.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
+        <a href="createaccount.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition nav-link">
           <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Create Account</span>
         </a>
@@ -247,8 +266,8 @@
       <a href="#" data-link="trackorder.html" class="block text-lg hover:text-[#00E5FF] transition nav-link">Track Order</a>
       <a href="#" data-link="contactus.html" class="block text-lg hover:text-[#00E5FF] transition nav-link">Contact Us</a>
       <a href="#" data-link="aboutus.html" class="block text-lg hover:text-[#00E5FF] transition nav-link">About Us</a>
-      <a href="signin.html" class="block text-lg hover:text-[#00E5FF] transition">Sign In</a>
-      <a href="createaccount.html" class="block text-lg hover:text-[#00E5FF] transition">Create Account</a>
+      <a href="signin.html" class="block text-lg hover:text-[#00E5FF] transition nav-link">Sign In</a>
+      <a href="createaccount.html" class="block text-lg hover:text-[#00E5FF] transition nav-link">Create Account</a>
     </nav>
   </div>
 
@@ -272,7 +291,7 @@
         <div class="slides-wrapper">
           <!-- Slide 1: Recent Products -->
           <div class="slide flex items-center justify-center md:flex-row flex-col gap-8 active">
-            <img src="https://via.placeholder.com/600x400" alt="Recent Products" class="w-full md:w-1/2 h-64 object-cover rounded-lg neon-border neon-glow">
+            <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3" alt="Recent Products" class="w-full md:w-1/2 h-64 object-cover rounded-lg neon-border neon-glow">
             <div class="slide-content text-center md:text-left">
               <h3 class="text-3xl font-bold text-white font-orbitron mb-4">Discover Our Latest Gaming Gear</h3>
               <p class="text-lg text-[#E0E0E0] mb-6">Explore the newest controllers, keyboards, and headsets designed for ultimate performance.</p>
@@ -281,7 +300,7 @@
           </div>
           <!-- Slide 2: Minecraft Server -->
           <div class="slide flex items-center justify-center md:flex-row flex-col gap-8">
-            <img src="https://via.placeholder.com/600x400" alt="Minecraft Server" class="w-full md:w-1/2 h-64 object-cover rounded-lg neon-border neon-glow">
+            <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3" alt="Minecraft Server" class="w-full md:w-1/2 h-64 object-cover rounded-lg neon-border neon-glow">
             <div class="slide-content text-center md:text-left">
               <h3 class="text-3xl font-bold text-white font-orbitron mb-4">Join Our Minecraft Server</h3>
               <p class="text-lg text-[#E0E0E0] mb-6">Dive into epic adventures on our server at <code>play.gamingodyssey.in</code>. Build, battle, and connect!</p>
@@ -290,7 +309,7 @@
           </div>
           <!-- Slide 3: Server Ranks -->
           <div class="slide flex items-center justify-center md:flex-row flex-col gap-8">
-            <img src="https://via.placeholder.com/600x400" alt="Server Ranks" class="w-full md:w-1/2 h-64 object-cover rounded-lg neon-border neon-glow">
+            <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3" alt="Server Ranks" class="w-full md:w-1/2 h-64 object-cover rounded-lg neon-border neon-glow">
             <div class="slide-content text-center md:text-left">
               <h3 class="text-3xl font-bold text-white font-orbitron mb-4">Unlock Exclusive Server Ranks</h3>
               <p class="text-lg text-[#E0E0E0] mb-6">Earn ranks like Legend, Hero, and Elite with unique perks. Level up your Minecraft experience!</p>
@@ -299,7 +318,7 @@
           </div>
           <!-- Slide 4: Gaming Odyssey Store -->
           <div class="slide flex items-center justify-center md:flex-row flex-col gap-8">
-            <img src="https://via.placeholder.com/600x400" alt="Gaming Odyssey Store" class="w-full md:w-1/2 h-64 object-cover rounded-lg neon-border neon-glow">
+            <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3" alt="Gaming Odyssey Store" class="w-full md:w-1/2 h-64 object-cover rounded-lg neon-border neon-glow">
             <div class="slide-content text-center md:text-left">
               <h3 class="text-3xl font-bold text-white font-orbitron mb-4">Shop at Gaming Odyssey Store</h3>
               <p class="text-lg text-[#E0E0E0] mb-6">From RGB peripherals to esports apparel, find everything you need to dominate.</p>
@@ -308,7 +327,7 @@
           </div>
           <!-- Slide 5: Custom PC Building -->
           <div class="slide flex items-center justify-center md:flex-row flex-col gap-8">
-            <img src="https://via.placeholder.com/600x400" alt="Custom PC Building" class="w-full md:w-1/2 h-64 object-cover rounded-lg neon-border neon-glow">
+            <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3" alt="Custom PC Building" class="w-full md:w-1/2 h-64 object-cover rounded-lg neon-border neon-glow">
             <div class="slide-content text-center md:text-left">
               <h3 class="text-3xl font-bold text-white font-orbitron mb-4">Build Your Dream Gaming PC</h3>
               <p class="text-lg text-[#E0E0E0] mb-6">Customize your rig with our expert PC building service. Power up your gameplay!</p>
@@ -370,6 +389,7 @@
       <h2 class="text-4xl font-bold text-white font-orbitron text-center mb-12">Upcoming Tournaments</h2>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
         <div class="bg-[#1a1a2e] p-6 rounded-lg neon-border neon-glow fade-in">
+          <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3" alt="Cyber Clash 2025" class="w-full h-48 object-cover rounded mb-4">
           <h3 class="text-xl font-bold text-white">Cyber Clash 2025</h3>
           <p class="text-[#E0E0E0] mb-2">Game: Valorant</p>
           <p class="text-[#E0E0E0] mb-2">Date: May 15, 2025</p>
@@ -377,6 +397,7 @@
           <a href="#" data-link="tournaments.html" class="block text-center bg-[#D500F9] text-white font-bold py-2 rounded neon-glow nav-link">Register</a>
         </div>
         <div class="bg-[#1a1a2e] p-6 rounded-lg neon-border neon-glow fade-in">
+          <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3" alt="Neon Strike" class="w-full h-48 object-cover rounded mb-4">
           <h3 class="text-xl font-bold text-white">Neon Strike</h3>
           <p class="text-[#E0E0E0] mb-2">Game: Overwatch</p>
           <p class="text-[#E0E0E0] mb-2">Date: June 10, 2025</p>
@@ -384,6 +405,7 @@
           <a href="#" data-link="tournaments.html" class="block text-center bg-[#D500F9] text-white font-bold py-2 rounded neon-glow nav-link">Register</a>
         </div>
         <div class="bg-[#1a1a2e] p-6 rounded-lg neon-border neon-glow fade-in">
+          <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3" alt="Odyssey League" class="w-full h-48 object-cover rounded mb-4">
           <h3 class="text-xl font-bold text-white">Odyssey League</h3>
           <p class="text-[#E0E0E0] mb-2">Game: League of Legends</p>
           <p class="text-[#E0E0E0] mb-2">Date: July 5, 2025</p>
@@ -440,7 +462,7 @@
       <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
         <div>
           <h3 class="text-xl font-bold text-white font-orbitron mb-4">Contact</h3>
-          <p class="text-[#E0E0E0]">📧 <a href="/cdn-cgi/l/email-protection#280a1d1b01060d1b1b0f090501060f070c111b1b0d11280f05090104460b0705" class="text-[#E0E0E0] hover:text-[#00E5FF] transition"><span class="__cf_email__" data-cfemail="086a7d7b61666d7b7b6f696561666f676c717b7b6d71486f65696164266b6765">[email&#160;protected]</span></a></p>
+          <p class="text-[#E0E0E0]">📧 <a href="/cdn-cgi/l/email-protection#280a1d1b01060d1b1b0f090501060f070c111b1b0d11280f05090104460b0705" class="text-[#E0E0E0] hover:text-[#00E5FF] transition"><span class="__cf_email__" data-cfemail="486a7d7b61666d7b7b6f696561666f676c717b7b6d71486f65696164266b6765">[email&#160;protected]</span></a></p>
           <p class="text-[#E0E0E0]">📞 6290994382</p>
         </div>
         <div>
@@ -637,5 +659,5 @@
     // Update slideshow on window resize
     window.addEventListener('resize', updateSlides);
   </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93ba36b45fc0bfed',t:'MTc0NjU1MjcxMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
