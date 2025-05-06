@@ -58,10 +58,10 @@
     #dashboard-content.active {
       display: block;
     }
-    #recent-activity-section {
+    .user-orders {
       display: none;
     }
-    #recent-activity-section.active {
+    .user-orders.active {
       display: block;
     }
   </style>
@@ -86,7 +86,7 @@
 
   <!-- Main Content -->
   <section class="content-bg py-16 px-6">
-    <div class="max-w-4xl mx-auto bg-[#0f0f1a] p-8 rounded-lg neon-border fade-in">
+    <div class="max-w-5xl mx-auto bg-[#0f0f1a] p-8 rounded-lg neon-border fade-in">
       <!-- Owner Login Section -->
       <div id="login-section">
         <h1 class="text-4xl font-bold text-white font-orbitron text-center mb-8">Owner Dashboard Login 🔒</h1>
@@ -106,41 +106,20 @@
         
         <!-- User Login Activity -->
         <div class="mb-12">
-          <h2 class="text-2xl font-bold text-white font-orbitron mb-4">User Login Activity</h2>
+          <h2 class="text-2xl font-bold text-white font-orbitron mb-4">User Activity</h2>
           <div class="overflow-x-auto">
             <table class="w-full text-left border border-[#00E5FF]">
               <thead>
                 <tr class="bg-[#0f0f1a]">
                   <th class="p-3 border border-[#00E5FF]">Username</th>
                   <th class="p-3 border border-[#00E5FF]">Email</th>
+                  <th class="p-3 border border-[#00E5FF]">Account Created</th>
                   <th class="p-3 border border-[#00E5FF]">Last Login</th>
+                  <th class="p-3 border border-[#00E5FF]">Orders</th>
                 </tr>
               </thead>
               <tbody id="user-table-body">
-                <tr id="no-users" class="hidden"><td colspan="3" class="p-3 text-center">No user logins found.</td></tr>
-              </tbody>
-            </table>
-          </div>
-          <button id="recent-activity-btn" class="mt-6 bg-[#00E5FF] text-[#0f0f1a] font-bold py-2 px-6 rounded neon-glow">Recent Orders</button>
-        </div>
-
-        <!-- Recent Orders Section -->
-        <div id="recent-activity-section" class="mt-8">
-          <h2 class="text-2xl font-bold text-white font-orbitron mb-4">Recent Orders</h2>
-          <div class="overflow-x-auto">
-            <table class="w-full text-left border border-[#00E5FF]">
-              <thead>
-                <tr class="bg-[#0f0f1a]">
-                  <th class="p-3 border border-[#00E5FF]">Order ID</th>
-                  <th class="p-3 border border-[#00E5FF]">Date</th>
-                  <th class="p-3 border border-[#00E5FF]">Items</th>
-                  <th class="p-3 border border-[#00E5FF]">Payment Method</th>
-                  <th class="p-3 border border-[#00E5FF]">Amount</th>
-                  <th class="p-3 border border-[#00E5FF]">Shipping Address</th>
-                </tr>
-              </thead>
-              <tbody id="order-table-body">
-                <tr id="no-orders" class="hidden"><td colspan="6" class="p-3 text-center">No orders found.</td></tr>
+                <tr id="no-users" class="hidden"><td colspan="5" class="p-3 text-center">No users found.</td></tr>
               </tbody>
             </table>
           </div>
@@ -187,24 +166,19 @@
   </footer>
 
   <script>
-    const ownerPassword = 'owner123'; // Hardcoded owner password (use secure backend in production)
+    const ownerPassword = 'owner123';
     const loginSection = document.getElementById('login-section');
     const dashboardContent = document.getElementById('dashboard-content');
     const loginBtn = document.getElementById('login-btn');
     const errorMessage = document.getElementById('error-message');
-    const recentActivityBtn = document.getElementById('recent-activity-btn');
-    const recentActivitySection = document.getElementById('recent-activity-section');
     const userTableBody = document.getElementById('user-table-body');
     const noUsersRow = document.getElementById('no-users');
-    const orderTableBody = document.getElementById('order-table-body');
-    const noOrdersRow = document.getElementById('no-orders');
 
-    // Check if owner is already authenticated
+    // Check if owner is authenticated
     if (localStorage.getItem('ownerAuthenticated') === 'true') {
       loginSection.style.display = 'none';
       dashboardContent.classList.add('active');
       loadUserActivity();
-      loadOrders();
     }
 
     // Handle owner login
@@ -216,67 +190,100 @@
         dashboardContent.classList.add('active');
         errorMessage.classList.add('hidden');
         loadUserActivity();
-        loadOrders();
       } else {
         errorMessage.classList.remove('hidden');
       }
     });
 
-    // Load user login activity
+    // Load user activity and orders
     function loadUserActivity() {
       const users = JSON.parse(localStorage.getItem('users')) || [];
+      const orders = JSON.parse(localStorage.getItem('orders')) || [];
       if (users.length === 0) {
         noUsersRow.classList.remove('hidden');
       } else {
-        users.forEach(user => {
-          const date = user.timestamp ? new Date(user.timestamp).toLocaleString() : 'N/A';
+        users.forEach((user, index) => {
+          const createdDate = user.createdAt ? new Date(user.createdAt).toLocaleString() : 'N/A';
+          const loginDate = user.timestamp ? new Date(user.timestamp).toLocaleString() : 'N/A';
+          const userOrders = orders.filter(order => order.email === user.email);
           const row = document.createElement('tr');
           row.innerHTML = `
             <td class="p-3 border border-[#00E5FF]">${user.username || 'N/A'}</td>
             <td class="p-3 border border-[#00E5FF]">${user.email || 'N/A'}</td>
-            <td class="p-3 border border-[#00E5FF]">${date}</td>
+            <td class="p-3 border border-[#00E5FF]">${createdDate}</td>
+            <td class="p-3 border border-[#00E5FF]">${loginDate}</td>
+            <td class="p-3 border border-[#00E5FF]">
+              <button class="recent-activity-btn bg-[#00E5FF] text-[#0f0f1a] font-bold py-1 px-3 rounded neon-glow" data-user-index="${index}">Recent Orders</button>
+            </td>
           `;
           userTableBody.appendChild(row);
-        });
-      }
-    }
 
-    // Load orders from localStorage
-    function loadOrders() {
-      const orders = JSON.parse(localStorage.getItem('orders')) || [];
-      if (orders.length === 0) {
-        noOrdersRow.classList.remove('hidden');
-      } else {
-        orders.forEach(order => {
-          const itemsList = order.items ? order.items.map(item => `${item.name} (x${item.quantity})`).join(', ') : 'N/A';
-          const address = order.shippingAddress ? `
-            ${order.shippingAddress.name || ''}<br>
-            ${order.shippingAddress.addressLine1 || ''}<br>
-            ${order.shippingAddress.addressLine2 || ''}<br>
-            ${order.shippingAddress.city || ''}, ${order.shippingAddress.state || ''} ${order.shippingAddress.zip || ''}<br>
-            ${order.shippingAddress.country || ''}<br>
-            ${order.shippingAddress.phone || ''}
-          ` : 'N/A';
-          const date = order.timestamp ? new Date(order.timestamp).toLocaleString() : 'N/A';
-
-          const row = document.createElement('tr');
-          row.innerHTML = `
-            <td class="p-3 border border-[#00E5FF]">${order.orderId || 'N/A'}</td>
-            <td class="p-3 border border-[#00E5FF]">${date}</td>
-            <td class="p-3 border border-[#00E5FF]">${itemsList}</td>
-            <td class="p-3 border border-[#00E5FF]">${order.paymentMethod || 'N/A'}</td>
-            <td class="p-3 border border-[#00E5FF]">$${order.total || '0.00'}</td>
-            <td class="p-3 border border-[#00E5FF]">${address}</td>
+          // Create orders table for this user
+          const ordersDiv = document.createElement('div');
+          ordersDiv.id = `user-orders-${index}`;
+          ordersDiv.classList.add('user-orders', 'mt-4');
+          ordersDiv.innerHTML = `
+            <h3 class="text-xl font-bold text-white font-orbitron mb-4">Orders for ${user.username || 'User'}</h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border border-[#00E5FF]">
+                <thead>
+                  <tr class="bg-[#0f0f1a]">
+                    <th class="p-3 border border-[#00E5FF]">Order ID</th>
+                    <th class="p-3 border border-[#00E5FF]">Date</th>
+                    <th class="p-3 border border-[#00E5FF]">Items</th>
+                    <th class="p-3 border border-[#00E5FF]">Email</th>
+                    <th class="p-3 border border-[#00E5FF]">Phone</th>
+                    <th class="p-3 border border-[#00E5FF]">Payment Method</th>
+                    <th class="p-3 border border-[#00E5FF]">Amount</th>
+                    <th class="p-3 border border-[#00E5FF]">Status</th>
+                    <th class="p-3 border border-[#00E5FF]">Shipping Address</th>
+                  </tr>
+                </thead>
+                <tbody id="order-table-body-${index}">
+                  ${userOrders.length === 0 ? '<tr><td colspan="9" class="p-3 text-center">No orders found.</td></tr>' : ''}
+                </tbody>
+              </table>
+            </div>
           `;
-          orderTableBody.appendChild(row);
+          userTableBody.parentElement.parentElement.appendChild(ordersDiv);
+
+          // Populate user orders
+          userOrders.forEach(order => {
+            const itemsList = order.items ? order.items.map(item => `${item.name} (x${item.quantity})`).join(', ') : 'N/A';
+            const address = order.shippingAddress ? `
+              ${order.shippingAddress.name || ''}<br>
+              ${order.shippingAddress.addressLine1 || ''}<br>
+              ${order.shippingAddress.addressLine2 || ''}<br>
+              ${order.shippingAddress.city || ''}, ${order.shippingAddress.state || ''} ${order.shippingAddress.zip || ''}<br>
+              ${order.shippingAddress.country || ''}<br>
+            ` : 'N/A';
+            const date = order.timestamp ? new Date(order.timestamp).toLocaleString() : 'N/A';
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td class="p-3 border border-[#00E5FF]">${order.orderId || 'N/A'}</td>
+              <td class="p-3 border border-[#00E5FF]">${date}</td>
+              <td class="p-3 border border-[#00E5FF]">${itemsList}</td>
+              <td class="p-3 border border-[#00E5FF]">${order.email || 'N/A'}</td>
+              <td class="p-3 border border-[#00E5FF]">${order.shippingAddress?.phone || 'N/A'}</td>
+              <td class="p-3 border border-[#00E5FF]">${order.paymentMethod || 'N/A'}</td>
+              <td class="p-3 border border-[#00E5FF]">$${order.total || '0.00'}</td>
+              <td class="p-3 border border-[#00E5FF]">${order.status || 'Pending'}</td>
+              <td class="p-3 border border-[#00E5FF]">${address}</td>
+            `;
+            document.getElementById(`order-table-body-${index}`).appendChild(row);
+          });
+        });
+
+        // Add event listeners for Recent Orders buttons
+        document.querySelectorAll('.recent-activity-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const userIndex = btn.getAttribute('data-user-index');
+            const ordersDiv = document.getElementById(`user-orders-${userIndex}`);
+            ordersDiv.classList.toggle('active');
+          });
         });
       }
     }
-
-    // Toggle Recent Orders section
-    recentActivityBtn.addEventListener('click', () => {
-      recentActivitySection.classList.toggle('active');
-    });
 
     // Logout functionality
     document.getElementById('logout').addEventListener('click', () => {
