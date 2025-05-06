@@ -85,28 +85,45 @@
   <section class="form-bg py-16 px-6">
     <div class="max-w-md mx-auto bg-[#0f0f1a] p-8 rounded-lg neon-border fade-in">
       <h2 class="text-3xl font-bold text-white font-orbitron text-center mb-8">Create Account</h2>
-      <form id="create-account-form">
-        <div class="mb-6">
+      <form id="create-account-form" class="space-y-6">
+        <div>
+          <label for="firstName" class="block text-[#E0E0E0] mb-2">First Name</label>
+          <input type="text" id="firstName" name="firstName" class="w-full p-3 bg-[#1a1a2e] text-[#E0E0E0] rounded neon-border focus:outline-none" required>
+          <p id="firstName-error" class="error hidden">First name is required</p>
+        </div>
+        <div>
+          <label for="lastName" class="block text-[#E0E0E0] mb-2">Last Name</label>
+          <input type="text" id="lastName" name="lastName" class="w-full p-3 bg-[#1a1a2e] text-[#E0E0E0] rounded neon-border focus:outline-none" required>
+          <p id="lastName-error" class="error hidden">Last name is required</p>
+        </div>
+        <div>
           <label for="username" class="block text-[#E0E0E0] mb-2">Username</label>
           <input type="text" id="username" name="username" class="w-full p-3 bg-[#1a1a2e] text-[#E0E0E0] rounded neon-border focus:outline-none" required>
           <p id="username-error" class="error hidden">Username is already taken</p>
         </div>
-        <div class="mb-6">
+        <div>
           <label for="email" class="block text-[#E0E0E0] mb-2">Gmail ID</label>
           <input type="email" id="email" name="email" class="w-full p-3 bg-[#1a1a2e] text-[#E0E0E0] rounded neon-border focus:outline-none" required>
           <p id="email-error" class="error hidden">Email is already registered</p>
         </div>
-        <div class="mb-6">
+        <div>
+          <label for="phone" class="block text-[#E0E0E0] mb-2">Phone Number</label>
+          <input type="tel" id="phone" name="phone" pattern="[0-9]{10}" class="w-full p-3 bg-[#1a1a2e] text-[#E0E0E0] rounded neon-border focus:outline-none" required>
+          <p id="phone-error" class="error hidden">Enter a valid 10-digit phone number</p>
+        </div>
+        <div>
           <label for="password" class="block text-[#E0E0E0] mb-2">Password</label>
           <input type="password" id="password" name="password" class="w-full p-3 bg-[#1a1a2e] text-[#E0E0E0] rounded neon-border focus:outline-none" required>
+          <p id="password-error" class="error hidden">Password must be at least 6 characters</p>
         </div>
-        <div class="mb-6">
+        <div>
           <label class="flex items-center text-[#E0E0E0]">
             <input type="checkbox" name="terms" class="mr-2 bg-[#1a1a2e] neon-border" required>
             I accept the <a href="#" class="text-[#00E5FF] hover:text-[#D500F9] transition">Terms and Conditions</a>
           </label>
+          <p id="terms-error" class="error hidden">You must accept the terms</p>
         </div>
-        <div class="mb-6">
+        <div>
           <p class="text-[#E0E0E0] mb-2">What best describes you?</p>
           <label class="flex items-center text-[#E0E0E0] mb-2">
             <input type="radio" name="preference" value="buyer" class="mr-2 bg-[#1a1a2e] neon-border" required>
@@ -120,12 +137,13 @@
             <input type="radio" name="preference" value="both" class="mr-2 bg-[#1a1a2e] neon-border">
             Both
           </label>
+          <p id="preference-error" class="error hidden">Please select a preference</p>
         </div>
         <button type="submit" class="w-full bg-[#00E5FF] text-[#0f0f1a] font-bold py-3 rounded neon-glow">Create Account</button>
         <p id="form-status" class="text-center mt-4"></p>
       </form>
       <div class="mt-4 text-center">
-        <p class="text-[#E0E0E0]">Already have an account? <a href="signin.html" class="text-[#E0E0E0] hover:text-[#D500F9] transition">Sign In</a></p>
+        <p class="text-[#E0E0E0]">Already have an account? <a href="signin.html" class="text-[#00E5FF] hover:text-[#D500F9] transition">Sign In</a></p>
       </div>
     </div>
   </section>
@@ -135,7 +153,7 @@
     <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
       <div>
         <h3 class="text-xl font-bold text-white font-orbitron mb-4">Contact</h3>
-        <p class="text-[#E0E0E0]">📧 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="98baadabb1b6bdababbfb9b5b1b6bfb7bca1ababbda198bfb5b9b1b4f6bbb7b5">[email&#160;protected]</a></p>
+        <p class="text-[#E0E0E0]">📧 <a href="mailto:support@gamingodyssey.com">support@gamingodyssey.com</a></p>
         <p class="text-[#E0E0E0]">📞 6289119156</p>
       </div>
       <div>
@@ -200,31 +218,81 @@
     // Form Submission
     document.getElementById('create-account-form').addEventListener('submit', function(event) {
       event.preventDefault();
+      const firstName = document.getElementById('firstName').value.trim();
+      const lastName = document.getElementById('lastName').value.trim();
       const username = document.getElementById('username').value.trim();
       const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
       const password = document.getElementById('password').value.trim();
-      const preference = document.querySelector('input[name="preference"]:checked').value;
+      const terms = document.querySelector('input[name="terms"]').checked;
+      const preference = document.querySelector('input[name="preference"]:checked')?.value;
       const status = document.getElementById('form-status');
+
+      // Reset errors
       document.querySelectorAll('.error').forEach(el => el.classList.add('hidden'));
+
+      // Validation
+      let isValid = true;
+      if (!firstName) {
+        document.getElementById('firstName-error').classList.remove('hidden');
+        isValid = false;
+      }
+      if (!lastName) {
+        document.getElementById('lastName-error').classList.remove('hidden');
+        isValid = false;
+      }
+      if (!username) {
+        document.getElementById('username-error').textContent = 'Username is required';
+        document.getElementById('username-error').classList.remove('hidden');
+        isValid = false;
+      }
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        document.getElementById('email-error').textContent = 'Enter a valid email';
+        document.getElementById('email-error').classList.remove('hidden');
+        isValid = false;
+      }
+      if (!phone || !/^[0-9]{10}$/.test(phone)) {
+        document.getElementById('phone-error').classList.remove('hidden');
+        isValid = false;
+      }
+      if (!password || password.length < 6) {
+        document.getElementById('password-error').classList.remove('hidden');
+        isValid = false;
+      }
+      if (!terms) {
+        document.getElementById('terms-error').classList.remove('hidden');
+        isValid = false;
+      }
+      if (!preference) {
+        document.getElementById('preference-error').classList.remove('hidden');
+        isValid = false;
+      }
+
+      if (!isValid) return;
 
       // Initialize users array
       let users = JSON.parse(localStorage.getItem('users')) || [];
 
       // Check for existing username or email
       if (users.some(user => user.username === username)) {
+        document.getElementById('username-error').textContent = 'Username is already taken';
         document.getElementById('username-error').classList.remove('hidden');
         return;
       }
       if (users.some(user => user.email === email)) {
+        document.getElementById('email-error').textContent = 'Email is already registered';
         document.getElementById('email-error').classList.remove('hidden');
         return;
       }
 
       // Store user data
       const user = {
+        firstName,
+        lastName,
         username,
         email,
-        password, // In production, passwords should be hashed
+        phone,
+        password, // In production, hash passwords
         preference,
         createdAt: new Date().toISOString(),
         lastLogin: null
