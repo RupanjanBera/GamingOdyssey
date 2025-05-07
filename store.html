@@ -456,8 +456,15 @@
     <section class="hero-bg py-8 px-6">
       <div class="max-w-6xl mx-auto">
         <div class="flex flex-col md:flex-row justify-between items-center mb-6">
-          <div class="w-full md:w-1/2">
+          <div class="w-full md:w-1/2 flex items-center space-x-4">
             <input type="text" id="search-input" placeholder="Search products..." class="w-full p-3 bg-[#0f0f1a] text-[#E0E0E0] rounded neon-border focus:outline-none">
+            <select id="currency-select" class="p-3 bg-[#0f0f1a] text-[#E0E0E0] rounded neon-border focus:outline-none">
+              <option value="INR">INR (₹)</option>
+              <option value="USD">USD ($)</option>
+              <option value="EUR">EUR (€)</option>
+              <option value="GBP">GBP (£)</option>
+              <option value="JPY">JPY (¥)</option>
+            </select>
           </div>
           <div class="flex items-center space-x-4 mt-4 md:mt-0">
             <button id="category-toggle" class="md:hidden bg-[#00E5FF] text-[#0f0f1a] font-bold py-2 px-4 rounded neon-glow">
@@ -478,7 +485,7 @@
     <section class="py-16 px-6">
       <h2 class="text-4xl font-bold text-white font-orbitron text-center mb-12">Store</h2>
       <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-        <!-- All products removed as per request -->
+        <!-- Products will be dynamically added -->
       </div>
     </section>
 
@@ -487,7 +494,7 @@
       <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
         <div>
           <h3 class="text-xl font-bold text-white font-orbitron mb-4">Contact</h3>
-          <p class="text-[#E0E0E0]">📧 <a href="mailto:businessgamingodyssey@gmail.com">businessgamingodyssey@gmail.com</a></p>
+          <p class="text-[#E0E0E0]">📧 <a href="/cdn-cgi/l/email-protection#462523262639242206212b272f2a232b203d3737213d6a272b29"><span class="__cf_email__" data-cfemail="680b0d0808170a0c2b0c060a02070e060d101a1a0c106b060a08">[businessgamingodyssey@gmail.com]</span></a></p>
           <p class="text-[#E0E0E0]">📞 6290994382</p>
         </div>
         <div>
@@ -520,7 +527,25 @@
     </footer>
   </div>
 
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
   <script>
+    // Currency Conversion Rates (relative to USD)
+    const conversionRates = {
+      USD: 1,
+      INR: 83,
+      EUR: 0.92,
+      GBP: 0.79,
+      JPY: 149
+    };
+    const currencySymbols = {
+      USD: '$',
+      INR: '₹',
+      EUR: '€',
+      GBP: '£',
+      JPY: '¥'
+    };
+    let selectedCurrency = 'INR';
+
     // Hamburger Menu Toggle
     const hamburger = document.getElementById('hamburger');
     const mobileMenu = document.getElementById('mobile-menu');
@@ -590,7 +615,7 @@
       if (existingItem) {
         existingItem.quantity += 1;
       } else {
-        cart.push({ name, price, quantity: 1 });
+        cart.push({ name, price: price / conversionRates[selectedCurrency], quantity: 1 });
       }
       localStorage.setItem('cart', JSON.stringify(cart));
       updateCartCount();
@@ -614,10 +639,11 @@
       currentImageIndex = 0;
       productImage.src = images[0];
       productName.textContent = name;
-      productPrice.textContent = `$${price}`;
+      const convertedPrice = (price * conversionRates[selectedCurrency]).toFixed(2);
+      productPrice.textContent = `${currencySymbols[selectedCurrency]}${convertedPrice}`;
       productDescription.innerHTML = description;
       overlayAddToCart.setAttribute('data-name', name);
-      overlayAddToCart.setAttribute('data-price', price);
+      overlayAddToCart.setAttribute('data-price', price * conversionRates[selectedCurrency]);
       productOverlay.classList.add('visible');
     }
 
@@ -652,6 +678,7 @@
     function renderProducts(products) {
       productsGrid.innerHTML = '';
       products.forEach(product => {
+        const convertedPrice = (product.price * conversionRates[selectedCurrency]).toFixed(2);
         const card = document.createElement('div');
         card.className = 'bg-[#0f0f1a] p-6 rounded-lg neon-border neon-glow fade-in product-card cursor-pointer';
         card.setAttribute('data-name', product.name);
@@ -661,10 +688,10 @@
         card.innerHTML = `
           <img src="${product.images[0]}" alt="Product" class="w-full h-48 object-contain rounded mb-4">
           <h3 class="text-xl font-bold text-white">${product.name}</h3>
-          <p class="text-[#E0E0E0] mb-4">$${product.price}</p>
+          <p class="text-[#E0E0E0] mb-4">${currencySymbols[selectedCurrency]}${convertedPrice}</p>
           <div class="flex space-x-2">
             <a href="#" class="flex-1 text-center bg-[#00E5FF] text-[#0f0f1a] font-bold py-2 rounded neon-glow buy-now-btn">Buy Now</a>
-            <button class="add-to-cart flex-1 text-center bg-[#D500F9] text-white font-bold py-2 rounded neon-glow" data-name="${product.name}" data-price="${product.price}">Add to Cart</button>
+            <button class="add-to-cart flex-1 text-center bg-[#D500F9] text-white font-bold py-2 rounded neon-glow" data-name="${product.name}" data-price="${product.price * conversionRates[selectedCurrency]}">Add to Cart</button>
           </div>
         `;
         productsGrid.appendChild(card);
@@ -697,7 +724,7 @@
         card.addEventListener('click', (e) => {
           if (e.target.classList.contains('add-to-cart') || e.target.classList.contains('buy-now-btn')) return;
           const name = card.getAttribute('data-name');
-          const price = card.getAttribute('data-price');
+          const price = parseFloat(card.getAttribute('data-price'));
           const images = JSON.parse(card.getAttribute('data-images'));
           const description = card.getAttribute('data-description');
           openProductOverlay(name, price, images, description);
@@ -721,7 +748,7 @@
           const card = button.closest('.product-card');
           const name = card.getAttribute('data-name');
           const price = parseFloat(card.getAttribute('data-price'));
-          const product = { name, price, quantity: 1 };
+          const product = { name, price: price * conversionRates[selectedCurrency], quantity: 1 };
           localStorage.setItem('buyNowProduct', JSON.stringify(product));
           window.location.href = 'address.html';
         });
@@ -730,50 +757,47 @@
       productCards.forEach(card => observer.observe(card));
     }
 
-    // Initial render of all products
-    renderProducts(allProducts);
-
-    // Search Functionality
+    // Search and Filter Functionality
     const searchInput = document.getElementById('search-input');
-    searchInput.addEventListener('input', () => {
-      const searchTerm = searchInput.value.toLowerCase();
-      const filteredProducts = allProducts.filter(product => 
-        product.name.toLowerCase().includes(searchTerm)
-      );
-      applyFilters(filteredProducts);
-    });
-
-    // Price Filter Functionality
     const minPriceInput = document.getElementById('min-price');
     const maxPriceInput = document.getElementById('max-price');
     const filterBtn = document.getElementById('filter-btn');
+    const currencySelect = document.getElementById('currency-select');
 
-    function applyFilters(products) {
-      let filteredProducts = products;
+    function applyFilters() {
+      const searchTerm = searchInput.value.toLowerCase();
       const minPrice = parseFloat(minPriceInput.value) || 0;
       const maxPrice = parseFloat(maxPriceInput.value) || Infinity;
-      if (minPrice || maxPrice !== Infinity) {
+
+      let filteredProducts = allProducts;
+      if (searchTerm) {
         filteredProducts = filteredProducts.filter(product => 
-          product.price >= minPrice && product.price <= maxPrice
+          product.name.toLowerCase().includes(searchTerm)
         );
+      }
+      if (minPrice || maxPrice !== Infinity) {
+        filteredProducts = filteredProducts.filter(product => {
+          const convertedPrice = product.price * conversionRates[selectedCurrency];
+          return convertedPrice >= minPrice && convertedPrice <= maxPrice;
+        });
       }
       renderProducts(filteredProducts);
     }
 
-    filterBtn.addEventListener('click', () => {
-      const searchTerm = searchInput.value.toLowerCase();
-      let filteredProducts = allProducts;
-      if (searchTerm) {
-        filteredProducts = allProducts.filter(product => 
-          product.name.toLowerCase().includes(searchTerm)
-        );
-      }
-      applyFilters(filteredProducts);
+    searchInput.addEventListener('input', applyFilters);
+    filterBtn.addEventListener('click', applyFilters);
+
+    // Currency Selection
+    currencySelect.addEventListener('change', () => {
+      selectedCurrency = currencySelect.value;
+      applyFilters();
     });
+
+    // Initial render of all products
+    renderProducts(allProducts);
 
     // Update cart count on page load
     updateCartCount();
   </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93a57c198d33afc0',t:'MTc0NjMzNTM1My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>
