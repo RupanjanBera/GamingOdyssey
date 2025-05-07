@@ -115,8 +115,11 @@
               <div class="space-y-4">
                 <div class="text-center">
                   <h4 class="text-lg font-bold text-white font-orbitron mb-2">Scan to Pay</h4>
-                  <img id="upi-qr-code" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=rupanjanbera5-1@okicici&pn=Gaming Odyssey&am=0&cu=INR" alt="UPI QR Code" class="mx-auto mb-4">
-                  <p class="text-[#E0E0E0] mb-4">Scan this QR code with your UPI app to pay <span id="upi-qr-amount">$0.00</span>.</p>
+                  <img id="upi-qr-code" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=rupanjanbera5-1@okicici&pn=Rupanjan%20Bera&am=0&cu=INR" alt="UPI QR Code" class="mx-auto mb-4">
+                  <p class="text-[#E0E0E0] mb-2">Payee Name: Rupanjan Bera</p>
+                  <p class="text-[#E0E0E0] mb-2">UPI ID: rupanjanbera5-1@okicici</p>
+                  <p class="text-[#E0E0E0] mb-4">UPI Number: 6290994382</p>
+                  <p class="text-[#E0E0E0] mb-4">Scan this QR code with your UPI app to pay <span id="upi-qr-amount">₹0.00</span>.</p>
                 </div>
                 <div class="border-t border-[#00E5FF] pt-4">
                   <h4 class="text-lg font-bold text-white font-orbitron mb-2">Or Enter Your UPI ID</h4>
@@ -256,7 +259,7 @@
                 <input type="hidden" name="orderId" id="cod-order-id">
                 <input type="hidden" name="amount" id="cod-amount">
                 <input type="hidden" name="method" value="Cash on Delivery">
-                <p class="text-[#E0E0E0] mb-4">Please have the exact amount of <span id="cod-amount-display">$0.00</span> ready upon delivery.</p>
+                <p class="text-[#E0E0E0] mb-4">Please have the exact amount of <span id="cod-amount-display">₹0.00</span> ready upon delivery.</p>
                 <button type="submit" class="w-full bg-[#00E5FF] text-[#0f0f1a] font-bold py-2 rounded neon-glow">Confirm Order</button>
               </form>
             </div>
@@ -271,7 +274,7 @@
         <div class="border-t border-[#00E5FF] pt-4 mt-4">
           <p class="flex justify-between text-lg">
             <span>Total:</span>
-            <span id="order-total">$0.00</span>
+            <span id="order-total">₹0.00</span>
           </p>
         </div>
         <div class="mt-6">
@@ -287,8 +290,8 @@
     <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
       <div>
         <h3 class="text-xl font-bold text-white font-orbitron mb-4">Contact</h3>
-        <p class="text-[#E0E0E0]">📧 <a href="/cdn-cgi/l/email-protection#0b787e7b7b64797f4b6c6a6662656c646f7278786e7225686466"><span class="__cf_email__" data-cfemail="a794929797889593a780868a8e898088839e9494829ec984888a">[email&#160;protected]</span></a></p>
-        <p class="text-[#E0E0E0]">📞 +1 800-123-4567</p>
+        <p class="text-[#E0E0E0]">📧 <a href="/cdn-cgi/l/email-protection#0b787e7b7b64797f4b6c6a6662656c646f7278786e7225686466"><span class="__cf_email__" data-cfemail="a794929797889593a780868a8e898088839e9494829ec984888a">[businessgamingodyssey@gmail.com]</span></a></p>
+        <p class="text-[#E0E0E0]">📞 6290994382</p>
       </div>
       <div>
         <h3 class="text-xl font-bold text-white font-orbitron mb-4">Useful Links</h3>
@@ -321,55 +324,76 @@
 
   <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
   <script>
+    // Currency Configuration (same as store.html and cart.html)
+    const currencySymbols = {
+      USD: '$',
+      INR: '₹',
+      EUR: '€',
+      GBP: '£',
+      JPY: '¥'
+    };
+
     // Generate unique order ID
     function generateOrderId() {
       return 'ORDER-' + Math.random().toString(36).substr(2, 9).toUpperCase();
     }
 
-    // Load cart and shipping address
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    // Load order and shipping address
+    const order = JSON.parse(localStorage.getItem('order')) || {};
     const shippingAddress = JSON.parse(localStorage.getItem('shippingAddress')) || {};
     const orderItemsContainer = document.getElementById('order-items');
     const orderTotalElement = document.getElementById('order-total');
     const shippingAddressElement = document.getElementById('shipping-address');
-
-    // Calculate total
-    let total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-
-    // Display order items
-    cart.forEach(item => {
-      const itemElement = document.createElement('div');
-      itemElement.className = 'flex justify-between';
-      itemElement.innerHTML = `
-        <span>${item.name} (x${item.quantity})</span>
-        <span>$${ (item.price * item.quantity).toFixed(2) }</span>
-      `;
-      orderItemsContainer.appendChild(itemElement);
-    });
-
-    // Display total
-    orderTotalElement.textContent = `$${ total.toFixed(2) }`;
-
-    // Display shipping address
-    shippingAddressElement.innerHTML = `
-      <p>${shippingAddress.name || 'N/A'}</p>
-      <p>${shippingAddress.addressLine1 || ''}</p>
-      <p>${shippingAddress.addressLine2 || ''}</p>
-      <p>${shippingAddress.city || ''}, ${shippingAddress.state || ''} ${shippingAddress.zip || ''}</p>
-      <p>${shippingAddress.country || ''}</p>
-      <p>${shippingAddress.phone || ''}</p>
-    `;
-
-    // Update UPI QR code with amount
     const upiQrCode = document.getElementById('upi-qr-code');
     const upiQrAmount = document.getElementById('upi-qr-amount');
-    const formattedTotal = total.toFixed(2);
-    upiQrAmount.textContent = `$${ formattedTotal }`;
-    const upiLink = `upi://pay?pa=rupanjanbera5-1@okicici&pn=${encodeURIComponent('Gaming Odyssey')}&am=${encodeURIComponent(formattedTotal)}&cu=USD`;
-    upiQrCode.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(upiLink)}`;
+
+    // Load order details
+    function loadOrderDetails() {
+      if (!order || !order.items || !order.total) {
+        orderItemsContainer.innerHTML = '<p class="text-[#E0E0E0] text-center">No order found. Please return to the store.</p>';
+        orderTotalElement.textContent = '₹0.00';
+        upiQrAmount.textContent = '₹0.00';
+        upiQrCode.src = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=rupanjanbera5-1@okicici&pn=Rupanjan%20Bera&am=0&cu=INR';
+        return;
+      }
+
+      const selectedCurrency = order.currency || 'INR';
+      const total = parseFloat(order.total).toFixed(2);
+
+      // Display order items
+      order.items.forEach(item => {
+        const itemElement = document.createElement('div');
+        itemElement.className = 'flex justify-between';
+        const itemTotal = (item.price * item.quantity * (selectedCurrency === 'INR' ? 83 : 1)).toFixed(2);
+        itemElement.innerHTML = `
+          <span>${item.name} (x${item.quantity})</span>
+          <span>${currencySymbols[selectedCurrency]}${itemTotal}</span>
+        `;
+        orderItemsContainer.appendChild(itemElement);
+      });
+
+      // Display total
+      orderTotalElement.textContent = `${currencySymbols[selectedCurrency]}${total}`;
+
+      // Display shipping address
+      shippingAddressElement.innerHTML = `
+        <p>${shippingAddress.name || 'N/A'}</p>
+        <p>${shippingAddress.addressLine1 || ''}</p>
+        <p>${shippingAddress.addressLine2 || ''}</p>
+        <p>${shippingAddress.city || ''}, ${shippingAddress.state || ''} ${shippingAddress.zip || ''}</p>
+        <p>${shippingAddress.country || ''}</p>
+        <p>${shippingAddress.phone || ''}</p>
+      `;
+
+      // Update UPI QR code with amount
+      upiQrAmount.textContent = `${currencySymbols[selectedCurrency]}${total}`;
+      const upiLink = `upi://pay?pa=rupanjanbera5-1@okicici&pn=Rupanjan%20Bera&am=${encodeURIComponent(total)}&cu=${selectedCurrency}&tn=Payment%20for%20${encodeURIComponent(order.orderId)}`;
+      upiQrCode.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(upiLink)}`;
+    }
 
     // Set order IDs and amounts
-    const orderId = generateOrderId();
+    const orderId = order.orderId || generateOrderId();
+    const formattedTotal = order.total ? parseFloat(order.total).toFixed(2) : '0.00';
     document.getElementById('upi-order-id').value = orderId;
     document.getElementById('upi-amount').value = formattedTotal;
     document.getElementById('debit-order-id').value = orderId;
@@ -380,7 +404,7 @@
     document.getElementById('netbanking-amount').value = formattedTotal;
     document.getElementById('cod-order-id').value = orderId;
     document.getElementById('cod-amount').value = formattedTotal;
-    document.getElementById('cod-amount-display').textContent = `$${ formattedTotal }`;
+    document.getElementById('cod-amount-display').textContent = `${order.currency ? currencySymbols[order.currency] : '₹'}${formattedTotal}`;
 
     // Payment method selection
     const paymentCards = document.querySelectorAll('.payment-card');
@@ -398,18 +422,19 @@
     // Store order in localStorage
     function storeOrder(paymentMethod) {
       const orders = JSON.parse(localStorage.getItem('orders')) || [];
-      const order = {
+      const orderData = {
         orderId: orderId,
-        items: cart,
+        items: order.items || [],
         total: formattedTotal,
         paymentMethod: paymentMethod,
         shippingAddress: shippingAddress,
         timestamp: new Date().toISOString()
       };
-      orders.push(order);
+      orders.push(orderData);
       localStorage.setItem('orders', JSON.stringify(orders));
-      // Clear cart after order is placed
+      // Clear cart and order after order is placed
       localStorage.removeItem('cart');
+      localStorage.removeItem('order');
     }
 
     // Handle form submissions
@@ -439,6 +464,9 @@
       });
     }, { threshold: 0.1 });
     fadeIns.forEach(element => observer.observe(element));
+
+    // Initial Load
+    loadOrderDetails();
   </script>
 </body>
 </html>
