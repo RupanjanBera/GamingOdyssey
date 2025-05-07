@@ -4,31 +4,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gaming Odyssey</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
-      font-family: 'Rajdhani', sans-serif;
-      background-color: #1a1a2e;
-      color: #E0E0E0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #0F172A;
+      color: #F1F5F9;
       scroll-behavior: smooth;
       overflow-x: hidden;
     }
-    .neon-border {
-      border: 1px solid #00E5FF;
-      box-shadow: 0 0 10px #00E5FF, 0 0 20px #D500F9;
-    }
-    .neon-glow:hover {
-      box-shadow: 0 0 15px #00E5FF, 0 0 25px #D500F9;
-      transform: translateY(-5px);
+    .gradient-glow {
+      box-shadow: 0 0 8px rgba(59, 130, 246, 0.4), 0 0 16px rgba(217, 70, 239, 0.3);
       transition: all 0.3s ease;
+    }
+    .gradient-glow:hover {
+      box-shadow: 0 0 12px rgba(59, 130, 246, 0.6), 0 0 20px rgba(217, 70, 239, 0.5);
+      transform: translateY(-2px);
     }
     .sidebar {
-      background-color: #0f0f1a;
-      transition: all 0.3s ease;
+      background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
+      box-shadow: 2px 0 12px rgba(59, 130, 246, 0.2);
     }
     .hero-bg {
-      background: linear-gradient(45deg, rgba(0, 229, 255, 0.1), rgba(213, 0, 249, 0.1));
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(217, 70, 239, 0.15), #0F172A);
       position: relative;
       overflow: hidden;
     }
@@ -39,32 +38,32 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="#00E5FF" opacity="0.3"/></svg>') repeat;
-      animation: particles 20s linear infinite;
+      background: radial-gradient(circle at 30% 30%, rgba(59, 130, 246, 0.2), transparent 70%);
+      animation: glow 20s ease-in-out infinite;
       opacity: 0.5;
     }
     .slideshow-container {
-      position: relative;
       max-width: 1200px;
       margin: 0 auto;
+      position: relative;
       overflow: hidden;
     }
     .slides-wrapper {
       display: flex;
-      transition: transform 0.5s ease;
+      transition: transform 0.6s ease-in-out;
     }
     .slide {
       flex: 0 0 100%;
-      max-width: 1200px;
       padding: 1.5rem;
-      background: #0f0f1a;
-      border-radius: 0.5rem;
+      background: linear-gradient(145deg, #1E293B, #0F172A);
+      border-radius: 1rem;
       margin: 0 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     }
     .slide-content {
       opacity: 0;
       transform: translateY(20px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
+      transition: opacity 0.7s ease, transform 0.7s ease;
     }
     .slide.active .slide-content {
       opacity: 1;
@@ -74,16 +73,15 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      background: #00E5FF;
+      background: linear-gradient(45deg, #3B82F6, #D946EF);
       padding: 10px;
       border-radius: 50%;
       cursor: pointer;
       transition: all 0.3s ease;
     }
     .arrow:hover {
-      background: #D500F9;
-      transform: translateY(-50%) scale(1.2);
-      box-shadow: 0 0 15px #D500F9;
+      background: #D946EF;
+      transform: translateY(-50%) scale(1.1);
     }
     .prev { left: 10px; }
     .next { right: 10px; }
@@ -93,105 +91,127 @@
     }
     .dot {
       display: inline-block;
-      width: 12px;
-      height: 12px;
+      width: 8px;
+      height: 8px;
       margin: 0 5px;
-      background: #00E5FF;
+      background: #3B82F6;
       border-radius: 50%;
       cursor: pointer;
       transition: all 0.3s ease;
     }
     .dot.active, .dot:hover {
-      background: #D500F9;
+      background: #D946EF;
       transform: scale(1.2);
     }
-    @keyframes particles {
-      0% { transform: translateY(0); }
-      100% { transform: translateY(-100px); }
+    @keyframes glow {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.2); opacity: 0.7; }
     }
     .fade-in {
       opacity: 0;
       transform: translateY(20px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
+      transition: opacity 0.7s ease, transform 0.7s ease;
     }
     .fade-in.visible {
       opacity: 1;
       transform: translateY(0);
     }
     input, textarea {
-      background: #0f0f1a;
-      color: #E0E0E0;
-      border: 1px solid #00E5FF;
-      border-radius: 0.375rem;
+      background: #1E293B;
+      color: #F1F5F9;
+      border: 1px solid #3B82F6;
+      border-radius: 0.5rem;
       padding: 0.75rem;
       width: 100%;
       transition: all 0.3s ease;
     }
     input:focus, textarea:focus {
       outline: none;
-      border-color: #D500F9;
-      box-shadow: 0 0 10px #D500F9;
+      border-color: #D946EF;
+      box-shadow: 0 0 6px rgba(217, 70, 239, 0.4);
     }
-    .submit-btn {
-      background: linear-gradient(45deg, #00E5FF, #D500F9);
-      color: #0f0f1a;
+    .action-btn {
+      background: linear-gradient(90deg, #3B82F6, #D946EF);
+      color: #0F172A;
+      font-family: 'Inter', sans-serif;
       font-weight: 600;
-      font-family: 'Orbitron', sans-serif;
-      padding: 0.75rem 1.5rem;
-      border-radius: 0.375rem;
+      padding: 0.75rem 2rem;
+      border-radius: 0.5rem;
       position: relative;
       overflow: hidden;
       transition: all 0.3s ease;
     }
-    .submit-btn::before {
+    .action-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 12px rgba(59, 130, 246, 0.6);
+    }
+    .action-btn::before {
       content: '';
       position: absolute;
       top: 0;
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
       transition: 0.5s;
     }
-    .submit-btn:hover::before {
+    .action-btn:hover::before {
       left: 100%;
     }
-    .submit-btn:hover {
-      transform: translateY(-2px) rotate(2deg);
-      box-shadow: 0 0 20px #00E5FF, 0 0 30px #D500F9;
-    }
     .error {
-      color: #FF5555;
+      color: #F87171;
       font-size: 0.875rem;
       margin-top: 0.25rem;
     }
     .success {
-      color: #00E5FF;
+      color: #3B82F6;
       font-size: 0.875rem;
       margin-top: 0.25rem;
     }
-    /* Gradient Underline Effect for Menu Items */
-    .nav-link, #mobile-menu a {
+    .nav-link {
       position: relative;
-      display: inline-block;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
       transition: color 0.3s ease;
     }
-    .nav-link::after, #mobile-menu a::after {
+    .nav-link::after {
       content: '';
       position: absolute;
       width: 0;
       height: 2px;
-      bottom: -2px;
+      bottom: -3px;
       left: 0;
-      background: linear-gradient(to right, #00E5FF, #D500F9);
+      background: #3B82F6;
       transition: width 0.3s ease;
     }
-    .nav-link:hover::after, #mobile-menu a:hover::after {
+    .nav-link:hover::after, .nav-link.active::after {
       width: 100%;
     }
-    @media (max-width: 640px) {
-      .submit-btn {
+    .nav-link.active {
+      color: #3B82F6;
+    }
+    .mobile-menu {
+      background: linear-gradient(180deg, #1E293B, #0F172A);
+      transform: translateX(-100%);
+      transition: transform 0.3s ease-in-out;
+    }
+    .mobile-menu.active {
+      transform: translateX(0);
+    }
+    .card {
+      background: linear-gradient(145deg, #1E293B, #0F172A);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 15px rgba(59, 130, 246, 0.3);
+    }
+    @media (max-width: 768px) {
+      .action-btn {
         width: 100%;
+        padding: 0.75rem;
       }
       .slide {
         flex: 0 0 90vw;
@@ -201,47 +221,47 @@
         font-size: 1.5rem;
       }
       .slide-content p {
-        font-size: 1rem;
+        font-size: 0.875rem;
       }
     }
   </style>
 </head>
 <body>
   <!-- Sidebar -->
-  <div class="fixed top-0 left-0 h-full w-64 sidebar neon-border z-20 hidden md:block">
+  <div class="fixed top-0 left-0 h-full w-64 sidebar z-20 hidden lg:block">
     <div class="p-6">
-      <h1 class="text-2xl font-bold text-white font-orbitron">Gaming Odyssey</h1>
+      <h1 class="text-2xl font-bold text-white font-['Inter']">Gaming Odyssey</h1>
       <nav class="mt-10 space-y-4">
-        <a href="#" data-link="index.html" class="flex items-center space-x-2 text-lg text-[#00E5FF] font-bold nav-link">
-          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <a href="#" data-link="index.html" class="flex items-center space-x-2 text-base text-[#3B82F6] font-semibold nav-link active">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Home</span>
         </a>
-        <a href="#" data-link="store.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition nav-link">
-          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <a href="#" data-link="store.html" class="flex items-center space-x-2 text-base text-[#F1F5F9] hover:text-[#3B82F6] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Store</span>
         </a>
-        <a href="#" data-link="tournaments.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition nav-link">
-          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <a href="#" data-link="tournaments.html" class="flex items-center space-x-2 text-base text-[#F1F5F9] hover:text-[#3B82F6] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Tournaments</span>
         </a>
-        <a href="#" data-link="trackorder.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition nav-link">
-          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <a href="#" data-link="trackorder.html" class="flex items-center space-x-2 text-base text-[#F1F5F9] hover:text-[#3B82F6] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Track Order</span>
         </a>
-        <a href="#" data-link="contactus.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition nav-link">
-          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <a href="#" data-link="contactus.html" class="flex items-center space-x-2 text-base text-[#F1F5F9] hover:text-[#3B82F6] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Contact Us</span>
         </a>
-        <a href="#" data-link="aboutus.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition nav-link">
-          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <a href="#" data-link="aboutus.html" class="flex items-center space-x-2 text-base text-[#F1F5F9] hover:text-[#3B82F6] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>About Us</span>
         </a>
-        <a href="signin.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition nav-link">
-          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <a href="signin.html" class="flex items-center space-x-2 text-base text-[#F1F5F9] hover:text-[#3B82F6] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Sign In</span>
         </a>
-        <a href="createaccount.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition nav-link">
-          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <a href="createaccount.html" class="flex items-center space-x-2 text-base text-[#F1F5F9] hover:text-[#3B82F6] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Create Account</span>
         </a>
       </nav>
@@ -249,38 +269,38 @@
   </div>
 
   <!-- Mobile Hamburger Menu -->
-  <div class="md:hidden fixed top-0 left-0 w-full bg-[#0f0f1a] z-30 p-4 flex justify-between items-center neon-border">
-    <h1 class="text-xl font-bold text-white font-orbitron">Gaming Odyssey</h1>
-    <button id="hamburger" class="text-[#00E5FF]">
-      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+  <div class="lg:hidden fixed top-0 left-0 w-full bg-[#1E293B] z-30 p-4 flex justify-between items-center gradient-glow">
+    <h1 class="text-xl font-bold text-white font-['Inter']">Gaming Odyssey</h1>
+    <button id="hamburger" class="text-[#3B82F6]">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
     </button>
   </div>
-  <div id="mobile-menu" class="hidden md:hidden fixed top-0 left-0 w-full h-full bg-[#0f0f1a] z-20 p-6">
-    <button id="close-menu" class="absolute top-4 right-4 text-[#00E5FF] neon-border rounded-full p-2 transition-transform">
-      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+  <div id="mobile-menu" class="lg:hidden fixed top-0 left-0 w-full h-full mobile-menu z-20 p-6">
+    <button id="close-menu" class="absolute top-4 right-4 text-[#3B82F6] gradient-glow rounded-full p-2 hover:scale-110 transition-transform">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
     </button>
     <nav class="space-y-4 mt-12">
-      <a href="#" data-link="index.html" class="block text-lg text-[#00E5FF] font-bold nav-link">Home</a>
-      <a href="#" data-link="store.html" class="block text-lg hover:text-[#00E5FF] transition nav-link">Store</a>
-      <a href="#" data-link="tournaments.html" class="block text-lg hover:text-[#00E5FF] transition nav-link">Tournaments</a>
-      <a href="#" data-link="trackorder.html" class="block text-lg hover:text-[#00E5FF] transition nav-link">Track Order</a>
-      <a href="#" data-link="contactus.html" class="block text-lg hover:text-[#00E5FF] transition nav-link">Contact Us</a>
-      <a href="#" data-link="aboutus.html" class="block text-lg hover:text-[#00E5FF] transition nav-link">About Us</a>
-      <a href="signin.html" class="block text-lg hover:text-[#00E5FF] transition nav-link">Sign In</a>
-      <a href="createaccount.html" class="block text-lg hover:text-[#00E5FF] transition nav-link">Create Account</a>
+      <a href="#" data-link="index.html" class="block text-lg text-[#3B82F6] font-semibold nav-link active">Home</a>
+      <a href="#" data-link="store.html" class="block text-lg text-[#F1F5F9] hover:text-[#3B82F6] font-semibold nav-link">Store</a>
+      <a href="#" data-link="tournaments.html" class="block text-lg text-[#F1F5F9] hover:text-[#3B82F6] font-semibold nav-link">Tournaments</a>
+      <a href="#" data-link="trackorder.html" class="block text-lg text-[#F1F5F9] hover:text-[#3B82F6] font-semibold nav-link">Track Order</a>
+      <a href="#" data-link="contactus.html" class="block text-lg text-[#F1F5F9] hover:text-[#3B82F6] font-semibold nav-link">Contact Us</a>
+      <a href="#" data-link="aboutus.html" class="block text-lg text-[#F1F5F9] hover:text-[#3B82F6] font-semibold nav-link">About Us</a>
+      <a href="signin.html" class="block text-lg text-[#F1F5F9] hover:text-[#3B82F6] font-semibold nav-link">Sign In</a>
+      <a href="createaccount.html" class="block text-lg text-[#F1F5F9] hover:text-[#3B82F6] font-semibold nav-link">Create Account</a>
     </nav>
   </div>
 
   <!-- Main Content -->
-  <div class="md:ml-64">
+  <div class="lg:ml-64">
     <!-- Hero Section -->
     <section class="hero-bg min-h-screen flex items-center justify-center text-center p-6">
-      <div class="fade-in">
-        <h1 class="text-5xl md:text-7xl font-bold text-white font-orbitron mb-4">Gaming Odyssey</h1>
-        <p class="text-xl md:text-2xl text-[#E0E0E0] mb-8">Where Gaming Meets Glory.</p>
-        <div class="space-x-4">
-          <a href="#" data-link="createaccount.html" class="inline-block bg-[#00E5FF] text-[#0f0f1a] font-bold py-3 px-6 rounded neon-glow nav-link">Join Now</a>
-          <a href="#" data-link="tournaments.html" class="inline-block bg-[#D500F9] text-white font-bold py-3 px-6 rounded neon-glow nav-link">View Tournaments</a>
+      <div class="fade-in max-w-2xl mx-auto">
+        <h1 class="text-4xl md:text-6xl font-bold text-white font-['Inter'] mb-4">Welcome to Gaming Odyssey</h1>
+        <p class="text-lg md:text-xl text-[#F1F5F9] mb-8">Discover epic tournaments, premium gaming gear, and a vibrant community.</p>
+        <div class="flex flex-col sm:flex-row justify-center gap-4">
+          <a href="#" data-link="createaccount.html" class="action-btn">Join Now</a>
+          <a href="#" data-link="tournaments.html" class="action-btn">Explore Tournaments</a>
         </div>
       </div>
     </section>
@@ -289,60 +309,53 @@
     <section class="py-16 px-6">
       <div class="slideshow-container">
         <div class="slides-wrapper">
-          <!-- Slide 1: Recent Products -->
-          <div class="slide flex items-center justify-center md:flex-row flex-col gap-8 active">
-            <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3" alt="Recent Products" class="w-full md:w-1/2 h-64 object-cover rounded-lg neon-border neon-glow">
-            <div class="slide-content text-center md:text-left">
-              <h3 class="text-3xl font-bold text-white font-orbitron mb-4">Discover Our Latest Gaming Gear</h3>
-              <p class="text-lg text-[#E0E0E0] mb-6">Explore the newest controllers, keyboards, and headsets designed for ultimate performance.</p>
-              <a href="#" data-link="store.html" class="inline-block submit-btn nav-link">Shop Now</a>
+          <div class="slide flex items-center justify-center lg:flex-row flex-col gap-8 active">
+            <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3" alt="Recent Products" class="w-full lg:w-1/2 h-64 object-cover rounded-lg gradient-glow">
+            <div class="slide-content text-center lg:text-left max-w-md">
+              <h3 class="text-3xl font-bold text-white font-['Inter'] mb-4">Premium Gaming Gear</h3>
+              <p class="text-base text-[#F1F5F9] mb-6">Explore cutting-edge controllers, keyboards, and headsets for ultimate performance.</p>
+              <a href="#" data-link="store.html" class="action-btn">Shop Now</a>
             </div>
           </div>
-          <!-- Slide 2: Minecraft Server -->
-          <div class="slide flex items-center justify-center md:flex-row flex-col gap-8">
-            <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3" alt="Minecraft Server" class="w-full md:w-1/2 h-64 object-cover rounded-lg neon-border neon-glow">
-            <div class="slide-content text-center md:text-left">
-              <h3 class="text-3xl font-bold text-white font-orbitron mb-4">Join Our Minecraft Server</h3>
-              <p class="text-lg text-[#E0E0E0] mb-6">Dive into epic adventures on our server at <code>play.gamingodyssey.in</code>. Build, battle, and connect!</p>
-              <a href="http://play.gamingodyssey.in" class="inline-block submit-btn">Join Server</a>
+          <div class="slide flex items-center justify-center lg:flex-row flex-col gap-8">
+            <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3" alt="Minecraft Server" class="w-full lg:w-1/2 h-64 object-cover rounded-lg gradient-glow">
+            <div class="slide-content text-center lg:text-left max-w-md">
+              <h3 class="text-3xl font-bold text-white font-['Inter'] mb-4">Minecraft Server</h3>
+              <p class="text-base text-[#F1F5F9] mb-6">Join <code>play.gamingodyssey.in</code> for thrilling adventures and epic builds.</p>
+              <a href="http://play.gamingodyssey.in" class="action-btn">Join Server</a>
             </div>
           </div>
-          <!-- Slide 3: Server Ranks -->
-          <div class="slide flex items-center justify-center md:flex-row flex-col gap-8">
-            <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3" alt="Server Ranks" class="w-full md:w-1/2 h-64 object-cover rounded-lg neon-border neon-glow">
-            <div class="slide-content text-center md:text-left">
-              <h3 class="text-3xl font-bold text-white font-orbitron mb-4">Unlock Exclusive Server Ranks</h3>
-              <p class="text-lg text-[#E0E0E0] mb-6">Earn ranks like Legend, Hero, and Elite with unique perks. Level up your Minecraft experience!</p>
-              <a href="#" data-link="ranks.html" class="inline-block submit-btn nav-link">Learn More</a>
+          <div class="slide flex items-center justify-center lg:flex-row flex-col gap-8">
+            <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3" alt="Server Ranks" class="w-full lg:w-1/2 h-64 object-cover rounded-lg gradient-glow">
+            <div class="slide-content text-center lg:text-left max-w-md">
+              <h3 class="text-3xl font-bold text-white font-['Inter'] mb-4">Exclusive Ranks</h3>
+              <p class="text-base text-[#F1F5F9] mb-6">Unlock Legend, Hero, and Elite ranks with premium perks.</p>
+              <a href="#" data-link="ranks.html" class="action-btn">Discover Ranks</a>
             </div>
           </div>
-          <!-- Slide 4: Gaming Odyssey Store -->
-          <div class="slide flex items-center justify-center md:flex-row flex-col gap-8">
-            <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3" alt="Gaming Odyssey Store" class="w-full md:w-1/2 h-64 object-cover rounded-lg neon-border neon-glow">
-            <div class="slide-content text-center md:text-left">
-              <h3 class="text-3xl font-bold text-white font-orbitron mb-4">Shop at Gaming Odyssey Store</h3>
-              <p class="text-lg text-[#E0E0E0] mb-6">From RGB peripherals to esports apparel, find everything you need to dominate.</p>
-              <a href="#" data-link="store.html" class="inline-block submit-btn nav-link">Visit Store</a>
+          <div class="slide flex items-center justify-center lg:flex-row flex-col gap-8">
+            <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3" alt="Gaming Odyssey Store" class="w-full lg:w-1/2 h-64 object-cover rounded-lg gradient-glow">
+            <div class="slide-content text-center lg:text-left max-w-md">
+              <h3 class="text-3xl font-bold text-white font-['Inter'] mb-4">Gaming Odyssey Store</h3>
+              <p class="text-base text-[#F1F5F9] mb-6">Shop the latest peripherals and esports apparel.</p>
+              <a href="#" data-link="store.html" class="action-btn">Visit Store</a>
             </div>
           </div>
-          <!-- Slide 5: Custom PC Building -->
-          <div class="slide flex items-center justify-center md:flex-row flex-col gap-8">
-            <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3" alt="Custom PC Building" class="w-full md:w-1/2 h-64 object-cover rounded-lg neon-border neon-glow">
-            <div class="slide-content text-center md:text-left">
-              <h3 class="text-3xl font-bold text-white font-orbitron mb-4">Build Your Dream Gaming PC</h3>
-              <p class="text-lg text-[#E0E0E0] mb-6">Customize your rig with our expert PC building service. Power up your gameplay!</p>
-              <a href="#" data-link="pcbuild.html" class="inline-block submit-btn nav-link">Start Building</a>
+          <div class="slide flex items-center justify-center lg:flex-row flex-col gap-8">
+            <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3" alt="Custom PC Building" class="w-full lg:w-1/2 h-64 object-cover rounded-lg gradient-glow">
+            <div class="slide-content text-center lg:text-left max-w-md">
+              <h3 class="text-3xl font-bold text-white font-['Inter'] mb-4">Custom Gaming PCs</h3>
+              <p class="text-base text-[#F1F5F9] mb-6">Build your dream rig with our expert PC building service.</p>
+              <a href="#" data-link="pcbuild.html" class="action-btn">Start Building</a>
             </div>
           </div>
         </div>
-        <!-- Navigation Arrows -->
         <div class="arrow prev">
-          <svg class="w-6 h-6 text-[#0f0f1a]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+          <svg class="w-5 h-5 text-[#0F172A]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
         </div>
         <div class="arrow next">
-          <svg class="w-6 h-6 text-[#0f0f1a]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          <svg class="w-5 h-5 text-[#0F172A]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
         </div>
-        <!-- Dots -->
         <div class="dots">
           <span class="dot active"></span>
           <span class="dot"></span>
@@ -354,147 +367,147 @@
     </section>
 
     <!-- Featured Products Section -->
-    <section class="py-16 px-6">
-      <h2 class="text-4xl font-bold text-white font-orbitron text-center mb-12">Featured Gaming Gear</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
-        <div class="bg-[#0f0f1a] p-6 rounded-lg neon-border neon-glow fade-in">
-          <img src="https://via.placeholder.com/200" alt="Product" class="w-full h-48 object-cover rounded mb-4">
-          <h3 class="text-xl font-bold text-white">Neon Controller</h3>
-          <p class="text-[#E0E0E0] mb-4">$99.99</p>
-          <a href="#" data-link="store.html" class="block text-center bg-[#00E5FF] text-[#0f0f1a] font-bold py-2 rounded neon-glow nav-link">Shop Now</a>
+    <section class="py-16 px-6 bg-[#1E293B]">
+      <h2 class="text-4xl font-bold text-white font-['Inter'] text-center mb-12">Featured Gaming Gear</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+        <div class="card gradient-glow">
+          <img src="https://via.placeholder.com/200" alt="Product" class="w-full h-48 object-cover rounded-lg mb-4">
+          <h3 class="text-xl font-bold text-white font-['Inter'] mb-2">Neon Controller</h3>
+          <p class="text-[#F1F5F9] mb-4">$99.99</p>
+          <a href="#" data-link="store.html" class="action-btn w-full text-center">Shop Now</a>
         </div>
-        <div class="bg-[#0f0f1a] p-6 rounded-lg neon-border neon-glow fade-in">
-          <img src="https://via.placeholder.com/200" alt="Product" class="w-full h-48 object-cover rounded mb-4">
-          <h3 class="text-xl font-bold text-white">RGB Keyboard</h3>
-          <p class="text-[#E0E0E0] mb-4">$129.99</p>
-          <a href="#" data-link="store.html" class="block text-center bg-[#00E5FF] text-[#0f0f1a] font-bold py-2 rounded neon-glow nav-link">Shop Now</a>
+        <div class="card gradient-glow">
+          <img src="https://via.placeholder.com/200" alt="Product" class="w-full h-48 object-cover rounded-lg mb-4">
+          <h3 class="text-xl font-bold text-white font-['Inter'] mb-2">RGB Keyboard</h3>
+          <p class="text-[#F1F5F9] mb-4">$129.99</p>
+          <a href="#" data-link="store.html" class="action-btn w-full text-center">Shop Now</a>
         </div>
-        <div class="bg-[#0f0f1a] p-6 rounded-lg neon-border neon-glow fade-in">
-          <img src="https://via.placeholder.com/200" alt="Product" class="w-full h-48 object-cover rounded mb-4">
-          <h3 class="text-xl font-bold text-white">Gaming Mouse</h3>
-          <p class="text-[#E0E0E0] mb-4">$79.99</p>
-          <a href="#" data-link="store.html" class="block text-center bg-[#00E5FF] text-[#0f0f1a] font-bold py-2 rounded neon-glow nav-link">Shop Now</a>
+        <div class="card gradient-glow">
+          <img src="https://via.placeholder.com/200" alt="Product" class="w-full h-48 object-cover rounded-lg mb-4">
+          <h3 class="text-xl font-bold text-white font-['Inter'] mb-2">Gaming Mouse</h3>
+          <p class="text-[#F1F5F9] mb-4">$79.99</p>
+          <a href="#" data-link="store.html" class="action-btn w-full text-center">Shop Now</a>
         </div>
-        <div class="bg-[#0f0f1a] p-6 rounded-lg neon-border neon-glow fade-in">
-          <img src="https://via.placeholder.com/200" alt="Product" class="w-full h-48 object-cover rounded mb-4">
-          <h3 class="text-xl font-bold text-white">Headset Pro</h3>
-          <p class="text-[#E0E0E0] mb-4">$149.99</p>
-          <a href="#" data-link="store.html" class="block text-center bg-[#00E5FF] text-[#0f0f1a] font-bold py-2 rounded neon-glow nav-link">Shop Now</a>
+        <div class="card gradient-glow">
+          <img src="https://via.placeholder.com/200" alt="Product" class="w-full h-48 object-cover rounded-lg mb-4">
+          <h3 class="text-xl font-bold text-white font-['Inter'] mb-2">Headset Pro</h3>
+          <p class="text-[#F1F5F9] mb-4">$149.99</p>
+          <a href="#" data-link="store.html" class="action-btn w-full text-center">Shop Now</a>
         </div>
       </div>
     </section>
 
     <!-- Upcoming Tournaments Section -->
-    <section class="py-16 px-6 bg-[#0f0f1a]">
-      <h2 class="text-4xl font-bold text-white font-orbitron text-center mb-12">Upcoming Tournaments</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-        <div class="bg-[#1a1a2e] p-6 rounded-lg neon-border neon-glow fade-in">
-          <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3" alt="Cyber Clash 2025" class="w-full h-48 object-cover rounded mb-4">
-          <h3 class="text-xl font-bold text-white">Cyber Clash 2025</h3>
-          <p class="text-[#E0E0E0] mb-2">Game: Valorant</p>
-          <p class="text-[#E0E0E0] mb-2">Date: May 15, 2025</p>
-          <p class="text-[#E0E0E0] mb-4">Prize: $10,000</p>
-          <a href="#" data-link="tournaments.html" class="block text-center bg-[#D500F9] text-white font-bold py-2 rounded neon-glow nav-link">Register</a>
+    <section class="py-16 px-6">
+      <h2 class="text-4xl font-bold text-white font-['Inter'] text-center mb-12">Upcoming Tournaments</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        <div class="card gradient-glow">
+          <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3" alt="Cyber Clash 2025" class="w-full h-48 object-cover rounded-lg mb-4">
+          <h3 class="text-xl font-bold text-white font-['Inter'] mb-2">Cyber Clash 2025</h3>
+          <p class="text-[#F1F5F9] mb-1">Game: Valorant</p>
+          <p class="text-[#F1F5F9] mb-1">Date: May 15, 2025</p>
+          <p class="text-[#F1F5F9] mb-4">Prize: $10,000</p>
+          <a href="#" data-link="tournaments.html" class="action-btn w-full text-center">Register</a>
         </div>
-        <div class="bg-[#1a1a2e] p-6 rounded-lg neon-border neon-glow fade-in">
-          <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3" alt="Neon Strike" class="w-full h-48 object-cover rounded mb-4">
-          <h3 class="text-xl font-bold text-white">Neon Strike</h3>
-          <p class="text-[#E0E0E0] mb-2">Game: Overwatch</p>
-          <p class="text-[#E0E0E0] mb-2">Date: June 10, 2025</p>
-          <p class="text-[#E0E0E0] mb-4">Prize: $15,000</p>
-          <a href="#" data-link="tournaments.html" class="block text-center bg-[#D500F9] text-white font-bold py-2 rounded neon-glow nav-link">Register</a>
+        <div class="card gradient-glow">
+          <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3" alt="Neon Strike" class="w-full h-48 object-cover rounded-lg mb-4">
+          <h3 class="text-xl font-bold text-white font-['Inter'] mb-2">Neon Strike</h3>
+          <p class="text-[#F1F5F9] mb-1">Game: Overwatch</p>
+          <p class="text-[#F1F5F9] mb-1">Date: June 10, 2025</p>
+          <p class="text-[#F1F5F9] mb-4">Prize: $15,000</p>
+          <a href="#" data-link="tournaments.html" class="action-btn w-full text-center">Register</a>
         </div>
-        <div class="bg-[#1a1a2e] p-6 rounded-lg neon-border neon-glow fade-in">
-          <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3" alt="Odyssey League" class="w-full h-48 object-cover rounded mb-4">
-          <h3 class="text-xl font-bold text-white">Odyssey League</h3>
-          <p class="text-[#E0E0E0] mb-2">Game: League of Legends</p>
-          <p class="text-[#E0E0E0] mb-2">Date: July 5, 2025</p>
-          <p class="text-[#E0E0E0] mb-4">Prize: $20,000</p>
-          <a href="#" data-link="tournaments.html" class="block text-center bg-[#D500F9] text-white font-bold py-2 rounded neon-glow nav-link">Register</a>
+        <div class="card gradient-glow">
+          <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3" alt="Odyssey League" class="w-full h-48 object-cover rounded-lg mb-4">
+          <h3 class="text-xl font-bold text-white font-['Inter'] mb-2">Odyssey League</h3>
+          <p class="text-[#F1F5F9] mb-1">Game: League of Legends</p>
+          <p class="text-[#F1F5F9] mb-1">Date: July 5, 2025</p>
+          <p class="text-[#F1F5F9] mb-4">Prize: $20,000</p>
+          <a href="#" data-link="tournaments.html" class="action-btn w-full text-center">Register</a>
         </div>
       </div>
     </section>
 
     <!-- About Us Section -->
-    <section class="py-16 px-6 text-center">
-      <h2 class="text-4xl font-bold text-white font-orbitron mb-8">About Gaming Odyssey</h2>
+    <section class="py-16 px-6 bg-[#1E293B] text-center">
+      <h2 class="text-4xl font-bold text-white font-['Inter'] mb-8">About Gaming Odyssey</h2>
       <div class="max-w-2xl mx-auto fade-in">
-        <p class="text-lg text-[#E0E0E0] mb-6">Gaming Odyssey is your gateway to competitive gaming. From thrilling tournaments to top-tier gaming gear, we bring the future of esports directly to you. Join a community of passionate gamers and level up your experience!</p>
-        <svg class="w-16 h-16 mx-auto text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <p class="text-base text-[#F1F5F9] mb-6">Gaming Odyssey is your ultimate destination for competitive gaming. Join thrilling tournaments, shop premium gear, and connect with a passionate community.</p>
+        <svg class="w-16 h-16 mx-auto text-[#3B82F6] gradient-glow" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
       </div>
     </section>
 
     <!-- Contact Us Section -->
-    <section class="py-16 px-6 bg-[#0f0f1a]">
-      <h2 class="text-4xl font-bold text-white font-orbitron text-center mb-12">Contact Us</h2>
-      <div class="max-w-lg mx-auto bg-[#1a1a2e] p-8 rounded-lg neon-border fade-in">
-        <form id="contact-form">
-          <div class="mb-4">
-            <label for="name" class="block text-[#E0E0E0] mb-2">Name</label>
+    <section class="py-16 px-6">
+      <h2 class="text-4xl font-bold text-white font-['Inter'] text-center mb-12">Get in Touch</h2>
+      <div class="max-w-xl mx-auto bg-[#1E293B] p-8 rounded-lg fade-in">
+        <div id="contact-form" class="space-y-6">
+          <div>
+            <label for="name" class="block text-[#F1F5F9] mb-1 font-medium">Name</label>
             <input type="text" id="name" name="name" required placeholder="Your name" />
             <p id="name-error" class="error hidden">Please enter your name</p>
           </div>
-          <div class="mb-4">
-            <label for="email" class="block text-[#E0E0E0] mb-2">Email</label>
+          <div>
+            <label for="email" class="block text-[#F1F5F9] mb-1 font-medium">Email</label>
             <input type="email" id="email" name="email" required placeholder="Your email" />
             <p id="email-error" class="error hidden">Please enter a valid email</p>
           </div>
-          <div class="mb-4">
-            <label for="subject" class="block text-[#E0E0E0] mb-2">Subject</label>
+          <div>
+            <label for="subject" class="block text-[#F1F5F9] mb-1 font-medium">Subject</label>
             <input type="text" id="subject" name="subject" required placeholder="Subject" />
             <p id="subject-error" class="error hidden">Please enter a subject</p>
           </div>
-          <div class="mb-4">
-            <label for="message" class="block text-[#E0E0E0] mb-2">Message</label>
+          <div>
+            <label for="message" class="block text-[#F1F5F9] mb-1 font-medium">Message</label>
             <textarea id="message" name="message" rows="5" required placeholder="Your message"></textarea>
             <p id="message-error" class="error hidden">Please enter a message</p>
           </div>
           <div class="text-center">
-            <button type="submit" class="submit-btn">Send Message</button>
+            <button type="submit" class="action-btn w-full">Send Message</button>
             <p id="form-status" class="mt-4"></p>
           </div>
-        </form>
+        </div>
       </div>
     </section>
+  </div>
 
-    <!-- Footer -->
-    <footer class="bg-[#0f0f1a] py-12 px-6">
-      <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div>
-          <h3 class="text-xl font-bold text-white font-orbitron mb-4">Contact</h3>
-          <p class="text-[#E0E0E0]">📧 <a href="/cdn-cgi/l/email-protection#280a1d1b01060d1b1b0f090501060f070c111b1b0d11280f05090104460b0705" class="text-[#E0E0E0] hover:text-[#00E5FF] transition"><span class="__cf_email__" data-cfemail="486a7d7b61666d7b7b6f696561666f676c717b7b6d71486f65696164266b6765">[email&#160;protected]</span></a></p>
-          <p class="text-[#E0E0E0]">📞 6290994382</p>
-        </div>
-        <div>
-          <h3 class="text-xl font-bold text-white font-orbitron mb-4">Useful Links</h3>
-          <ul class="space-y-2">
-            <li><a href="#" data-link="index.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition nav-link">Home</a></li>
-            <li><a href="#" data-link="store.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition nav-link">Store</a></li>
-            <li><a href="#" data-link="tournaments.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition nav-link">Tournaments</a></li>
-            <li><a href="#" data-link="trackorder.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition nav-link">Track Order</a></li>
-            <li><a href="#" data-link="contactus.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition nav-link">Contact Us</a></li>
-            <li><a href="#" data-link="aboutus.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition nav-link">About Us</a></li>
-            <li><a href="terms.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Terms & Conditions</a></li>
-          </ul>
-        </div>
-        <div>
-          <h3 class="text-xl font-bold text-white font-orbitron mb-4">Follow Us</h3>
-          <div class="flex space-x-4">
-            <a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">
-              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
-            </a>
-            <a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">
-              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
-            </a>
-            <a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">
-              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
-            </a>
-          </div>
+  <!-- Footer -->
+  <footer class="bg-[#1E293B] py-12 px-6">
+    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 lg:ml-64">
+      <div>
+        <h3 class="text-xl font-bold text-white font-['Inter'] mb-4">Contact</h3>
+        <p class="text-[#F1F5F9] mb-2">📧 <a href="mailto:businessgamingodyssey@gmail.com" class="hover:text-[#3B82F6] transition">businessgamingodyssey@gmail.com</a></p>
+        <p class="text-[#F1F5F9]">📞 6290994382</p>
+      </div>
+      <div>
+        <h3 class="text-xl font-bold text-white font-['Inter'] mb-4">Explore</h3>
+        <ul class="space-y-2">
+          <li><a href="#" data-link="index.html" class="text-[#F1F5F9] hover:text-[#3B82F6] font-medium nav-link">Home</a></li>
+          <li><a href="#" data-link="store.html" class="text-[#F1F5F9] hover:text-[#3B82F6] font-medium nav-link">Store</a></li>
+          <li><a href="#" data-link="tournaments.html" class="text-[#F1F5F9] hover:text-[#3B82F6] font-medium nav-link">Tournaments</a></li>
+          <li><a href="#" data-link="trackorder.html" class="text-[#F1F5F9] hover:text-[#3B82F6] font-medium nav-link">Track Order</a></li>
+          <li><a href="#" data-link="contactus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] font-medium nav-link">Contact</a></li>
+          <li><a href="#" data-link="aboutus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] font-medium nav-link">About</a></li>
+          <li><a href="terms.html" class="text-[#F1F5F9] hover:text-[#3B82F6] font-medium nav-link">Terms & Conditions</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-xl font-bold text-white font-['Inter'] mb-4">Connect</h3>
+        <div class="flex space-x-4">
+          <a href="#" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
+          </a>
+          <a href="#" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
+          </a>
+          <a href="#" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
+          </a>
         </div>
       </div>
-      <p class="text-center text-[#E0E0E0] mt-8">© 2025 Gaming Odyssey. All rights reserved.</p>
-    </footer>
-  </div>
+    </div>
+    <p class="text-center text-[#F1F5F9] mt-8">© 2025 Gaming Odyssey. All rights reserved.</p>
+  </footer>
 
   <!-- EmailJS SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
@@ -526,10 +539,10 @@
     const mobileMenu = document.getElementById('mobile-menu');
     const closeMenu = document.getElementById('close-menu');
     hamburger.addEventListener('click', () => {
-      mobileMenu.classList.remove('hidden');
+      mobileMenu.classList.add('active');
     });
     closeMenu.addEventListener('click', () => {
-      mobileMenu.classList.add('hidden');
+      mobileMenu.classList.remove('active');
     });
 
     // Fade-in Animation on Scroll
@@ -659,5 +672,3 @@
     // Update slideshow on window resize
     window.addEventListener('resize', updateSlides);
   </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93ba36b45fc0bfed',t:'MTc0NjU1MjcxMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
-</html>
