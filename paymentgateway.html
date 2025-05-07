@@ -287,7 +287,7 @@
     <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
       <div>
         <h3 class="text-xl font-bold text-white font-orbitron mb-4">Contact</h3>
-        <p class="text-[#E0E0E0]">📧 <a href="mailto:support@gamingodyssey.com">support@gamingodyssey.com</a></p>
+        <p class="text-[#E0E0E0]">📧 <a href="/cdn-cgi/l/email-protection#0b787e7b7b64797f4b6c6a6662656c646f7278786e7225686466"><span class="__cf_email__" data-cfemail="a794929797889593a780868a8e898088839e9494829ec984888a">[email&#160;protected]</span></a></p>
         <p class="text-[#E0E0E0]">📞 +1 800-123-4567</p>
       </div>
       <div>
@@ -319,6 +319,7 @@
     <p class="text-center text-[#E0E0E0] mt-8">© 2025 Gaming Odyssey. All rights reserved.</p>
   </footer>
 
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
   <script>
     // Generate unique order ID
     function generateOrderId() {
@@ -362,22 +363,24 @@
     // Update UPI QR code with amount
     const upiQrCode = document.getElementById('upi-qr-code');
     const upiQrAmount = document.getElementById('upi-qr-amount');
-    upiQrAmount.textContent = `$${ total.toFixed(2) }`;
-    upiQrCode.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=rupanjanbera5-1@okicici&pn=Gaming Odyssey&am=${total.toFixed(2)}&cu=USD`;
+    const formattedTotal = total.toFixed(2);
+    upiQrAmount.textContent = `$${ formattedTotal }`;
+    const upiLink = `upi://pay?pa=rupanjanbera5-1@okicici&pn=${encodeURIComponent('Gaming Odyssey')}&am=${encodeURIComponent(formattedTotal)}&cu=USD`;
+    upiQrCode.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(upiLink)}`;
 
     // Set order IDs and amounts
     const orderId = generateOrderId();
     document.getElementById('upi-order-id').value = orderId;
-    document.getElementById('upi-amount').value = total.toFixed(2);
+    document.getElementById('upi-amount').value = formattedTotal;
     document.getElementById('debit-order-id').value = orderId;
-    document.getElementById('debit-amount').value = total.toFixed(2);
+    document.getElementById('debit-amount').value = formattedTotal;
     document.getElementById('credit-order-id').value = orderId;
-    document.getElementById('credit-amount').value = total.toFixed(2);
+    document.getElementById('credit-amount').value = formattedTotal;
     document.getElementById('netbanking-order-id').value = orderId;
-    document.getElementById('netbanking-amount').value = total.toFixed(2);
+    document.getElementById('netbanking-amount').value = formattedTotal;
     document.getElementById('cod-order-id').value = orderId;
-    document.getElementById('cod-amount').value = total.toFixed(2);
-    document.getElementById('cod-amount-display').textContent = `$${ total.toFixed(2) }`;
+    document.getElementById('cod-amount').value = formattedTotal;
+    document.getElementById('cod-amount-display').textContent = `$${ formattedTotal }`;
 
     // Payment method selection
     const paymentCards = document.querySelectorAll('.payment-card');
@@ -398,7 +401,7 @@
       const order = {
         orderId: orderId,
         items: cart,
-        total: total.toFixed(2),
+        total: formattedTotal,
         paymentMethod: paymentMethod,
         shippingAddress: shippingAddress,
         timestamp: new Date().toISOString()
