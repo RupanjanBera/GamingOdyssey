@@ -28,7 +28,7 @@
       box-shadow: 2px 0 6px rgba(59, 130, 246, 0.1);
     }
     .hero-bg {
-      background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(217, 70, 239, 0.15), #0F172A);
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(217, 70, 239,  цикл 0.15), #0F172A);
       position: relative;
       overflow: hidden;
     }
@@ -302,14 +302,38 @@
       <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
     </button>
     <nav class="space-y-3 mt-12">
-      <a href="#" data-link="index.html" class="block text-[#3B82F6] font-semibold nav-link leading-relaxed">Home</a>
-      <a href="#" data-link="store.html" class="block text-[#F1F5F9] font-semibold nav-link leading-relaxed">Store</a>
-      <a href="#" data-link="tournaments.html" class="block text-[#F1F5F9] font-semibold nav-link leading-relaxed">Tournaments</a>
-      <a href="#" data-link="trackorder.html" class="block text-[#F1F5F9] font-semibold nav-link leading-relaxed">Track Order</a>
-      <a href="#" data-link="contactus.html" class="block text-[#F1F5F9] font-semibold nav-link leading-relaxed">Contact Us</a>
-      <a href="#" data-link="aboutus.html" class="block text-[#F1F5F9] font-semibold nav-link leading-relaxed">About Us</a>
-      <a href="signin.html" class="block text-[#F1F5F9] font-semibold nav-link leading-relaxed">Sign In</a>
-      <a href="createaccount.html" class="block text-[#F1F5F9] font-semibold nav-link leading-relaxed">Create Account</a>
+        <a href="#" data-link="index.html" class="flex items-center space-x-2 text-[#3B82F6] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Home</span>
+        </a>
+        <a href="#" data-link="store.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Store</span>
+        </a>
+        <a href="#" data-link="tournaments.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Tournaments</span>
+        </a>
+        <a href="#" data-link="trackorder.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Track Order</span>
+        </a>
+        <a href="#" data-link="contactus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Contact Us</span>
+        </a>
+        <a href="#" data-link="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>About Us</span>
+        </a>
+        <a href="signin.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Sign In</span>
+        </a>
+        <a href="createaccount.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Create Account</span>
+        </a>
     </nav>
   </div>
 
@@ -321,7 +345,7 @@
         <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">Gaming Odyssey</h1>
         <p class="text-base sm:text-lg md:text-xl text-[#F1F5F9] mb-8 leading-relaxed">Where Gaming Meets Glory</p>
         <div class="flex flex-col sm:flex-row justify-center gap-3">
-          <a href="#" data-link="createaccount.html" class="submit-btn">Join Now</a>
+          <a href="createaccount.html" class="submit-btn">Join Now</a>
           <a href="#" data-link="tournaments.html" class="submit-btn">View Tournaments</a>
         </div>
       </div>
@@ -515,14 +539,14 @@
         <div>
           <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Follow Us</h3>
           <div class="flex space-x-3">
-            <a href="#" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full">
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v-2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
+            <a href="https://www.instagram.com/noticedveil" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full">
+              <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" class="w-5 h-5">
             </a>
-            <a href="#" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full">
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v-2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
+            <a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full">
+              <img src="https://cdn-icons-png.flaticon.com/512/3938/3938026.png" alt="YouTube" class="w-5 h-5">
             </a>
-            <a href="#" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full">
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v-2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
+            <a href="https://www.facebook.com" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full">
+              <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" class="w-5 h-5">
             </a>
           </div>
         </div>
@@ -545,6 +569,12 @@
     function handleProtectedLink(event) {
       event.preventDefault();
       const link = event.currentTarget.getAttribute('data-link');
+      // Allow direct access to signin.html and createaccount.html
+      if (link === 'signin.html' || link === 'createaccount.html') {
+        window.location.href = link;
+        return;
+      }
+      // Require authentication for other pages
       if (isAuthenticated()) {
         window.location.href = link;
       } else {
