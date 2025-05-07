@@ -76,9 +76,10 @@
   <section class="content-bg py-16 px-6">
     <div class="max-w-4xl mx-auto bg-[#0f0f1a] p-8 rounded-lg neon-border fade-in">
       <h1 class="text-4xl font-bold text-white font-orbitron text-center mb-8">Your Cart 🛒</h1>
+      <p class="text-lg text-[#E0E0E0] mb-4">Currency: <span id="currency-display">INR (₹)</span></p>
       <div id="cart-items" class="space-y-4 mb-6"></div>
       <div class="border-t border-[#00E5FF] pt-4">
-        <p class="text-2xl font-bold text-white font-orbitron">Total: <span id="cart-total">$0.00</span></p>
+        <p class="text-2xl font-bold text-white font-orbitron">Total: <span id="cart-total">₹0.00</span></p>
       </div>
       <div class="flex justify-between mt-6">
         <button id="clear-cart" class="bg-[#D500F9] text-white font-bold py-2 px-6 rounded neon-glow">Clear Cart</button>
@@ -93,7 +94,7 @@
     <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
       <div>
         <h3 class="text-xl font-bold text-white font-orbitron mb-4">Contact</h3>
-        <p class="text-[#E0E0E0]">📧 <a href="mailto:support@gamingodyssey.com">support@gamingodyssey.com</a></p>
+        <p class="text-[#E0E0E0]">📧 <a href="/cdn-cgi/l/email-protection#2e4d4b4e4e514c4a6e49434f474049414a575d5d4b57004d4143"><span class="__cf_email__" data-cfemail="c2a1a7a2a2bda0a682a5afa3abaea7afa4b9b3b3a5b9eca1adaf">[businessgamingodyssey@gmail.com]</span></a></p>
         <p class="text-[#E0E0E0]">📞 6290994382</p>
       </div>
       <div>
@@ -114,7 +115,7 @@
             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
           </a>
           <a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">
-            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v-2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
           </a>
           <a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">
             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
@@ -125,7 +126,28 @@
     <p class="text-center text-[#E0E0E0] mt-8">© 2025 Gaming Odyssey. All rights reserved.</p>
   </footer>
 
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
   <script>
+    // Currency Configuration (same as store.html)
+    const conversionRates = {
+      USD: 1,
+      INR: 83,
+      EUR: 0.92,
+      GBP: 0.79,
+      JPY: 149
+    };
+    const currencySymbols = {
+      USD: '$',
+      INR: '₹',
+      EUR: '€',
+      GBP: '£',
+      JPY: '¥'
+    };
+    // Retrieve selected currency from localStorage or default to INR
+    let selectedCurrency = localStorage.getItem('selectedCurrency') || 'INR';
+    const currencyDisplay = document.getElementById('currency-display');
+    currencyDisplay.textContent = `${selectedCurrency} (${currencySymbols[selectedCurrency]})`;
+
     // Load Cart Items
     const cartItemsContainer = document.getElementById('cart-items');
     const cartTotalElement = document.getElementById('cart-total');
@@ -139,26 +161,27 @@
 
       if (cart.length === 0) {
         cartItemsContainer.innerHTML = '<p class="text-[#E0E0E0] text-center">Your cart is empty.</p>';
-        cartTotalElement.textContent = '$0.00';
+        cartTotalElement.textContent = `${currencySymbols[selectedCurrency]}0.00`;
       } else {
         cart.forEach((item, index) => {
-          const itemTotal = item.price * item.quantity;
-          total += itemTotal;
+          const itemPriceConverted = (item.price * conversionRates[selectedCurrency]).toFixed(2);
+          const itemTotal = (item.price * item.quantity * conversionRates[selectedCurrency]).toFixed(2);
+          total += parseFloat(itemTotal);
           const itemElement = document.createElement('div');
           itemElement.className = 'flex justify-between items-center border-b border-[#00E5FF] pb-4';
           itemElement.innerHTML = `
             <div>
               <h3 class="text-lg font-bold text-white">${item.name}</h3>
-              <p class="text-[#E0E0E0]">$${item.price.toFixed(2)} x ${item.quantity}</p>
+              <p class="text-[#E0E0E0]">${currencySymbols[selectedCurrency]}${itemPriceConverted} x ${item.quantity}</p>
             </div>
             <div class="flex items-center space-x-4">
-              <p class="text-[#E0E0E0] font-bold">$${itemTotal.toFixed(2)}</p>
+              <p class="text-[#E0E0E0] font-bold">${currencySymbols[selectedCurrency]}${itemTotal}</p>
               <button class="remove-item text-[#D500F9] hover:text-[#00E5FF]" data-index="${index}">Remove</button>
             </div>
           `;
           cartItemsContainer.appendChild(itemElement);
         });
-        cartTotalElement.textContent = `$${total.toFixed(2)}`;
+        cartTotalElement.textContent = `${currencySymbols[selectedCurrency]}${total.toFixed(2)}`;
       }
     }
 
@@ -186,11 +209,12 @@
         alert('Your cart is empty. Add items to proceed to checkout.');
         return;
       }
-      const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      const total = cart.reduce((sum, item) => sum + item.price * item.quantity * conversionRates[selectedCurrency], 0).toFixed(2);
       const orderId = 'ORDER' + Math.floor(Math.random() * 10000);
       const order = {
         orderId: orderId,
-        total: total,
+        total: parseFloat(total),
+        currency: selectedCurrency,
         items: cart
       };
       localStorage.setItem('order', JSON.stringify(order));
