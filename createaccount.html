@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -155,7 +154,6 @@
         font-size: 1rem;
       }
     }
-    /* Ensure checkbox and label text align properly */
     .terms-label {
       display: flex;
       align-items: center;
@@ -198,7 +196,7 @@
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Contact Us</span>
         </a>
-        <a href="#" data-link="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+        <a href="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>About Us</span>
         </a>
@@ -210,6 +208,10 @@
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Create Account</span>
         </a>
+        <div id="user-display" class="hidden flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>User</span>
+        </div>
       </nav>
     </div>
   </div>
@@ -246,7 +248,7 @@
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
         <span>Contact Us</span>
       </a>
-      <a href="#" data-link="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+      <a href="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
         <span>About Us</span>
       </a>
@@ -258,6 +260,10 @@
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
         <span>Create Account</span>
       </a>
+      <div id="mobile-user-display" class="hidden flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <span>User</span>
+      </div>
     </nav>
   </div>
 
@@ -304,7 +310,7 @@
       <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         <div>
           <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Contact</h3>
-          <p class="text-[#F1F5F9] mb-2 text-sm leading-relaxed">📧 <a href="mailto:support@gamingodyssey.in" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link">support@gamingodyssey.in</a></p>
+          <p class="text-[#F1F5F9] mb-2 text-sm leading-relaxed">📧 <a href="mailto:support@gamingodyssey.in" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link">businessgamingodyssey@gmail.com</a></p>
           <p class="text-[#F1F5F9] text-sm leading-relaxed">📞 6290994382</p>
         </div>
         <div>
@@ -315,7 +321,7 @@
             <li><a href="#" data-link="tournaments.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Tournaments</a></li>
             <li><a href="#" data-link="trackorder.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Track Order</a></li>
             <li><a href="#" data-link="contactus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Contact Us</a></li>
-            <li><a href="#" data-link="aboutus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">About Us</a></li>
+            <li><a href="aboutus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">About Us</a></li>
             <li><a href="terms.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Terms & Conditions</a></li>
           </ul>
         </div>
@@ -347,8 +353,8 @@
     function handleProtectedLink(event) {
       event.preventDefault();
       const link = event.currentTarget.getAttribute('data-link') || event.currentTarget.getAttribute('href');
-      // Allow direct access to signin.html, createaccount.html, terms.html, and external links
-      if (link === 'signin.html' || link === 'createaccount.html' || link === 'terms.html' || link.startsWith('http')) {
+      // Allow direct access to signin.html, createaccount.html, aboutus.html, terms.html, and external links
+      if (link === 'signin.html' || link === 'createaccount.html' || link === 'aboutus.html' || link === 'terms.html' || link.startsWith('http')) {
         window.location.href = link;
         return;
       }
@@ -363,6 +369,19 @@
     document.querySelectorAll('.nav-link, .submit-btn').forEach(link => {
       link.addEventListener('click', handleProtectedLink);
     });
+
+    // Display Username in Sidebar and Mobile Menu
+    const userDisplay = document.getElementById('user-display');
+    const mobileUserDisplay = document.getElementById('mobile-user-display');
+    if (isAuthenticated()) {
+      const username = localStorage.getItem('currentUser');
+      if (username) {
+        userDisplay.classList.remove('hidden');
+        mobileUserDisplay.classList.remove('hidden');
+        userDisplay.querySelector('span').textContent = username;
+        mobileUserDisplay.querySelector('span').textContent = username;
+      }
+    }
 
     // Hamburger Menu Toggle
     const hamburger = document.getElementById('hamburger');
@@ -399,41 +418,43 @@
       document.querySelectorAll('.error').forEach(el => el.classList.add('hidden'));
       let isValid = true;
 
-      // Load existing users from localStorage
-      const users = JSON.parse(localStorage.getItem('users')) || [];
-
-      // Validate username
-      if (!username || users.some(user => user.username === username)) {
-        document.getElementById('username-error').textContent = 'Please enter a unique username';
+      // Validate inputs
+      if (!username) {
+        document.getElementById('username-error').textContent = 'Please enter a username';
         document.getElementById('username-error').classList.remove('hidden');
         isValid = false;
+      } else {
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        if (users.some(user => user.username === username)) {
+          document.getElementById('username-error').textContent = 'Username already exists';
+          document.getElementById('username-error').classList.remove('hidden');
+          isValid = false;
+        }
       }
 
-      // Validate email
       if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         document.getElementById('email-error').classList.remove('hidden');
         isValid = false;
       }
 
-      // Validate password
       if (!password || password.length < 6) {
         document.getElementById('password-error').classList.remove('hidden');
         isValid = false;
       }
 
-      // Validate terms
       if (!terms) {
         document.getElementById('terms-error').classList.remove('hidden');
         isValid = false;
       }
 
       if (!isValid) {
-        status.textContent = 'Please fix the errors above';
+        status.textContent = 'Please fill all fields correctly';
         status.className = 'error';
         return;
       }
 
       // Save user data
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
       users.push({ username, email, password });
       localStorage.setItem('users', JSON.stringify(users));
       status.textContent = 'Account created successfully! Redirecting to sign-in...';
