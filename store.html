@@ -4,28 +4,28 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gaming Odyssey - Store</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
-      font-family: 'Rajdhani', sans-serif;
-      background-color: #1a1a2e;
-      color: #E0E0E0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #0F172A;
+      color: #F1F5F9;
       scroll-behavior: smooth;
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
-    .neon-border {
-      border: 1px solid #00E5FF;
-      box-shadow: 0 0 10px #00E5FF, 0 0 20px #D500F9;
+    .gradient-glow {
+      box-shadow: 0 0 6px rgba(59, 130, 246, 0.2);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-    .neon-glow:hover {
-      box-shadow: 0 0 15px #00E5FF, 0 0 25px #D500F9;
-      transform: translateY(-5px);
-      transition: all 0.3s ease;
+    .gradient-glow:hover {
+      box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+      transform: translateY(-3px);
     }
-    .sidebar {
-      background-color: #0f0f1a;
-      transition: all 0.3s ease;
+    .sidebar, .category-menu {
+      background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
+      box-shadow: 2px 0 6px rgba(59, 130, 246, 0.1);
     }
     .category-menu {
       transition: transform 0.3s ease;
@@ -34,7 +34,7 @@
       transform: translateX(100%);
     }
     .hero-bg {
-      background: linear-gradient(45deg, rgba(0, 229, 255, 0.1), rgba(213, 0, 249, 0.1));
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(217, 70, 239, 0.15), #0F172A);
       position: relative;
       overflow: hidden;
     }
@@ -45,40 +45,110 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="#00E5FF" opacity="0.3"/></svg>') repeat;
-      animation: particles 20s linear infinite;
+      background: radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.2), transparent 70%);
+      animation: glow 20s ease-in-out infinite;
       opacity: 0.5;
     }
-    @keyframes particles {
-      0% { transform: translateY(0); }
-      100% { transform: translateY(-100px); }
+    @keyframes glow {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 0.7; }
     }
     .fade-in {
       opacity: 0;
-      transform: translateY(20px);
+      transform: translateY(15px);
       transition: opacity 0.6s ease, transform 0.6s ease;
     }
     .fade-in.visible {
       opacity: 1;
       transform: translateY(0);
     }
-    @media (min-width: 768px) {
-      .category-menu {
-        transform: translateX(0);
-      }
+    input, select {
+      background: #1E293B;
+      color: #F1F5F9;
+      border: 1px solid #3B82F6;
+      border-radius: 0.5rem;
+      padding: 0.75rem;
+      width: 100%;
+      transition: border-color 0.2s ease;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.9375rem;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: #D946EF;
+      box-shadow: 0 0 6px rgba(217, 70, 239, 0.2);
+    }
+    .submit-btn {
+      background: linear-gradient(90deg, #3B82F6, #D946EF);
+      color: #0F172A;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      transition: transform 0.2s ease;
+      font-size: 1rem;
+    }
+    .submit-btn:hover {
+      transform: translateY(-2px);
+    }
+    .nav-link, #mobile-menu a {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      transition: color 0.2s ease;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 1.0625rem;
+      padding: 0.5rem 0;
+    }
+    .nav-link::after, #mobile-menu a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: 0;
+      left: 0;
+      background: linear-gradient(to right, #3B82F6, #D946EF);
+      transition: width 0.2s ease;
+    }
+    .nav-link:hover::after, #mobile-menu a:hover::after {
+      width: 100%;
+    }
+    .nav-link:hover, #mobile-menu a:hover {
+      color: #3B82F6;
+    }
+    .mobile-menu {
+      background: linear-gradient(180deg, #1E293B, #0F172A);
+      opacity: 0;
+      transform: translateX(-100%);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .mobile-menu.active {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .card, .product-card {
+      background: linear-gradient(145deg, #1E293B, #0F172A);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      transition: transform 0.2s ease;
+    }
+    .card:hover, .product-card:hover {
+      transform: translateY(-4px);
     }
     #coming-soon {
       position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background-color: #0f0f1a;
-      color: #00E5FF;
+      background: linear-gradient(145deg, #1E293B, #0F172A);
+      color: #F1F5F9;
       padding: 2rem;
-      font-size: 2rem;
-      font-family: 'Orbitron', sans-serif;
-      border-radius: 10px;
-      box-shadow: 0 0 20px #00E5FF, 0 0 30px #D500F9;
+      font-size: 1.5rem;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      border-radius: 0.75rem;
+      box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
       z-index: 50;
       text-align: center;
     }
@@ -89,8 +159,8 @@
       position: absolute;
       top: -8px;
       right: -8px;
-      background-color: #D500F9;
-      color: #0f0f1a;
+      background: linear-gradient(90deg, #3B82F6, #D946EF);
+      color: #0F172A;
       font-size: 0.75rem;
       font-weight: bold;
       border-radius: 50%;
@@ -102,7 +172,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(10, 10, 26, 0.95);
+      background: rgba(15, 23, 42, 0.95);
       z-index: 40;
       display: none;
       opacity: 0;
@@ -116,39 +186,32 @@
       position: fixed;
       top: 2rem;
       right: 2rem;
-      background: #D500F9;
-      color: #0f0f1a;
+      background: linear-gradient(90deg, #3B82F6, #D946EF);
+      color: #0F172A;
       padding: 0.5rem 1rem;
       border-radius: 0.5rem;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: transform 0.2s ease;
       z-index: 45;
-      font-family: 'Orbitron', sans-serif;
-      font-weight: bold;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
     }
     .close-btn:hover {
-      background: #00E5FF;
-      box-shadow: 0 0 15px #00E5FF;
-      transform: scale(1.1);
+      transform: translateY(-2px);
     }
     .product-detail {
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%) scale(0.8);
-      background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #2a1a3e 100%);
-      border-radius: 1rem;
+      transform: translate(-50%, -50%);
+      background: linear-gradient(145deg, #1E293B, #0F172A);
+      border-radius: 0.75rem;
       width: 90%;
       max-width: 1000px;
       max-height: 90vh;
       overflow-y: auto;
       padding: 2rem;
-      animation: zoomIn 0.5s ease forwards;
-      box-shadow: 0 0 30px #00E5FF, 0 0 50px #D500F9;
-    }
-    @keyframes zoomIn {
-      0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
-      100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+      box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
     }
     .image-container {
       position: relative;
@@ -161,24 +224,22 @@
       max-height: 400px;
       object-fit: contain;
       border-radius: 0.5rem;
-      box-shadow: 0 0 15px #00E5FF;
+      box-shadow: 0 0 6px rgba(59, 130, 246, 0.2);
     }
     .arrow {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      background: #D500F9;
-      color: #0f0f1a;
+      background: linear-gradient(45deg, #3B82F6, #D946EF);
+      color: #0F172A;
       padding: 0.5rem;
       border-radius: 50%;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: background 0.2s ease;
       font-size: 1.5rem;
-      z-index: 10;
     }
     .arrow:hover {
-      background: #00E5FF;
-      box-shadow: 0 0 10px #00E5FF;
+      background: linear-gradient(45deg, #D946EF, #3B82F6);
     }
     .left-arrow {
       left: 1rem;
@@ -187,35 +248,35 @@
       right: 1rem;
     }
     .product-detail h3 {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 2.5rem;
-      color: #00E5FF;
+      font-family: 'Poppins', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #F1F5F9;
       margin-bottom: 1rem;
-      text-shadow: 0 0 10px #00E5FF;
     }
     .product-detail .price {
       font-size: 1.5rem;
-      color: #D500F9;
+      color: #3B82F6;
       margin-bottom: 1.5rem;
-      font-weight: bold;
+      font-weight: 600;
     }
     .product-detail .description {
-      background: linear-gradient(45deg, #1a1a2e 0%, #2a1a3e 100%);
+      background: #1E293B;
       padding: 1.5rem;
       border-radius: 0.5rem;
       margin-bottom: 1.5rem;
-      border: 1px solid #00E5FF;
-      box-shadow: inset 0 0 10px #00E5FF;
+      border: 1px solid #3B82F6;
     }
     .product-detail .description h4 {
-      font-family: 'Orbitron', sans-serif;
+      font-family: 'Poppins', sans-serif;
       font-size: 1.25rem;
-      color: #00E5FF;
+      color: #F1F5F9;
       margin-bottom: 0.5rem;
+      font-weight: 600;
     }
     .product-detail .description div {
       font-size: 1rem;
-      color: #E0E0E0;
+      color: #F1F5F9;
       line-height: 1.6;
     }
     .product-detail .buttons {
@@ -227,41 +288,42 @@
     .product-detail .buttons a {
       flex: 1;
       text-align: center;
-      font-family: 'Orbitron', sans-serif;
-      font-weight: bold;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
       padding: 0.75rem;
       border-radius: 0.5rem;
-      transition: all 0.3s ease;
+      transition: transform 0.2s ease;
     }
     .product-detail .buttons .add-to-cart {
-      background: #D500F9;
-      color: white;
+      background: linear-gradient(90deg, #3B82F6, #D946EF);
+      color: #0F172A;
     }
     .product-detail .buttons .buy-now {
-      background: #00E5FF;
-      color: #0f0f1a;
+      background: linear-gradient(90deg, #D946EF, #3B82F6);
+      color: #0F172A;
     }
     .product-detail .buttons .add-to-cart:hover,
     .product-detail .buttons .buy-now:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 0 20px #00E5FF, 0 0 30px #D500F9;
+      transform: translateY(-2px);
     }
-    .product-card {
-      background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #2a1a3e 100%);
+    .category-toggle svg {
+      transition: transform 0.3s ease;
     }
-    .product-card img {
-      transition: opacity 0.5s ease;
-      width: 100%;
-      height: 48;
-      object-fit: contain;
+    .category-toggle svg.rotate-180 {
+      transform: rotate(180deg);
     }
     @media (max-width: 640px) {
+      .submit-btn {
+        width: 100%;
+        padding: 0.875rem;
+        font-size: 0.9375rem;
+      }
       .product-detail {
         width: 95%;
         padding: 1rem;
       }
       .product-detail h3 {
-        font-size: 1.75rem;
+        font-size: 1.5rem;
       }
       .product-detail .price {
         font-size: 1.25rem;
@@ -281,6 +343,14 @@
       .arrow {
         padding: 0.3rem;
         font-size: 1rem;
+      }
+      .nav-link, #mobile-menu a {
+        font-size: 1rem;
+      }
+    }
+    @media (min-width: 768px) {
+      .category-menu {
+        transform: translateX(0);
       }
     }
   </style>
@@ -312,44 +382,44 @@
   </div>
 
   <!-- Sidebar (Navigation Menu) -->
-  <div class="fixed top-0 left-0 h-full w-64 sidebar neon-border z-20 hidden md:block">
+  <div class="fixed top-0 left-0 h-full w-64 sidebar gradient-glow z-20 hidden md:block">
     <div class="p-6">
-      <h1 class="text-2xl font-bold text-white font-orbitron">Gaming Odyssey</h1>
-      <nav class="mt-10 space-y-4">
-        <a href="index.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
-          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+      <h1 class="text-2xl font-bold text-white leading-relaxed">Gaming Odyssey</h1>
+      <nav class="mt-10 space-y-3">
+        <a href="index.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Home</span>
         </a>
-        <a href="store.html" class="flex items-center space-x-2 text-lg text-[#00E5FF] font-bold">
-          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <a href="store.html" class="flex items-center space-x-2 text-[#3B82F6] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Store</span>
         </a>
-        <a href="tournaments.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
-          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <a href="tournaments.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Tournaments</span>
         </a>
-        <a href="#" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
-          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <a href="trackorder.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Track Order</span>
         </a>
-        <a href="contactus.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
-          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <a href="contactus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Contact Us</span>
         </a>
-        <a href="aboutus.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
-          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <a href="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>About Us</span>
         </a>
-        <a href="signin.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
-          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <a href="signin.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Sign In</span>
         </a>
-        <a href="createaccount.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition">
-          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <a href="createaccount.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Create Account</span>
         </a>
-        <a href="cart.html" class="flex items-center space-x-2 text-lg hover:text-[#00E5FF] transition cart-icon-container">
-          <svg class="w-5 h-5 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M0 1h3l2 11h10l2-9H5l-.5-2H0v1zm6 15a2 2 0 100 4 2 2 0 000-4zm9 0a2 2 0 100 4 2 2 0 000-4z"/></svg>
+        <a href="cart.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link cart-icon-container">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M0 1h3l2 11h10l2-9H5l-.5-2H0v1zm6 15a2 2 0 100 4 2 2 0 000-4zm9 0a2 2 0 100 4 2 2 0 000-4z"/></svg>
           <span>Cart</span>
           <span id="cart-count-sidebar" class="cart-count">0</span>
         </a>
@@ -358,92 +428,121 @@
   </div>
 
   <!-- Mobile Hamburger Menu -->
-  <div class="md:hidden fixed top-0 left-0 w-full bg-[#0f0f1a] z-30 p-4 flex justify-between items-center neon-border">
-    <h1 class="text-xl font-bold text-white font-orbitron">Gaming Odyssey</h1>
+  <div class="md:hidden fixed top-0 left-0 w-full bg-[#1E293B] z-30 p-4 flex justify-between items-center gradient-glow">
+    <h1 class="text-lg font-bold text-white leading-relaxed">Gaming Odyssey</h1>
     <div class="flex items-center space-x-4">
       <a href="cart.html" class="cart-icon-container">
-        <svg class="w-6 h-6 text-[#00E5FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M0 1h3l2 11h10l2-9H5l-.5-2H0v1zm6 15a2 2 0 100 4 2 2 0 000-4zm9 0a2 2 0 100 4 2 2 0 000-4z"/></svg>
+        <svg class="w-6 h-6 text-[#3B82F6]" fill="currentColor" viewBox="0 0 20 20"><path d="M0 1h3l2 11h10l2-9H5l-.5-2H0v1zm6 15a2 2 0 100 4 2 2 0 000-4zm9 0a2 2 0 100 4 2 2 0 000-4z"/></svg>
         <span id="cart-count-mobile" class="cart-count">0</span>
       </a>
-      <button id="hamburger" class="text-[#00E5FF]">
-        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      <button id="hamburger" class="text-[#3B82F6]">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
       </button>
     </div>
   </div>
-  <div id="mobile-menu" class="hidden md:hidden fixed top-0 left-0 w-full h-full bg-[#0f0f1a] z-20 p-6">
-    <nav class="space-y-4">
-      <a href="index.html" class="block text-lg hover:text-[#00E5FF] transition">Home</a>
-      <a href="store.html" class="block text-lg text-[#00E5FF] font-bold">Store</a>
-      <a href="tournaments.html" class="block text-lg hover:text-[#00E5FF] transition">Tournaments</a>
-      <a href="#" class="block text-lg hover:text-[#00E5FF] transition">Track Order</a>
-      <a href="contactus.html" class="block text-lg hover:text-[#00E5FF] transition">Contact Us</a>
-      <a href="aboutus.html" class="block text-lg hover:text-[#00E5FF] transition">About Us</a>
-      <a href="signin.html" class="block text-lg hover:text-[#00E5FF] transition">Sign In</a>
-      <a href="createaccount.html" class="block text-lg hover:text-[#00E5FF] transition">Create Account</a>
-      <a href="cart.html" class="block text-lg hover:text-[#00E5FF] transition cart-icon-container">
-        Cart <span id="cart-count-mobile-menu" class="cart-count">0</span>
+  <div id="mobile-menu" class="hidden md:hidden fixed top-0 left-0 w-full h-full mobile-menu z-20 p-4">
+    <button id="close-menu" class="absolute top-4 right-4 text-[#3B82F6] gradient-glow rounded-full p-2">
+      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+    <nav class="space-y-3 mt-12">
+      <a href="index.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <span>Home</span>
+      </a>
+      <a href="store.html" class="flex items-center space-x-2 text-[#3B82F6] font-semibold nav-link">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <span>Store</span>
+      </a>
+      <a href="tournaments.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <span>Tournaments</span>
+      </a>
+      <a href="trackorder.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <span>Track Order</span>
+      </a>
+      <a href="contactus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <span>Contact Us</span>
+      </a>
+      <a href="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <span>About Us</span>
+      </a>
+      <a href="signin.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <span>Sign In</span>
+      </a>
+      <a href="createaccount.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <span>Create Account</span>
+      </a>
+      <a href="cart.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link cart-icon-container">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M0 1h3l2 11h10l2-9H5l-.5-2H0v1zm6 15a2 2 0 100 4 2 2 0 000-4zm9 0a2 2 0 100 4 2 2 0 000-4z"/></svg>
+        <span>Cart</span>
+        <span id="cart-count-mobile-menu" class="cart-count">0</span>
       </a>
     </nav>
   </div>
 
   <!-- Category Sliding Menu (Right Side) -->
-  <div id="category-menu" class="fixed top-0 right-0 h-full w-64 bg-[#0f0f1a] z-30 category-menu neon-border md:block">
+  <div id="category-menu" class="fixed top-0 right-0 h-full w-64 category-menu gradient-glow z-30 hidden md:block">
     <div class="p-6">
-      <h2 class="text-xl font-bold text-white font-orbitron mb-6">Categories</h2>
+      <h2 class="text-xl font-bold text-white mb-6">Categories</h2>
       <nav class="space-y-4">
         <div>
-          <button class="category-toggle flex items-center justify-between w-full text-lg text-[#E0E0E0] hover:text-[#00E5FF] transition">
+          <button class="category-toggle flex items-center justify-between w-full text-lg text-[#F1F5F9] font-semibold nav-link">
             Mouse
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </button>
           <div class="subcategory ml-4 mt-2 space-y-2 hidden">
-            <a href="#" class="block text-sm hover:text-[#00E5FF] transition">Razer</a>
-            <a href="#" class="block text-sm hover:text-[#00E5FF] transition">Logitech</a>
-            <a href="#" class="block text-sm hover:text-[#00E5FF] transition">Roccat</a>
+            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link">Razer</a>
+            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link">Logitech</a>
+            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link">Roccat</a>
           </div>
         </div>
         <div>
-          <button class="category-toggle flex items-center justify-between w-full text-lg text-[#E0E0E0] hover:text-[#00E5FF] transition">
+          <button class="category-toggle flex items-center justify-between w-full text-lg text-[#F1F5F9] font-semibold nav-link">
             Keyboard
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </button>
           <div class="subcategory ml-4 mt-2 space-y-2 hidden">
-            <a href="#" class="block text-sm hover:text-[#00E5FF] transition">Razer</a>
-            <a href="#" class="block text-sm hover:text-[#00E5FF] transition">Logitech</a>
-            <a href="#" class="block text-sm hover:text-[#00E5FF] transition">Roccat</a>
+            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link">Razer</a>
+            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link">Logitech</a>
+            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link">Roccat</a>
           </div>
         </div>
         <div>
-          <button class="category-toggle flex items-center justify-between w-full text-lg text-[#E0E0E0] hover:text-[#00E5FF] transition">
+          <button class="category-toggle flex items-center justify-between w-full text-lg text-[#F1F5F9] font-semibold nav-link">
             Monitor
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </button>
           <div class="subcategory ml-4 mt-2 space-y-2 hidden">
-            <a href="#" class="block text-sm hover:text-[#00E5FF] transition">ASUS</a>
-            <a href="#" class="block text-sm hover:text-[#00E5FF] transition">Acer</a>
-            <a href="#" class="block text-sm hover:text-[#00E5FF] transition">LG</a>
+            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link">ASUS</a>
+            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link">Acer</a>
+            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link">LG</a>
           </div>
         </div>
         <div>
-          <button class="category-toggle flex items-center justify-between w-full text-lg text-[#E0E0E0] hover:text-[#00E5FF] transition">
+          <button class="category-toggle flex items-center justify-between w-full text-lg text-[#F1F5F9] font-semibold nav-link">
             Speakers
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </button>
           <div class="subcategory ml-4 mt-2 space-y-2 hidden">
-            <a href="#" class="block text-sm hover:text-[#00E5FF] transition">Bose</a>
-            <a href="#" class="block text-sm hover:text-[#00E5FF] transition">Logitech</a>
-            <a href="#" class="block text-sm hover:text-[#00E5FF] transition">JBL</a>
+            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link">Bose</a>
+            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link">Logitech</a>
+            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link">JBL</a>
           </div>
         </div>
         <div>
-          <button class="category-toggle flex items-center justify-between w-full text-lg text-[#E0E0E0] hover:text-[#00E5FF] transition">
+          <button class="category-toggle flex items-center justify-between w-full text-lg text-[#F1F5F9] font-semibold nav-link">
             Webcam
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </button>
           <div class="subcategory ml-4 mt-2 space-y-2 hidden">
-            <a href="#" class="block text-sm hover:text-[#00E5FF] transition">Logitech</a>
-            <a href="#" class="block text-sm hover:text-[#00E5FF] transition">Razer</a>
-            <a href="#" class="block text-sm hover:text-[#00E5FF] transition">Elgato</a>
+            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link">Logitech</a>
+            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link">Razer</a>
+            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link">Elgato</a>
           </div>
         </div>
       </nav>
@@ -453,12 +552,12 @@
   <!-- Main Content -->
   <div class="md:ml-64 md:mr-64">
     <!-- Search and Filters Section -->
-    <section class="hero-bg py-8 px-6">
+    <section class="hero-bg py-8 px-4 sm:px-6 md:px-8">
       <div class="max-w-6xl mx-auto">
         <div class="flex flex-col md:flex-row justify-between items-center mb-6">
           <div class="w-full md:w-1/2 flex items-center space-x-4">
-            <input type="text" id="search-input" placeholder="Search products..." class="w-full p-3 bg-[#0f0f1a] text-[#E0E0E0] rounded neon-border focus:outline-none">
-            <select id="currency-select" class="p-3 bg-[#0f0f1a] text-[#E0E0E0] rounded neon-border focus:outline-none">
+            <input type="text" id="search-input" placeholder="Search products..." class="w-full">
+            <select id="currency-select" class="p-3">
               <option value="INR">INR (₹)</option>
               <option value="USD">USD ($)</option>
               <option value="EUR">EUR (€)</option>
@@ -467,14 +566,12 @@
             </select>
           </div>
           <div class="flex items-center space-x-4 mt-4 md:mt-0">
-            <button id="category-toggle" class="md:hidden bg-[#00E5FF] text-[#0f0f1a] font-bold py-2 px-4 rounded neon-glow">
-              Categories
-            </button>
+            <button id="category-toggle" class="md:hidden submit-btn">Categories</button>
             <div class="flex items-center space-x-2">
-              <input type="number" id="min-price" placeholder="Min Price" class="w-24 p-2 bg-[#0f0f1a] text-[#E0E0E0] rounded neon-border focus:outline-none">
-              <span class="text-[#E0E0E0]">-</span>
-              <input type="number" id="max-price" placeholder="Max Price" class="w-24 p-2 bg-[#0f0f1a] text-[#E0E0E0] rounded neon-border focus:outline-none">
-              <button id="filter-btn" class="bg-[#D500F9] text-white font-bold py-2 px-4 rounded neon-glow">Filter</button>
+              <input type="number" id="min-price" placeholder="Min Price" class="w-24">
+              <span class="text-[#F1F5F9]">-</span>
+              <input type="number" id="max-price" placeholder="Max Price" class="w-24">
+              <button id="filter-btn" class="submit-btn">Filter</button>
             </div>
           </div>
         </div>
@@ -482,52 +579,51 @@
     </section>
 
     <!-- Products Section -->
-    <section class="py-16 px-6">
-      <h2 class="text-4xl font-bold text-white font-orbitron text-center mb-12">Store</h2>
+    <section class="py-16 px-4 sm:px-6 md:px-8">
+      <h2 class="text-4xl font-bold text-white text-center mb-12">Store</h2>
       <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
         <!-- Products will be dynamically added -->
       </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-[#0f0f1a] py-12 px-6">
-      <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+    <footer class="bg-[#1E293B] py-10 px-4 sm:px-6 md:px-8">
+      <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         <div>
-          <h3 class="text-xl font-bold text-white font-orbitron mb-4">Contact</h3>
-          <p class="text-[#E0E0E0]">📧 <a href="/cdn-cgi/l/email-protection#462523262639242206212b272f2a232b203d3737213d6a272b29"><span class="__cf_email__" data-cfemail="680b0d0808170a0c2b0c060a02070e060d101a1a0c106b060a08">[businessgamingodyssey@gmail.com]</span></a></p>
-          <p class="text-[#E0E0E0]">📞 6290994382</p>
+          <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Contact</h3>
+          <p class="text-[#F1F5F9] mb-2 text-sm leading-relaxed">📧 <a href="mailto:businessgamingodyssey@gmail.com" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link">businessgamingodyssey@gmail.com</a></p>
+          <p class="text-[#F1F5F9] text-sm leading-relaxed">📞 6290994382</p>
         </div>
         <div>
-          <h3 class="text-xl font-bold text-white font-orbitron mb-4">Useful Links</h3>
+          <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Useful Links</h3>
           <ul class="space-y-2">
-            <li><a href="index.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Home</a></li>
-            <li><a href="store.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Store</a></li>
-            <li><a href="tournaments.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Tournaments</a></li>
-            <li><a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Track Order</a></li>
-            <li><a href="contactus.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Contact Us</a></li>
-            <li><a href="aboutus.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">About Us</a></li>
+            <li><a href="index.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Home</a></li>
+            <li><a href="store.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Store</a></li>
+            <li><a href="tournaments.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Tournaments</a></li>
+            <li><a href="trackorder.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Track Order</a></li>
+            <li><a href="contactus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Contact Us</a></li>
+            <li><a href="aboutus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">About Us</a></li>
           </ul>
         </div>
         <div>
-          <h3 class="text-xl font-bold text-white font-orbitron mb-4">Follow Us</h3>
-          <div class="flex space-x-4">
-            <a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">
-              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
+          <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Follow Us</h3>
+          <div class="flex space-x-3">
+            <a href="https://www.instagram.com/noticedveil" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full">
+              <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" class="w-5 h-5">
             </a>
-            <a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">
-              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v-2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
+            <a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full">
+              <img src="https://cdn-icons-png.flaticon.com/512/3938/3938026.png" alt="YouTube" class="w-5 h-5">
             </a>
-            <a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">
-              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
+            <a href="https://www.facebook.com" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full">
+              <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" class="w-5 h-5">
             </a>
           </div>
         </div>
       </div>
-      <p class="text-center text-[#E0E0E0] mt-8">© 2025 Gaming Odyssey. All rights reserved.</p>
+      <p class="text-center text-[#F1F5F9] mt-6 text-sm leading-relaxed">© 2025 Gaming Odyssey. All rights reserved.</p>
     </footer>
   </div>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
   <script>
     // Currency Conversion Rates (relative to USD)
     const conversionRates = {
@@ -549,8 +645,14 @@
     // Hamburger Menu Toggle
     const hamburger = document.getElementById('hamburger');
     const mobileMenu = document.getElementById('mobile-menu');
+    const closeMenu = document.getElementById('close-menu');
     hamburger.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
+      mobileMenu.classList.remove('hidden');
+      mobileMenu.classList.add('active');
+    });
+    closeMenu.addEventListener('click', () => {
+      mobileMenu.classList.add('hidden');
+      mobileMenu.classList.remove('active');
     });
 
     // Category Menu Toggle (Mobile)
@@ -680,18 +782,18 @@
       products.forEach(product => {
         const convertedPrice = (product.price * conversionRates[selectedCurrency]).toFixed(2);
         const card = document.createElement('div');
-        card.className = 'bg-[#0f0f1a] p-6 rounded-lg neon-border neon-glow fade-in product-card cursor-pointer';
+        card.className = 'product-card gradient-glow fade-in cursor-pointer';
         card.setAttribute('data-name', product.name);
         card.setAttribute('data-price', product.price);
         card.setAttribute('data-images', JSON.stringify(product.images));
         card.setAttribute('data-description', product.description);
         card.innerHTML = `
-          <img src="${product.images[0]}" alt="Product" class="w-full h-48 object-contain rounded mb-4">
+          <img src="${product.images[0]}" alt="Product" class="w-full h-48 object-contain rounded-lg mb-4">
           <h3 class="text-xl font-bold text-white">${product.name}</h3>
-          <p class="text-[#E0E0E0] mb-4">${currencySymbols[selectedCurrency]}${convertedPrice}</p>
+          <p class="text-[#F1F5F9] mb-4">${currencySymbols[selectedCurrency]}${convertedPrice}</p>
           <div class="flex space-x-2">
-            <a href="#" class="flex-1 text-center bg-[#00E5FF] text-[#0f0f1a] font-bold py-2 rounded neon-glow buy-now-btn">Buy Now</a>
-            <button class="add-to-cart flex-1 text-center bg-[#D500F9] text-white font-bold py-2 rounded neon-glow" data-name="${product.name}" data-price="${product.price * conversionRates[selectedCurrency]}">Add to Cart</button>
+            <a href="#" class="submit-btn flex-1 text-center buy-now-btn">Buy Now</a>
+            <button class="submit-btn flex-1 text-center add-to-cart" data-name="${product.name}" data-price="${product.price * conversionRates[selectedCurrency]}">Add to Cart</button>
           </div>
         `;
         productsGrid.appendChild(card);
@@ -799,5 +901,3 @@
     // Update cart count on page load
     updateCartCount();
   </script>
-</body>
-</html>
