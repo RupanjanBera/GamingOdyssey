@@ -6,19 +6,16 @@
   <title>Contact Us - Gaming Odyssey</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <style>
     :root {
-      /* Customizable theme variables */
-      --primary-color: #3B82F6; /* Primary accent (blue) */
-      --secondary-color: #D946EF; /* Secondary accent (pink) */
-      --background-color: #0F172A; /* Main background */
-      --text-color: #F1F5F9; /* Primary text */
-      --card-background: linear-gradient(145deg, #1E293B, #0F172A); /* Card background */
-      --font-family: 'Poppins', sans-serif; /* Primary font */
-      --shadow-glow: 0 0 6px rgba(59, 130, 246, 0.2); /* Glow effect */
-      --shadow-glow-hover: 0 0 10px rgba(59, 130, 246, 0.4); /* Hover glow */
-      /* To customize, update these values */
+      --primary-color: #3B82F6;
+      --secondary-color: #D946EF;
+      --background-color: #0F172A;
+      --text-color: #F1F5F9;
+      --card-background: linear-gradient(145deg, #1E293B, #0F172A);
+      --font-family: 'Poppins', sans-serif;
+      --shadow-glow: 0 0 6px rgba(59, 130, 246, 0.2);
+      --shadow-glow-hover: 0 0 10px rgba(59, 130, 246, 0.4);
     }
     body {
       font-family: var(--font-family);
@@ -27,7 +24,7 @@
       scroll-behavior: smooth;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
-      font-size: clamp(16px, 2.5vw, 18px); /* Fluid typography */
+      font-size: clamp(16px, 2.5vw, 18px);
     }
     .gradient-glow {
       box-shadow: var(--shadow-glow);
@@ -84,7 +81,7 @@
       text-align: center;
       display: inline-block;
       width: auto;
-      min-width: 120px; /* Touch-friendly size */
+      min-width: 120px;
     }
     .submit-btn:hover {
       transform: translateY(-2px);
@@ -172,7 +169,6 @@
         max-width: 80%;
       }
     }
-    /* Customization tip: Adjust --primary-color, --secondary-color, etc., in :root to change the theme */
   </style>
 </head>
 <body>
@@ -269,7 +265,7 @@
     <section class="py-16 px-4 sm:px-6 md:px-8 bg-gradient-to-b from-[#1E293B] to-[#0F172A] min-h-screen">
       <h2 class="heading">Contact Us</h2>
       <div class="form-container gradient-glow fade-in">
-        <form id="contact-form">
+        <form id="contact-form" action="send_email.php" method="POST">
           <div class="mb-4">
             <label for="name" class="block text-[#F1F5F9] mb-2 text-sm">Name</label>
             <input type="text" id="name" name="name" required placeholder="Your name" aria-required="true" />
@@ -303,7 +299,7 @@
       <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         <div>
           <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Contact</h3>
-          <p class="text-[#F1F5F9] mb-2 text-sm leading-relaxed">📧 <a href="mailto:businessgamingodyssey@gmail.com" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link">businessgamingodyssey@gmail.com</a></p>
+          <p class="text-[#F1F5F9] mb-2 text-sm leading-relaxed">📧 <a href="mailto:support@gamingodyssey.in" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link">support@gamingodyssey.in</a></p>
           <p class="text-[#F1F5F9] text-sm leading-relaxed">📞 6290994382</p>
         </div>
         <div>
@@ -337,9 +333,6 @@
   </div>
 
   <script>
-    // Initialize EmailJS with Public Key (replace with your actual key)
-    emailjs.init('__S5AyIeoL526kGwQ');
-
     // Hamburger Menu Toggle
     const hamburger = document.getElementById('hamburger');
     const mobileMenu = document.getElementById('mobile-menu');
@@ -364,9 +357,8 @@
     }, { threshold: 0.1 });
     fadeIns.forEach(element => observer.observe(element));
 
-    // Contact Form Submission
+    // Client-side Form Validation
     document.getElementById('contact-form').addEventListener('submit', function(event) {
-      event.preventDefault();
       const name = document.getElementById('name').value.trim();
       const email = document.getElementById('email').value.trim();
       const subject = document.getElementById('subject').value.trim();
@@ -391,22 +383,9 @@
         isValid = false;
       }
       if (!isValid) {
+        event.preventDefault();
         status.textContent = 'Please fill all fields correctly';
         status.className = 'error';
-        return;
       }
-      emailjs.send('service_94tnfxp', 'template_6ahr5g1', {
-        name: name,
-        email: email,
-        subject: subject,
-        message: message
-      }).then(() => {
-        status.textContent = 'Message sent successfully!';
-        status.className = 'success';
-        document.getElementById('contact-form').reset();
-      }).catch((error) => {
-        status.textContent = 'Failed to send message: ' + error.text;
-        status.className = 'error';
-      });
     });
   </script>
