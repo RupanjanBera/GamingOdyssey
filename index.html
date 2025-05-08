@@ -278,11 +278,11 @@
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>About Us</span>
         </a>
-        <a href="signin.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+        <a href="signin.html" id="signin-link" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Sign In</span>
         </a>
-        <a href="createaccount.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+        <a href="createaccount.html" id="createaccount-link" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Create Account</span>
         </a>
@@ -330,11 +330,11 @@
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
         <span>About Us</span>
       </a>
-      <a href="signin.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+      <a href="signin.html" id="mobile-signin-link" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
         <span>Sign In</span>
       </a>
-      <a href="createaccount.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+      <a href="createaccount.html" id="mobile-createaccount-link" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
         <span>Create Account</span>
       </a>
@@ -461,7 +461,9 @@
           <p class="text-[#F1F5F9] mb-1 text-sm">Game: Valorant</p>
           <p class="text-[#F1F5F9] mb-1 text-sm">Date: May 15, 2025</p>
           <p class="text-[#F1F5F9] mb-3 text-sm">Prize: $10,000</p>
-          <a href="#" data-link="tournaments.html" class="submit-btn block text-center">Register</a>
+          <a href="#" /
+
+data-link="tournaments.html" class="submit-btn block text-center">Register</a>
         </div>
         <div class="card gradient-glow fade-in">
           <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=800&auto=format&fit=crop" alt="Neon Strike" class="w-full h-40 object-cover rounded-lg mb-3" loading="lazy">
@@ -529,7 +531,7 @@
       <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         <div>
           <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Contact</h3>
-          <p class="text-[#F1F5F9] mb-2 text-sm leading-relaxed">📧 <a href="mailto:support@gamingodyssey.in" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link">support@gamingodyssey.in</a></p>
+          <p class="text-[#F1F5F9] mb-2 text-sm leading-relaxed">📧 <a href="/cdn-cgi/l/email-protection#c3b0b6b3b3acb1b783a4a2aeaaada4aca7bab0b0a6baedaaad" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link"><span class="__cf_email__" data-cfemail="5e2d2b2e2e312c2a1e393f33373039313a272d2d3b27703730">[email&#160;protected]</span></a></p>
           <p class="text-[#F1F5F9] text-sm leading-relaxed">📞 6290994382</p>
         </div>
         <div>
@@ -564,7 +566,7 @@
   </div>
 
   <!-- EmailJS SDK -->
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <script>
     // Initialize EmailJS
     emailjs.init('__S5AyIeoL526kGwQ');
@@ -577,8 +579,8 @@
     function handleProtectedLink(event) {
       event.preventDefault();
       const link = event.currentTarget.getAttribute('data-link') || event.currentTarget.getAttribute('href');
-      // Allow direct access to signin.html, createaccount.html, and external links
-      if (link === 'signin.html' || link === 'createaccount.html' || link.startsWith('http')) {
+      // Allow direct access to signin.html, createaccount.html, aboutus.html, terms.html, and external links
+      if (link === 'signin.html' || link === 'createaccount.html' || link === 'aboutus.html' || link === 'terms.html' || link.startsWith('http')) {
         window.location.href = link;
         return;
       }
@@ -594,9 +596,13 @@
       link.addEventListener('click', handleProtectedLink);
     });
 
-    // Display Username in Sidebar and Mobile Menu
+    // Display Username and Hide Sign In/Create Account Links
     const userDisplay = document.getElementById('user-display');
     const mobileUserDisplay = document.getElementById('mobile-user-display');
+    const signInLink = document.getElementById('signin-link');
+    const createAccountLink = document.getElementById('createaccount-link');
+    const mobileSignInLink = document.getElementById('mobile-signin-link');
+    const mobileCreateAccountLink = document.getElementById('mobile-createaccount-link');
     if (isAuthenticated()) {
       const username = localStorage.getItem('currentUser');
       if (username) {
@@ -604,7 +610,18 @@
         mobileUserDisplay.classList.remove('hidden');
         userDisplay.querySelector('span').textContent = username;
         mobileUserDisplay.querySelector('span').textContent = username;
+        // Hide Sign In and Create Account links
+        signInLink.style.display = 'none';
+        createAccountLink.style.display = 'none';
+        mobileSignInLink.style.display = 'none';
+        mobileCreateAccountLink.style.display = 'none';
       }
+    } else {
+      // Ensure Sign In and Create Account links are visible
+      signInLink.style.display = 'flex';
+      createAccountLink.style.display = 'flex';
+      mobileSignInLink.style.display = 'flex';
+      mobileCreateAccountLink.style.display = 'flex';
     }
 
     // Hamburger Menu Toggle
@@ -779,5 +796,5 @@
     // Update slideshow on window resize
     window.addEventListener('resize', updateSlides);
   </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93c91fdecf23b0cd',t:'MTc0NjcwOTA2My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
