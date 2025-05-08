@@ -7,36 +7,59 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
+    :root {
+      /* Customizable theme variables */
+      --primary-color: #3B82F6;
+      --secondary-color: #D946EF;
+      --background-color: #0F172A;
+      --text-color: #F1F5F9;
+      --card-background: linear-gradient(145deg, #1E293B, #0F172A);
+      --font-family: 'Poppins', sans-serif;
+      --shadow-glow: 0 0 6px rgba(59, 130, 246, 0.2);
+      --shadow-glow-hover: 0 0 10px rgba(59, 130, 246, 0.4);
+      --font-size-base: clamp(14px, 2.5vw, 16px);
+      --padding-base: clamp(0.75rem, 2vw, 1rem);
+      /* To customize, update these values */
+    }
     body {
-      font-family: 'Poppins', sans-serif;
-      background-color: #0F172A;
-      color: #F1F5F9;
+      font-family: var(--font-family);
+      background-color: var(--background-color);
+      color: var(--text-color);
       scroll-behavior: smooth;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
+      font-size: var(--font-size-base);
     }
     .gradient-glow {
-      box-shadow: 0 0 6px rgba(59, 130, 246, 0.2);
+      box-shadow: var(--shadow-glow);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
+      will-change: transform, box-shadow;
     }
     .gradient-glow:hover {
-      box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+      box-shadow: var(--shadow-glow-hover);
       transform: translateY(-3px);
     }
     .sidebar, .category-menu {
-      background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
+      background: linear-gradient(180deg, #1E293B 0%, var(--background-color) 100%);
       box-shadow: 2px 0 6px rgba(59, 130, 246, 0.1);
+    }
+    .sidebar {
+      width: 80vw; /* Responsive width for mobile */
+      max-width: 16rem; /* Consistent with desktop */
     }
     .category-menu {
       transition: transform 0.3s ease;
+      width: 80vw;
+      max-width: 16rem;
     }
     .category-menu.hidden {
       transform: translateX(100%);
     }
     .hero-bg {
-      background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(217, 70, 239, 0.15), #0F172A);
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(217, 70, 239, 0.15), var(--background-color));
       position: relative;
       overflow: hidden;
+      padding: var(--padding-base);
     }
     .hero-bg::before {
       content: '';
@@ -57,6 +80,7 @@
       opacity: 0;
       transform: translateY(15px);
       transition: opacity 0.6s ease, transform 0.6s ease;
+      will-change: opacity, transform;
     }
     .fade-in.visible {
       opacity: 1;
@@ -64,29 +88,31 @@
     }
     input, select {
       background: #1E293B;
-      color: #F1F5F9;
-      border: 1px solid #3B82F6;
+      color: var(--text-color);
+      border: 1px solid var(--primary-color);
       border-radius: 0.5rem;
-      padding: 0.75rem;
+      padding: var(--padding-base);
       width: 100%;
       transition: border-color 0.2s ease;
-      font-family: 'Poppins', sans-serif;
-      font-size: 0.9375rem;
+      font-family: var(--font-family);
+      font-size: var(--font-size-base);
     }
     input:focus, select:focus {
       outline: none;
-      border-color: #D946EF;
+      border-color: var(--secondary-color);
       box-shadow: 0 0 6px rgba(217, 70, 239, 0.2);
     }
     .submit-btn {
-      background: linear-gradient(90deg, #3B82F6, #D946EF);
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
       color: #0F172A;
-      font-family: 'Poppins', sans-serif;
+      font-family: var(--font-family);
       font-weight: 600;
-      padding: 0.75rem 1.5rem;
+      padding: var(--padding-base) clamp(1rem, 3vw, 1.5rem);
       border-radius: 0.5rem;
       transition: transform 0.2s ease;
-      font-size: 1rem;
+      font-size: var(--font-size-base);
+      min-width: 120px; /* Touch-friendly */
+      text-align: center;
     }
     .submit-btn:hover {
       transform: translateY(-2px);
@@ -96,9 +122,9 @@
       display: inline-flex;
       align-items: center;
       transition: color 0.2s ease;
-      font-family: 'Poppins', sans-serif;
+      font-family: var(--font-family);
       font-weight: 600;
-      font-size: 1.0625rem;
+      font-size: clamp(15px, 2.5vw, 17px);
       padding: 0.5rem 0;
     }
     .nav-link::after, #mobile-menu a::after {
@@ -108,49 +134,35 @@
       height: 2px;
       bottom: 0;
       left: 0;
-      background: linear-gradient(to right, #3B82F6, #D946EF);
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
       transition: width 0.2s ease;
     }
     .nav-link:hover::after, #mobile-menu a:hover::after {
       width: 100%;
     }
     .nav-link:hover, #mobile-menu a:hover {
-      color: #3B82F6;
+      color: var(--primary-color);
     }
     .mobile-menu {
-      background: linear-gradient(180deg, #1E293B, #0F172A);
+      background: linear-gradient(180deg, #1E293B, var(--background-color));
       opacity: 0;
       transform: translateX(-100%);
       transition: opacity 0.3s ease, transform 0.3s ease;
+      width: 80vw;
     }
     .mobile-menu.active {
       opacity: 1;
       transform: translateX(0);
     }
     .card, .product-card {
-      background: linear-gradient(145deg, #1E293B, #0F172A);
+      background: var(--card-background);
       border-radius: 0.75rem;
-      padding: 1.25rem;
+      padding: var(--padding-base);
       transition: transform 0.2s ease;
+      width: 100%;
     }
     .card:hover, .product-card:hover {
       transform: translateY(-4px);
-    }
-    #coming-soon {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: linear-gradient(145deg, #1E293B, #0F172A);
-      color: #F1F5F9;
-      padding: 2rem;
-      font-size: 1.5rem;
-      font-family: 'Poppins', sans-serif;
-      font-weight: 600;
-      border-radius: 0.75rem;
-      box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
-      z-index: 50;
-      text-align: center;
     }
     .cart-icon-container {
       position: relative;
@@ -159,9 +171,9 @@
       position: absolute;
       top: -8px;
       right: -8px;
-      background: linear-gradient(90deg, #3B82F6, #D946EF);
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
       color: #0F172A;
-      font-size: 0.75rem;
+      font-size: clamp(10px, 1.5vw, 12px);
       font-weight: bold;
       border-radius: 50%;
       padding: 2px 6px;
@@ -184,17 +196,18 @@
     }
     .close-btn {
       position: fixed;
-      top: 2rem;
-      right: 2rem;
-      background: linear-gradient(90deg, #3B82F6, #D946EF);
+      top: 1rem;
+      right: 1rem;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
       color: #0F172A;
-      padding: 0.5rem 1rem;
+      padding: var(--padding-base);
       border-radius: 0.5rem;
       cursor: pointer;
       transition: transform 0.2s ease;
       z-index: 45;
-      font-family: 'Poppins', sans-serif;
+      font-family: var(--font-family);
       font-weight: 600;
+      font-size: var(--font-size-base);
     }
     .close-btn:hover {
       transform: translateY(-2px);
@@ -204,79 +217,79 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background: linear-gradient(145deg, #1E293B, #0F172A);
+      background: var(--card-background);
       border-radius: 0.75rem;
-      width: 90%;
+      width: 95%;
       max-width: 1000px;
       max-height: 90vh;
       overflow-y: auto;
-      padding: 2rem;
-      box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+      padding: var(--padding-base);
+      box-shadow: var(--shadow-glow);
     }
     .image-container {
       position: relative;
       width: 100%;
       max-height: 400px;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
     }
     .product-detail img {
       width: 100%;
       max-height: 400px;
       object-fit: contain;
       border-radius: 0.5rem;
-      box-shadow: 0 0 6px rgba(59, 130, 246, 0.2);
+      box-shadow: var(--shadow-glow);
     }
     .arrow {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      background: linear-gradient(45deg, #3B82F6, #D946EF);
+      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
       color: #0F172A;
       padding: 0.5rem;
       border-radius: 50%;
       cursor: pointer;
       transition: background 0.2s ease;
-      font-size: 1.5rem;
+      font-size: clamp(16px, 2vw, 18px);
     }
     .arrow:hover {
-      background: linear-gradient(45deg, #D946EF, #3B82F6);
+      background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
     }
     .left-arrow {
-      left: 1rem;
+      left: 0.5rem;
     }
     .right-arrow {
-      right: 1rem;
+      right: 0.5rem;
     }
     .product-detail h3 {
-      font-family: 'Poppins', sans-serif;
-      font-size: 2rem;
+      font-family: var(--font-family);
+      font-size: clamp(1.5rem, 4vw, 2rem);
       font-weight: 700;
-      color: #F1F5F9;
-      margin-bottom: 1rem;
+      color: var(--text-color);
+      margin-bottom: 0.75rem;
     }
     .product-detail .price {
-      font-size: 1.5rem;
-      color: #3B82F6;
-      margin-bottom: 1.5rem;
+      font-size: clamp(1.25rem, 3vw, 1.5rem);
+      color: var(--primary-color);
+      margin-bottom: 1rem;
       font-weight: 600;
     }
     .product-detail .description {
       background: #1E293B;
-      padding: 1.5rem;
+      padding: var(--padding-base);
       border-radius: 0.5rem;
-      margin-bottom: 1.5rem;
-      border: 1px solid #3B82F6;
+      margin-bottom: 1rem;
+      border: 1px solid var(--primary-color);
     }
     .product-detail .description h4 {
-      font-family: 'Poppins', sans-serif;
-      font-size: 1.25rem;
-      color: #F1F5F9;
+      font-family: var(--font-family);
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      color: var(--text-color);
       margin-bottom: 0.5rem;
       font-weight: 600;
     }
     .product-detail .description div {
-      font-size: 1rem;
-      color: #F1F5F9;
+      font-size: var(--font-size-base);
+      color: var(--text-color);
       line-height: 1.6;
     }
     .product-detail .buttons {
@@ -288,18 +301,19 @@
     .product-detail .buttons a {
       flex: 1;
       text-align: center;
-      font-family: 'Poppins', sans-serif;
+      font-family: var(--font-family);
       font-weight: 600;
-      padding: 0.75rem;
+      padding: var(--padding-base);
       border-radius: 0.5rem;
       transition: transform 0.2s ease;
+      min-width: 120px;
     }
     .product-detail .buttons .add-to-cart {
-      background: linear-gradient(90deg, #3B82F6, #D946EF);
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
       color: #0F172A;
     }
     .product-detail .buttons .buy-now {
-      background: linear-gradient(90deg, #D946EF, #3B82F6);
+      background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
       color: #0F172A;
     }
     .product-detail .buttons .add-to-cart:hover,
@@ -312,53 +326,99 @@
     .category-toggle svg.rotate-180 {
       transform: rotate(180deg);
     }
+    /* Mobile-specific styles */
     @media (max-width: 640px) {
+      .sidebar, .category-menu {
+        display: none; /* Hidden by default, shown via toggles */
+      }
+      .sidebar.active, .category-menu.active {
+        display: block;
+      }
+      .hero-bg {
+        padding: 0.5rem;
+      }
+      .hero-bg .flex {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      input, select {
+        font-size: 14px;
+        padding: 0.625rem;
+      }
       .submit-btn {
         width: 100%;
         padding: 0.875rem;
-        font-size: 0.9375rem;
+        font-size: 14px;
+      }
+      #products-grid {
+        grid-template-columns: 1fr;
+      }
+      .product-card img {
+        height: 10rem; /* Smaller images on mobile */
+      }
+      .product-card h3 {
+        font-size: 1.125rem;
+      }
+      .product-card p {
+        font-size: 0.875rem;
       }
       .product-detail {
-        width: 95%;
-        padding: 1rem;
-      }
-      .product-detail h3 {
-        font-size: 1.5rem;
-      }
-      .product-detail .price {
-        font-size: 1.25rem;
+        padding: 0.75rem;
+        width: 98%;
       }
       .product-detail img {
-        max-height: 300px;
+        max-height: 250px;
+      }
+      .product-detail h3 {
+        font-size: 1.25rem;
+      }
+      .product-detail .price {
+        font-size: 1rem;
+      }
+      .product-detail .description h4 {
+        font-size: 0.875rem;
       }
       .product-detail .buttons {
         flex-direction: column;
       }
       .close-btn {
-        top: 1rem;
-        right: 1rem;
-        padding: 0.3rem 0.8rem;
-        font-size: 0.9rem;
+        padding: 0.5rem;
+        font-size: 0.875rem;
       }
       .arrow {
         padding: 0.3rem;
         font-size: 1rem;
       }
       .nav-link, #mobile-menu a {
+        font-size: 0.9375rem;
+      }
+      footer .grid {
+        grid-template-columns: 1fr;
+      }
+      footer h3 {
         font-size: 1rem;
+      }
+      footer p, footer a {
+        font-size: 0.875rem;
+      }
+      .cart-count {
+        font-size: 0.625rem;
+        padding: 1px 4px;
       }
     }
     @media (min-width: 768px) {
       .category-menu {
         transform: translateX(0);
+        display: block;
+      }
+      .sidebar {
+        display: block;
       }
     }
+    /* Customization tip: Adjust variables in :root to change theme */
   </style>
 </head>
 <body>
-  <!-- Coming Soon Message -->
-  <div id="coming-soon">Coming Soon</div>
-
   <!-- Product Detail Overlay -->
   <div id="product-overlay">
     <button class="close-btn">Close</button>
@@ -382,7 +442,7 @@
   </div>
 
   <!-- Sidebar (Navigation Menu) -->
-  <div class="fixed top-0 left-0 h-full w-64 sidebar gradient-glow z-20 hidden md:block">
+  <div class="fixed top-0 left-0 h-full sidebar gradient-glow z-20 hidden md:block">
     <div class="p-6">
       <h1 class="text-2xl font-bold text-white leading-relaxed">Gaming Odyssey</h1>
       <nav class="mt-10 space-y-3">
@@ -486,7 +546,7 @@
   </div>
 
   <!-- Category Sliding Menu (Right Side) -->
-  <div id="category-menu" class="fixed top-0 right-0 h-full w-64 category-menu gradient-glow z-30 hidden md:block">
+  <div id="category-menu" class="fixed top-0 right-0 h-full category-menu gradient-glow z-30 hidden md:block">
     <div class="p-6">
       <h2 class="text-xl font-bold text-white mb-6">Categories</h2>
       <nav class="space-y-4">
@@ -554,10 +614,10 @@
     <!-- Search and Filters Section -->
     <section class="hero-bg py-8 px-4 sm:px-6 md:px-8">
       <div class="max-w-6xl mx-auto">
-        <div class="flex flex-col md:flex-row justify-between items-center mb-6">
-          <div class="w-full md:w-1/2 flex items-center space-x-4">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+          <div class="w-full flex flex-col sm:flex-row items-center space-x-0 sm:space-x-4 space-y-2 sm:space-y-0">
             <input type="text" id="search-input" placeholder="Search products..." class="w-full">
-            <select id="currency-select" class="p-3">
+            <select id="currency-select" class="p-3 w-full sm:w-auto">
               <option value="INR">INR (₹)</option>
               <option value="USD">USD ($)</option>
               <option value="EUR">EUR (€)</option>
@@ -565,13 +625,13 @@
               <option value="JPY">JPY (¥)</option>
             </select>
           </div>
-          <div class="flex items-center space-x-4 mt-4 md:mt-0">
-            <button id="category-toggle" class="md:hidden submit-btn">Categories</button>
-            <div class="flex items-center space-x-2">
-              <input type="number" id="min-price" placeholder="Min Price" class="w-24">
+          <div class="flex flex-col sm:flex-row items-center space-x-0 sm:space-x-4 space-y-2 sm:space-y-0 w-full">
+            <button id="category-toggle" class="md:hidden submit-btn w-full sm:w-auto">Categories</button>
+            <div class="flex items-center space-x-2 w-full">
+              <input type="number" id="min-price" placeholder="Min Price" class="w-full sm:w-24">
               <span class="text-[#F1F5F9]">-</span>
-              <input type="number" id="max-price" placeholder="Max Price" class="w-24">
-              <button id="filter-btn" class="submit-btn">Filter</button>
+              <input type="number" id="max-price" placeholder="Max Price" class="w-full sm:w-24">
+              <button id="filter-btn" class="submit-btn w-full sm:w-auto">Filter</button>
             </div>
           </div>
         </div>
@@ -649,6 +709,7 @@
     hamburger.addEventListener('click', () => {
       mobileMenu.classList.remove('hidden');
       mobileMenu.classList.add('active');
+      document.querySelector('.sidebar').classList.remove('active'); // Ensure sidebar doesn't conflict
     });
     closeMenu.addEventListener('click', () => {
       mobileMenu.classList.add('hidden');
@@ -660,6 +721,7 @@
     const categoryMenu = document.getElementById('category-menu');
     categoryToggle.addEventListener('click', () => {
       categoryMenu.classList.toggle('hidden');
+      categoryMenu.classList.toggle('active');
     });
 
     // Subcategory Dropdown Toggle
@@ -688,15 +750,8 @@
     window.addEventListener('DOMContentLoaded', () => {
       if (window.innerWidth >= 768) {
         categoryMenu.classList.remove('hidden');
+        categoryMenu.classList.add('active');
       }
-    });
-
-    // Coming Soon Message Display for 2 Seconds
-    window.addEventListener('DOMContentLoaded', () => {
-      const comingSoon = document.getElementById('coming-soon');
-      setTimeout(() => {
-        comingSoon.style.display = 'none';
-      }, 2000);
     });
 
     // Cart Functionality
@@ -901,3 +956,5 @@
     // Update cart count on page load
     updateCartCount();
   </script>
+</body>
+</html>
