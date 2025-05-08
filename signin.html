@@ -153,6 +153,12 @@
       .nav-link, #mobile-menu a {
         font-size: 1rem;
       }
+      .card {
+        padding: 1rem;
+      }
+      .form-bg {
+        padding: 1rem;
+      }
     }
   </style>
 </head>
@@ -182,7 +188,7 @@
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Contact Us</span>
         </a>
-        <a href="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+        <a href="#" data-link="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>About Us</span>
         </a>
@@ -194,10 +200,6 @@
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Create Account</span>
         </a>
-        <div id="user-display" class="hidden flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>User</span>
-        </div>
       </nav>
     </div>
   </div>
@@ -234,7 +236,7 @@
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
         <span>Contact Us</span>
       </a>
-      <a href="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+      <a href="#" data-link="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
         <span>About Us</span>
       </a>
@@ -246,10 +248,6 @@
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
         <span>Create Account</span>
       </a>
-      <div id="mobile-user-display" class="hidden flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-        <span>User</span>
-      </div>
     </nav>
   </div>
 
@@ -284,7 +282,7 @@
       <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         <div>
           <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Contact</h3>
-          <p class="text-[#F1F5F9] mb-2 text-sm leading-relaxed">📧 <a href="mailto:support@gamingodyssey.in" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link">support@gamingodyssey.in</a></p>
+          <p class="text-[#F1F5F9] mb-2 text-sm leading-relaxed">📧 <a href="/cdn-cgi/l/email-protection#e695939696998482a681878b8f8881878c919b9b8d91c88582" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link"><span class="__cf_email__" data-cfemail="4a393f3a3a25383e0a2d2b2723202d2b203d3737213d642920">[email protected]</span></a></p>
           <p class="text-[#F1F5F9] text-sm leading-relaxed">📞 6290994382</p>
         </div>
         <div>
@@ -295,7 +293,7 @@
             <li><a href="#" data-link="tournaments.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Tournaments</a></li>
             <li><a href="#" data-link="trackorder.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Track Order</a></li>
             <li><a href="#" data-link="contactus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Contact Us</a></li>
-            <li><a href="aboutus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">About Us</a></li>
+            <li><a href="#" data-link="aboutus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">About Us</a></li>
             <li><a href="terms.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Terms & Conditions</a></li>
           </ul>
         </div>
@@ -318,45 +316,8 @@
     </footer>
   </div>
 
+  <!-- JavaScript for Form Handling and Navigation -->
   <script>
-    // Authentication Logic
-    function isAuthenticated() {
-      return localStorage.getItem('isAuthenticated') === 'true';
-    }
-
-    function handleProtectedLink(event) {
-      event.preventDefault();
-      const link = event.currentTarget.getAttribute('data-link') || event.currentTarget.getAttribute('href');
-      // Allow direct access to signin.html, createaccount.html, aboutus.html, terms.html, and external links
-      if (link === 'signin.html' || link === 'createaccount.html' || link === 'aboutus.html' || link === 'terms.html' || link.startsWith('http')) {
-        window.location.href = link;
-        return;
-      }
-      // Require authentication for other pages
-      if (isAuthenticated()) {
-        window.location.href = link;
-      } else {
-        window.location.href = 'createaccount.html';
-      }
-    }
-
-    document.querySelectorAll('.nav-link, .submit-btn').forEach(link => {
-      link.addEventListener('click', handleProtectedLink);
-    });
-
-    // Display Username in Sidebar and Mobile Menu
-    const userDisplay = document.getElementById('user-display');
-    const mobileUserDisplay = document.getElementById('mobile-user-display');
-    if (isAuthenticated()) {
-      const username = localStorage.getItem('currentUser');
-      if (username) {
-        userDisplay.classList.remove('hidden');
-        mobileUserDisplay.classList.remove('hidden');
-        userDisplay.querySelector('span').textContent = username;
-        mobileUserDisplay.querySelector('span').textContent = username;
-      }
-    }
-
     // Hamburger Menu Toggle
     const hamburger = document.getElementById('hamburger');
     const mobileMenu = document.getElementById('mobile-menu');
@@ -381,6 +342,29 @@
     }, { threshold: 0.1 });
     fadeIns.forEach(element => observer.observe(element));
 
+    // Authentication Logic
+    function isAuthenticated() {
+      return localStorage.getItem('isAuthenticated') === 'true';
+    }
+
+    function handleProtectedLink(event) {
+      event.preventDefault();
+      const link = event.currentTarget.getAttribute('data-link') || event.currentTarget.getAttribute('href');
+      if (link === 'signin.html' || link === 'createaccount.html' || link === 'aboutus.html' || link === 'terms.html' || link.startsWith('http')) {
+        window.location.href = link;
+        return;
+      }
+      if (isAuthenticated()) {
+        window.location.href = link;
+      } else {
+        window.location.href = 'createaccount.html';
+      }
+    }
+
+    document.querySelectorAll('.nav-link, .submit-btn').forEach(link => {
+      link.addEventListener('click', handleProtectedLink);
+    });
+
     // Sign In Form Submission
     document.getElementById('signin-form').addEventListener('submit', function(event) {
       event.preventDefault();
@@ -390,7 +374,6 @@
       document.querySelectorAll('.error').forEach(el => el.classList.add('hidden'));
       let isValid = true;
 
-      // Validate inputs
       if (!username) {
         document.getElementById('username-error').classList.remove('hidden');
         isValid = false;
@@ -407,19 +390,22 @@
         return;
       }
 
-      // Check credentials
+      // Verify credentials
       const users = JSON.parse(localStorage.getItem('users') || '[]');
-      const user = users.find(u => u.username === username && u.password === password);
+      const user = users.find(user => user.username === username && user.password === password);
+
       if (!user) {
         status.textContent = 'Invalid username or password';
         status.className = 'error';
         return;
       }
 
-      // Authenticate user
+      // Set authentication state
       localStorage.setItem('isAuthenticated', 'true');
       localStorage.setItem('currentUser', username);
-      status.textContent = 'Sign-in successful! Redirecting...';
+
+      // Show success message and redirect
+      status.textContent = 'Sign in successful';
       status.className = 'success';
       setTimeout(() => {
         window.location.href = 'index.html';
