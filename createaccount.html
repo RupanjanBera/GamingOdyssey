@@ -4,53 +4,164 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gaming Odyssey - Create Account</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
+    :root {
+      --primary-color: #3B82F6;
+      --secondary-color: #D946EF;
+      --background-color: #0F172A;
+      --text-color: #F1F5F9;
+      --card-background: linear-gradient(145deg, #1E293B, #0F172A);
+      --font-family: 'Poppins', sans-serif;
+      --shadow-glow: 0 0 6px rgba(59, 130, 246, 0.2);
+      --shadow-glow-hover: 0 0 10px rgba(59, 130, 246, 0.4);
+      --font-size-base: clamp(14px, 2.5vw, 16px);
+      --padding-base: clamp(0.75rem, 2vw, 1rem);
+    }
     body {
-      font-family: 'Rajdhani', sans-serif;
-      background-color: #1a1a2e;
-      color: #E0E0E0;
+      font-family: var(--font-family);
+      background-color: var(--background-color);
+      color: var(--text-color);
       scroll-behavior: smooth;
       overflow-x: hidden;
+      font-size: var(--font-size-base);
     }
-    .neon-border {
-      border: 1px solid #00E5FF;
-      box-shadow: 0 0 10px #00E5FF, 0 0 20px #D500F9;
+    .gradient-glow {
+      box-shadow: var(--shadow-glow);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      will-change: transform, box-shadow;
     }
-    .neon-glow:hover {
-      box-shadow: 0 0 15px #00E5FF, 0 0 25px #D500F9;
-      transform: translateY(-2px);
-      transition: all 0.3s ease;
+    .gradient-glow:hover {
+      box-shadow: var(--shadow-glow-hover);
+      transform: translateY(-3px);
     }
-    .form-bg {
-      background: linear-gradient(45deg, rgba(0, 229, 255, 0.1), rgba(213, 0, 249, 0.1));
+    .hero-bg {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(217, 70, 239, 0.15), var(--background-color));
       position: relative;
       overflow: hidden;
+      padding: var(--padding-base);
     }
-    .form-bg::before {
+    .hero-bg::before {
       content: '';
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="#00E5FF" opacity="0.3"/></svg>') repeat;
-      animation: particles 20s linear infinite;
+      background: radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.2), transparent 70%);
+      animation: glow 20s ease-in-out infinite;
       opacity: 0.5;
     }
-    @keyframes particles {
-      0% { transform: translateY(0); }
-      100% { transform: translateY(-100px); }
+    @keyframes glow {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 0.7; }
     }
     .fade-in {
       opacity: 0;
-      transform: translateY(20px);
+      transform: translateY(15px);
       transition: opacity 0.6s ease, transform 0.6s ease;
+      will-change: opacity, transform;
     }
     .fade-in.visible {
       opacity: 1;
       transform: translateY(0);
+    }
+    .card {
+      background: var(--card-background);
+      border-radius: 0.75rem;
+      padding: var(--padding-base);
+      transition: transform 0.2s ease;
+      width: 100%;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+    }
+    input, select {
+      background: #1E293B;
+      color: var(--text-color);
+      border: 1px solid var(--primary-color);
+      border-radius: 0.5rem;
+      padding: var(--padding-base);
+      width: 100%;
+      transition: border-color 0.2s ease;
+      font-family: var(--font-family);
+      font-size: var(--font-size-base);
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--secondary-color);
+      box-shadow: 0 0 6px rgba(217, 70, 239, 0.2);
+    }
+    input[type="checkbox"], input[type="radio"] {
+      width: auto;
+      accent-color: var(--primary-color);
+    }
+    .submit-btn {
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+      color: #0F172A;
+      font-family: var(--font-family);
+      font-weight: 600;
+      padding: var(--padding-base) clamp(1rem, 3vw, 1.5rem);
+      border-radius: 0.5rem;
+      transition: transform 0.2s ease;
+      font-size: var(--font-size-base);
+      min-width: 120px;
+      text-align: center;
+    }
+    .submit-btn:hover {
+      transform: translateY(-2px);
+    }
+    .nav-link, #mobile-menu a {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      transition: color 0.2s ease;
+      font-family: var(--font-family);
+      font-weight: 600;
+      font-size: clamp(15px, 2.5vw, 17px);
+      padding: 0.5rem 0;
+    }
+    .nav-link::after, #mobile-menu a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: 0;
+      left: 0;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      transition: width 0.2s ease;
+    }
+    .nav-link:hover::after, #mobile-menu a:hover::after {
+      width: 100%;
+    }
+    .nav-link:hover, #mobile-menu a:hover {
+      color: var(--primary-color);
+    }
+    .mobile-menu {
+      background: linear-gradient(180deg, #1E293B, var(--background-color));
+      opacity: 0;
+      transform: translateX(-100%);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      width: 80vw;
+    }
+    .mobile-menu.active {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .cart-icon-container {
+      position: relative;
+    }
+    .cart-count {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+      color: #0F172A;
+      font-size: clamp(10px, 1.5vw, 12px);
+      font-weight: bold;
+      border-radius: 50%;
+      padding: 2px 6px;
     }
     .error {
       color: #FF5555;
@@ -58,130 +169,211 @@
       margin-top: 0.25rem;
     }
     .success {
-      color: #00E5FF;
+      color: var(--primary-color);
       font-size: 0.875rem;
       margin-top: 0.25rem;
+    }
+    @media (max-width: 640px) {
+      .hero-bg {
+        padding: 0.5rem;
+      }
+      .card {
+        padding: 0.75rem;
+        width: 95%;
+        margin: 0 auto;
+      }
+      input, select {
+        font-size: 14px;
+        padding: 0.625rem;
+      }
+      .submit-btn {
+        width: 100%;
+        padding: 0.875rem;
+        font-size: 14px;
+      }
+      .nav-link, #mobile-menu a {
+        font-size: 0.9375rem;
+      }
+      footer .grid {
+        grid-template-columns: 1fr;
+      }
+      footer h3 {
+        font-size: 1rem;
+      }
+      footer p, footer a {
+        font-size: 0.875rem;
+      }
+      .cart-count {
+        font-size: 0.625rem;
+        padding: 1px 4px;
+      }
+      .error, .success {
+        font-size: 0.75rem;
+      }
+    }
+    @media (min-width: 768px) {
+      .mobile-menu {
+        display: none;
+      }
     }
   </style>
 </head>
 <body>
   <!-- Header -->
-  <header class="bg-[#0f0f1a] py-4 px-6 neon-border">
-    <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center">
-      <h1 class="text-2xl font-bold text-white font-orbitron mb-4 md:mb-0">Gaming Odyssey</h1>
-      <nav class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-6 text-lg">
-        <a href="#" data-link="index.html" class="hover:text-[#00E5FF] transition nav-link">Home</a>
-        <a href="#" data-link="store.html" class="hover:text-[#00E5FF] transition nav-link">Store</a>
-        <a href="#" data-link="tournaments.html" class="hover:text-[#00E5FF] transition nav-link">Tournaments</a>
-        <a href="#" data-link="trackorder.html" class="hover:text-[#00E5FF] transition nav-link">Track Order</a>
-        <a href="#" data-link="contactus.html" class="hover:text-[#00E5FF] transition nav-link">Contact Us</a>
-        <a href="signin.html" class="hover:text-[#00E5FF] transition">Sign In</a>
-        <a href="createaccount.html" class="text-[#00E5FF] font-bold">Create Account</a>
+  <div class="md:hidden fixed top-0 left-0 w-full bg-[#1E293B] z-30 p-4 flex justify-between items-center gradient-glow">
+    <h1 class="text-lg font-bold text-white leading-relaxed">Gaming Odyssey</h1>
+    <div class="flex items-center space-x-4">
+      <a href="cart.html" class="cart-icon-container">
+        <svg class="w-6 h-6 text-[#3B82F6]" fill="currentColor" viewBox="0 0 20 20"><path d="M0 1h3l2 11h10l2-9H5l-.5-2H0v1zm6 15a2 2 0 100 4 2 2 0 000-4zm9 0a2 2 0 100 4 2 2 0 000-4z"/></svg>
+        <span id="cart-count-mobile" class="cart-count">0</span>
+      </a>
+      <button id="hamburger" class="text-[#3B82F6]">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="mobile-menu" class="hidden md:hidden fixed top-0 left-0 w-full h-full mobile-menu z-20 p-4">
+    <button id="close-menu" class="absolute top-4 right-4 text-[#3B82F6] gradient-glow rounded-full p-2">
+      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+    <nav class="space-y-3 mt-12">
+      <a href="#" data-link="index.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">Home</a>
+      <a href="#" data-link="store.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">Store</a>
+      <a href="#" data-link="tournaments.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">Tournaments</a>
+      <a href="#" data-link="trackorder.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">Track Order</a>
+      <a href="#" data-link="contactus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">Contact Us</a>
+      <a href="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">About Us</a>
+      <a href="signin.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">Sign In</a>
+      <a href="createaccount.html" class="flex items-center space-x-2 text-[#3B82F6] font-semibold nav-link">Create Account</a>
+      <a href="cart.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link cart-icon-container">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M0 1h3l2 11h10l2-9H5l-.5-2H0v1zm6 15a2 2 0 100 4 2 2 0 000-4zm9 0a2 2 0 100 4 2 2 0 000-4z"/></svg>
+        <span>Cart</span>
+        <span id="cart-count-mobile-menu" class="cart-count">0</span>
+      </a>
+    </nav>
+  </div>
+  <header class="hidden md:block bg-[#1E293B] py-4 px-6 fixed top-0 left-0 w-full z-30 gradient-glow">
+    <div class="max-w-6xl mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-white leading-relaxed">Gaming Odyssey</h1>
+      <nav class="flex space-x-6 text-lg">
+        <a href="#" data-link="index.html" class="text-[#F1F5F9] hover:text-[#3B82F6] nav-link">Home</a>
+        <a href="#" data-link="store.html" class="text-[#F1F5F9] hover:text-[#3B82F6] nav-link">Store</a>
+        <a href="#" data-link="tournaments.html" class="text-[#F1F5F9] hover:text-[#3B82F6] nav-link">Tournaments</a>
+        <a href="#" data-link="trackorder.html" class="text-[#F1F5F9] hover:text-[#3B82F6] nav-link">Track Order</a>
+        <a href="#" data-link="contactus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] nav-link">Contact Us</a>
+        <a href="aboutus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] nav-link">About Us</a>
+        <a href="signin.html" class="text-[#F1F5F9] hover:text-[#3B82F6] nav-link">Sign In</a>
+        <a href="createaccount.html" class="text-[#3B82F6] font-bold nav-link">Create Account</a>
+        <a href="cart.html" class="cart-icon-container">
+          <svg class="w-6 h-6 text-[#F1F5F9] hover:text-[#3B82F6]" fill="currentColor" viewBox="0 0 20 20"><path d="M0 1h3l2 11h10l2-9H5l-.5-2H0v1zm6 15a2 2 0 100 4 2 2 0 000-4zm9 0a2 2 0 100 4 2 2 0 000-4z"/></svg>
+          <span id="cart-count-desktop" class="cart-count">0</span>
+        </a>
       </nav>
     </div>
   </header>
 
   <!-- Main Content -->
-  <section class="form-bg py-16 px-6">
-    <div class="max-w-md mx-auto bg-[#0f0f1a] p-8 rounded-lg neon-border fade-in">
-      <h2 class="text-3xl font-bold text-white font-orbitron text-center mb-8">Create Account</h2>
+  <section class="hero-bg py-16 px-6 pt-24 md:pt-16">
+    <div class="max-w-md mx-auto card gradient-glow fade-in">
+      <h2 class="text-3xl font-bold text-white text-center mb-8">Create Account</h2>
       <form id="create-account-form" class="space-y-6">
         <div>
-          <label for="firstName" class="block text-[#E0E0E0] mb-2">First Name</label>
-          <input type="text" id="firstName" name="firstName" class="w-full p-3 bg-[#1a1a2e] text-[#E0E0E0] rounded neon-border focus:outline-none" required>
+          <label for="firstName" class="block text-[#F1F5F9] mb-2">First Name</label>
+          <input type="text" id="firstName" name="firstName" class="w-full" required>
           <p id="firstName-error" class="error hidden">First name is required</p>
         </div>
         <div>
-          <label for="lastName" class="block text-[#E0E0E0] mb-2">Last Name</label>
-          <input type="text" id="lastName" name="lastName" class="w-full p-3 bg-[#1a1a2e] text-[#E0E0E0] rounded neon-border focus:outline-none" required>
+          <label for="lastName" class="block text-[#F1F5F9] mb-2">Last Name</label>
+          <input type="text" id="lastName" name="lastName" class="w-full" required>
           <p id="lastName-error" class="error hidden">Last name is required</p>
         </div>
         <div>
-          <label for="username" class="block text-[#E0E0E0] mb-2">Username</label>
-          <input type="text" id="username" name="username" class="w-full p-3 bg-[#1a1a2e] text-[#E0E0E0] rounded neon-border focus:outline-none" required>
+          <label for="username" class="block text-[#F1F5F9] mb-2">Username</label>
+          <input type="text" id="username" name="username" class="w-full" required>
           <p id="username-error" class="error hidden">Username is already taken</p>
         </div>
         <div>
-          <label for="email" class="block text-[#E0E0E0] mb-2">Gmail ID</label>
-          <input type="email" id="email" name="email" class="w-full p-3 bg-[#1a1a2e] text-[#E0E0E0] rounded neon-border focus:outline-none" required>
+          <label for="email" class="block text-[#F1F5F9] mb-2">Gmail ID</label>
+          <input type="email" id="email" name="email" class="w-full" required>
           <p id="email-error" class="error hidden">Email is already registered</p>
         </div>
         <div>
-          <label for="phone" class="block text-[#E0E0E0] mb-2">Phone Number</label>
-          <input type="tel" id="phone" name="phone" pattern="[0-9]{10}" class="w-full p-3 bg-[#1a1a2e] text-[#E0E0E0] rounded neon-border focus:outline-none" required>
+          <label for="phone" class="block text-[#F1F5F9] mb-2">Phone Number</label>
+          <input type="tel" id="phone" name="phone" pattern="[0-9]{10}" class="w-full" required>
           <p id="phone-error" class="error hidden">Enter a valid 10-digit phone number</p>
         </div>
         <div>
-          <label for="password" class="block text-[#E0E0E0] mb-2">Password</label>
-          <input type="password" id="password" name="password" class="w-full p-3 bg-[#1a1a2e] text-[#E0E0E0] rounded neon-border focus:outline-none" required>
+          <label for="password" class="block text-[#F1F5F9] mb-2">Password</label>
+          <input type="password" id="password" name="password" class="w-full" required>
           <p id="password-error" class="error hidden">Password must be at least 6 characters</p>
         </div>
         <div>
-          <label class="flex items-center text-[#E0E0E0]">
-            <input type="checkbox" name="terms" class="mr-2 bg-[#1a1a2e] neon-border" required>
-            I accept the <a href="#" class="text-[#00E5FF] hover:text-[#D500F9] transition">Terms and Conditions</a>
+          <label class="flex items-center text-[#F1F5F9]">
+            <input type="checkbox" name="terms" class="mr-2" required>
+            I accept the <a href="#" class="text-[#3B82F6] hover:text-[#D946EF] transition">Terms and Conditions</a>
           </label>
           <p id="terms-error" class="error hidden">You must accept the terms</p>
         </div>
         <div>
-          <p class="text-[#E0E0E0] mb-2">What best describes you?</p>
-          <label class="flex items-center text-[#E0E0E0] mb-2">
-            <input type="radio" name="preference" value="buyer" class="mr-2 bg-[#1a1a2e] neon-border" required>
+          <p class="text-[#F1F5F9] mb-2">What best describes you?</p>
+          <label class="flex items-center text-[#F1F5F9] mb-2">
+            <input type="radio" name="preference" value="buyer" class="mr-2" required>
             Product Buyer Only
           </label>
-          <label class="flex items-center text-[#E0E0E0] mb-2">
-            <input type="radio" name="preference" value="gamer" class="mr-2 bg-[#1a1a2e] neon-border">
+          <label class="flex items-center text-[#F1F5F9] mb-2">
+            <input type="radio" name="preference" value="gamer" class="mr-2">
             Gamer
           </label>
-          <label class="flex items-center text-[#E0E0E0]">
-            <input type="radio" name="preference" value="both" class="mr-2 bg-[#1a1a2e] neon-border">
+          <label class="flex items-center text-[#F1F5F9]">
+            <input type="radio" name="preference" value="both" class="mr-2">
             Both
           </label>
           <p id="preference-error" class="error hidden">Please select a preference</p>
         </div>
-        <button type="submit" class="w-full bg-[#00E5FF] text-[#0f0f1a] font-bold py-3 rounded neon-glow">Create Account</button>
+        <button type="submit" class="w-full submit-btn">Create Account</button>
         <p id="form-status" class="text-center mt-4"></p>
       </form>
       <div class="mt-4 text-center">
-        <p class="text-[#E0E0E0]">Already have an account? <a href="signin.html" class="text-[#00E5FF] hover:text-[#D500F9] transition">Sign In</a></p>
+        <p class="text-[#F1F5F9]">Already have an account? <a href="signin.html" class="text-[#3B82F6] hover:text-[#D946EF] transition">Sign In</a></p>
       </div>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer class="bg-[#0f0f1a] py-12 px-6">
-    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+  <footer class="bg-[#1E293B] py-10 px-4 sm:px-6 md:px-8">
+    <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
       <div>
-        <h3 class="text-xl font-bold text-white font-orbitron mb-4">Contact</h3>
-        <p class="text-[#E0E0E0]">📧 <a href="mailto:support@gamingodyssey.com">support@gamingodyssey.com</a></p>
-        <p class="text-[#E0E0E0]">📞 6289119156</p>
+        <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Contact</h3>
+        <p class="text-[#F1F5F9] mb-2 text-sm leading-relaxed">📧 <a href="mailto:businessgamingodyssey@gmail.com" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link">businessgamingodyssey@gmail.com</a></p>
+        <p class="text-[#F1F5F9] text-sm leading-relaxed">📞 6289119156</p>
       </div>
       <div>
-        <h3 class="text-xl font-bold text-white font-orbitron mb-4">Useful Links</h3>
+        <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Useful Links</h3>
         <ul class="space-y-2">
-          <li><a href="#" data-link="index.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition nav-link">Home</a></li>
-          <li><a href="#" data-link="store.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition nav-link">Store</a></li>
-          <li><a href="#" data-link="tournaments.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition nav-link">Tournaments</a></li>
-          <li><a href="#" data-link="trackorder.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition nav-link">Track Order</a></li>
-          <li><a href="#" data-link="contactus.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition nav-link">Contact Us</a></li>
+          <li><a href="#" data-link="index.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Home</a></li>
+          <li><a href="#" data-link="store.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Store</a></li>
+          <li><a href="#" data-link="tournaments.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Tournaments</a></li>
+          <li><a href="#" data-link="trackorder.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Track Order</a></li>
+          <li><a href="#" data-link="contactus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Contact Us</a></li>
+          <li><a href="aboutus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">About Us</a></li>
         </ul>
       </div>
       <div>
-        <h3 class="text-xl font-bold text-white font-orbitron mb-4">Follow Us</h3>
-        <div class="flex space-x-4">
-          <a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">
-            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
+        <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Follow Us</h3>
+        <div class="flex space-x-3">
+          <a href="https://www.instagram.com/noticedveil" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full">
+            <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" class="w-5 h-5">
           </a>
-          <a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">
-            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
+          <a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full">
+            <img src="https://cdn-icons-png.flaticon.com/512/3938/3938026.png" alt="YouTube" class="w-5 h-5">
           </a>
-          <a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">
-            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
+          <a href="https://www.facebook.com" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full">
+            <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" class="w-5 h-5">
           </a>
         </div>
       </div>
     </div>
-    <p class="text-center text-[#E0E0E0] mt-8">© 2025 Gaming Odyssey. All rights reserved.</p>
+    <p class="text-center text-[#F1F5F9] mt-6 text-sm leading-relaxed">© 2025 Gaming Odyssey. All rights reserved.</p>
   </footer>
 
   <script>
@@ -195,6 +387,36 @@
       });
     }, { threshold: 0.1 });
     fadeIns.forEach(element => observer.observe(element));
+
+    // Mobile Menu Toggle
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const closeMenu = document.getElementById('close-menu');
+    if (hamburger && mobileMenu && closeMenu) {
+      hamburger.addEventListener('click', () => {
+        mobileMenu.classList.remove('hidden');
+        mobileMenu.classList.add('active');
+      });
+      closeMenu.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+        mobileMenu.classList.remove('active');
+      });
+    }
+
+    // Cart Count (Placeholder - sync with store.html if needed)
+    const cartCountElements = {
+      mobile: document.getElementById('cart-count-mobile'),
+      mobileMenu: document.getElementById('cart-count-mobile-menu'),
+      desktop: document.getElementById('cart-count-desktop')
+    };
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    function updateCartCount() {
+      const count = cart.reduce((total, item) => total + item.quantity, 0);
+      if (cartCountElements.mobile) cartCountElements.mobile.textContent = count;
+      if (cartCountElements.mobileMenu) cartCountElements.mobileMenu.textContent = count;
+      if (cartCountElements.desktop) cartCountElements.desktop.textContent = count;
+    }
+    updateCartCount();
 
     // Authentication Logic
     function isAuthenticated() {
