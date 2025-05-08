@@ -3,164 +3,291 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gaming Odyssey - Contact Us</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+  <title>Contact Us - Gaming Odyssey</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <style>
+    :root {
+      /* Customizable theme variables */
+      --primary-color: #3B82F6; /* Primary accent (blue) */
+      --secondary-color: #D946EF; /* Secondary accent (pink) */
+      --background-color: #0F172A; /* Main background */
+      --text-color: #F1F5F9; /* Primary text */
+      --card-background: linear-gradient(145deg, #1E293B, #0F172A); /* Card background */
+      --font-family: 'Poppins', sans-serif; /* Primary font */
+      --shadow-glow: 0 0 6px rgba(59, 130, 246, 0.2); /* Glow effect */
+      --shadow-glow-hover: 0 0 10px rgba(59, 130, 246, 0.4); /* Hover glow */
+      /* To customize, update these values */
+    }
     body {
-      font-family: 'Rajdhani', sans-serif;
-      background-color: #1a1a2e;
-      color: #E0E0E0;
+      font-family: var(--font-family);
+      background-color: var(--background-color);
+      color: var(--text-color);
       scroll-behavior: smooth;
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      font-size: clamp(16px, 2.5vw, 18px); /* Fluid typography */
     }
-    .neon-border {
-      border: 1px solid #00B7D4;
-      box-shadow: 0 0 10px #00B7D4, 0 0 20px #D500F9;
+    .gradient-glow {
+      box-shadow: var(--shadow-glow);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .gradient-glow:hover {
+      box-shadow: var(--shadow-glow-hover);
+      transform: translateY(-4px);
+    }
+    .sidebar {
+      background: linear-gradient(180deg, #1E293B 0%, var(--background-color) 100%);
+      box-shadow: 2px 0 6px rgba(59, 130, 246, 0.1);
+    }
+    .fade-in {
+      opacity: 0;
+      transform: translateY(15px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
     .form-container {
+      background: var(--card-background);
+      padding: clamp(1rem, 3vw, 1.5rem);
+      border-radius: 0.75rem;
       max-width: 600px;
       margin: 0 auto;
-      background: #0f0f1a;
-      padding: 2rem;
-      border-radius: 0.5rem;
-      opacity: 0;
-      transform: scale(0.95);
-      animation: fadeIn 0.6s ease forwards;
-    }
-    @keyframes fadeIn {
-      to { opacity: 1; transform: scale(1); }
     }
     input, textarea {
-      background: #1a1a2e;
-      color: #E0E0E0;
-      border: 1px solid #00B7D4;
-      border-radius: 0.375rem;
-      padding: 0.75rem;
+      background: #1E293B;
+      color: var(--text-color);
+      border: 1px solid #4B5563;
+      border-radius: 0.5rem;
+      padding: clamp(0.5rem, 2vw, 0.75rem);
       width: 100%;
-      transition: all 0.3s ease;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      font-size: clamp(14px, 2vw, 16px);
     }
     input:focus, textarea:focus {
       outline: none;
-      border-color: #D500F9;
-      box-shadow: 0 0 10px #D500F9;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 8px rgba(59, 130, 246, 0.3);
     }
     .submit-btn {
-      background: linear-gradient(45deg, #00B7D4, #D500F9);
-      color: #0f0f1a;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+      color: #0F172A;
+      font-family: var(--font-family);
       font-weight: 600;
-      font-family: 'Orbitron', sans-serif;
-      padding: 0.75rem 1.5rem;
-      border-radius: 0.375rem;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.3s ease;
-    }
-    .submit-btn::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-      transition: 0.5s;
-    }
-    .submit-btn:hover::before {
-      left: 100%;
+      padding: clamp(0.625rem, 2vw, 0.75rem) clamp(1rem, 3vw, 1.5rem);
+      border-radius: 0.5rem;
+      transition: transform 0.2s ease;
+      font-size: clamp(14px, 2vw, 15px);
+      text-align: center;
+      display: inline-block;
+      width: auto;
+      min-width: 120px; /* Touch-friendly size */
     }
     .submit-btn:hover {
-      transform: translateY(-2px) rotate(2deg);
-      box-shadow: 0 0 20px #00B7D4, 0 0 30px #D500F9;
+      transform: translateY(-2px);
+    }
+    .heading {
+      font-family: var(--font-family);
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 700;
+      color: var(--text-color);
+      text-align: center;
+      position: relative;
+      margin-bottom: 2rem;
+    }
+    .heading::after {
+      content: '';
+      position: absolute;
+      bottom: -0.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    }
+    .nav-link, #mobile-menu a {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      transition: color 0.2s ease;
+      font-family: var(--font-family);
+      font-weight: 600;
+      font-size: clamp(15px, 2.5vw, 17px);
+      padding: 0.5rem 0;
+    }
+    .nav-link::after, #mobile-menu a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: 0;
+      left: 0;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      transition: width 0.2s ease;
+    }
+    .nav-link:hover::after, #mobile-menu a:hover::after {
+      width: 100%;
+    }
+    .nav-link:hover, #mobile-menu a:hover {
+      color: var(--primary-color);
+    }
+    .mobile-menu {
+      background: linear-gradient(180deg, #1E293B, var(--background-color));
+      opacity: 0;
+      transform: translateX(-100%);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .mobile-menu.active {
+      opacity: 1;
+      transform: translateX(0);
     }
     .error {
-      color: #FF5555;
-      font-size: 0.875rem;
+      color: #EF4444;
+      font-size: clamp(12px, 2vw, 14px);
       margin-top: 0.25rem;
     }
     .success {
-      color: #00B7D4;
-      font-size: 0.875rem;
+      color: var(--primary-color);
+      font-size: clamp(12px, 2vw, 14px);
       margin-top: 0.25rem;
-    }
-    .content-bg {
-      background: linear-gradient(45deg, rgba(0, 183, 212, 0.1), rgba(213, 0, 249, 0.1));
-      position: relative;
-      overflow: hidden;
-    }
-    .content-bg::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="#00B7D4" opacity="0.3"/></svg>') repeat;
-      animation: particles 20s linear infinite;
-      opacity: 0.5;
-    }
-    @keyframes particles {
-      0% { transform: translateY(0); }
-      100% { transform: translateY(-100px); }
     }
     @media (max-width: 640px) {
       .form-container {
-        padding: 1.5rem;
         margin: 0 1rem;
+        padding: 1rem;
       }
       .submit-btn {
         width: 100%;
+        min-width: unset;
       }
-      h1 {
-        font-size: 2rem;
+      .heading {
+        font-size: clamp(1.5rem, 4vw, 2rem);
       }
     }
+    @media (min-width: 640px) and (max-width: 1024px) {
+      .form-container {
+        max-width: 80%;
+      }
+    }
+    /* Customization tip: Adjust --primary-color, --secondary-color, etc., in :root to change the theme */
   </style>
 </head>
 <body>
-  <!-- Header -->
-  <header class="bg-[#0f0f1a] py-4 px-6 neon-border">
-    <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center">
-      <h1 class="text-2xl font-bold text-white font-orbitron mb-4 md:mb-0">Gaming Odyssey</h1>
-      <nav class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-6 text-lg">
-        <a href="index.html" class="hover:text-[#00B7D4] transition">Home</a>
-        <a href="store.html" class="hover:text-[#00B7D4] transition">Store</a>
-        <a href="tournaments.html" class="hover:text-[#00B7D4] transition">Tournaments</a>
-        <a href="#" class="hover:text-[#00B7D4] transition">Track Order</a>
-        <a href="contactus.html" class="text-[#00B7D4] font-bold">Contact Us</a>
-        <a href="aboutus.html" class="hover:text-[#00B7D4] transition">About Us</a>
-        <a href="signin.html" class="hover:text-[#00B7D4] transition">Sign In</a>
-        <a href="createaccount.html" class="hover:text-[#00B7D4] transition">Create Account</a>
+  <!-- Sidebar -->
+  <div class="fixed top-0 left-0 h-full w-64 sidebar gradient-glow z-20 hidden md:block">
+    <div class="p-6">
+      <h1 class="text-2xl font-bold text-white leading-relaxed">Gaming Odyssey</h1>
+      <nav class="mt-10 space-y-3">
+        <a href="index.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Home</span>
+        </a>
+        <a href="store.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Store</span>
+        </a>
+        <a href="tournaments.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Tournaments</span>
+        </a>
+        <a href="trackorder.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Track Order</span>
+        </a>
+        <a href="contactus.html" class="flex items-center space-x-2 text-[#3B82F6] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Contact Us</span>
+        </a>
+        <a href="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>About Us</span>
+        </a>
+        <a href="signin.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Sign In</span>
+        </a>
+        <a href="createaccount.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Create Account</span>
+        </a>
       </nav>
     </div>
-  </header>
+  </div>
+
+  <!-- Mobile Hamburger Menu -->
+  <div class="md:hidden fixed top-0 left-0 w-full bg-[#1E293B] z-30 p-4 flex justify-between items-center gradient-glow">
+    <h1 class="text-lg font-bold text-white leading-relaxed">Gaming Odyssey</h1>
+    <button id="hamburger" class="text-[#3B82F6]">
+      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+  </div>
+  <div id="mobile-menu" class="hidden md:hidden fixed top-0 left-0 w-full h-full mobile-menu z-20 p-4">
+    <button id="close-menu" class="absolute top-4 right-4 text-[#3B82F6] gradient-glow rounded-full p-2">
+      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+    <nav class="space-y-3 mt-12">
+        <a href="index.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Home</span>
+        </a>
+        <a href="store.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Store</span>
+        </a>
+        <a href="tournaments.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Tournaments</span>
+        </a>
+        <a href="trackorder.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Track Order</span>
+        </a>
+        <a href="contactus.html" class="flex items-center space-x-2 text-[#3B82F6] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Contact Us</span>
+        </a>
+        <a href="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>About Us</span>
+        </a>
+        <a href="signin.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Sign In</span>
+        </a>
+        <a href="createaccount.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Create Account</span>
+        </a>
+    </nav>
+  </div>
 
   <!-- Main Content -->
-  <section class="content-bg py-16 px-6">
-    <div class="max-w-5xl mx-auto">
-      <h1 class="text-4xl md:text-5xl font-bold text-white font-orbitron text-center mb-12">
-        Contact Us
-      </h1>
-      <div class="form-container neon-border">
+  <div class="md:ml-64">
+    <section class="py-16 px-4 sm:px-6 md:px-8 bg-gradient-to-b from-[#1E293B] to-[#0F172A] min-h-screen">
+      <h2 class="heading">Contact Us</h2>
+      <div class="form-container gradient-glow fade-in">
         <form id="contact-form">
           <div class="mb-4">
-            <label for="name" class="block text-[#E0E0E0] mb-2">Name</label>
-            <input type="text" id="name" name="name" required placeholder="Your name" />
+            <label for="name" class="block text-[#F1F5F9] mb-2 text-sm">Name</label>
+            <input type="text" id="name" name="name" required placeholder="Your name" aria-required="true" />
             <p id="name-error" class="error hidden">Please enter your name</p>
           </div>
           <div class="mb-4">
-            <label for="email" class="block text-[#E0E0E0] mb-2">Email</label>
-            <input type="email" id="email" name="email" required placeholder="Your email" />
+            <label for="email" class="block text-[#F1F5F9] mb-2 text-sm">Email</label>
+            <input type="email" id="email" name="email" required placeholder="Your email" aria-required="true" />
             <p id="email-error" class="error hidden">Please enter a valid email</p>
           </div>
           <div class="mb-4">
-            <label for="subject" class="block text-[#E0E0E0] mb-2">Subject</label>
-            <input type="text" id="subject" name="subject" required placeholder="Subject" />
+            <label for="subject" class="block text-[#F1F5F9] mb-2 text-sm">Subject</label>
+            <input type="text" id="subject" name="subject" required placeholder="Subject" aria-required="true" />
             <p id="subject-error" class="error hidden">Please enter a subject</p>
           </div>
           <div class="mb-4">
-            <label for="message" class="block text-[#E0E0E0] mb-2">Message</label>
-            <textarea id="message" name="message" rows="5" required placeholder="Your message"></textarea>
+            <label for="message" class="block text-[#F1F5F9] mb-2 text-sm">Message</label>
+            <textarea id="message" name="message" rows="5" required placeholder="Your message" aria-required="true"></textarea>
             <p id="message-error" class="error hidden">Please enter a message</p>
           </div>
           <div class="text-center">
@@ -169,66 +296,83 @@
           </div>
         </form>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Footer -->
-  <footer class="bg-[#0f0f1a] py-12 px-6">
-    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-      <div>
-        <h3 class="text-xl font-bold text-white font-orbitron mb-4">Contact</h3>
-        <p class="text-[#E0E0E0]">📧 businessgamingodyssey@gmail.com</p>
-        <p class="text-[#E0E0E0]">📞 6290994382</p>
-      </div>
-      <div>
-        <h3 class="text-xl font-bold text-white font-orbitron mb-4">Useful Links</h3>
-        <ul class="space-y-2">
-          <li><a href="index.html" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">Home</a></li>
-          <li><a href="store.html" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">Store</a></li>
-          <li><a href="tournaments.html" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">Tournaments</a></li>
-          <li><a href="#" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">Track Order</a></li>
-          <li><a href="contactus.html" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">Contact Us</a></li>
-          <li><a href="aboutus.html" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">About Us</a></li>
-        </ul>
-      </div>
-      <div>
-        <h3 class="text-xl font-bold text-white font-orbitron mb-4">Follow Us</h3>
-        <div class="flex space-x-4">
-          <a href="#" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">
-            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
-          </a>
-          <a href="#" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">
-            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
-          </a>
-          <a href="#" class="text-[#E0E0E0] hover:text-[#00B7D4] transition">
-            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
-          </a>
+    <!-- Footer -->
+    <footer class="bg-[#1E293B] py-10 px-4 sm:px-6 md:px-8">
+      <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div>
+          <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Contact</h3>
+          <p class="text-[#F1F5F9] mb-2 text-sm leading-relaxed">📧 <a href="mailto:businessgamingodyssey@gmail.com" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link">businessgamingodyssey@gmail.com</a></p>
+          <p class="text-[#F1F5F9] text-sm leading-relaxed">📞 6290994382</p>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Useful Links</h3>
+          <ul class="space-y-2">
+            <li><a href="index.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Home</a></li>
+            <li><a href="store.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Store</a></li>
+            <li><a href="tournaments.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Tournaments</a></li>
+            <li><a href="trackorder.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Track Order</a></li>
+            <li><a href="contactus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Contact Us</a></li>
+            <li><a href="aboutus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">About Us</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Follow Us</h3>
+          <div class="flex space-x-3">
+            <a href="https://www.instagram.com/noticedveil" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full" aria-label="Follow us on Instagram">
+              <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" class="w-5 h-5">
+            </a>
+            <a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full" aria-label="Follow us on YouTube">
+              <img src="https://cdn-icons-png.flaticon.com/512/3938/3938026.png" alt="YouTube" class="w-5 h-5">
+            </a>
+            <a href="https://www.facebook.com" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full" aria-label="Follow us on Facebook">
+              <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" class="w-5 h-5">
+            </a>
+          </div>
         </div>
       </div>
-    </div>
-    <p class="text-center text-[#E0E0E0] mt-8">© 2025 Gaming Odyssey. All rights reserved.</p>
-  </footer>
+      <p class="text-center text-[#F1F5F9] mt-6 text-sm leading-relaxed">© 2025 Gaming Odyssey. All rights reserved.</p>
+    </footer>
+  </div>
 
-  <!-- EmailJS SDK -->
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <script>
-    // Initialize EmailJS with Public Key
+    // Initialize EmailJS with Public Key (replace with your actual key)
     emailjs.init('__S5AyIeoL526kGwQ');
 
+    // Hamburger Menu Toggle
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const closeMenu = document.getElementById('close-menu');
+    hamburger.addEventListener('click', () => {
+      mobileMenu.classList.remove('hidden');
+      mobileMenu.classList.add('active');
+    });
+    closeMenu.addEventListener('click', () => {
+      mobileMenu.classList.add('hidden');
+      mobileMenu.classList.remove('active');
+    });
+
+    // Fade-in Animation on Scroll
+    const fadeIns = document.querySelectorAll('.fade-in');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+    fadeIns.forEach(element => observer.observe(element));
+
+    // Contact Form Submission
     document.getElementById('contact-form').addEventListener('submit', function(event) {
       event.preventDefault();
-
-      // Get form elements
       const name = document.getElementById('name').value.trim();
       const email = document.getElementById('email').value.trim();
       const subject = document.getElementById('subject').value.trim();
       const message = document.getElementById('message').value.trim();
       const status = document.getElementById('form-status');
-
-      // Reset error messages
       document.querySelectorAll('.error').forEach(el => el.classList.add('hidden'));
-
-      // Validation
       let isValid = true;
       if (!name) {
         document.getElementById('name-error').classList.remove('hidden');
@@ -246,14 +390,11 @@
         document.getElementById('message-error').classList.remove('hidden');
         isValid = false;
       }
-
       if (!isValid) {
         status.textContent = 'Please fill all fields correctly';
         status.className = 'error';
         return;
       }
-
-      // Send email via EmailJS
       emailjs.send('service_94tnfxp', 'template_6ahr5g1', {
         name: name,
         email: email,
@@ -269,5 +410,3 @@
       });
     });
   </script>
-</body>
-</html>
