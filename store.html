@@ -6,9 +6,9 @@
   <title>Gaming Odyssey - Store</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://www.paypal.com/sdk/js?client-id=BAAdJ2wosmpBU4FkhzwVXyScXgOeoxF5keNmkuHD3Hj2vxJwy7Wd3-vEfvzJdNwNzICDycz01anoleHSxs&components=hosted-buttons&disable-funding=venmo&currency=USD"></script>
   <style>
     :root {
+      /* Customizable theme variables */
       --primary-color: #3B82F6;
       --secondary-color: #D946EF;
       --background-color: #0F172A;
@@ -19,6 +19,7 @@
       --shadow-glow-hover: 0 0 10px rgba(59, 130, 246, 0.4);
       --font-size-base: clamp(14px, 2.5vw, 16px);
       --padding-base: clamp(0.75rem, 2vw, 1rem);
+      /* To customize, update these values */
     }
     body {
       font-family: var(--font-family);
@@ -40,11 +41,11 @@
     }
     .sidebar, .category-menu {
       background: linear-gradient(180deg, #1E293B 0%, var(--background-color) 100%);
-      box-shadow: 2px 0 6px rgba(-statements 59, 130, 246, 0.1);
+      box-shadow: 2px 0 6px rgba(59, 130, 246, 0.1);
     }
     .sidebar {
-      width: 80vw;
-      max-width: 16rem;
+      width: 80vw; /* Responsive width for mobile */
+      max-width: 16rem; /* Consistent with desktop */
     }
     .category-menu {
       transition: transform 0.3s ease;
@@ -110,7 +111,7 @@
       border-radius: 0.5rem;
       transition: transform 0.2s ease;
       font-size: var(--font-size-base);
-      min-width: 120px;
+      min-width: 120px; /* Touch-friendly */
       text-align: center;
     }
     .submit-btn:hover {
@@ -295,9 +296,9 @@
       display: flex;
       gap: 1rem;
       justify-content: center;
-      align-items: center;
     }
-    .product-detail .buttons button {
+    .product-detail .buttons button,
+    .product-detail .buttons a {
       flex: 1;
       text-align: center;
       font-family: var(--font-family);
@@ -311,7 +312,12 @@
       background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
       color: #0F172A;
     }
-    .product-detail .buttons .add-to-cart:hover {
+    .product-detail .buttons .buy-now {
+      background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+      color: #0F172A;
+    }
+    .product-detail .buttons .add-to-cart:hover,
+    .product-detail .buttons .buy-now:hover {
       transform: translateY(-2px);
     }
     .category-toggle svg {
@@ -320,9 +326,10 @@
     .category-toggle svg.rotate-180 {
       transform: rotate(180deg);
     }
+    /* Mobile-specific styles */
     @media (max-width: 640px) {
       .sidebar, .category-menu {
-        display: none;
+        display: none; /* Hidden by default, shown via toggles */
       }
       .sidebar.active, .category-menu.active {
         display: block;
@@ -347,7 +354,7 @@
         grid-template-columns: 1fr;
       }
       .product-card img {
-        height: 10rem;
+        height: 10rem; /* Smaller images on mobile */
       }
       .product-card h3 {
         font-size: 1.125rem;
@@ -366,9 +373,7 @@
         font-size: 1.25rem;
       }
       .product-detail .price {
-        font-size: 1rem {
-
-/* Truncated for brevity; the rest of the styles remain unchanged */
+        font-size: 1rem;
       }
       .product-detail .description h4 {
         font-size: 0.875rem;
@@ -410,6 +415,7 @@
         display: block;
       }
     }
+    /* Customization tip: Adjust variables in :root to change theme */
   </style>
 </head>
 <body>
@@ -430,7 +436,7 @@
       </div>
       <div class="buttons">
         <button class="add-to-cart" id="overlay-add-to-cart">Add to Cart</button>
-        <div id="paypal-container-JBLVY4R26FMSY"></div>
+        <a href="address.html" class="buy-now" id="overlay-buy-now">Buy Now</a>
       </div>
     </div>
   </div>
@@ -563,7 +569,7 @@
           <div class="subcategory ml-4 mt-2 space-y-2 hidden">
             <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link">Razer</a>
             <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link">Logitech</a>
-            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav Store.html-link">Roccat</a>
+            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link">Roccat</a>
           </div>
         </div>
         <div>
@@ -611,6 +617,13 @@
         <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
           <div class="w-full flex flex-col sm:flex-row items-center space-x-0 sm:space-x-4 space-y-2 sm:space-y-0">
             <input type="text" id="search-input" placeholder="Search products..." class="w-full">
+            <select id="currency-select" class="p-3 w-full sm:w-auto">
+              <option value="INR">INR (₹)</option>
+              <option value="USD">USD ($)</option>
+              <option value="EUR">EUR (€)</option>
+              <option value="GBP">GBP (£)</option>
+              <option value="JPY">JPY (¥)</option>
+            </select>
           </div>
           <div class="flex flex-col sm:flex-row items-center space-x-0 sm:space-x-4 space-y-2 sm:space-y-0 w-full">
             <button id="category-toggle" class="md:hidden submit-btn w-full sm:w-auto">Categories</button>
@@ -638,7 +651,7 @@
       <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         <div>
           <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Contact</h3>
-          <p class="text-[#F1F5F9] mb-2 text-sm leading-relaxed">📧 <a href="/cdn-cgi/l/email-protection#1a786f6973747f69697d7b7773747d757e6369697f635a7d777b737634797577" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link"><span class="__cf_email__" data-cfemail="b1828481819e8385b196909c989f969e958882829488df989f"></span></a></p>
+          <p class="text-[#F1F5F9] mb-2 text-sm leading-relaxed">📧 <a href="mailto:businessgamingodyssey@gmail.com" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link">support@gamingodyssey.in</a></p>
           <p class="text-[#F1F5F9] text-sm leading-relaxed">📞 6290994382</p>
         </div>
         <div>
@@ -671,8 +684,24 @@
     </footer>
   </div>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
   <script>
+    // Currency Conversion Rates (relative to USD)
+    const conversionRates = {
+      USD: 1,
+      INR: 83,
+      EUR: 0.92,
+      GBP: 0.79,
+      JPY: 149
+    };
+    const currencySymbols = {
+      USD: '$',
+      INR: '₹',
+      EUR: '€',
+      GBP: '£',
+      JPY: '¥'
+    };
+    let selectedCurrency = 'INR';
+
     // Hamburger Menu Toggle
     const hamburger = document.getElementById('hamburger');
     const mobileMenu = document.getElementById('mobile-menu');
@@ -680,7 +709,7 @@
     hamburger.addEventListener('click', () => {
       mobileMenu.classList.remove('hidden');
       mobileMenu.classList.add('active');
-      document.querySelector('.sidebar').classList.remove('active');
+      document.querySelector('.sidebar').classList.remove('active'); // Ensure sidebar doesn't conflict
     });
     closeMenu.addEventListener('click', () => {
       mobileMenu.classList.add('hidden');
@@ -743,7 +772,7 @@
       if (existingItem) {
         existingItem.quantity += 1;
       } else {
-        cart.push({ name, price, quantity: 1 });
+        cart.push({ name, price: price / conversionRates[selectedCurrency], quantity: 1 });
       }
       localStorage.setItem('cart', JSON.stringify(cart));
       updateCartCount();
@@ -757,6 +786,7 @@
     const productPrice = document.getElementById('product-price');
     const productDescription = document.getElementById('product-description');
     const overlayAddToCart = document.getElementById('overlay-add-to-cart');
+    const overlayBuyNow = document.getElementById('overlay-buy-now');
     const closeBtn = document.querySelector('.close-btn');
     let currentImages = [];
     let currentImageIndex = 0;
@@ -766,18 +796,12 @@
       currentImageIndex = 0;
       productImage.src = images[0];
       productName.textContent = name;
-      productPrice.textContent = `$${price.toFixed(2)}`;
+      const convertedPrice = (price * conversionRates[selectedCurrency]).toFixed(2);
+      productPrice.textContent = `${currencySymbols[selectedCurrency]}${convertedPrice}`;
       productDescription.innerHTML = description;
       overlayAddToCart.setAttribute('data-name', name);
-      overlayAddToCart.setAttribute('data-price', price);
+      overlayAddToCart.setAttribute('data-price', price * conversionRates[selectedCurrency]);
       productOverlay.classList.add('visible');
-
-      // Render PayPal button
-      const paypalContainer = document.getElementById('paypal-container-JBLVY4R26FMSY');
-      paypalContainer.innerHTML = ''; // Clear previous button
-      paypal.HostedButtons({
-        hostedButtonId: "JBLVY4R26FMSY",
-      }).render("#paypal-container-JBLVY4R26FMSY");
     }
 
     function changeImage(direction) {
@@ -811,6 +835,7 @@
     function renderProducts(products) {
       productsGrid.innerHTML = '';
       products.forEach(product => {
+        const convertedPrice = (product.price * conversionRates[selectedCurrency]).toFixed(2);
         const card = document.createElement('div');
         card.className = 'product-card gradient-glow fade-in cursor-pointer';
         card.setAttribute('data-name', product.name);
@@ -820,10 +845,10 @@
         card.innerHTML = `
           <img src="${product.images[0]}" alt="Product" class="w-full h-48 object-contain rounded-lg mb-4">
           <h3 class="text-xl font-bold text-white">${product.name}</h3>
-          <p class="text-[#F1F5F9] mb-4">$${product.price.toFixed(2)}</p>
+          <p class="text-[#F1F5F9] mb-4">${currencySymbols[selectedCurrency]}${convertedPrice}</p>
           <div class="flex space-x-2">
             <a href="#" class="submit-btn flex-1 text-center buy-now-btn">Buy Now</a>
-            <button class="submit-btn flex-1 text-center add-to-cart" data-name="${product.name}" data-price="${product.price}">Add to Cart</button>
+            <button class="submit-btn flex-1 text-center add-to-cart" data-name="${product.name}" data-price="${product.price * conversionRates[selectedCurrency]}">Add to Cart</button>
           </div>
         `;
         productsGrid.appendChild(card);
@@ -880,9 +905,9 @@
           const card = button.closest('.product-card');
           const name = card.getAttribute('data-name');
           const price = parseFloat(card.getAttribute('data-price'));
-          const images = JSON.parse(card.getAttribute('data-images'));
-          const description = card.getAttribute('data-description');
-          openProductOverlay(name, price, images, description);
+          const product = { name, price: price * conversionRates[selectedCurrency], quantity: 1 };
+          localStorage.setItem('buyNowProduct', JSON.stringify(product));
+          window.location.href = 'address.html';
         });
       });
 
@@ -894,6 +919,7 @@
     const minPriceInput = document.getElementById('min-price');
     const maxPriceInput = document.getElementById('max-price');
     const filterBtn = document.getElementById('filter-btn');
+    const currencySelect = document.getElementById('currency-select');
 
     function applyFilters() {
       const searchTerm = searchInput.value.toLowerCase();
@@ -907,15 +933,22 @@
         );
       }
       if (minPrice || maxPrice !== Infinity) {
-        filteredProducts = filteredProducts.filter(product => 
-          product.price >= minPrice && product.price <= maxPrice
-        );
+        filteredProducts = filteredProducts.filter(product => {
+          const convertedPrice = product.price * conversionRates[selectedCurrency];
+          return convertedPrice >= minPrice && convertedPrice <= maxPrice;
+        });
       }
       renderProducts(filteredProducts);
     }
 
     searchInput.addEventListener('input', applyFilters);
     filterBtn.addEventListener('click', applyFilters);
+
+    // Currency Selection
+    currencySelect.addEventListener('change', () => {
+      selectedCurrency = currencySelect.value;
+      applyFilters();
+    });
 
     // Initial render of all products
     renderProducts(allProducts);
