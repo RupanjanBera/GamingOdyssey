@@ -6,8 +6,8 @@
   <title>Gaming Odyssey - Secure Payment</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- PayPal SDK with USD as Default Currency -->
-  <script src="https://www.paypal.com/sdk/js?client-id=Abj4GKhw0aoqQes156AfApLm2wN5PAF5ncEUA_M-Dtzaj22yUzczA7tzf5LrsP7ufTj2ERxhUIEscsRF¤cy=USD&disable-funding=card,credit"></script>
+  <!-- PayPal SDK -->
+  <script src="https://www.paypal.com/sdk/js?client-id=Abj4GKhw0aoqQes156AfApLm2wN5PAF5ncEUA_M-Dtzaj22yUzczA7tzf5LrsP7ufTj2ERxhUIEscsRF&currency=INR"></script>
   <style>
     body {
       font-family: 'Poppins', sans-serif;
@@ -283,6 +283,9 @@
                   <div class="text-center">
                     <h4 class="text-lg font-bold text-white mb-2">Scan to Pay</h4>
                     <img id="upi-qr-code" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=rupanjanbera5-1@okicici&pn=Rupanjan%20Bera&am=0&cu=INR" alt="UPI QR Code" class="mx-auto mb-4">
+                    <p class="text-[#F1F5F9] mb-2">Payee Name: Rupanjan Bera</p>
+                    <p class="text-[#F1F5F9] mb-2">UPI ID: rupanjanbera5-1@okicici</p>
+                    <p class="text-[#F1F5F9] mb-4">UPI Number: 6290994382</p>
                     <p class="text-[#F1F5F9] mb-4">Scan this QR code with your UPI app to pay <span id="upi-qr-amount">₹0.00</span>.</p>
                   </div>
                   <div class="border-t border-[#3B82F6] pt-4">
@@ -299,6 +302,113 @@
                     </form>
                   </div>
                 </div>
+              </div>
+            </div>
+            
+            <div class="payment-card gradient-glow cursor-pointer" data-target="debit">
+              <label class="flex items-center space-x-3">
+                <input type="radio" name="payment-method" value="Debit Card" class="form-radio h-5 w-5 text-[#3B82F6] border-[#3B82F6]">
+                <span class="text-2xl">💳</span>
+                <div>
+                  <h3 class="text-xl font-bold text-white">Debit Card</h3>
+                  <p class="text-[#F1F5F9]">Pay using your debit card details.</p>
+                </div>
+              </label>
+              <div id="debit-form" class="payment-form mt-4">
+                <form id="debit-payment-form" action="thankyou.html" method="GET" class="space-y-4">
+                  <input type="hidden" name="orderId" id="debit-order-id">
+                  <input type="hidden" name="amount" id="debit-amount">
+                  <input type="hidden" name="method" value="Debit Card">
+                  <div>
+                    <label class="block text-[#F1F5F9] mb-2" for="debit-number">Card Number</label>
+                    <input type="text" id="debit-number" name="cardNumber" class="w-full p-2" placeholder="1234 5678 9012 3456" required>
+                  </div>
+                  <div class="flex space-x-4">
+                    <div class="w-1/2">
+                      <label class="block text-[#F1F5F9] mb-2" for="debit-expiry">Expiry Date</label>
+                      <input type="text" id="debit-expiry" name="expiry" class="w-full p-2" placeholder="MM/YY" required>
+                    </div>
+                    <div class="w-1/2">
+                      <label class="block text-[#F1F5F9] mb-2" for="debit-cvv">CVV</label>
+                      <input type="text" id="debit-cvv" name="cvv" class="w-full p-2" placeholder="123" required>
+                    </div>
+                  </div>
+                  <div>
+                    <label class="block text-[#F1F5F9] mb-2" for="debit-name">Cardholder Name</label>
+                    <input type="text" id="debit-name" name="cardholderName" class="w-full p-2" placeholder="John Doe" required>
+                  </div>
+                  <button type="submit" class="submit-btn w-full">Pay Now</button>
+                </form>
+                <p class="text-[#F1F5F9] mt-4">Note: Redirect to bank’s payment page in production.</p>
+              </div>
+            </div>
+            
+            <div class="payment-card gradient-glow cursor-pointer" data-target="credit">
+              <label class="flex items-center space-x-3">
+                <input type="radio" name="payment-method" value="Credit Card" class="form-radio h-5 w-5 text-[#3B82F6] border-[#3B82F6]">
+                <span class="text-2xl">💳</span>
+                <div>
+                  <h3 class="text-xl font-bold text-white">Credit Card</h3>
+                  <p class="text-[#F1F5F9]">Pay using your credit card. RuPay supported.</p>
+                </div>
+              </label>
+              <div id="credit-form" class="payment-form mt-4">
+                <form id="credit-payment-form" action="thankyou.html" method="GET" class="space-y-4">
+                  <input type="hidden" name="orderId" id="credit-order-id">
+                  <input type="hidden" name="amount" id="credit-amount">
+                  <input type="hidden" name="method" value="Credit Card">
+                  <div>
+                    <label class="block text-[#F1F5F9] mb-2" for="credit-number">Card Number</label>
+                    <input type="text" id="credit-number" name="cardNumber" class="w-full p-2" placeholder="1234 5678 9012 3456" required>
+                  </div>
+                  <div class="flex space-x-4">
+                    <div class="w-1/2">
+                      <label class="block text-[#F1F5F9] mb-2" for="credit-expiry">Expiry Date</label>
+                      <input type="text" id="credit-expiry" name="expiry" class="w-full p-2" placeholder="MM/YY" required>
+                    </div>
+                    <div class="w-1/2">
+                      <label class="block text-[#F1F5F9] mb-2" for="credit-cvv">CVV</label>
+                      <input type="text" id="credit-cvv" name="cvv" class="w-full p-2" placeholder="123" required>
+                    </div>
+                  </div>
+                  <div>
+                    <label class="block text-[#F1F5F9] mb-2" for="credit-name">Cardholder Name</label>
+                    <input type="text" id="credit-name" name="cardholderName" class="w-full p-2" placeholder="John Doe" required>
+                  </div>
+                  <button type="submit" class="submit-btn w-full">Pay Now</button>
+                </form>
+                <p class="text-[#F1F5F9] mt-4">Note: Redirect to bank’s payment page in production.</p>
+              </div>
+            </div>
+
+            <div class="payment-card gradient-glow cursor-pointer" data-target="netbanking">
+              <label class="flex items-center space-x-3">
+                <input type="radio" name="payment-method" value="Netbanking" class="form-radio h-5 w-5 text-[#3B82F6] border-[#3B82F6]">
+                <span class="text-2xl">🏦</span>
+                <div>
+                  <h3 class="text-xl font-bold text-white">Netbanking</h3>
+                  <p class="text-[#F1F5F9]">Pay using your online banking account.</p>
+                </div>
+              </label>
+              <div id="netbanking-form" class="payment-form mt-4">
+                <form id="netbanking-payment-form" action="thankyou.html" method="GET" class="space-y-4">
+                  <input type="hidden" name="orderId" id="netbanking-order-id">
+                  <input type="hidden" name="amount" id="netbanking-amount">
+                  <input type="hidden" name="method" value="Netbanking">
+                  <div>
+                    <label class="block text-[#F1F5F9] mb-2" for="bank-select">Select Bank</label>
+                    <select id="bank-select" name="bank" class="w-full p-2" required>
+                      <option value="" disabled selected>Select your bank</option>
+                      <option value="SBI">State Bank of India (SBI)</option>
+                      <option value="HDFC">HDFC Bank</option>
+                      <option value="ICICI">ICICI Bank</option>
+                      <option value="Axis">Axis Bank</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  <button type="submit" class="submit-btn w-full">Pay Now</button>
+                </form>
+                <p class="text-[#F1F5F9] mt-4">Note: You will be redirected to your bank’s login page.</p>
               </div>
             </div>
 
@@ -318,7 +428,7 @@
                   <input type="hidden" name="method" value="PayPal">
                   <div id="paypal-button-container"></div>
                 </form>
-                <p class="text-[#F1F5F9] mt-4">Note: You will be redirected to PayPal to complete the payment. Amount will be charged in USD (<span id="paypal-usd-amount">$0.00</span>).</p>
+                <p class="text-[#F1F5F9] mt-4">Note: You will be redirected to PayPal to complete the payment.</p>
               </div>
             </div>
 
@@ -411,21 +521,9 @@
       JPY: '¥'
     };
 
-    // Exchange rate (1 INR = 0.012 USD as of May 2025, for simplicity)
-    const INR_TO_USD_RATE = 0.012;
-
-    // Supported PayPal currencies (forcing USD for PayPal)
-    const supportedCurrencies = ['USD', 'INR', 'EUR', 'GBP', 'JPY'];
-
     // Generate unique order ID
     function generateOrderId() {
       return 'ORDER-' + Math.random().toString(36).substr(2, 9).toUpperCase();
-    }
-
-    // Convert INR to USD
-    function convertINRtoUSD(amountInINR) {
-      const converted = parseFloat(amountInINR) * INR_TO_USD_RATE;
-      return converted > 0 ? converted.toFixed(2) : '0.00';
     }
 
     // Load order and shipping address
@@ -436,7 +534,6 @@
     const shippingAddressElement = document.getElementById('shipping-address');
     const upiQrCode = document.getElementById('upi-qr-code');
     const upiQrAmount = document.getElementById('upi-qr-amount');
-    const paypalUsdAmount = document.getElementById('paypal-usd-amount');
 
     // Load order details
     function loadOrderDetails() {
@@ -444,32 +541,27 @@
         orderItemsContainer.innerHTML = '<p class="text-[#F1F5F9] text-center">No order found. Please return to the store.</p>';
         orderTotalElement.textContent = '₹0.00';
         upiQrAmount.textContent = '₹0.00';
-        paypalUsdAmount.textContent = '$0.00';
         upiQrCode.src = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=rupanjanbera5-1@okicici&pn=Rupanjan%20Bera&am=0&cu=INR';
         return;
       }
 
-      const userCurrency = order.currency && supportedCurrencies.includes(order.currency) ? order.currency : 'INR';
-      const totalInINR = userCurrency === 'INR' ? parseFloat(order.total).toFixed(2) : (parseFloat(order.total) * 83).toFixed(2); // Convert to INR if not already
-      const totalInUSD = convertINRtoUSD(totalInINR);
+      const selectedCurrency = order.currency || 'INR';
+      const total = parseFloat(order.total).toFixed(2);
 
-      // Display order items in INR
+      // Display order items
       order.items.forEach(item => {
         const itemElement = document.createElement('div');
         itemElement.className = 'flex justify-between';
-        const itemTotal = (item.price * item.quantity * (userCurrency === 'INR' ? 1 : 83)).toFixed(2); // Display in INR
+        const itemTotal = (item.price * item.quantity * (selectedCurrency === 'INR' ? 83 : 1)).toFixed(2);
         itemElement.innerHTML = `
           <span>${item.name} (x${item.quantity})</span>
-          <span>${currencySymbols['INR']}${itemTotal}</span>
+          <span>${currencySymbols[selectedCurrency]}${itemTotal}</span>
         `;
         orderItemsContainer.appendChild(itemElement);
       });
 
-      // Display total in INR
-      orderTotalElement.textContent = `${currencySymbols['INR']}${totalInINR}`;
-
-      // Display PayPal amount in USD
-      paypalUsdAmount.textContent = `$${totalInUSD}`;
+      // Display total
+      orderTotalElement.textContent = `${currencySymbols[selectedCurrency]}${total}`;
 
       // Display shipping address
       shippingAddressElement.innerHTML = `
@@ -481,25 +573,28 @@
         <p>${shippingAddress.phone || ''}</p>
       `;
 
-      // Update UPI QR code with amount in INR
-      upiQrAmount.textContent = `${currencySymbols['INR']}${totalInINR}`;
-      const upiLink = `upi://pay?pa=rupanjanbera5-1@okicici&pn=Rupanjan%20Bera&am=${encodeURIComponent(totalInINR)}&cu=INR&tn=Payment%20for%20${encodeURIComponent(order.orderId)}`;
+      // Update UPI QR code with amount
+      upiQrAmount.textContent = `${currencySymbols[selectedCurrency]}${total}`;
+      const upiLink = `upi://pay?pa=rupanjanbera5-1@okicici&pn=Rupanjan%20Bera&am=${encodeURIComponent(total)}&cu=${selectedCurrency}&tn=Payment%20for%20${encodeURIComponent(order.orderId)}`;
       upiQrCode.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(upiLink)}`;
     }
 
     // Set order IDs and amounts
     const orderId = order.orderId || generateOrderId();
-    const rawTotalInINR = order.total ? parseFloat(order.total) : 0;
-    const formattedTotalInINR = rawTotalInINR > 0 ? rawTotalInINR.toFixed(2) : '0.00';
-    const formattedTotalInUSD = rawTotalInINR > 0 ? convertINRtoUSD(formattedTotalInINR) : '0.00';
-
+    const formattedTotal = order.total ? parseFloat(order.total).toFixed(2) : '0.00';
     document.getElementById('upi-order-id').value = orderId;
-    document.getElementById('upi-amount').value = formattedTotalInINR;
+    document.getElementById('upi-amount').value = formattedTotal;
+    document.getElementById('debit-order-id').value = orderId;
+    document.getElementById('debit-amount').value = formattedTotal;
+    document.getElementById('credit-order-id').value = orderId;
+    document.getElementById('credit-amount').value = formattedTotal;
+    document.getElementById('netbanking-order-id').value = orderId;
+    document.getElementById('netbanking-amount').value = formattedTotal;
     document.getElementById('paypal-order-id').value = orderId;
-    document.getElementById('paypal-amount').value = formattedTotalInUSD; // Store USD amount for PayPal
+    document.getElementById('paypal-amount').value = formattedTotal;
     document.getElementById('cod-order-id').value = orderId;
-    document.getElementById('cod-amount').value = formattedTotalInINR;
-    document.getElementById('cod-amount-display').textContent = `${currencySymbols['INR']}${formattedTotalInINR}`;
+    document.getElementById('cod-amount').value = formattedTotal;
+    document.getElementById('cod-amount-display').textContent = `${order.currency ? currencySymbols[order.currency] : '₹'}${formattedTotal}`;
 
     // Payment method selection
     const paymentCards = document.querySelectorAll('.payment-card');
@@ -515,14 +610,12 @@
     });
 
     // Store order in localStorage
-    function storeOrder(paymentMethod, paypalOrderId = '') {
+    function storeOrder(paymentMethod) {
       const orders = JSON.parse(localStorage.getItem('orders')) || [];
       const orderData = {
         orderId: orderId,
-        paypalOrderId: paypalOrderId,
         items: order.items || [],
-        totalInINR: formattedTotalInINR,
-        totalInUSD: formattedTotalInUSD,
+        total: formattedTotal,
         paymentMethod: paymentMethod,
         shippingAddress: shippingAddress,
         timestamp: new Date().toISOString()
@@ -538,83 +631,72 @@
     document.getElementById('upi-payment-form').addEventListener('submit', (e) => {
       storeOrder('UPI');
     });
+    document.getElementById('debit-payment-form').addEventListener('submit', (e) => {
+      storeOrder('Debit Card');
+    });
+    document.getElementById('credit-payment-form').addEventListener('submit', (e) => {
+      storeOrder('Credit Card');
+    });
+    document.getElementById('netbanking-payment-form').addEventListener('submit', (e) => {
+      storeOrder('Netbanking');
+    });
     document.getElementById('cod-payment-form').addEventListener('submit', (e) => {
       storeOrder('Cash on Delivery');
     });
 
-    // PayPal Payment Integration (Using USD)
-    function initializePayPal() {
-      console.log('Initializing PayPal with amount:', formattedTotalInUSD);
-      
-      // Validate PayPal SDK availability
-      if (typeof paypal === 'undefined' || !paypal.Buttons) {
-        console.error('PayPal SDK failed to load. Please check network or script URL.');
-        document.getElementById('paypal-button-container').innerHTML = '<p class="text-[#F1F5F9] text-center">PayPal is unavailable. Please try another payment method.</p>';
-        return;
-      }
-
-      // Validate amount
-      const amountInUSD = parseFloat(formattedTotalInUSD);
-      if (isNaN(amountInUSD) || amountInUSD <= 0) {
-        console.error('Invalid PayPal amount:', formattedTotalInUSD);
-        document.getElementById('paypal-button-container').innerHTML = '<p class="text-[#F1F5F9] text-center">Invalid order amount for PayPal. Please return to the store.</p>';
-        return;
-      }
-
+    // PayPal Payment Integration
+    if (order.total && parseFloat(order.total) > 0) {
       paypal.Buttons({
         createOrder: function(data, actions) {
-          console.log('Creating PayPal order:', {
-            amount: amountInUSD,
-            currency: 'USD',
-            orderId: orderId
-          });
+          // Create the PayPal order
           return actions.order.create({
             purchase_units: [{
               amount: {
-                value: amountInUSD.toString(),
-                currency_code: 'USD'
+                value: formattedTotal,
+                currency_code: order.currency || 'INR'
               },
-              description: `Payment for order ${orderId}`
+              description: `Payment for order ${orderId}`,
+              shipping: {
+                name: {
+                  full_name: shippingAddress.name || 'Customer'
+                },
+                address: {
+                  address_line_1: shippingAddress.addressLine1 || '',
+                  address_line_2: shippingAddress.addressLine2 || '',
+                  admin_area_2: shippingAddress.city || '',
+                  admin_area_1: shippingAddress.state || '',
+                  postal_code: shippingAddress.zip || '',
+                  country_code: shippingAddress.country || 'IN'
+                }
+              }
             }],
             application_context: {
-              shipping_preference: 'NO_SHIPPING'
+              shipping_preference: 'SET_PROVIDED_ADDRESS'
             }
-          }).catch(err => {
-            console.error('Error in createOrder:', err);
-            throw err;
           });
         },
         onApprove: function(data, actions) {
-          console.log('PayPal payment approved:', data);
+          // Capture the payment
           return actions.order.capture().then(function(details) {
-            console.log('PayPal payment captured:', details);
-            if (details.status === 'COMPLETED') {
-              storeOrder('PayPal', data.orderID);
-              window.location.href = `thankyou.html?orderId=${orderId}&amount=${formattedTotalInINR}&method=PayPal&paypalOrderId=${data.orderID}&amountUSD=${formattedTotalInUSD}`;
-            } else {
-              throw new Error('Payment not completed: ' + details.status);
-            }
-          }).catch(function(error) {
-            console.error('Error capturing PayPal payment:', error);
-            alert('Failed to capture the payment. Please check the console for details and try again.');
+            // Store the order with PayPal payment method
+            storeOrder('PayPal');
+            // Redirect to thank you page with order details
+            window.location.href = `thankyou.html?orderId=${orderId}&amount=${formattedTotal}&method=PayPal&payerId=${details.payer.payer_id}`;
           });
         },
         onCancel: function(data) {
-          console.log('PayPal payment cancelled:', data);
+          // Handle payment cancellation
           alert('Payment was cancelled. Please try again or choose another payment method.');
         },
         onError: function(err) {
+          // Handle errors during payment process
           console.error('PayPal payment error:', err);
-          alert('An error occurred during the PayPal payment process. Please check the console for details and try again.');
+          alert('An error occurred during the PayPal payment process. Please try again.');
         }
-      }).render('#paypal-button-container').catch(function(error) {
-        console.error('Error rendering PayPal buttons:', error);
-        document.getElementById('paypal-button-container').innerHTML = '<p class="text-[#F1F5F9] text-center">Failed to load PayPal. Please try again later.</p>';
-      });
+      }).render('#paypal-button-container');
+    } else {
+      document.getElementById('paypal-button-container').innerHTML = '<p class="text-[#F1F5F9] text-center">No valid order amount found. Please return to the store.</p>';
     }
-
-    // Initialize PayPal after page load
-    window.addEventListener('load', initializePayPal);
 
     // Authentication Logic
     function isAuthenticated() {
