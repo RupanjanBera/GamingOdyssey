@@ -6,8 +6,8 @@
   <title>Gaming Odyssey - Secure Payment</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- PayPal SDK -->
-  <script src="https://www.paypal.com/sdk/js?client-id=Abj4GKhw0aoqQes156AfApLm2wN5PAF5ncEUA_M-Dtzaj22yUzczA7tzf5LrsP7ufTj2ERxhUIEscsRF&currency=INR"></script>
+  <!-- PayPal SDK with Sandbox Environment -->
+  <script src="https://www.paypal.com/sdk/js?client-id=Abj4GKhw0aoqQes156AfApLm2wN5PAF5ncEUA_M-Dtzaj22yUzczA7tzf5LrsP7ufTj2ERxhUIEscsRF&currency=INR&disable-funding=card,credit"></script>
   <style>
     body {
       font-family: 'Poppins', sans-serif;
@@ -521,6 +521,9 @@
       JPY: '¥'
     };
 
+    // Supported PayPal currencies
+    const supportedCurrencies = ['USD', 'INR', 'EUR', 'GBP', 'JPY'];
+
     // Generate unique order ID
     function generateOrderId() {
       return 'ORDER-' + Math.random().toString(36).substr(2, 9).toUpperCase();
@@ -545,7 +548,7 @@
         return;
       }
 
-      const selectedCurrency = order.currency || 'INR';
+      const selectedCurrency = supportedCurrencies.includes(order.currency) ? order.currency : 'INR';
       const total = parseFloat(order.total).toFixed(2);
 
       // Display order items
@@ -581,7 +584,8 @@
 
     // Set order IDs and amounts
     const orderId = order.orderId || generateOrderId();
-    const formattedTotal = order.total ? parseFloat(order.total).toFixed(2) : '0.00';
+    const rawTotal = order.total ? parseFloat(order.total) : 0;
+    const formattedTotal = rawTotal > 0 ? rawTotal.toFixed(2) : '0.00';
     document.getElementById('upi-order-id').value = orderId;
     document.getElementById('upi-amount').value = formattedTotal;
     document.getElementById('debit-order-id').value = orderId;
@@ -645,55 +649,51 @@
     });
 
     // PayPal Payment Integration
-    if (order.total && parseFloat(order.total) > 0) {
+    if (rawTotal > 0) {
       paypal.Buttons({
         createOrder: function(data, actions) {
-          // Create the PayPal order
+          const selectedCurrency = supportedCurrencies.includes(order.currency) ? order.currency : 'INR';
+          console.log('Creating PayPal order with:', {
+            amount: formattedTotal,
+            currency: selectedCurrency,
+            orderId: orderId
+          });
           return actions.order.create({
             purchase_units: [{
               amount: {
                 value: formattedTotal,
-                currency_code: order.currency || 'INR'
+                currency_code: selectedCurrency
               },
-              description: `Payment for order ${orderId}`,
-              shipping: {
-                name: {
-                  full_name: shippingAddress.name || 'Customer'
-                },
-                address: {
-                  address_line_1: shippingAddress.addressLine1 || '',
-                  address_line_2: shippingAddress.addressLine2 || '',
-                  admin_area_2: shippingAddress.city || '',
-                  admin_area_1: shippingAddress.state || '',
-                  postal_code: shippingAddress.zip || '',
-                  country_code: shippingAddress.country || 'IN'
-                }
-              }
+              description: `Payment for order ${orderId}`
             }],
             application_context: {
-              shipping_preference: 'SET_PROVIDED_ADDRESS'
+              shipping_preference: 'NO_SHIPPING' // Simplified to avoid shipping address issues
             }
           });
         },
         onApprove: function(data, actions) {
-          // Capture the payment
+          console.log('PayPal payment approved:', data);
           return actions.order.capture().then(function(details) {
-            // Store the order with PayPal payment method
+            console.log('PayPal payment captured:', details);
             storeOrder('PayPal');
-            // Redirect to thank you page with order details
             window.location.href = `thankyou.html?orderId=${orderId}&amount=${formattedTotal}&method=PayPal&payerId=${details.payer.payer_id}`;
+          }).catch(function(error) {
+            console.error('Error capturing PayPal payment:', error);
+            alert('Failed to capture the payment. Please try again.');
           });
         },
         onCancel: function(data) {
-          // Handle payment cancellation
+          console.log('PayPal payment cancelled:', data);
           alert('Payment was cancelled. Please try again or choose another payment method.');
         },
         onError: function(err) {
-          // Handle errors during payment process
           console.error('PayPal payment error:', err);
-          alert('An error occurred during the PayPal payment process. Please try again.');
+          alert('An error occurred during the PayPal payment process. Please check the console for details and try again.');
         }
-      }).render('#paypal-button-container');
+      }).render('#paypal-button-container').catch(function(error) {
+        console.error('Error rendering PayPal buttons:', error);
+        document.getElementById('paypal-button-container').innerHTML = '<p class="text-[#F1F5F9] text-center">Failed to load PayPal. Please try again later.</p>';
+      });
     } else {
       document.getElementById('paypal-button-container').innerHTML = '<p class="text-[#F1F5F9] text-center">No valid order amount found. Please return to the store.</p>';
     }
