@@ -614,10 +614,11 @@
     });
 
     // Store order in localStorage
-    function storeOrder(paymentMethod) {
+    function storeOrder(paymentMethod, paypalOrderId = '') {
       const orders = JSON.parse(localStorage.getItem('orders')) || [];
       const orderData = {
         orderId: orderId,
+        paypalOrderId: paypalOrderId,
         items: order.items || [],
         total: formattedTotal,
         paymentMethod: paymentMethod,
@@ -648,7 +649,7 @@
       storeOrder('Cash on Delivery');
     });
 
-    // PayPal Payment Integration
+    // PayPal Payment Integration (Client-Side for Testing)
     if (rawTotal > 0) {
       paypal.Buttons({
         createOrder: function(data, actions) {
@@ -667,7 +668,7 @@
               description: `Payment for order ${orderId}`
             }],
             application_context: {
-              shipping_preference: 'NO_SHIPPING' // Simplified to avoid shipping address issues
+              shipping_preference: 'NO_SHIPPING'
             }
           });
         },
@@ -675,11 +676,15 @@
           console.log('PayPal payment approved:', data);
           return actions.order.capture().then(function(details) {
             console.log('PayPal payment captured:', details);
-            storeOrder('PayPal');
-            window.location.href = `thankyou.html?orderId=${orderId}&amount=${formattedTotal}&method=PayPal&payerId=${details.payer.payer_id}`;
+            if (details.status === 'COMPLETED') {
+              storeOrder('PayPal', data.orderID);
+              window.location.href = `thankyou.html?orderId=${orderId}&amount=${formattedTotal}&method=PayPal&paypalOrderId=${data.orderID}`;
+            } else {
+              throw new Error('Payment not completed');
+            }
           }).catch(function(error) {
             console.error('Error capturing PayPal payment:', error);
-            alert('Failed to capture the payment. Please try again.');
+            alert('Failed to capture the payment. Please try again or contact support.');
           });
         },
         onCancel: function(data) {
