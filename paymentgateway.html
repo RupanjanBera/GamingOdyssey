@@ -6,8 +6,8 @@
   <title>Gaming Odyssey - Secure Payment</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- PayPal SDK with Sandbox Environment -->
-  <script src="https://www.paypal.com/sdk/js?client-id=Abj4GKhw0aoqQes156AfApLm2wN5PAF5ncEUA_M-Dtzaj22yUzczA7tzf5LrsP7ufTj2ERxhUIEscsRF&currency=INR&disable-funding=card,credit"></script>
+  <!-- PayPal SDK with USD as Default Currency -->
+  <script src="https://www.paypal.com/sdk/js?client-id=Abj4GKhw0aoqQes156AfApLm2wN5PAF5ncEUA_M-Dtzaj22yUzczA7tzf5LrsP7ufTj2ERxhUIEscsRF&currency=USD&disable-funding=card,credit"></script>
   <style>
     body {
       font-family: 'Poppins', sans-serif;
@@ -428,7 +428,7 @@
                   <input type="hidden" name="method" value="PayPal">
                   <div id="paypal-button-container"></div>
                 </form>
-                <p class="text-[#F1F5F9] mt-4">Note: You will be redirected to PayPal to complete the payment.</p>
+                <p class="text-[#F1F5F9] mt-4">Note: You will be redirected to PayPal to complete the payment. Amount will be charged in USD (<span id="paypal-usd-amount">$0.00</span>).</p>
               </div>
             </div>
 
@@ -521,12 +521,20 @@
       JPY: '¥'
     };
 
-    // Supported PayPal currencies
+    // Exchange rate (1 INR = 0.012 USD as of May 2025, for simplicity)
+    const INR_TO_USD_RATE = 0.012;
+
+    // Supported PayPal currencies (forcing USD for PayPal)
     const supportedCurrencies = ['USD', 'INR', 'EUR', 'GBP', 'JPY'];
 
     // Generate unique order ID
     function generateOrderId() {
       return 'ORDER-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+    }
+
+    // Convert INR to USD
+    function convertINRtoUSD(amountInINR) {
+      return (parseFloat(amountInINR) * INR_TO_USD_RATE).toFixed(2);
     }
 
     // Load order and shipping address
@@ -537,6 +545,7 @@
     const shippingAddressElement = document.getElementById('shipping-address');
     const upiQrCode = document.getElementById('upi-qr-code');
     const upiQrAmount = document.getElementById('upi-qr-amount');
+    const paypalUsdAmount = document.getElementById('paypal-usd-amount');
 
     // Load order details
     function loadOrderDetails() {
@@ -544,27 +553,32 @@
         orderItemsContainer.innerHTML = '<p class="text-[#F1F5F9] text-center">No order found. Please return to the store.</p>';
         orderTotalElement.textContent = '₹0.00';
         upiQrAmount.textContent = '₹0.00';
+        paypalUsdAmount.textContent = '$0.00';
         upiQrCode.src = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=rupanjanbera5-1@okicici&pn=Rupanjan%20Bera&am=0&cu=INR';
         return;
       }
 
-      const selectedCurrency = supportedCurrencies.includes(order.currency) ? order.currency : 'INR';
-      const total = parseFloat(order.total).toFixed(2);
+      const userCurrency = order.currency && supportedCurrencies.includes(order.currency) ? order.currency : 'INR';
+      const totalInINR = userCurrency === 'INR' ? parseFloat(order.total).toFixed(2) : (parseFloat(order.total) * 83).toFixed(2); // Convert to INR if not already
+      const totalInUSD = convertINRtoUSD(totalInINR);
 
-      // Display order items
+      // Display order items in INR
       order.items.forEach(item => {
         const itemElement = document.createElement('div');
         itemElement.className = 'flex justify-between';
-        const itemTotal = (item.price * item.quantity * (selectedCurrency === 'INR' ? 83 : 1)).toFixed(2);
+        const itemTotal = (item.price * item.quantity * (userCurrency === 'INR' ? 1 : 83)).toFixed(2); // Display in INR
         itemElement.innerHTML = `
           <span>${item.name} (x${item.quantity})</span>
-          <span>${currencySymbols[selectedCurrency]}${itemTotal}</span>
+          <span>${currencySymbols['INR']}${itemTotal}</span>
         `;
         orderItemsContainer.appendChild(itemElement);
       });
 
-      // Display total
-      orderTotalElement.textContent = `${currencySymbols[selectedCurrency]}${total}`;
+      // Display total in INR
+      orderTotalElement.textContent = `${currencySymbols['INR']}${totalInINR}`;
+
+      // Display PayPal amount in USD
+      paypalUsdAmount.textContent = `$${totalInUSD}`;
 
       // Display shipping address
       shippingAddressElement.innerHTML = `
@@ -576,29 +590,31 @@
         <p>${shippingAddress.phone || ''}</p>
       `;
 
-      // Update UPI QR code with amount
-      upiQrAmount.textContent = `${currencySymbols[selectedCurrency]}${total}`;
-      const upiLink = `upi://pay?pa=rupanjanbera5-1@okicici&pn=Rupanjan%20Bera&am=${encodeURIComponent(total)}&cu=${selectedCurrency}&tn=Payment%20for%20${encodeURIComponent(order.orderId)}`;
+      // Update UPI QR code with amount in INR
+      upiQrAmount.textContent = `${currencySymbols['INR']}${totalInINR}`;
+      const upiLink = `upi://pay?pa=rupanjanbera5-1@okicici&pn=Rupanjan%20Bera&am=${encodeURIComponent(totalInINR)}&cu=INR&tn=Payment%20for%20${encodeURIComponent(order.orderId)}`;
       upiQrCode.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(upiLink)}`;
     }
 
     // Set order IDs and amounts
     const orderId = order.orderId || generateOrderId();
-    const rawTotal = order.total ? parseFloat(order.total) : 0;
-    const formattedTotal = rawTotal > 0 ? rawTotal.toFixed(2) : '0.00';
+    const rawTotalInINR = order.total ? parseFloat(order.total) : 0;
+    const formattedTotalInINR = rawTotalInINR > 0 ? rawTotalInINR.toFixed(2) : '0.00';
+    const formattedTotalInUSD = rawTotalInINR > 0 ? convertINRtoUSD(formattedTotalInINR) : '0.00';
+
     document.getElementById('upi-order-id').value = orderId;
-    document.getElementById('upi-amount').value = formattedTotal;
+    document.getElementById('upi-amount').value = formattedTotalInINR;
     document.getElementById('debit-order-id').value = orderId;
-    document.getElementById('debit-amount').value = formattedTotal;
+    document.getElementById('debit-amount').value = formattedTotalInINR;
     document.getElementById('credit-order-id').value = orderId;
-    document.getElementById('credit-amount').value = formattedTotal;
+    document.getElementById('credit-amount').value = formattedTotalInINR;
     document.getElementById('netbanking-order-id').value = orderId;
-    document.getElementById('netbanking-amount').value = formattedTotal;
+    document.getElementById('netbanking-amount').value = formattedTotalInINR;
     document.getElementById('paypal-order-id').value = orderId;
-    document.getElementById('paypal-amount').value = formattedTotal;
+    document.getElementById('paypal-amount').value = formattedTotalInUSD; // Store USD amount for PayPal
     document.getElementById('cod-order-id').value = orderId;
-    document.getElementById('cod-amount').value = formattedTotal;
-    document.getElementById('cod-amount-display').textContent = `${order.currency ? currencySymbols[order.currency] : '₹'}${formattedTotal}`;
+    document.getElementById('cod-amount').value = formattedTotalInINR;
+    document.getElementById('cod-amount-display').textContent = `${currencySymbols['INR']}${formattedTotalInINR}`;
 
     // Payment method selection
     const paymentCards = document.querySelectorAll('.payment-card');
@@ -620,7 +636,8 @@
         orderId: orderId,
         paypalOrderId: paypalOrderId,
         items: order.items || [],
-        total: formattedTotal,
+        totalInINR: formattedTotalInINR,
+        totalInUSD: formattedTotalInUSD,
         paymentMethod: paymentMethod,
         shippingAddress: shippingAddress,
         timestamp: new Date().toISOString()
@@ -649,21 +666,20 @@
       storeOrder('Cash on Delivery');
     });
 
-    // PayPal Payment Integration (Client-Side for Testing)
-    if (rawTotal > 0) {
+    // PayPal Payment Integration (Using USD)
+    if (parseFloat(formattedTotalInUSD) > 0) {
       paypal.Buttons({
         createOrder: function(data, actions) {
-          const selectedCurrency = supportedCurrencies.includes(order.currency) ? order.currency : 'INR';
           console.log('Creating PayPal order with:', {
-            amount: formattedTotal,
-            currency: selectedCurrency,
+            amount: formattedTotalInUSD,
+            currency: 'USD',
             orderId: orderId
           });
           return actions.order.create({
             purchase_units: [{
               amount: {
-                value: formattedTotal,
-                currency_code: selectedCurrency
+                value: formattedTotalInUSD,
+                currency_code: 'USD'
               },
               description: `Payment for order ${orderId}`
             }],
@@ -678,7 +694,7 @@
             console.log('PayPal payment captured:', details);
             if (details.status === 'COMPLETED') {
               storeOrder('PayPal', data.orderID);
-              window.location.href = `thankyou.html?orderId=${orderId}&amount=${formattedTotal}&method=PayPal&paypalOrderId=${data.orderID}`;
+              window.location.href = `thankyou.html?orderId=${orderId}&amount=${formattedTotalInINR}&method=PayPal&paypalOrderId=${data.orderID}&amountUSD=${formattedTotalInUSD}`;
             } else {
               throw new Error('Payment not completed');
             }
