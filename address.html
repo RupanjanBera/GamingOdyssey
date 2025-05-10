@@ -209,11 +209,11 @@
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>About Us</span>
         </a>
-        <a href="signin.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+        <a href="signin.html" id="signin-link" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Sign In</span>
         </a>
-        <a href="createaccount.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+        <a href="createaccount.html" id="createaccount-link" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Create Account</span>
         </a>
@@ -261,11 +261,11 @@
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
         <span>About Us</span>
       </a>
-      <a href="signin.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+      <a href="signin.html" id="mobile-signin-link" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
         <span>Sign In</span>
       </a>
-      <a href="createaccount.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+      <a href="createaccount.html" id="mobile-createaccount-link" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
         <span>Create Account</span>
       </a>
@@ -286,10 +286,12 @@
           <div>
             <label class="block text-[#F1F5F9] mb-2 font-semibold text-sm" for="name">Full Name</label>
             <input type="text" id="name" name="name" class="w-full" placeholder="John Doe" required>
+            <p id="name-error" class="error hidden">Please enter your full name</p>
           </div>
           <div>
             <label class="block text-[#F1F5F9] mb-2 font-semibold text-sm" for="address-line1">Address Line 1</label>
             <input type="text" id="address-line1" name="addressLine1" class="w-full" placeholder="123 Gaming Street" required>
+            <p id="address-line1-error" class="error hidden">Please enter your address</p>
           </div>
           <div>
             <label class="block text-[#F1F5F9] mb-2 font-semibold text-sm" for="address-line2">Address Line 2 (Optional)</label>
@@ -299,6 +301,7 @@
             <div class="w-1/2">
               <label class="block text-[#F1F5F9] mb-2 font-semibold text-sm" for="city">City</label>
               <input type="text" id="city" name="city" class="w-full" placeholder="New York" required>
+              <p id="city-error" class="error hidden">Please enter your city</p>
             </div>
             <div class="w-1/2">
               <label class="block text-[#F1F5F9] mb-2 font-semibold text-sm" for="state">State</label>
@@ -306,12 +309,14 @@
                 <option value="" disabled selected>Select State</option>
               </select>
               <input type="text" id="state-input" name="state-input" class="w-full hidden" placeholder="Enter State">
+              <p id="state-error" class="error hidden">Please select or enter a state</p>
             </div>
           </div>
           <div class="flex space-x-4">
             <div class="w-1/2">
               <label class="block text-[#F1F5F9] mb-2 font-semibold text-sm" for="zip">ZIP Code</label>
               <input type="text" id="zip" name="zip" class="w-full" placeholder="10001" required>
+              <p id="zip-error" class="error hidden">Please enter a valid ZIP code</p>
             </div>
             <div class="w-1/2">
               <label class="block text-[#F1F5F9] mb-2 font-semibold text-sm" for="country">Country</label>
@@ -428,7 +433,7 @@
                 <option value="Mauritania">🇲🇷 Mauritania</option>
                 <option value="Mauritius">🇲🇺 Mauritius</option>
                 <option value="Mexico">🇲🇽 Mexico</option>
-                <option value="Micronesia">🇫🇴 Micronesia</option>
+                <option value="Micronesia">🇫🇲 Micronesia</option>
                 <option value="Moldova">🇲🇩 Moldova</option>
                 <option value="Monaco">🇲🇨 Monaco</option>
                 <option value="Mongolia">🇲🇳 Mongolia</option>
@@ -490,7 +495,7 @@
                 <option value="Syria">🇸🇾 Syria</option>
                 <option value="Taiwan">🇹🇼 Taiwan</option>
                 <option value="Tajikistan">🇹🇯 Tajikistan</option>
-                <option value="Tanzania">🇻🇿 Tanzania</option>
+                <option value="Tanzania">🇹🇿 Tanzania</option>
                 <option value="Thailand">🇹🇭 Thailand</option>
                 <option value="Timor-Leste">🇹🇱 Timor-Leste</option>
                 <option value="Togo">🇹🇬 Togo</option>
@@ -513,6 +518,7 @@
                 <option value="Zambia">🇿🇲 Zambia</option>
                 <option value="Zimbabwe">🇿🇼 Zimbabwe</option>
               </select>
+              <p id="country-error" class="error hidden">Please select a country</p>
             </div>
           </div>
           <div>
@@ -562,7 +568,7 @@
                 <option value="+57">🇨🇴 +57 (Colombia)</option>
                 <option value="+269">🇰🇲 +269 (Comoros)</option>
                 <option value="+242">🇨🇬 +242 (Congo, Republic of the)</option>
-                <option value="+243">🇨🇍 +243 (Congo, Democratic Republic of the)</option>
+                <option value="+243">🇨🇩 +243 (Congo, Democratic Republic of the)</option>
                 <option value="+506">🇨🇷 +506 (Costa Rica)</option>
                 <option value="+385">🇭🇷 +385 (Croatia)</option>
                 <option value="+53">🇨🇺 +53 (Cuba)</option>
@@ -616,7 +622,7 @@
                 <option value="+371">🇱🇻 +371 (Latvia)</option>
                 <option value="+961">🇱🇧 +961 (Lebanon)</option>
                 <option value="+266">🇱🇸 +266 (Lesotho)</option>
-                <option value="+231">🇬🇾 +231 (Liberia)</option>
+                <option value="+231">🇱🇷 +231 (Liberia)</option>
                 <option value="+218">🇬🇾 +218 (Libya)</option>
                 <option value="+423">🇱🇮 +423 (Liechtenstein)</option>
                 <option value="+370">🇱🇹 +370 (Lithuania)</option>
@@ -717,12 +723,14 @@
                 <option value="+263">🇿🇼 +263 (Zimbabwe)</option>
               </select>
               <input type="tel" id="phone" name="phone" class="w-2/3" placeholder="123-456-7890" required>
+              <p id="phone-error" class="error hidden">Please enter a valid phone number</p>
             </div>
           </div>
           <div class="flex justify-between mt-6">
             <a href="cart.html" class="submit-btn">Back to Cart</a>
-            <button type="submit" class="submit-btn">Continue</button>
+            <button type="submit" id="continue-btn" class="submit-btn">Continue</button>
           </div>
+          <p id="form-status" class="text-center mt-3 text-sm"></p>
         </form>
       </div>
     </section>
@@ -767,7 +775,7 @@
   </div>
 
   <!-- EmailJS SDK -->
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <script>
     // Initialize EmailJS (not used in this page but included for consistency)
     emailjs.init('__S5AyIeoL526kGwQ');
@@ -803,6 +811,7 @@
     const stateSelect = document.getElementById('state');
     const stateInput = document.getElementById('state-input');
     const form = document.getElementById('address-form');
+    const formStatus = document.getElementById('form-status');
 
     // Update state dropdown based on selected country
     countrySelect.addEventListener('change', () => {
@@ -831,34 +840,68 @@
     // Handle form submission
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      const stateValue = stateSelect.classList.contains('hidden') ? stateInput.value : stateSelect.value;
+      const name = document.getElementById('name').value.trim();
+      const addressLine1 = document.getElementById('address-line1').value.trim();
+      const city = document.getElementById('city').value.trim();
+      const stateValue = stateSelect.classList.contains('hidden') ? stateInput.value.trim() : stateSelect.value;
+      const zip = document.getElementById('zip').value.trim();
+      const country = document.getElementById('country').value;
+      const countryCode = document.getElementById('country-code').value;
+      const phone = document.getElementById('phone').value.trim();
+
+      // Reset error messages
+      document.querySelectorAll('.error').forEach(el => el.classList.add('hidden'));
+      formStatus.textContent = '';
+      let isValid = true;
+
+      // Basic validation
+      if (!name) {
+        document.getElementById('name-error').classList.remove('hidden');
+        isValid = false;
+      }
+      if (!addressLine1) {
+        document.getElementById('address-line1-error').classList.remove('hidden');
+        isValid = false;
+      }
+      if (!city) {
+        document.getElementById('city-error').classList.remove('hidden');
+        isValid = false;
+      }
+      if (!stateValue) {
+        document.getElementById('state-error').classList.remove('hidden');
+        isValid = false;
+      }
+      if (!zip || !/^\d{5}(-\d{4})?$/.test(zip) && country === 'United States') {
+        document.getElementById('zip-error').classList.remove('hidden');
+        isValid = false;
+      }
+      if (!country) {
+        document.getElementById('country-error').classList.remove('hidden');
+        isValid = false;
+      }
+      if (!countryCode || !phone || !/^\d{7,15}$/.test(phone.replace(/[\s-]/g, ''))) {
+        document.getElementById('phone-error').classList.remove('hidden');
+        isValid = false;
+      }
+
+      if (!isValid) {
+        formStatus.textContent = 'Please fill all required fields correctly';
+        formStatus.className = 'error';
+        return;
+      }
+
+      // Save address to localStorage
       const address = {
-        name: document.getElementById('name').value,
-        addressLine1: document.getElementById('address-line1').value,
-        addressLine2: document.getElementById('address-line2').value,
-        city: document.getElementById('city').value,
+        name,
+        addressLine1,
+        addressLine2: document.getElementById('address-line2').value.trim(),
+        city,
         state: stateValue,
-        zip: document.getElementById('zip').value,
-        country: document.getElementById('country').value,
-        phone: `${document.getElementById('country-code').value} ${document.getElementById('phone').value}`
+        zip,
+        country,
+        phone: `${countryCode} ${phone}`
       };
-      
-      // Store shipping address
       localStorage.setItem('shippingAddress', JSON.stringify(address));
-
-      // Generate order details
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-      const orderId = 'ORD-' + Math.random().toString(36).substr(2, 9).toUpperCase();
-      const order = {
-        orderId: orderId,
-        items: cart,
-        total: total,
-        timestamp: new Date().toISOString()
-      };
-
-      // Store order details
-      localStorage.setItem('order', JSON.stringify(order));
 
       // Redirect to payment gateway
       window.location.href = 'paymentgateway.html';
@@ -872,28 +915,31 @@
     function handleProtectedLink(event) {
       event.preventDefault();
       const link = event.currentTarget.getAttribute('data-link') || event.currentTarget.getAttribute('href');
-      // Allow direct access to signin.html, createaccount.html, and external links
-      if (link === 'signin.html' || link === 'createaccount.html' || link.startsWith('http')) {
+      // Allow direct access to signin.html, createaccount.html, terms.html, cart.html, and external links
+      if (link === 'signin.html' || link === 'createaccount.html' || link === 'terms.html' || link === 'cart.html' || link.startsWith('http')) {
         window.location.href = link;
         return;
       }
       // Require authentication for other pages
       if (isAuthenticated()) {
         window.location.href = link;
-        return;
       } else {
         window.location.href = 'createaccount.html';
-        return;
       }
     }
 
-    document.querySelectorAll('.nav-link, .submit-btn').forEach(link => {
+    // Apply handleProtectedLink only to navigation links, excluding the Continue button
+    document.querySelectorAll('.nav-link, .submit-btn:not(#continue-btn)').forEach(link => {
       link.addEventListener('click', handleProtectedLink);
     });
 
     // Display Username in Sidebar and Mobile Menu
     const userDisplay = document.getElementById('user-display');
     const mobileUserDisplay = document.getElementById('mobile-user-display');
+    const signInLink = document.getElementById('signin-link');
+    const createAccountLink = document.getElementById('createaccount-link');
+    const mobileSignInLink = document.getElementById('mobile-signin-link');
+    const mobileCreateAccountLink = document.getElementById('mobile-createaccount-link');
     if (isAuthenticated()) {
       const username = localStorage.getItem('currentUser');
       if (username) {
@@ -901,7 +947,18 @@
         mobileUserDisplay.classList.remove('hidden');
         userDisplay.querySelector('span').textContent = username;
         mobileUserDisplay.querySelector('span').textContent = username;
+        // Hide Sign In and Create Account links
+        signInLink.style.display = 'none';
+        createAccountLink.style.display = 'none';
+        mobileSignInLink.style.display = 'none';
+        mobileCreateAccountLink.style.display = 'none';
       }
+    } else {
+      // Ensure Sign In and Create Account links are visible
+      signInLink.style.display = 'flex';
+      createAccountLink.style.display = 'flex';
+      mobileSignInLink.style.display = 'flex';
+      mobileCreateAccountLink.style.display = 'flex';
     }
 
     // Hamburger Menu Toggle
@@ -928,5 +985,5 @@
     }, { threshold: 0.1 });
     fadeIns.forEach(element => observer.observe(element));
   </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93db20297e76675b',t:'MTc0Njg5NzgxOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
