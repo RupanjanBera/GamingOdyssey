@@ -6,8 +6,10 @@
   <title>Gaming Odyssey - Secure Payment</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- PayPal SDK -->
-  <script src="https://www.paypal.com/sdk/js?client-id=Abj4GKhw0aoqQes156AfApLm2wN5PAF5ncEUA_M-Dtzaj22yUzczA7tzf5LrsP7ufTj2ERxhUIEscsRF&currency=INR"></script>
+  <!-- PayPal SDK with Live Client ID -->
+  <script src="https://www.paypal.com/sdk/js?client-id=Abj4GKhw0aoqQes156AfApLm2wN5PAF5ncEUA_M-Dtzaj22yUzczA7tzf5LrsP7ufTj2ERxhUIEscsRF¤cy=USD"></script>
+  <!-- QR Code Generator Library -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
   <style>
     body {
       font-family: 'Poppins', sans-serif;
@@ -167,6 +169,7 @@
   <!-- Sidebar -->
   <div class="fixed top-0 left-0 h-full w-64 sidebar gradient-glow z-20 hidden md:block">
     <div class="p-4 sm:p-6">
+      <h1 class="text-2xl font-bold text-white leading-relaxed">Gaming Odyssey</h1>
       <nav class="mt-8 space-y-3">
         <a href="index.html" data-link="index.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
@@ -262,101 +265,58 @@
   <!-- Main Content -->
   <div class="md:ml-64">
     <section class="content-bg py-16 px-6">
-      <div class="max-w-4xl mx-auto flex flex-col md:flex-row gap-8">
+      <div class="max-w-4xl mx-auto bg-[#1E293B] p-8 rounded-lg gradient-glow fade-in">
+        <h1 class="text-4xl font-bold text-white text-center mb-8">Secure Payment 🔒</h1>
+        <div class="mb-6">
+          <p class="text-lg text-[#F1F5F9] mb-2">Order ID: <span id="orderId" class="text-[#3B82F6]"></span></p>
+          <p class="text-lg text-[#F1F5F9] mb-2">Total: <span id="totalAmount" class="text-[#3B82F6]"></span></p>
+          <p class="text-lg text-[#F1F5F9] mb-4">Currency: USD ($)</p>
+        </div>
+
         <!-- Payment Options -->
-        <div class="flex-1 p-8 fade-in">
-          <h1 class="text-4xl font-bold text-white text-center mb-8">Secure Payment 💳</h1>
-          
-          <!-- Payment Options List -->
-          <div class="space-y-4">
-            <div class="payment-card gradient-glow cursor-pointer selected" data-target="upi">
-              <label class="flex items-center space-x-3">
-                <input type="radio" name="payment-method" value="UPI" class="form-radio h-5 w-5 text-[#3B82F6] border-[#3B82F6]" checked>
-                <span class="text-2xl">📱</span>
-                <div>
-                  <h3 class="text-xl font-bold text-white">UPI</h3>
-                  <p class="text-[#F1F5F9]">Pay using your UPI app or enter your UPI ID.</p>
-                </div>
-              </label>
-              <div id="upi-form" class="payment-form active mt-4">
-                <div class="space-y-4">
-                  <div class="text-center">
-                    <h4 class="text-lg font-bold text-white mb-2">Scan to Pay</h4>
-                    <img id="upi-qr-code" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=rupanjanbera5-1@okicici&pn=Rupanjan%20Bera&am=0&cu=INR" alt="UPI QR Code" class="mx-auto mb-4">
-                    <p class="text-[#F1F5F9] mb-4">Scan this QR code with your UPI app to pay <span id="upi-qr-amount">₹0.00</span>.</p>
-                  </div>
-                  <div class="border-t border-[#3B82F6] pt-4">
-                    <h4 class="text-lg font-bold text-white mb-2">Or Enter Your UPI ID</h4>
-                    <form id="upi-payment-form" action="thankyou.html" method="GET" class="space-y-4">
-                      <input type="hidden" name="orderId" id="upi-order-id">
-                      <input type="hidden" name="amount" id="upi-amount">
-                      <input type="hidden" name="method" value="UPI">
-                      <div>
-                        <label class="block text-[#F1F5F9] mb-2" for="upi-id">Your UPI ID (e.g., name@bank)</label>
-                        <input type="text" id="upi-id" name="upiId" class="w-full p-2" placeholder="Enter UPI ID" required>
-                      </div>
-                      <button type="submit" class="submit-btn w-full">Pay Now</button>
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="payment-card gradient-glow cursor-pointer" data-target="paypal">
-              <label class="flex items-center space-x-3">
-                <input type="radio" name="payment-method" value="PayPal" class="form-radio h-5 w-5 text-[#3B82F6] border-[#3B82F6]">
-                <span class="text-2xl">💰</span>
-                <div>
-                  <h3 class="text-xl font-bold text-white">PayPal</h3>
-                  <p class="text-[#F1F5F9]">Pay securely using your PayPal account.</p>
-                </div>
-              </label>
-              <div id="paypal-form" class="payment-form mt-4">
-                <form id="paypal-payment-form" action="thankyou.html" method="GET" class="space-y-4">
-                  <input type="hidden" name="orderId" id="paypal-order-id">
-                  <input type="hidden" name="amount" id="paypal-amount">
-                  <input type="hidden" name="method" value="PayPal">
-                  <div id="paypal-button-container"></div>
-                </form>
-                <p class="text-[#F1F5F9] mt-4">Note: You will be redirected to PayPal to complete the payment.</p>
-              </div>
-            </div>
-
-            <div class="payment-card gradient-glow cursor-pointer" data-target="cod">
-              <label class="flex items-center space-x-3">
-                <input type="radio" name="payment-method" value="Cash on Delivery" class="form-radio h-5 w-5 text-[#3B82F6] border-[#3B82F6]">
-                <span class="text-2xl">🚚</span>
-                <div>
-                  <h3 class="text-xl font-bold text-white">Cash on Delivery</h3>
-                  <p class="text-[#F1F5F9]">Pay when you receive your order.</p>
-                </div>
-              </label>
-              <div id="cod-form" class="payment-form mt-4">
-                <form id="cod-payment-form" action="thankyou.html" method="GET" class="space-y-4">
-                  <input type="hidden" name="orderId" id="cod-order-id">
-                  <input type="hidden" name="amount" id="cod-amount">
-                  <input type="hidden" name="method" value="Cash on Delivery">
-                  <p class="text-[#F1F5F9] mb-4">Please have the exact amount of <span id="cod-amount-display">₹0.00</span> ready upon delivery.</p>
-                  <button type="submit" class="submit-btn w-full">Confirm Order</button>
-                </form>
-              </div>
-            </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+          <div class="payment-card gradient-glow cursor-pointer" data-method="upi">
+            <h3 class="text-lg font-bold text-white">UPI</h3>
+            <p class="text-[#F1F5F9] text-sm">Pay via Google Pay, PhonePe, etc.</p>
+          </div>
+          <div class="payment-card gradient-glow cursor-pointer" data-method="paypal">
+            <h3 class="text-lg font-bold text-white">PayPal</h3>
+            <p class="text-[#F1F5F9] text-sm">Secure payment with PayPal</p>
+          </div>
+          <div class="payment-card gradient-glow cursor-pointer" data-method="cod">
+            <h3 class="text-lg font-bold text-white">Cash on Delivery</h3>
+            <p class="text-[#F1F5F9] text-sm">Pay when you receive</p>
           </div>
         </div>
 
-        <!-- Order Summary -->
-        <div class="flex-1 payment-card gradient-glow p-8 fade-in">
-          <h2 class="text-2xl font-bold text-white mb-6">Order Summary</h2>
-          <div id="order-items" class="space-y-4"></div>
-          <div class="border-t border-[#3B82F6] pt-4 mt-4">
-            <p class="flex justify-between text-lg">
-              <span>Total:</span>
-              <span id="order-total">₹0.00</span>
-            </p>
+        <!-- Payment Forms -->
+        <div id="payment-forms">
+          <!-- UPI Form -->
+          <div id="upi-form" class="payment-form">
+            <form id="upi-payment-form" class="space-y-4">
+              <div>
+                <p class="text-[#F1F5F9] mb-2">Pay using UPI ID: <span class="text-[#3B82F6]">rupanjanbera5-1@okicici</span></p>
+              </div>
+              <div class="text-center">
+                <p class="text-[#F1F5F9] mb-2">Scan the QR code to pay:</p>
+                <div id="upi-qr-code" class="inline-block bg-white p-2 rounded-lg"></div>
+                <p class="text-[#F1F5F9] mt-2 text-sm">Amount: <span id="upi-amount"></span></p>
+              </div>
+              <button type="submit" class="submit-btn w-full">Confirm Payment</button>
+            </form>
           </div>
-          <div class="mt-6">
-            <h3 class="text-xl font-bold text-white mb-2">Shipping Address</h3>
-            <div id="shipping-address" class="text-[#F1F5F9]"></div>
+
+          <!-- PayPal Form -->
+          <div id="paypal-form" class="payment-form">
+            <div id="paypal-button-container"></div>
+          </div>
+
+          <!-- Cash on Delivery Form -->
+          <div id="cod-form" class="payment-form">
+            <form id="cod-payment-form" class="space-y-4">
+              <p class="text-[#F1F5F9]">You will pay <span id="cod-amount"></span> upon delivery.</p>
+              <button type="submit" class="submit-btn w-full">Confirm Order</button>
+            </form>
           </div>
         </div>
       </div>
@@ -367,7 +327,7 @@
       <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         <div>
           <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Contact</h3>
-          <p class="text-[#F1F5F9] mb-2 text-sm leading-relaxed">📧 <a href="/cdn-cgi/l/email-protection#54261017172813152373757971767f73786f6565716d3a7d7a" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link"><span class="__cf_email__" data-cfemail="5d2e282d2d322f291d3a3c3034333a3239242e2e3824733433">[email&#160;protected]</span></a></p>
+          <p class="text-[#F1F5F9] mb-2 text-sm leading-relaxed">📧 <a href="mailto:support@gamingodyssey.in" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link">support@gamingodyssey.in</a></p>
           <p class="text-[#F1F5F9] text-sm leading-relaxed">📞 6290994382</p>
         </div>
         <div>
@@ -401,173 +361,158 @@
     </footer>
   </div>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
   <script>
-    // Currency Configuration
-    const currencySymbols = {
-      USD: '$',
-      INR: '₹',
-      EUR: '€',
-      GBP: '£',
-      JPY: '¥'
-    };
-
-    // Generate unique order ID
-    function generateOrderId() {
-      return 'ORDER-' + Math.random().toString(36).substr(2, 9).toUpperCase();
-    }
-
-    // Load order and shipping address
+    // Load Order Details
     const order = JSON.parse(localStorage.getItem('order')) || {};
     const shippingAddress = JSON.parse(localStorage.getItem('shippingAddress')) || {};
-    const orderItemsContainer = document.getElementById('order-items');
-    const orderTotalElement = document.getElementById('order-total');
-    const shippingAddressElement = document.getElementById('shipping-address');
-    const upiQrCode = document.getElementById('upi-qr-code');
-    const upiQrAmount = document.getElementById('upi-qr-amount');
+    const orderIdElement = document.getElementById('orderId');
+    const totalAmountElement = document.getElementById('totalAmount');
+    const codAmountElement = document.getElementById('cod-amount');
+    const upiAmountElement = document.getElementById('upi-amount');
 
-    // Load order details
-    function loadOrderDetails() {
-      if (!order || !order.items || !order.total) {
-        orderItemsContainer.innerHTML = '<p class="text-[#F1F5F9] text-center">No order found. Please return to the store.</p>';
-        orderTotalElement.textContent = '₹0.00';
-        upiQrAmount.textContent = '₹0.00';
-        upiQrCode.src = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=rupanjanbera5-1@okicici&pn=Rupanjan%20Bera&am=0&cu=INR';
-        return;
-      }
+    orderIdElement.textContent = order.orderId || 'Not Available';
+    totalAmountElement.textContent = order.total ? `$${order.total.toFixed(2)}` : '$0.00';
+    codAmountElement.textContent = order.total ? `$${order.total.toFixed(2)}` : '$0.00';
+    upiAmountElement.textContent = order.total ? `$${order.total.toFixed(2)}` : '$0.00';
 
-      const selectedCurrency = order.currency || 'INR';
-      const total = parseFloat(order.total).toFixed(2);
-
-      // Display order items
-      orderItemsContainer.innerHTML = '';
-      order.items.forEach(item => {
-        const itemElement = document.createElement('div');
-        itemElement.className = 'flex justify-between';
-        const itemTotal = (item.price * item.quantity * (selectedCurrency === 'INR' ? 83 : 1)).toFixed(2);
-        itemElement.innerHTML = `
-          <span>${item.name} (x${item.quantity})</span>
-          <span>${currencySymbols[selectedCurrency]}${itemTotal}</span>
-        `;
-        orderItemsContainer.appendChild(itemElement);
-      });
-
-      // Display total
-      orderTotalElement.textContent = `${currencySymbols[selectedCurrency]}${total}`;
-
-      // Display shipping address
-      shippingAddressElement.innerHTML = `
-        <p>${shippingAddress.name || 'N/A'}</p>
-        <p>${shippingAddress.addressLine1 || ''}</p>
-        <p>${shippingAddress.addressLine2 || ''}</p>
-        <p>${shippingAddress.city || ''}, ${shippingAddress.state || ''} ${shippingAddress.zip || ''}</p>
-        <p>${shippingAddress.country || ''}</p>
-        <p>${shippingAddress.phone || ''}</p>
-      `;
-
-      // Update UPI QR code with amount
-      upiQrAmount.textContent = `${currencySymbols[selectedCurrency]}${total}`;
-      const upiLink = `upi://pay?pa=rupanjanbera5-1@okicici&pn=Rupanjan%20Bera&am=${encodeURIComponent(total)}&cu=${selectedCurrency}&tn=Payment%20for%20${encodeURIComponent(order.orderId)}`;
-      upiQrCode.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(upiLink)}`;
-    }
-
-    // Set order IDs and amounts
-    const orderId = order.orderId || generateOrderId();
-    const formattedTotal = order.total ? parseFloat(order.total).toFixed(2) : '0.00';
-    document.getElementById('upi-order-id').value = orderId;
-    document.getElementById('upi-amount').value = formattedTotal;
-    document.getElementById('paypal-order-id').value = orderId;
-    document.getElementById('paypal-amount').value = formattedTotal;
-    document.getElementById('cod-order-id').value = orderId;
-    document.getElementById('cod-amount').value = formattedTotal;
-    document.getElementById('cod-amount-display').textContent = `${order.currency ? currencySymbols[order.currency] : '₹'}${formattedTotal}`;
-
-    // Payment method selection
+    // Payment Method Selection
     const paymentCards = document.querySelectorAll('.payment-card');
     const paymentForms = document.querySelectorAll('.payment-form');
+
     paymentCards.forEach(card => {
       card.addEventListener('click', () => {
         paymentCards.forEach(c => c.classList.remove('selected'));
-        paymentForms.forEach(f => f.classList.remove('active'));
         card.classList.add('selected');
-        const targetForm = document.getElementById(`${card.dataset.target}-form`);
-        targetForm.classList.add('active');
+        const method = card.getAttribute('data-method');
+        paymentForms.forEach(form => form.classList.remove('active'));
+        document.getElementById(`${method}-form`).classList.add('active');
+        if (method === 'upi') {
+          generateUPIQRCode(); // Generate QR code when UPI is selected
+        }
       });
     });
 
-    // Store order in localStorage
-    function storeOrder(paymentMethod) {
-      const orders = JSON.parse(localStorage.getItem('orders')) || [];
-      const orderData = {
-        orderId: orderId,
-        items: order.items || [],
-        total: formattedTotal,
-        paymentMethod: paymentMethod,
-        shippingAddress: shippingAddress,
-        timestamp: new Date().toISOString()
-      };
-      orders.push(orderData);
-      localStorage.setItem('orders', JSON.stringify(orders));
-      // Clear cart and order after order is placed
-      localStorage.removeItem('cart');
-      localStorage.removeItem('order');
+    // Default to UPI
+    document.querySelector('[data-method="upi"]').click();
+
+    // Generate Dynamic UPI QR Code
+    const upiQRCodeElement = document.getElementById('upi-qr-code');
+
+    function generateUPIQRCode() {
+      const upiId = 'rupanjanbera5-1@okicici'; // Fixed UPI ID
+      const amount = order.total ? order.total.toFixed(2) : '0.00';
+      const transactionNote = `Order Payment ${order.orderId || 'Unknown'}`;
+      const upiLink = `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent('Gaming Odyssey')}&am=${amount}&cu=USD&tn=${encodeURIComponent(transactionNote)}`;
+
+      // Clear previous QR code
+      upiQRCodeElement.innerHTML = '';
+
+      // Generate new QR code
+      QRCode.toCanvas(upiLink, {
+        width: 200,
+        margin: 1,
+        color: {
+          dark: '#000000',
+          light: '#FFFFFF'
+        }
+      }, (error, canvas) => {
+        if (error) {
+          console.error('QR Code generation error:', error);
+          upiQRCodeElement.innerHTML = '<p class="text-[#F1F5F9] text-center">Failed to generate QR code.</p>';
+        } else {
+          upiQRCodeElement.appendChild(canvas);
+        }
+      });
     }
 
-    // Handle form submissions
+    // Initial QR code generation
+    generateUPIQRCode();
+
+    // Store Order and Redirect
+    function storeOrder(method) {
+      const finalOrder = {
+        ...order,
+        paymentMethod: method,
+        shippingAddress: shippingAddress,
+        status: method === 'PayPal' ? 'Completed' : 'Pending',
+        timestamp: new Date().toISOString()
+      };
+      localStorage.setItem('finalOrder', JSON.stringify(finalOrder));
+      localStorage.setItem('finalShippingAddress', JSON.stringify(shippingAddress));
+      localStorage.removeItem('order');
+      localStorage.removeItem('shippingAddress');
+      localStorage.removeItem('cart');
+      window.location.href = `thankyou.html?orderId=${finalOrder.orderId}&amount=${finalOrder.total}&method=${method}`;
+    }
+
+    // UPI Payment Form Submission
     document.getElementById('upi-payment-form').addEventListener('submit', (e) => {
+      e.preventDefault();
       storeOrder('UPI');
     });
+
+    // Cash on Delivery Form Submission
     document.getElementById('cod-payment-form').addEventListener('submit', (e) => {
+      e.preventDefault();
       storeOrder('Cash on Delivery');
     });
 
-    // PayPal Payment Integration
-    if (order.total && parseFloat(order.total) > 0) {
+    // PayPal Integration
+    if (order.total) {
       paypal.Buttons({
-        createOrder: function(data, actions) {
+        createOrder: (data, actions) => {
           return actions.order.create({
             purchase_units: [{
               amount: {
-                value: formattedTotal,
-                currency_code: order.currency || 'INR'
-              },
-              description: `Payment for order ${orderId}`,
-              shipping: {
-                name: {
-                  full_name: shippingAddress.name || 'Customer'
-                },
-                address: {
-                  address_line_1: shippingAddress.addressLine1 || '',
-                  address_line_2: shippingAddress.addressLine2 || '',
-                  admin_area_2: shippingAddress.city || '',
-                  admin_area_1: shippingAddress.state || '',
-                  postal_code: shippingAddress.zip || '',
-                  country_code: shippingAddress.country || 'IN'
-                }
+                value: order.total.toFixed(2),
+                currency_code: 'USD'
               }
             }],
             application_context: {
-              shipping_preference: 'SET_PROVIDED_ADDRESS'
+              shipping_preference: 'SET_PROVIDED_ADDRESS',
+              user_action: 'PAY_NOW'
+            },
+            payer: {
+              address: {
+                address_line_1: shippingAddress.addressLine1 || '',
+                address_line_2: shippingAddress.addressLine2 || '',
+                admin_area_2: shippingAddress.city || '',
+                admin_area_1: shippingAddress.state || '',
+                postal_code: shippingAddress.zip || '',
+                country_code: shippingAddress.country || 'US'
+              }
             }
           });
         },
-        onApprove: function(data, actions) {
-          return actions.order.capture().then(function(details) {
+        onApprove: (data, actions) => {
+          return actions.order.capture().then(() => {
             storeOrder('PayPal');
-            window.location.href = `thankyou.html?orderId=${orderId}&amount=${formattedTotal}&method=PayPal&payerId=${details.payer.payer_id}`;
           });
         },
-        onCancel: function(data) {
-          alert('Payment was cancelled. Please try again or choose another payment method.');
-        },
-        onError: function(err) {
-          console.error('PayPal payment error:', err);
-          alert('An error occurred during the PayPal payment process. Please try again.');
+        onError: (err) => {
+          console.error('PayPal Error:', err);
+          alert('An error occurred with PayPal. Please try again or choose another payment method.');
         }
-      }).render('#paypal-button-container');
+      }).render('#paypal-button-container').catch(err => {
+        console.error('PayPal SDK failed to load:', err);
+        alert('Failed to load PayPal. Please try again later.');
+      });
     } else {
-      document.getElementById('paypal-button-container').innerHTML = '<p class="text-[#F1F5F9] text-center">No valid order amount found. Please return to the store.</p>';
+      document.getElementById('paypal-button-container').innerHTML = '<p class="text-[#F1F5F9] text-center">Order total not available. Please try again.</p>';
     }
+
+    // Hamburger Menu Toggle
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const closeMenu = document.getElementById('close-menu');
+    hamburger.addEventListener('click', () => {
+      mobileMenu.classList.remove('hidden');
+      mobileMenu.classList.add('active');
+    });
+    closeMenu.addEventListener('click', () => {
+      mobileMenu.classList.add('hidden');
+      mobileMenu.classList.remove('active');
+    });
 
     // Authentication Logic
     function isAuthenticated() {
@@ -605,19 +550,6 @@
       }
     }
 
-    // Hamburger Menu Toggle
-    const hamburger = document.getElementById('hamburger');
-    const mobileMenu = document.getElementById('mobile-menu');
-    const closeMenu = document.getElementById('close-menu');
-    hamburger.addEventListener('click', () => {
-      mobileMenu.classList.remove('hidden');
-      mobileMenu.classList.add('active');
-    });
-    closeMenu.addEventListener('click', () => {
-      mobileMenu.classList.add('hidden');
-      mobileMenu.classList.remove('active');
-    });
-
     // Fade-in Animation on Scroll
     const fadeIns = document.querySelectorAll('.fade-in');
     const observer = new IntersectionObserver((entries) => {
@@ -628,9 +560,6 @@
       });
     }, { threshold: 0.1 });
     fadeIns.forEach(element => observer.observe(element));
-
-    // Initial Load
-    loadOrderDetails();
   </script>
 </body>
 </html>
