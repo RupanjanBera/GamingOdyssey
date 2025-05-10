@@ -6,8 +6,8 @@
   <title>Gaming Odyssey - Secure Payment</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- PayPal SDK with Live Client ID -->
-  <script src="https://www.paypal.com/sdk/js?client-id=Abj4GKhw0aoqQes156AfApLm2wN5PAF5ncEUA_M-Dtzaj22yUzczA7tzf5LrsP7ufTj2ERxhUIEscsRF¤cy=USD"></script>
+  <!-- PayPal SDK with Provided Client ID -->
+  <script src="https://www.paypal.com/sdk/js?client-id=Abj4GKhw0aoqQes156AfApLm2wN5PAF5ncEUA_M-Dtzaj22yUzczA7tzf5LrsP7ufTj2ERxhUIEscsRF&currency=USD"></script>
   <!-- QR Code Generator Library -->
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
   <style>
@@ -60,12 +60,6 @@
       opacity: 1;
       transform: translateY(0);
     }
-    .payment-form {
-      display: none;
-    }
-    .payment-form.active {
-      display: block;
-    }
     .payment-card {
       background: linear-gradient(145deg, #1E293B, #0F172A);
       border-radius: 0.75rem;
@@ -74,10 +68,6 @@
     }
     .payment-card:hover {
       transform: translateY(-4px);
-    }
-    .payment-card.selected {
-      background: linear-gradient(45deg, #3B82F6, #D946EF);
-      color: #0F172A;
     }
     input, select, textarea {
       background: #1E293B;
@@ -171,15 +161,15 @@
     <div class="p-4 sm:p-6">
       <h1 class="text-2xl font-bold text-white leading-relaxed">Gaming Odyssey</h1>
       <nav class="mt-8 space-y-3">
-        <a href="index.html" data-link="index.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+        <a href="#" data-link="index.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Home</span>
         </a>
-        <a href="store.html" data-link="store.html" class="flex items-center space-x-2 text-[#3B82F6] font-semibold nav-link">
+        <a href="#" data-link="store.html" class="flex items-center space-x-2 text-[#3B82F6] font-semibold nav-link">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Store</span>
         </a>
-        <a href="tournaments.html" data-link="tournaments.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+        <a href="#" data-link="tournaments.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Tournaments</span>
         </a>
@@ -187,19 +177,19 @@
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Track Order</span>
         </a>
-        <a href="contactus.html" data-link="contactus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+        <a href="#" data-link="contactus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Contact Us</span>
         </a>
-        <a href="aboutus.html" data-link="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+        <a href="#" data-link="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>About Us</span>
         </a>
-        <a href="signin.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+        <a href="signin.html" id="signin-link" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Sign In</span>
         </a>
-        <a href="createaccount.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+        <a href="createaccount.html" id="createaccount-link" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Create Account</span>
         </a>
@@ -223,15 +213,15 @@
       <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
     </button>
     <nav class="space-y-3 mt-12">
-      <a href="index.html" data-link="index.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+      <a href="#" data-link="index.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
         <span>Home</span>
       </a>
-      <a href="store.html" data-link="store.html" class="flex items-center space-x-2 text-[#3B82F6] font-semibold nav-link">
+      <a href="#" data-link="store.html" class="flex items-center space-x-2 text-[#3B82F6] font-semibold nav-link">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
         <span>Store</span>
       </a>
-      <a href="tournaments.html" data-link="tournaments.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+      <a href="#" data-link="tournaments.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
         <span>Tournaments</span>
       </a>
@@ -239,19 +229,19 @@
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
         <span>Track Order</span>
       </a>
-      <a href="contactus.html" data-link="contactus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+      <a href="#" data-link="contactus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
         <span>Contact Us</span>
       </a>
-      <a href="aboutus.html" data-link="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+      <a href="#" data-link="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
         <span>About Us</span>
       </a>
-      <a href="signin.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+      <a href="signin.html" id="mobile-signin-link" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
         <span>Sign In</span>
       </a>
-      <a href="createaccount.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+      <a href="createaccount.html" id="mobile-createaccount-link" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
         <span>Create Account</span>
       </a>
@@ -267,36 +257,37 @@
     <section class="content-bg py-16 px-6">
       <div class="max-w-4xl mx-auto bg-[#1E293B] p-8 rounded-lg gradient-glow fade-in">
         <h1 class="text-4xl font-bold text-white text-center mb-8">Secure Payment 🔒</h1>
-        <div class="mb-6">
+
+        <!-- Order Details -->
+        <div class="mb-8">
           <p class="text-lg text-[#F1F5F9] mb-2">Order ID: <span id="orderId" class="text-[#3B82F6]"></span></p>
           <p class="text-lg text-[#F1F5F9] mb-2">Total: <span id="totalAmount" class="text-[#3B82F6]"></span></p>
           <p class="text-lg text-[#F1F5F9] mb-4">Currency: USD ($)</p>
         </div>
 
-        <!-- Payment Options -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-          <div class="payment-card gradient-glow cursor-pointer" data-method="upi">
-            <h3 class="text-lg font-bold text-white">UPI</h3>
-            <p class="text-[#F1F5F9] text-sm">Pay via Google Pay, PhonePe, etc.</p>
-          </div>
-          <div class="payment-card gradient-glow cursor-pointer" data-method="paypal">
-            <h3 class="text-lg font-bold text-white">PayPal</h3>
-            <p class="text-[#F1F5F9] text-sm">Secure payment with PayPal</p>
-          </div>
-          <div class="payment-card gradient-glow cursor-pointer" data-method="cod">
-            <h3 class="text-lg font-bold text-white">Cash on Delivery</h3>
-            <p class="text-[#F1F5F9] text-sm">Pay when you receive</p>
+        <!-- Order Summary -->
+        <div class="mb-8">
+          <h2 class="text-2xl font-bold text-white mb-4">Order Summary</h2>
+          <div id="order-summary" class="space-y-4">
+            <!-- Cart items will be dynamically inserted here -->
           </div>
         </div>
 
-        <!-- Payment Forms -->
-        <div id="payment-forms">
+        <!-- Shipping Details -->
+        <div class="mb-8">
+          <h2 class="text-2xl font-bold text-white mb-4">Shipping Details</h2>
+          <div id="shipping-details" class="text-[#F1F5F9] space-y-2">
+            <!-- Shipping address will be dynamically inserted here -->
+          </div>
+        </div>
+
+        <!-- Payment Options -->
+        <div id="payment-forms" class="space-y-8">
           <!-- UPI Form -->
-          <div id="upi-form" class="payment-form">
+          <div id="upi-form" class="payment-card gradient-glow">
+            <h3 class="text-lg font-bold text-white mb-2">UPI</h3>
+            <p class="text-[#F1F5F9] text-sm mb-4">Pay via Google Pay, PhonePe, etc.</p>
             <form id="upi-payment-form" class="space-y-4">
-              <div>
-                <p class="text-[#F1F5F9] mb-2">Pay using UPI ID: <span class="text-[#3B82F6]">rupanjanbera5-1@okicici</span></p>
-              </div>
               <div class="text-center">
                 <p class="text-[#F1F5F9] mb-2">Scan the QR code to pay:</p>
                 <div id="upi-qr-code" class="inline-block bg-white p-2 rounded-lg"></div>
@@ -307,12 +298,16 @@
           </div>
 
           <!-- PayPal Form -->
-          <div id="paypal-form" class="payment-form">
+          <div id="paypal-form" class="payment-card gradient-glow">
+            <h3 class="text-lg font-bold text-white mb-2">PayPal</h3>
+            <p class="text-[#F1F5F9] text-sm mb-4">Secure payment with PayPal</p>
             <div id="paypal-button-container"></div>
           </div>
 
           <!-- Cash on Delivery Form -->
-          <div id="cod-form" class="payment-form">
+          <div id="cod-form" class="payment-card gradient-glow">
+            <h3 class="text-lg font-bold text-white mb-2">Cash on Delivery</h3>
+            <p class="text-[#F1F5F9] text-sm mb-4">Pay when you receive</p>
             <form id="cod-payment-form" class="space-y-4">
               <p class="text-[#F1F5F9]">You will pay <span id="cod-amount"></span> upon delivery.</p>
               <button type="submit" class="submit-btn w-full">Confirm Order</button>
@@ -333,12 +328,12 @@
         <div>
           <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Useful Links</h3>
           <ul class="space-y-2">
-            <li><a href="index.html" data-link="index.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Home</a></li>
-            <li><a href="store.html" data-link="store.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Store</a></li>
-            <li><a href="tournaments.html" data-link="tournaments.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Tournaments</a></li>
+            <li><a href="#" data-link="index.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Home</a></li>
+            <li><a href="#" data-link="store.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Store</a></li>
+            <li><a href="#" data-link="tournaments.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Tournaments</a></li>
             <li><a href="#" data-link="trackorder.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Track Order</a></li>
-            <li><a href="contactus.html" data-link="contactus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Contact Us</a></li>
-            <li><a href="aboutus.html" data-link="aboutus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">About Us</a></li>
+            <li><a href="#" data-link="contactus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Contact Us</a></li>
+            <li><a href="#" data-link="aboutus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">About Us</a></li>
             <li><a href="terms.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Terms & Conditions</a></li>
           </ul>
         </div>
@@ -362,86 +357,160 @@
   </div>
 
   <script>
-    // Load Order Details
-    const order = JSON.parse(localStorage.getItem('order')) || {};
-    const shippingAddress = JSON.parse(localStorage.getItem('shippingAddress')) || {};
+    // Check if in preview mode (e.g., ?preview=true in URL)
+    const urlParams = new URLSearchParams(window.location.search);
+    const isPreviewMode = urlParams.get('preview') === 'true';
+
+    // Authentication Check (skipped in preview mode)
+    if (!isPreviewMode && !isAuthenticated()) {
+      window.location.href = 'createaccount.html';
+    }
+
+    // Mock data for preview if localStorage is unavailable
+    const mockOrder = {
+      orderId: 'ORD-12345',
+      total: 99.99
+    };
+    const mockCart = [
+      { name: 'Gaming Mouse', price: 49.99, quantity: 1 },
+      { name: 'Keyboard', price: 50.00, quantity: 1 }
+    ];
+    const mockShippingAddress = {
+      name: 'John Doe',
+      addressLine1: '123 Main St',
+      addressLine2: '',
+      city: 'New York',
+      state: 'NY',
+      zip: '10001',
+      country: 'United States',
+      phone: '555-123-4567'
+    };
+
+    // Load Order, Cart, and Shipping Details
+    let order, cart, shippingAddress;
+    try {
+      order = JSON.parse(localStorage.getItem('order')) || (isPreviewMode ? mockOrder : {});
+      cart = JSON.parse(localStorage.getItem('cart')) || (isPreviewMode ? mockCart : []);
+      shippingAddress = JSON.parse(localStorage.getItem('shippingAddress')) || (isPreviewMode ? mockShippingAddress : {});
+    } catch (e) {
+      console.error('Error accessing localStorage:', e);
+      order = isPreviewMode ? mockOrder : {};
+      cart = isPreviewMode ? mockCart : [];
+      shippingAddress = isPreviewMode ? mockShippingAddress : {};
+    }
+
     const orderIdElement = document.getElementById('orderId');
     const totalAmountElement = document.getElementById('totalAmount');
     const codAmountElement = document.getElementById('cod-amount');
     const upiAmountElement = document.getElementById('upi-amount');
+    const orderSummaryElement = document.getElementById('order-summary');
+    const shippingDetailsElement = document.getElementById('shipping-details');
 
+    // Display Order Details
     orderIdElement.textContent = order.orderId || 'Not Available';
     totalAmountElement.textContent = order.total ? `$${order.total.toFixed(2)}` : '$0.00';
     codAmountElement.textContent = order.total ? `$${order.total.toFixed(2)}` : '$0.00';
     upiAmountElement.textContent = order.total ? `$${order.total.toFixed(2)}` : '$0.00';
 
-    // Payment Method Selection
-    const paymentCards = document.querySelectorAll('.payment-card');
-    const paymentForms = document.querySelectorAll('.payment-form');
-
-    paymentCards.forEach(card => {
-      card.addEventListener('click', () => {
-        paymentCards.forEach(c => c.classList.remove('selected'));
-        card.classList.add('selected');
-        const method = card.getAttribute('data-method');
-        paymentForms.forEach(form => form.classList.remove('active'));
-        document.getElementById(`${method}-form`).classList.add('active');
-        if (method === 'upi') {
-          generateUPIQRCode(); // Generate QR code when UPI is selected
-        }
+    // Display Order Summary
+    if (cart.length > 0) {
+      cart.forEach(item => {
+        const itemElement = document.createElement('div');
+        itemElement.className = 'flex justify-between items-center';
+        itemElement.innerHTML = `
+          <div>
+            <p class="text-[#F1F5F9]">${item.name || 'Unknown Item'}</p>
+            <p class="text-[#F1F5F9] text-sm">Quantity: ${item.quantity || 1}</p>
+          </div>
+          <p class="text-[#3B82F6]">$${((item.price || 0) * (item.quantity || 1)).toFixed(2)}</p>
+        `;
+        orderSummaryElement.appendChild(itemElement);
       });
-    });
+    } else {
+      orderSummaryElement.innerHTML = '<p class="text-[#F1F5F9] text-center">Order Summary is empty.</p>';
+    }
 
-    // Default to UPI
-    document.querySelector('[data-method="upi"]').click();
+    // Display Shipping Details
+    if (shippingAddress.name) {
+      shippingDetailsElement.innerHTML = `
+        <p><strong>Name:</strong> ${shippingAddress.name}</p>
+        <p><strong>Address:</strong> ${shippingAddress.addressLine1}${shippingAddress.addressLine2 ? ', ' + shippingAddress.addressLine2 : ''}</p>
+        <p><strong>City:</strong> ${shippingAddress.city || ''}</p>
+        <p><strong>State:</strong> ${shippingAddress.state || ''}</p>
+        <p><strong>ZIP Code:</strong> ${shippingAddress.zip || ''}</p>
+        <p><strong>Country:</strong> ${shippingAddress.country || ''}</p>
+        <p><strong>Phone:</strong> ${shippingAddress.phone || ''}</p>
+      `;
+    } else {
+      shippingDetailsElement.innerHTML = '<p class="text-[#F1F5F9] text-center">No shipping address provided.</p>';
+    }
 
     // Generate Dynamic UPI QR Code
     const upiQRCodeElement = document.getElementById('upi-qr-code');
 
     function generateUPIQRCode() {
-      const upiId = 'rupanjanbera5-1@okicici'; // Fixed UPI ID
+      const upiId = 'rupanjanbera5-1@okicici';
       const amount = order.total ? order.total.toFixed(2) : '0.00';
       const transactionNote = `Order Payment ${order.orderId || 'Unknown'}`;
       const upiLink = `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent('Gaming Odyssey')}&am=${amount}&cu=USD&tn=${encodeURIComponent(transactionNote)}`;
 
-      // Clear previous QR code
       upiQRCodeElement.innerHTML = '';
 
-      // Generate new QR code
-      QRCode.toCanvas(upiLink, {
-        width: 200,
-        margin: 1,
-        color: {
-          dark: '#000000',
-          light: '#FFFFFF'
-        }
-      }, (error, canvas) => {
-        if (error) {
-          console.error('QR Code generation error:', error);
-          upiQRCodeElement.innerHTML = '<p class="text-[#F1F5F9] text-center">Failed to generate QR code.</p>';
-        } else {
-          upiQRCodeElement.appendChild(canvas);
-        }
-      });
+      if (typeof QRCode === 'undefined') {
+        console.error('QRCode library not loaded');
+        upiQRCodeElement.innerHTML = '<p class="text-[#F1F5F9] text-center">QR code library not loaded. Please try again.</p>';
+        return;
+      }
+
+      try {
+        QRCode.toCanvas(upiLink, {
+          width: 200,
+          margin: 1,
+          color: { dark: '#000000', light: '#FFFFFF' }
+        }, (error, canvas) => {
+          if (error) {
+            console.error('QR Code generation error:', error);
+            upiQRCodeElement.innerHTML = '<p class="text-[#F1F5F9] text-center">Failed to generate QR code. Please try again.</p>';
+          } else {
+            upiQRCodeElement.appendChild(canvas);
+          }
+        });
+      } catch (e) {
+        console.error('QR Code rendering error:', e);
+        upiQRCodeElement.innerHTML = '<p class="text-[#F1F5F9] text-center">Error rendering QR code. Please try again.</p>';
+      }
     }
 
     // Initial QR code generation
-    generateUPIQRCode();
+    if (!isPreviewMode) {
+      generateUPIQRCode();
+    } else {
+      upiQRCodeElement.innerHTML = '<p class="text-[#F1F5F9] text-center">UPI QR Code Placeholder</p>';
+    }
 
     // Store Order and Redirect
     function storeOrder(method) {
+      if (isPreviewMode) {
+        alert('Order confirmation disabled in preview mode.');
+        return;
+      }
       const finalOrder = {
         ...order,
         paymentMethod: method,
         shippingAddress: shippingAddress,
+        items: cart,
         status: method === 'PayPal' ? 'Completed' : 'Pending',
         timestamp: new Date().toISOString()
       };
-      localStorage.setItem('finalOrder', JSON.stringify(finalOrder));
-      localStorage.setItem('finalShippingAddress', JSON.stringify(shippingAddress));
-      localStorage.removeItem('order');
-      localStorage.removeItem('shippingAddress');
-      localStorage.removeItem('cart');
+      try {
+        localStorage.setItem('finalOrder', JSON.stringify(finalOrder));
+        localStorage.setItem('finalShippingAddress', JSON.stringify(shippingAddress));
+        localStorage.removeItem('order');
+        localStorage.removeItem('shippingAddress');
+        localStorage.removeItem('cart');
+      } catch (e) {
+        console.error('Error saving to localStorage:', e);
+      }
       window.location.href = `thankyou.html?orderId=${finalOrder.orderId}&amount=${finalOrder.total}&method=${method}`;
     }
 
@@ -457,48 +526,83 @@
       storeOrder('Cash on Delivery');
     });
 
-    // PayPal Integration
-    if (order.total) {
-      paypal.Buttons({
-        createOrder: (data, actions) => {
-          return actions.order.create({
-            purchase_units: [{
-              amount: {
-                value: order.total.toFixed(2),
-                currency_code: 'USD'
+    // PayPal Integration with Server-Side API
+    const paypalContainer = document.getElementById('paypal-button-container');
+    if (order.total && !isPreviewMode && typeof paypal !== 'undefined' && paypal.Buttons) {
+      try {
+        paypal.Buttons({
+          createOrder: async (data, actions) => {
+            try {
+              const response = await fetch('http://localhost:3000/api/paypal/create-order', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  amount: order.total.toFixed(2),
+                  currency: 'USD'
+                })
+              });
+              const orderData = await response.json();
+              if (orderData.id) {
+                return orderData.id;
+              } else {
+                throw new Error('Failed to create PayPal order');
               }
-            }],
-            application_context: {
-              shipping_preference: 'SET_PROVIDED_ADDRESS',
-              user_action: 'PAY_NOW'
-            },
-            payer: {
-              address: {
-                address_line_1: shippingAddress.addressLine1 || '',
-                address_line_2: shippingAddress.addressLine2 || '',
-                admin_area_2: shippingAddress.city || '',
-                admin_area_1: shippingAddress.state || '',
-                postal_code: shippingAddress.zip || '',
-                country_code: shippingAddress.country || 'US'
-              }
+            } catch (error) {
+              console.error('Create order error:', error);
+              alert('Failed to create PayPal order. Please try again.');
             }
-          });
-        },
-        onApprove: (data, actions) => {
-          return actions.order.capture().then(() => {
-            storeOrder('PayPal');
-          });
-        },
-        onError: (err) => {
-          console.error('PayPal Error:', err);
-          alert('An error occurred with PayPal. Please try again or choose another payment method.');
-        }
-      }).render('#paypal-button-container').catch(err => {
-        console.error('PayPal SDK failed to load:', err);
-        alert('Failed to load PayPal. Please try again later.');
-      });
+          },
+          onApprove: async (data, actions) => {
+            try {
+              const response = await fetch('http://localhost:3000/api/paypal/capture-order', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  orderID: data.orderID
+                })
+              });
+              const captureData = await response.json();
+              if (captureData.status === 'COMPLETED') {
+                storeOrder('PayPal');
+              } else {
+                throw new Error('Payment capture failed');
+              }
+            } catch (error) {
+              console.error('Capture order error:', error);
+              alert('Failed to capture PayPal payment. Please try again.');
+            }
+          },
+          onError: (err) => {
+            console.error('PayPal Error:', err);
+            alert('An error occurred with PayPal. Please try again or choose another payment method.');
+          }
+        }).render('#paypal-button-container').catch(err => {
+          console.error('PayPal SDK render error:', err);
+          paypalContainer.innerHTML = '<p class="text-[#F1F5F9] text-center">Failed to load PayPal buttons. Please try again.</p>';
+        });
+      } catch (e) {
+        console.error('PayPal initialization error:', e);
+        paypalContainer.innerHTML = '<p class="text-[#F1F5F9] text-center">PayPal not available. Please try another payment method.</p>';
+      }
     } else {
-      document.getElementById('paypal-button-container').innerHTML = '<p class="text-[#F1F5F9] text-center">Order total not available. Please try again.</p>';
+      console.warn('PayPal not loaded or in preview mode');
+      paypalContainer.innerHTML = '<p class="text-[#F1F5F9] text-center">PayPal Button Placeholder</p>';
+    }
+
+    // Helper function to get country code
+    function getCountryCode(countryName) {
+      const countryCodes = {
+        'United States': 'US',
+        'India': 'IN',
+        'Canada': 'CA',
+        'United Kingdom': 'GB',
+        'Australia': 'AU'
+      };
+      return countryCodes[countryName] || 'US';
     }
 
     // Hamburger Menu Toggle
@@ -516,13 +620,18 @@
 
     // Authentication Logic
     function isAuthenticated() {
-      return localStorage.getItem('isAuthenticated') === 'true';
+      try {
+        return localStorage.getItem('isAuthenticated') === 'true';
+      } catch (e) {
+        return false;
+      }
     }
 
     function handleProtectedLink(event) {
+      if (isPreviewMode) return;
       event.preventDefault();
       const link = event.currentTarget.getAttribute('data-link') || event.currentTarget.getAttribute('href');
-      if (link === 'signin.html' || link === 'createaccount.html' || link.startsWith('http')) {
+      if (link === 'signin.html' || link === 'createaccount.html' || link === 'terms.html' || link === 'cart.html' || link.startsWith('http')) {
         window.location.href = link;
         return;
       }
@@ -540,14 +649,32 @@
     // Display Username in Sidebar and Mobile Menu
     const userDisplay = document.getElementById('user-display');
     const mobileUserDisplay = document.getElementById('mobile-user-display');
-    if (isAuthenticated()) {
-      const username = localStorage.getItem('currentUser');
+    const signInLink = document.getElementById('signin-link');
+    const createAccountLink = document.getElementById('createaccount-link');
+    const mobileSignInLink = document.getElementById('mobile-signin-link');
+    const mobileCreateAccountLink = document.getElementById('mobile-createaccount-link');
+    if (isAuthenticated() && !isPreviewMode) {
+      let username;
+      try {
+        username = localStorage.getItem('currentUser');
+      } catch (e) {
+        console.error('Error accessing localStorage:', e);
+      }
       if (username) {
         userDisplay.classList.remove('hidden');
         mobileUserDisplay.classList.remove('hidden');
         userDisplay.querySelector('span').textContent = username;
         mobileUserDisplay.querySelector('span').textContent = username;
+        signInLink.style.display = 'none';
+        createAccountLink.style.display = 'none';
+        mobileSignInLink.style.display = 'none';
+        mobileCreateAccountLink.style.display = 'none';
       }
+    } else {
+      signInLink.style.display = 'flex';
+      createAccountLink.style.display = 'flex';
+      mobileSignInLink.style.display = 'flex';
+      mobileCreateAccountLink.style.display = 'flex';
     }
 
     // Fade-in Animation on Scroll
