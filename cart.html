@@ -4,27 +4,31 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gaming Odyssey - Cart</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
-      font-family: 'Rajdhani', sans-serif;
-      background-color: #1a1a2e;
-      color: #E0E0E0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #0F172A;
+      color: #F1F5F9;
       scroll-behavior: smooth;
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
-    .neon-border {
-      border: 1px solid #00E5FF;
-      box-shadow: 0 0 10px #00E5FF, 0 0 20px #D500F9;
+    .gradient-glow {
+      box-shadow: 0 0 6px rgba(59, 130, 246, 0.2);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-    .neon-glow:hover {
-      box-shadow: 0 0 15px #00E5FF, 0 0 25px #D500F9;
-      transform: translateY(-2px);
-      transition: all 0.3s ease;
+    .gradient-glow:hover {
+      box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+      transform: translateY(-3px);
+    }
+    .sidebar {
+      background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
+      box-shadow: 2px 0 6px rgba(59, 130, 246, 0.1);
     }
     .content-bg {
-      background: linear-gradient(45deg, rgba(0, 229, 255, 0.1), rgba(213, 0, 249, 0.1));
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(217, 70, 239, 0.15), #0F172A);
       position: relative;
       overflow: hidden;
     }
@@ -35,118 +39,244 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="#00E5FF" opacity="0.3"/></svg>') repeat;
-      animation: particles 20s linear infinite;
+      background: radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.2), transparent 70%);
+      animation: glow 20s ease-in-out infinite;
       opacity: 0.5;
     }
-    @keyframes particles {
-      0% { transform: translateY(0); }
-      100% { transform: translateY(-100px); }
+    @keyframes glow {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 0.7; }
     }
     .fade-in {
       opacity: 0;
-      transform: translateY(20px);
+      transform: translateY(15px);
       transition: opacity 0.6s ease, transform 0.6s ease;
     }
     .fade-in.visible {
       opacity: 1;
       transform: translateY(0);
     }
+    .submit-btn {
+      background: linear-gradient(90deg, #3B82F6, #D946EF);
+      color: #0F172A;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      padding: 1rem 1.5rem;
+      border-radius: 0.5rem;
+      transition: transform 0.2s ease;
+      touch-action: manipulation;
+      font-size: 1rem;
+    }
+    .submit-btn:hover {
+      transform: translateY(-2px);
+    }
+    .nav-link, #mobile-menu a {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      transition: color 0.2s ease;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 1.0625rem;
+      padding: 0.5rem 0;
+    }
+    .nav-link::after, #mobile-menu a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: 0;
+      left: 0;
+      background: linear-gradient(to right, #3B82F6, #D946EF);
+      transition: width 0.2s ease;
+    }
+    .nav-link:hover::after, #mobile-menu a:hover::after {
+      width: 100%;
+    }
+    .nav-link:hover, #mobile-menu a:hover {
+      color: #3B82F6;
+    }
+    .mobile-menu {
+      background: linear-gradient(180deg, #1E293B, #0F172A);
+      opacity: 0;
+      transform: translateX(-100%);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .mobile-menu.active {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    @media (max-width: 640px) {
+      .submit-btn {
+        width: 100%;
+        padding: 0.875rem;
+        font-size: 0.9375rem;
+      }
+      .nav-link, #mobile-menu a {
+        font-size: 1rem;
+      }
+    }
   </style>
 </head>
 <body>
-  <!-- Header -->
-  <header class="bg-[#0f0f1a] py-4 px-6 neon-border">
-    <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center">
-      <h1 class="text-2xl font-bold text-white font-orbitron mb-4 md:mb-0">Gaming Odyssey</h1>
-      <nav class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-6 text-lg">
-        <a href="index.html" class="hover:text-[#00E5FF] transition">Home</a>
-        <a href="store.html" class="text-[#00E5FF] font-bold">Store</a>
-        <a href="tournaments.html" class="hover:text-[#00E5FF] transition">Tournaments</a>
-        <a href="#" class="hover:text-[#00E5FF] transition">Track Order</a>
-        <a href="contactus.html" class="hover:text-[#00E5FF] transition">Contact Us</a>
-        <a href="aboutus.html" class="hover:text-[#00E5FF] transition">About Us</a>
-        <a href="signin.html" class="hover:text-[#00E5FF] transition">Sign In</a>
-        <a href="createaccount.html" class="hover:text-[#00E5FF] transition">Create Account</a>
+  <!-- Sidebar -->
+  <div class="fixed top-0 left-0 h-full w-64 sidebar gradient-glow z-20 hidden md:block">
+    <div class="p-4 sm:p-6">
+      <h1 class="text-2xl font-bold text-white leading-relaxed">Gaming Odyssey</h1>
+      <nav class="mt-8 space-y-3">
+        <a href="index.html" data-link="index.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Home</span>
+        </a>
+        <a href="store.html" data-link="store.html" class="flex items-center space-x-2 text-[#3B82F6] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Store</span>
+        </a>
+        <a href="tournaments.html" data-link="tournaments.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Tournaments</span>
+        </a>
+        <a href="#" data-link="trackorder.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Track Order</span>
+        </a>
+        <a href="contactus.html" data-link="contactus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Contact Us</span>
+        </a>
+        <a href="aboutus.html" data-link="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>About Us</span>
+        </a>
+        <a href="signin.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Sign In</span>
+        </a>
+        <a href="createaccount.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Create Account</span>
+        </a>
+        <div id="user-display" class="hidden flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>User</span>
+        </div>
       </nav>
     </div>
-  </header>
+  </div>
+
+  <!-- Mobile Hamburger Menu -->
+  <div class="md:hidden fixed top-0 left-0 w-full bg-[#1E293B] z-30 p-4 flex justify-between items-center gradient-glow">
+    <span class="text-[#F1F5F9] font-semibold text-xl">Gaming Odyssey</span>
+    <button id="hamburger" class="text-[#3B82F6]">
+      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+  </div>
+  <div id="mobile-menu" class="hidden md:hidden fixed top-0 left-0 w-full h-full bg-[#1E293B] z-20 p-4 mobile-menu">
+    <button id="close-menu" class="absolute top-4 right-4 text-[#3B82F6] gradient-glow rounded-full p-2">
+      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+    <nav class="space-y-3 mt-12">
+      <a href="index.html" data-link="index.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <span>Home</span>
+      </a>
+      <a href="store.html" data-link="store.html" class="flex items-center space-x-2 text-[#3B82F6] font-semibold nav-link">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <span>Store</span>
+      </a>
+      <a href="tournaments.html" data-link="tournaments.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <span>Tournaments</span>
+      </a>
+      <a href="#" data-link="trackorder.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <span>Track Order</span>
+      </a>
+      <a href="contactus.html" data-link="contactus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <span>Contact Us</span>
+      </a>
+      <a href="aboutus.html" data-link="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <span>About Us</span>
+      </a>
+      <a href="signin.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <span>Sign In</span>
+      </a>
+      <a href="createaccount.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <span>Create Account</span>
+      </a>
+      <div id="mobile-user-display" class="hidden flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <span>User</span>
+      </div>
+    </nav>
+  </div>
 
   <!-- Main Content -->
-  <section class="content-bg py-16 px-6">
-    <div class="max-w-4xl mx-auto bg-[#0f0f1a] p-8 rounded-lg neon-border fade-in">
-      <h1 class="text-4xl font-bold text-white font-orbitron text-center mb-8">Your Cart 🛒</h1>
-      <p class="text-lg text-[#E0E0E0] mb-4">Currency: <span id="currency-display">INR (₹)</span></p>
-      <div id="cart-items" class="space-y-4 mb-6"></div>
-      <div class="border-t border-[#00E5FF] pt-4">
-        <p class="text-2xl font-bold text-white font-orbitron">Total: <span id="cart-total">₹0.00</span></p>
+  <div class="md:ml-64">
+    <section class="content-bg py-16 px-6">
+      <div class="max-w-4xl mx-auto bg-[#1E293B] p-8 rounded-lg gradient-glow fade-in">
+        <h1 class="text-4xl font-bold text-white text-center mb-8">Your Cart 🛒</h1>
+        <p class="text-lg text-[#F1F5F9] mb-4">Currency: USD ($)</p>
+        <div id="cart-items" class="space-y-4 mb-6"></div>
+        <div class="border-t border-[#3B82F6] pt-4">
+          <p class="text-2xl font-bold text-white">Total: <span id="cart-total">$0.00</span></p>
+        </div>
+        <div class="flex justify-between mt-6">
+          <button id="clear-cart" class="submit-btn">Clear Cart</button>
+          <button id="checkout" class="submit-btn">Checkout</button>
+        </div>
+        <a href="store.html" class="block mt-4 text-center text-[#3B82F6] hover:text-[#D946EF] nav-link">Continue Shopping</a>
       </div>
-      <div class="flex justify-between mt-6">
-        <button id="clear-cart" class="bg-[#D500F9] text-white font-bold py-2 px-6 rounded neon-glow">Clear Cart</button>
-        <button id="checkout" class="bg-[#00E5FF] text-[#0f0f1a] font-bold py-2 px-6 rounded neon-glow">Checkout</button>
-      </div>
-      <a href="store.html" class="block mt-4 text-center text-[#00E5FF] hover:text-[#D500F9]">Continue Shopping</a>
-    </div>
-  </section>
+    </section>
 
-  <!-- Footer -->
-  <footer class="bg-[#0f0f1a] py-12 px-6">
-    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-      <div>
-        <h3 class="text-xl font-bold text-white font-orbitron mb-4">Contact</h3>
-        <p class="text-[#E0E0E0]">📧 <a href="/cdn-cgi/l/email-protection#2e4d4b4e4e514c4a6e49434f474049414a575d5d4b57004d4143"><span class="__cf_email__" data-cfemail="c2a1a7a2a2bda0a682a5afa3abaea7afa4b9b3b3a5b9eca1adaf">[businessgamingodyssey@gmail.com]</span></a></p>
-        <p class="text-[#E0E0E0]">📞 6290994382</p>
-      </div>
-      <div>
-        <h3 class="text-xl font-bold text-white font-orbitron mb-4">Useful Links</h3>
-        <ul class="space-y-2">
-          <li><a href="index.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Home</a></li>
-          <li><a href="store.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Store</a></li>
-          <li><a href="tournaments.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Tournaments</a></li>
-          <li><a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Track Order</a></li>
-          <li><a href="contactus.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">Contact Us</a></li>
-          <li><a href="aboutus.html" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">About Us</a></li>
-        </ul>
-      </div>
-      <div>
-        <h3 class="text-xl font-bold text-white font-orbitron mb-4">Follow Us</h3>
-        <div class="flex space-x-4">
-          <a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">
-            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
-          </a>
-          <a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">
-            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v-2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
-          </a>
-          <a href="#" class="text-[#E0E0E0] hover:text-[#00E5FF] transition">
-            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.43c.16-.03.31-.09.43-.16v-6.6H6.9a.75.75 0 01-.75-.75v-2.25a.75.75 0 01.75-.75h2.47V8.47c0-2.47 1.5-3.81 3.69-3.81h2.34a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-1.41c-.78 0-1.47.37-1.47 1.47v2.25h2.88a.75.75 0 01.75.75v2.25a.75.75 0 01-.75.75h-2.88v6.6c.12.07.27.13.43.16A10 10 0 0012 2z"/></svg>
-          </a>
+    <!-- Footer -->
+    <footer class="bg-[#1E293B] py-10 px-4 sm:px-6 md:px-8">
+      <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div>
+          <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Contact</h3>
+          <p class="text-[#F1F5F9] mb-2 text-sm leading-relaxed">📧 <a href="mailto:support@gamingodyssey.in" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link">support@gamingodyssey.in</a></p>
+          <p class="text-[#F1F5F9] text-sm leading-relaxed">📞 6290994382</p>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Useful Links</h3>
+          <ul class="space-y-2">
+            <li><a href="index.html" data-link="index.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Home</a></li>
+            <li><a href="store.html" data-link="store.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Store</a></li>
+            <li><a href="tournaments.html" data-link="tournaments.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Tournaments</a></li>
+            <li><a href="#" data-link="trackorder.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Track Order</a></li>
+            <li><a href="contactus.html" data-link="contactus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Contact Us</a></li>
+            <li><a href="aboutus.html" data-link="aboutus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">About Us</a></li>
+            <li><a href="terms.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Terms & Conditions</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Follow Us</h3>
+          <div class="flex space-x-3">
+            <a href="https://www.instagram.com/noticedveil" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full">
+              <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" class="w-5 h-5">
+            </a>
+            <a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full">
+              <img src="https://cdn-icons-png.flaticon.com/512/3938/3938026.png" alt="YouTube" class="w-5 h-5">
+            </a>
+            <a href="https://www.facebook.com" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full">
+              <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" class="w-5 h-5">
+            </a>
+          </div>
         </div>
       </div>
-    </div>
-    <p class="text-center text-[#E0E0E0] mt-8">© 2025 Gaming Odyssey. All rights reserved.</p>
-  </footer>
+      <p class="text-center text-[#F1F5F9] mt-6 text-sm leading-relaxed">© 2025 Gaming Odyssey. All rights reserved.</p>
+    </footer>
+  </div>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
   <script>
-    // Currency Configuration (same as store.html)
-    const conversionRates = {
-      USD: 1,
-      INR: 83,
-      EUR: 0.92,
-      GBP: 0.79,
-      JPY: 149
-    };
-    const currencySymbols = {
-      USD: '$',
-      INR: '₹',
-      EUR: '€',
-      GBP: '£',
-      JPY: '¥'
-    };
-    // Retrieve selected currency from localStorage or default to INR
-    let selectedCurrency = localStorage.getItem('selectedCurrency') || 'INR';
-    const currencyDisplay = document.getElementById('currency-display');
-    currencyDisplay.textContent = `${selectedCurrency} (${currencySymbols[selectedCurrency]})`;
+    // Currency Configuration
+    const conversionRates = { USD: 1 };
+    const currencySymbols = { USD: '$' };
+    const selectedCurrency = 'USD';
 
     // Load Cart Items
     const cartItemsContainer = document.getElementById('cart-items');
@@ -160,28 +290,28 @@
       let total = 0;
 
       if (cart.length === 0) {
-        cartItemsContainer.innerHTML = '<p class="text-[#E0E0E0] text-center">Your cart is empty.</p>';
-        cartTotalElement.textContent = `${currencySymbols[selectedCurrency]}0.00`;
+        cartItemsContainer.innerHTML = '<p class="text-[#F1F5F9] text-center">Your cart is empty.</p>';
+        cartTotalElement.textContent = '$0.00';
       } else {
         cart.forEach((item, index) => {
-          const itemPriceConverted = (item.price * conversionRates[selectedCurrency]).toFixed(2);
-          const itemTotal = (item.price * item.quantity * conversionRates[selectedCurrency]).toFixed(2);
+          const itemPriceConverted = item.price.toFixed(2);
+          const itemTotal = (item.price * item.quantity).toFixed(2);
           total += parseFloat(itemTotal);
           const itemElement = document.createElement('div');
-          itemElement.className = 'flex justify-between items-center border-b border-[#00E5FF] pb-4';
+          itemElement.className = 'flex justify-between items-center border-b border-[#3B82F6] pb-4';
           itemElement.innerHTML = `
             <div>
               <h3 class="text-lg font-bold text-white">${item.name}</h3>
-              <p class="text-[#E0E0E0]">${currencySymbols[selectedCurrency]}${itemPriceConverted} x ${item.quantity}</p>
+              <p class="text-[#F1F5F9]">$${itemPriceConverted} x ${item.quantity}</p>
             </div>
             <div class="flex items-center space-x-4">
-              <p class="text-[#E0E0E0] font-bold">${currencySymbols[selectedCurrency]}${itemTotal}</p>
-              <button class="remove-item text-[#D500F9] hover:text-[#00E5FF]" data-index="${index}">Remove</button>
+              <p class="text-[#F1F5F9] font-bold">$${itemTotal}</p>
+              <button class="remove-item text-[#D946EF] hover:text-[#3B82F6]" data-index="${index}">Remove</button>
             </div>
           `;
           cartItemsContainer.appendChild(itemElement);
         });
-        cartTotalElement.textContent = `${currencySymbols[selectedCurrency]}${total.toFixed(2)}`;
+        cartTotalElement.textContent = `$${total.toFixed(2)}`;
       }
     }
 
@@ -209,17 +339,66 @@
         alert('Your cart is empty. Add items to proceed to checkout.');
         return;
       }
-      const total = cart.reduce((sum, item) => sum + item.price * item.quantity * conversionRates[selectedCurrency], 0).toFixed(2);
+      const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2);
       const orderId = 'ORDER' + Math.floor(Math.random() * 10000);
       const order = {
         orderId: orderId,
         total: parseFloat(total),
-        currency: selectedCurrency,
+        currency: 'USD',
         items: cart
       };
       localStorage.setItem('order', JSON.stringify(order));
       window.location.href = 'address.html';
     });
+
+    // Hamburger Menu Toggle
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const closeMenu = document.getElementById('close-menu');
+    hamburger.addEventListener('click', () => {
+      mobileMenu.classList.remove('hidden');
+      mobileMenu.classList.add('active');
+    });
+    closeMenu.addEventListener('click', () => {
+      mobileMenu.classList.add('hidden');
+      mobileMenu.classList.remove('active');
+    });
+
+    // Authentication Logic
+    function isAuthenticated() {
+      return localStorage.getItem('isAuthenticated') === 'true';
+    }
+
+    function handleProtectedLink(event) {
+      event.preventDefault();
+      const link = event.currentTarget.getAttribute('data-link') || event.currentTarget.getAttribute('href');
+      if (link === 'signin.html' || link === 'createaccount.html' || link.startsWith('http')) {
+        window.location.href = link;
+        return;
+      }
+      if (isAuthenticated()) {
+        window.location.href = link;
+      } else {
+        window.location.href = 'createaccount.html';
+      }
+    }
+
+    document.querySelectorAll('.nav-link, .submit-btn').forEach(link => {
+      link.addEventListener('click', handleProtectedLink);
+    });
+
+    // Display Username in Sidebar and Mobile Menu
+    const userDisplay = document.getElementById('user-display');
+    const mobileUserDisplay = document.getElementById('mobile-user-display');
+    if (isAuthenticated()) {
+      const username = localStorage.getItem('currentUser');
+      if (username) {
+        userDisplay.classList.remove('hidden');
+        mobileUserDisplay.classList.remove('hidden');
+        userDisplay.querySelector('span').textContent = username;
+        mobileUserDisplay.querySelector('span').textContent = username;
+      }
+    }
 
     // Fade-in Animation on Scroll
     const fadeIns = document.querySelectorAll('.fade-in');
