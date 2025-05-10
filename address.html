@@ -428,7 +428,7 @@
                 <option value="Mauritania">🇲🇷 Mauritania</option>
                 <option value="Mauritius">🇲🇺 Mauritius</option>
                 <option value="Mexico">🇲🇽 Mexico</option>
-                <option value="Micronesia">🇫🇲 Micronesia</option>
+                <option value="Micronesia">🇫🇴 Micronesia</option>
                 <option value="Moldova">🇲🇩 Moldova</option>
                 <option value="Monaco">🇲🇨 Monaco</option>
                 <option value="Mongolia">🇲🇳 Mongolia</option>
@@ -490,7 +490,7 @@
                 <option value="Syria">🇸🇾 Syria</option>
                 <option value="Taiwan">🇹🇼 Taiwan</option>
                 <option value="Tajikistan">🇹🇯 Tajikistan</option>
-                <option value="Tanzania">🇹🇿 Tanzania</option>
+                <option value="Tanzania">🇻🇿 Tanzania</option>
                 <option value="Thailand">🇹🇭 Thailand</option>
                 <option value="Timor-Leste">🇹🇱 Timor-Leste</option>
                 <option value="Togo">🇹🇬 Togo</option>
@@ -562,7 +562,7 @@
                 <option value="+57">🇨🇴 +57 (Colombia)</option>
                 <option value="+269">🇰🇲 +269 (Comoros)</option>
                 <option value="+242">🇨🇬 +242 (Congo, Republic of the)</option>
-                <option value="+243">🇨🇩 +243 (Congo, Democratic Republic of the)</option>
+                <option value="+243">🇨🇍 +243 (Congo, Democratic Republic of the)</option>
                 <option value="+506">🇨🇷 +506 (Costa Rica)</option>
                 <option value="+385">🇭🇷 +385 (Croatia)</option>
                 <option value="+53">🇨🇺 +53 (Cuba)</option>
@@ -616,7 +616,7 @@
                 <option value="+371">🇱🇻 +371 (Latvia)</option>
                 <option value="+961">🇱🇧 +961 (Lebanon)</option>
                 <option value="+266">🇱🇸 +266 (Lesotho)</option>
-                <option value="+231">🇱🇷 +231 (Liberia)</option>
+                <option value="+231">🇬🇾 +231 (Liberia)</option>
                 <option value="+218">🇬🇾 +218 (Libya)</option>
                 <option value="+423">🇱🇮 +423 (Liechtenstein)</option>
                 <option value="+370">🇱🇹 +370 (Lithuania)</option>
@@ -767,7 +767,7 @@
   </div>
 
   <!-- EmailJS SDK -->
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <script>
     // Initialize EmailJS (not used in this page but included for consistency)
     emailjs.init('__S5AyIeoL526kGwQ');
@@ -842,7 +842,25 @@
         country: document.getElementById('country').value,
         phone: `${document.getElementById('country-code').value} ${document.getElementById('phone').value}`
       };
+      
+      // Store shipping address
       localStorage.setItem('shippingAddress', JSON.stringify(address));
+
+      // Generate order details
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      const orderId = 'ORD-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+      const order = {
+        orderId: orderId,
+        items: cart,
+        total: total,
+        timestamp: new Date().toISOString()
+      };
+
+      // Store order details
+      localStorage.setItem('order', JSON.stringify(order));
+
+      // Redirect to payment gateway
       window.location.href = 'paymentgateway.html';
     });
 
@@ -862,8 +880,10 @@
       // Require authentication for other pages
       if (isAuthenticated()) {
         window.location.href = link;
+        return;
       } else {
         window.location.href = 'createaccount.html';
+        return;
       }
     }
 
@@ -908,5 +928,5 @@
     }, { threshold: 0.1 });
     fadeIns.forEach(element => observer.observe(element));
   </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93db20297e76675b',t:'MTc0Njg5NzgxOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
