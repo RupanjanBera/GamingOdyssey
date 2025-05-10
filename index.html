@@ -701,7 +701,7 @@ data-link="tournaments.html" class="submit-btn block text-center">Register</a>
     const prevArrow = document.querySelector('.prev');
     const nextArrow = document.querySelector('.next');
     let currentSlide = 0;
-    let slideInterval = setInterval(nextSlide, 4000);
+    let slideInterval = setInterval(nextSlide, 6000);
     let touchStartX = 0;
     let touchEndX = 0;
 
@@ -748,7 +748,7 @@ data-link="tournaments.html" class="submit-btn block text-center">Register</a>
 
     function resetInterval() {
       clearInterval(slideInterval);
-      slideInterval = setInterval(nextSlide, 4000);
+      slideInterval = setInterval(nextSlide, 6000);
     }
 
     // Swipe Gestures for Slideshow
@@ -779,7 +779,7 @@ data-link="tournaments.html" class="submit-btn block text-center">Register</a>
     });
 
     document.querySelector('.slideshow-container').addEventListener('mouseleave', () => {
-      slideInterval = setInterval(nextSlide, 4000);
+      slideInterval = setInterval(nextSlide, 6000);
     });
 
     document.querySelector('.slideshow-container').addEventListener('touchstart', () => {
@@ -787,7 +787,7 @@ data-link="tournaments.html" class="submit-btn block text-center">Register</a>
     });
 
     document.querySelector('.slideshow-container').addEventListener('touchend', () => {
-      slideInterval = setInterval(nextSlide, 4000);
+      slideInterval = setInterval(nextSlide, 6000);
     });
 
     // Initialize slideshow
