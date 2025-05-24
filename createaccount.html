@@ -3,111 +3,106 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gaming Odyssey - Create Account</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <meta name="description" content="Create an account with Gaming Odyssey to join tournaments and shop premium gaming gear.">
+  <title>Create Account - Gaming Odyssey</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
-      font-family: 'Poppins', sans-serif;
-      background-color: #0F172A;
-      color: #F1F5F9;
+      font-family: 'Inter', sans-serif;
+      background-color: #0A1324;
+      color: #E5E7EB;
       scroll-behavior: smooth;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
+      margin: 0;
     }
     .gradient-glow {
-      box-shadow: 0 0 6px rgba(59, 130, 246, 0.2);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     .gradient-glow:hover {
-      box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
-      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
+      transform: translateY(-4px);
     }
     .sidebar {
-      background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
-      box-shadow: 2px 0 6px rgba(59, 130, 246, 0.1);
+      background: linear-gradient(180deg, #1A2338 0%, #0A1324 100%);
+      box-shadow: 4px 0 12px rgba(0, 0, 0, 0.3);
     }
-    .form-bg {
-      background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(217, 70, 239, 0.15), #0F172A);
+    .hero-bg {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(217, 70, 239, 0.25), #0A1324);
       position: relative;
       overflow: hidden;
-      min-height: 80vh;
     }
-    .form-bg::before {
+    .hero-bg::before {
       content: '';
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background: radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.2), transparent 70%);
-      animation: glow 20s ease-in-out infinite;
-      opacity: 0.5;
+      background: radial-gradient(circle at 30% 30%, rgba(59, 130, 246, 0.4), transparent 80%);
+      animation: glow 12s ease-in-out infinite;
     }
     @keyframes glow {
-      0%, 100% { opacity: 0.5; }
-      50% { opacity: 0.7; }
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.5; }
     }
     .fade-in {
       opacity: 0;
-      transform: translateY(15px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
+      transform: translateY(25px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
     }
     .fade-in.visible {
       opacity: 1;
       transform: translateY(0);
     }
-    input {
-      background: #1E293B;
-      color: #F1F5F9;
+    input, textarea {
+      background: #1A2338;
+      color: #E5E7EB;
       border: 1px solid #3B82F6;
-      border-radius: 0.5rem;
-      padding: 0.75rem;
+      border-radius: 0.75rem;
+      padding: 0.875rem;
       width: 100%;
-      transition: border-color 0.2s ease;
-      font-family: 'Poppins', sans-serif;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
       font-size: 0.9375rem;
     }
-    input:focus {
+    input:focus, textarea:focus {
       outline: none;
       border-color: #D946EF;
-      box-shadow: 0 0 6px rgba(217, 70, 239, 0.2);
+      box-shadow: 0 0 10px rgba(217, 70, 239, 0.4);
     }
     .submit-btn {
       background: linear-gradient(90deg, #3B82F6, #D946EF);
-      color: #0F172A;
-      font-family: 'Poppins', sans-serif;
+      color: #0A1324;
       font-weight: 600;
-      padding: 1rem 1.5rem;
-      border-radius: 0.5rem;
-      transition: transform 0.2s ease;
-      touch-action: manipulation;
+      padding: 0.875rem 2rem;
+      border-radius: 0.75rem;
+      transition: transform 0.3s ease, background 0.3s ease;
       font-size: 1rem;
     }
     .submit-btn:hover {
-      transform: translateY(-2px);
+      transform: translateY(-3px);
+      background: linear-gradient(90deg, #D946EF, #3B82F6);
     }
     .error {
       color: #F87171;
       font-size: 0.8125rem;
-      margin-top: 0.25rem;
-      font-family: 'Poppins', sans-serif;
+      margin-top: 0.5rem;
     }
     .success {
       color: #3B82F6;
       font-size: 0.8125rem;
-      margin-top: 0.25rem;
-      font-family: 'Poppins', sans-serif;
+      margin-top: 0.5rem;
     }
     .nav-link, #mobile-menu a {
       position: relative;
       display: inline-flex;
       align-items: center;
-      transition: color 0.2s ease;
-      font-family: 'Poppins', sans-serif;
-      font-weight: 600;
-      font-size: 1.0625rem;
-      padding: 0.5rem 0;
+      transition: color 0.3s ease;
+      font-weight: 500;
+      font-size: 1rem;
+      padding: 0.875rem 0;
     }
     .nav-link::after, #mobile-menu a::after {
       content: '';
@@ -117,7 +112,7 @@
       bottom: 0;
       left: 0;
       background: linear-gradient(to right, #3B82F6, #D946EF);
-      transition: width 0.2s ease;
+      transition: width 0.3s ease;
     }
     .nav-link:hover::after, #mobile-menu a:hover::after {
       width: 100%;
@@ -126,289 +121,278 @@
       color: #3B82F6;
     }
     .mobile-menu {
-      background: linear-gradient(180deg, #1E293B, #0F172A);
+      background: #1A2338;
       opacity: 0;
       transform: translateX(-100%);
-      transition: opacity 0.3s ease, transform 0.3s ease;
+      transition: opacity 0.4s ease, transform 0.4s ease;
     }
     .mobile-menu.active {
       opacity: 1;
       transform: translateX(0);
     }
     .card {
-      background: linear-gradient(145deg, #1E293B, #0F172A);
-      border-radius: 0.75rem;
-      padding: 1.25rem;
-      transition: transform 0.2s ease;
-    }
-    .card:hover {
-      transform: translateY(-4px);
+      background: #1A2338;
+      border-radius: 1.25rem;
+      padding: 1.75rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     @media (max-width: 640px) {
       .submit-btn {
         width: 100%;
-        padding: 0.875rem;
+        padding: 0.75rem;
         font-size: 0.9375rem;
       }
+      .hero-bg h1 {
+        font-size: 2.25rem;
+      }
       .nav-link, #mobile-menu a {
-        font-size: 1rem;
-      }
-      .card {
-        padding: 1rem;
-      }
-      .form-bg {
-        padding: 1rem;
+        font-size: 0.9375rem;
       }
     }
-    .terms-label {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .terms-label input[type="checkbox"] {
-      width: 1rem;
-      height: 1rem;
-      accent-color: #3B82F6;
-    }
-    .terms-label input[type="checkbox"]:focus {
-      outline: none;
-      box-shadow: 0 0 6px rgba(217, 70, 239, 0.2);
+    @media (min-width: 640px) and (max-width: 768px) {
+      .hero-bg h1 {
+        font-size: 3rem;
+      }
     }
   </style>
 </head>
 <body>
   <!-- Sidebar -->
-  <div class="fixed top-0 left-0 h-full w-64 sidebar gradient-glow z-20 hidden md:block">
-    <div class="p-4 sm:p-6">
-      <h1 class="text-xl sm:text-2xl font-bold text-white leading-relaxed">Gaming Odyssey</h1>
-      <nav class="mt-8 space-y-3">
-        <a href="#" data-link="index.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+  <div class="fixed top-0 left-0 h-full w-72 sidebar gradient-glow z-20 hidden lg:block">
+    <div class="p-8">
+      <h1 class="text-2xl font-bold text-white tracking-tight">Gaming Odyssey</h1>
+      <nav class="mt-12 space-y-5">
+        <a href="#" data-link="index.html" class="flex items-center space-x-4 text-[#E5E7EB] font-semibold nav-link" aria-label="Home">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>
           <span>Home</span>
         </a>
-        <a href="#" data-link="store.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <a href="#" data-link="store.html" class="flex items-center space-x-4 text-[#E5E7EB] font-semibold nav-link" aria-label="Store">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/></svg>
           <span>Store</span>
         </a>
-        <a href="#" data-link="tournaments.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <a href="#" data-link="tournaments.html" class="flex items-center space-x-4 text-[#E5E7EB] font-semibold nav-link" aria-label="Tournaments">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
           <span>Tournaments</span>
         </a>
-        <a href="#" data-link="trackorder.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <a href="#" data-link="trackorder.html" class="flex items-center space-x-4 text-[#E5E7EB] font-semibold nav-link" aria-label="Track Order">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"/></svg>
           <span>Track Order</span>
         </a>
-        <a href="#" data-link="contactus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <a href="#" data-link="contactus.html" class="flex items-center space-x-4 text-[#E5E7EB] font-semibold nav-link" aria-label="Contact Us">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884zM18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/></svg>
           <span>Contact Us</span>
         </a>
-        <a href="#" data-link="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <a href="#" data-link="aboutus.html" class="flex items-center space-x-4 text-[#E5E7EB] font-semibold nav-link" aria-label="About Us">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
           <span>About Us</span>
         </a>
-        <a href="signin.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <a href="signin.html" class="flex items-center space-x-4 text-[#3B82F6] font-semibold nav-link" aria-label="Sign In">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3 3a1 1 0 011 1v12a1 1 0 11-2 0V4a1 1 0 011-1zm7.707 3.293a1 1 0 010 1.414L9.414 9H17a1 1 0 110 2H9.414l1.293 1.293a1 1 0 01-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
           <span>Sign In</span>
         </a>
-        <a href="createaccount.html" class="flex items-center space-x-2 text-[#3B82F6] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <a href="createaccount.html" class="flex items-center space-x-4 text-[#E5E7EB] font-semibold nav-link" aria-label="Create Account">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z"/></svg>
           <span>Create Account</span>
         </a>
       </nav>
     </div>
   </div>
 
-  <!-- Mobile Hamburger Menu -->
-  <div class="md:hidden fixed top-0 left-0 w-full bg-[#1E293B] z-30 p-4 flex justify-between items-center gradient-glow">
-    <h1 class="text-lg font-bold text-white leading-relaxed">Gaming Odyssey</h1>
-    <button id="hamburger" class="text-[#3B82F6]">
-      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+  <!-- Mobile Header -->
+  <header class="lg:hidden fixed top-0 left-0 w-full bg-[#1A2338] z-30 p-5 flex justify-between items-center gradient-glow">
+    <h1 class="text-xl font-bold text-white tracking-tight">Gaming Odyssey</h1>
+    <button id="hamburger" class="text-[#3B82F6]" aria-label="Open Menu">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
     </button>
-  </div>
-  <div id="mobile-menu" class="hidden md:hidden fixed top-0 left-0 w-full h-full bg-[#1E293B] z-20 p-4 mobile-menu">
-    <button id="close-menu" class="absolute top-4 right-4 text-[#3B82F6] gradient-glow rounded-full p-2">
-      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+  </header>
+  <nav id="mobile-menu" class="hidden lg:hidden fixed top-0 left-0 w-4/5 h-full bg-[#1A2338] z-20 p-8 mobile-menu">
+    <button id="close-menu" class="absolute top-5 right-5 text-[#3B82F6] gradient-glow rounded-full p-2" aria-label="Close Menu">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
     </button>
-    <nav class="space-y-3 mt-12">
-      <a href="#" data-link="index.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+    <div class="mt-16 space-y-5">
+      <a href="#" data-link="index.html" class="flex items-center space-x-4 text-[#E5E7EB] font-semibold nav-link" aria-label="Home">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>
         <span>Home</span>
       </a>
-      <a href="#" data-link="store.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+      <a href="#" data-link="store.html" class="flex items-center space-x-4 text-[#E5E7EB] font-semibold nav-link" aria-label="Store">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/></svg>
         <span>Store</span>
       </a>
-      <a href="#" data-link="tournaments.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+      <a href="#" data-link="tournaments.html" class="flex items-center space-x-4 text-[#E5E7EB] font-semibold nav-link" aria-label="Tournaments">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
         <span>Tournaments</span>
       </a>
-      <a href="#" data-link="trackorder.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+      <a href="#" data-link="trackorder.html" class="flex items-center space-x-4 text-[#E5E7EB] font-semibold nav-link" aria-label="Track Order">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"/></svg>
         <span>Track Order</span>
       </a>
-      <a href="#" data-link="contactus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+      <a href="#" data-link="contactus.html" class="flex items-center space-x-4 text-[#E5E7EB] font-semibold nav-link" aria-label="Contact Us">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884zM18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/></svg>
         <span>Contact Us</span>
       </a>
-      <a href="#" data-link="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+      <a href="#" data-link="aboutus.html" class="flex items-center space-x-4 text-[#E5E7EB] font-semibold nav-link" aria-label="About Us">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
         <span>About Us</span>
       </a>
-      <a href="signin.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+      <a href="signin.html" class="flex items-center space-x-4 text-[#3B82F6] font-semibold nav-link" aria-label="Sign In">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3 3a1 1 0 011 1v12a1 1 0 11-2 0V4a1 1 0 011-1zm7.707 3.293a1 1 0 010 1.414L9.414 9H17a1 1 0 110 2H9.414l1.293 1.293a1 1 0 01-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
         <span>Sign In</span>
       </a>
-      <a href="createaccount.html" class="flex items-center space-x-2 text-[#3B82F6] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+      <a href="createaccount.html" class="flex items-center space-x-4 text-[#E5E7EB] font-semibold nav-link" aria-label="Create Account">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z"/></svg>
         <span>Create Account</span>
       </a>
-    </nav>
-  </div>
+    </div>
+  </nav>
 
   <!-- Main Content -->
-  <div class="md:ml-64">
+  <main class="lg:ml-72">
     <!-- Create Account Section -->
-    <section class="form-bg min-h-[80vh] flex items-center justify-center p-4 sm:p-6 md:p-8">
-      <div class="max-w-lg mx-auto card gradient-glow fade-in w-full">
+    <section class="hero-bg min-h-screen flex items-center justify-center px-6 py-20">
+      <div class="max-w-md w-full mx-auto card gradient-glow fade-in">
+        <h2 class="text-3xl font-bold text-white text-center mb-8 tracking-tight">Create Account</h2>
         <form id="create-account-form" class="p-6">
-          <h2 class="text-3xl font-bold text-white text-center mb-6">Create Account</h2>
-          <div class="mb-5">
-            <label for="username" class="block text-[#F1F5F9] mb-2 font-semibold text-sm">Username</label>
-            <input type="text" id="username" name="username" required placeholder="Your username" />
+          <div class="mb-6">
+            <label for="username" class="block text-[#E5E7EB] mb-2 font-semibold text-sm">Username</label>
+            <input type="text" id="username" name="username" required placeholder="Choose a username" aria-required="true" />
             <p id="username-error" class="error hidden">Please enter a unique username</p>
           </div>
-          <div class="mb-5">
-            <label for="email" class="block text-[#F1F5F9] mb-2 font-semibold text-sm">Email</label>
-            <input type="email" id="email" name="email" required placeholder="Your email" />
+          <div class="mb-6">
+            <label for="email" class="block text-[#E5E7EB] mb-2 font-semibold text-sm">Email</label>
+            <input type="email" id="email" name="email" required placeholder="Your email" aria-required="true" />
             <p id="email-error" class="error hidden">Please enter a valid email</p>
           </div>
-          <div class="mb-5">
-            <label for="password" class="block text-[#F1F5F9] mb-2 font-semibold text-sm">Password</label>
-            <input type="password" id="password" name="password" required placeholder="Your password" />
+          <div class="mb-6">
+            <label for="password" class="block text-[#E5E7EB] mb-2 font-semibold text-sm">Password</label>
+            <input type="password" id="password" name="password" required placeholder="Create a password" aria-required="true" />
             <p id="password-error" class="error hidden">Password must be at least 6 characters</p>
           </div>
-          <div class="mb-5">
-            <label for="terms" class="terms-label text-[#F1F5F9] font-semibold text-sm">
-              <input type="checkbox" id="terms" name="terms" required />
-              <span>I agree to the <a href="terms.html" class="text-[#3B82F6] hover:text-[#D946EF] transition">Terms and Conditions</a></span>
+          <div class="mb-6">
+            <label class="flex items-center space-x-3">
+              <input type="checkbox" id="terms" name="terms" required aria-required="true" />
+              <span class="text-[#E5E7EB] text-sm">I agree to the <a href="terms.html" class="text-[#3B82F6] hover:text-[#D946EF] transition">Terms and Conditions</a></span>
             </label>
             <p id="terms-error" class="error hidden">You must agree to the terms</p>
           </div>
           <div class="text-center">
-            <button type="submit" class="submit-btn w-full">Create Account</button>
-            <p id="form-status" class="mt-3 text-sm"></p>
+            <button type="submit" class="submit-btn w-full" aria-label="Create Account">Create Account</button>
+            <p id="form-status" class="mt-5 text-base"></p>
           </div>
-          <p class="text-center text-[#F1F5F9] mt-4 text-sm">Already have an account? <a href="signin.html" class="text-[#3B82F6] hover:text-[#D946EF] transition">Sign In</a></p>
         </form>
+        <p class="text-center text-[#E5E7EB] text-sm mt-4">Already have an account? <a href="signin.html" class="text-[#3B82F6] hover:text-[#D946EF] transition">Sign In</a></p>
       </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-[#1E293B] py-10 px-4 sm:px-6 md:px-8">
-      <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    <footer class="bg-[#1A2338] py-16 px-6 md:px-10">
+      <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
         <div>
-          <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Contact</h3>
-          <p class="text-[#F1F5F9] mb-2 text-sm leading-relaxed">📧 <a href="/cdn-cgi/l/email-protection#f087939696998482b097919d999e979f94898383958dd89295" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link"><span class="__cf_email__" data-cfemail="671502050e0b160271616d696e676f645955554356494e">[support@gamingodyssey.in]</span></a></p>
-          <p class="text-[#F1F5F9] text-sm leading-relaxed">📞 6290994382</p>
+          <h3 class="text-xl font-bold text-white mb-5 tracking-tight">Contact</h3>
+          <p class="text-[#E5E7EB] mb-3 text-base"><a href="mailto:support@gamingodyssey.in" class="hover:text-[#3B82F6] transition nav-link">support@gamingodyssey.in</a></p>
+          <p class="text-[#E5E7EB] text-base">+1 (629) 099-4382</p>
         </div>
         <div>
-          <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Useful Links</h3>
-          <ul class="space-y-2">
-            <li><a href="#" data-link="index.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Home</a></li>
-            <li><a href="#" data-link="store.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Store</a></li>
-            <li><a href="#" data-link="tournaments.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Tournaments</a></li>
-            <li><a href="#" data-link="trackorder.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Track Order</a></li>
-            <li><a href="#" data-link="contactus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Contact Us</a></li>
-            <li><a href="#" data-link="aboutus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">About Us</a></li>
-            <li><a href="terms.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Terms & Conditions</a></li>
+          <h3 class="text-xl font-bold text-white mb-5 tracking-tight">Useful Links</h3>
+          <ul class="space-y-3">
+            <li><a href="#" data-link="index.html" class="text-[#E5E7EB] hover:text-[#3B82F6] transition nav-link text-base" aria-label="Home">Home</a></li>
+            <li><a href="#" data-link="store.html" class="text-[#E5E7EB] hover:text-[#3B82F6] transition nav-link text-base" aria-label="Store">Store</a></li>
+            <li><a href="#" data-link="tournaments.html" class="text-[#E5E7EB] hover:text-[#3B82F6] transition nav-link text-base" aria-label="Tournaments">Tournaments</a></li>
+            <li><a href="#" data-link="trackorder.html" class="text-[#E5E7EB] hover:text-[#3B82F6] transition nav-link text-base" aria-label="Track Order">Track Order</a></li>
+            <li><a href="#" data-link="contactus.html" class="text-[#E5E7EB] hover:text-[#3B82F6] transition nav-link text-base" aria-label="Contact Us">Contact Us</a></li>
+            <li><a href="#" data-link="aboutus.html" class="text-[#E5E7EB] hover:text-[#3B82F6] transition nav-link text-base" aria-label="About Us">About Us</a></li>
+            <li><a href="terms.html" class="text-[#E5E7EB] hover:text-[#3B82F6] transition nav-link text-base" aria-label="Terms & Conditions">Terms & Conditions</a></li>
           </ul>
         </div>
         <div>
-          <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Follow Us</h3>
-          <div class="flex space-x-3">
-            <a href="https://www.instagram.com/noticedveil" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full">
-              <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" class="w-5 h-5">
+          <h3 class="text-xl font-bold text-white mb-5 tracking-tight">Follow Us</h3>
+          <div class="flex space-x-5">
+            <a href="https://www.instagram.com/noticedveil" target="_blank" class="text-[#E5E7EB] hover:text-[#3B82F6] transition gradient-glow p-3 rounded-full" aria-label="Instagram">
+              <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" class="w-6 h-6">
             </a>
-            <a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full">
-              <img src="https://cdn-icons-png.flaticon.com/512/3938/3938026.png" alt="YouTube" class="w-5 h-5">
+            <a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="text-[#E5E7EB] hover:text-[#3B82F6] transition gradient-glow p-3 rounded-full" aria-label="YouTube">
+              <img src="https://cdn-icons-png.flaticon.com/512/3938/3938026.png" alt="YouTube" class="w-6 h-6">
             </a>
-            <a href="https://www.facebook.com" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full">
-              <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" class="w-5 h-5">
+            <a href="https://www.facebook.com" target="_blank" class="text-[#E5E7EB] hover:text-[#3B82F6] transition gradient-glow p-3 rounded-full" aria-label="Facebook">
+              <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" class="w-6 h-6">
             </a>
           </div>
         </div>
       </div>
-      <p class="text-center text-[#F1F5F9] mt-6 text-sm leading-relaxed">© 2025 Gaming Odyssey. All rights reserved.</p>
+      <p class="text-center text-[#E5E7EB] mt-12 text-base">© 2025 Gaming Odyssey. All rights reserved.</p>
     </footer>
-  </div>
+  </main>
 
-  <!-- JavaScript for Form Handling and Navigation -->
   <script>
-    // Hamburger Menu Toggle
+    // Authentication Logic
+    const isAuthenticated = () => localStorage.getItem('isAuthenticated') === 'true';
+
+    const handleProtectedLink = (event) => {
+      event.preventDefault();
+      const link = event.currentTarget.getAttribute('data-link') || event.currentTarget.getAttribute('href');
+      if (['signin.html', 'createaccount.html', 'aboutus.html', 'terms.html'].includes(link) || link.startsWith('http')) {
+        window.location.href = link;
+        return;
+      }
+      if (link === 'tournaments.html') {
+        if (!isAuthenticated()) {
+          localStorage.setItem('redirectAfterSignIn', link);
+          window.location.href = 'createaccount.html';
+          return;
+        }
+      }
+      window.location.href = isAuthenticated() ? link : 'createaccount.html';
+    };
+
+    document.querySelectorAll('.nav-link, .submit-btn').forEach(link => link.addEventListener('click', handleProtectedLink));
+
+    // Mobile Menu Toggle
     const hamburger = document.getElementById('hamburger');
     const mobileMenu = document.getElementById('mobile-menu');
     const closeMenu = document.getElementById('close-menu');
+
     hamburger.addEventListener('click', () => {
       mobileMenu.classList.remove('hidden');
       mobileMenu.classList.add('active');
     });
+
     closeMenu.addEventListener('click', () => {
       mobileMenu.classList.add('hidden');
       mobileMenu.classList.remove('active');
     });
 
-    // Fade-in Animation on Scroll
+    // Fade-in Animation
     const fadeIns = document.querySelectorAll('.fade-in');
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.2 });
+
     fadeIns.forEach(element => observer.observe(element));
 
-    // Authentication Logic
-    function isAuthenticated() {
-      return localStorage.getItem('isAuthenticated') === 'true';
-    }
-
-    function handleProtectedLink(event) {
-      event.preventDefault();
-      const link = event.currentTarget.getAttribute('data-link') || event.currentTarget.getAttribute('href');
-      if (link === 'signin.html' || link === 'createaccount.html' || link === 'aboutus.html' || link === 'terms.html' || link.startsWith('http')) {
-        window.location.href = link;
-        return;
-      }
-      if (isAuthenticated()) {
-        window.location.href = link;
-      } else {
-        window.location.href = 'createaccount.html';
-      }
-    }
-
-    document.querySelectorAll('.nav-link, .submit-btn').forEach(link => {
-      link.addEventListener('click', handleProtectedLink);
-    });
-
     // Create Account Form Submission
-    document.getElementById('create-account-form').addEventListener('submit', function(event) {
+    document.getElementById('create-account-form').addEventListener('submit', (event) => {
       event.preventDefault();
       const username = document.getElementById('username').value.trim();
       const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value.trim();
+      const password = document.getElementById('password').value;
       const terms = document.getElementById('terms').checked;
       const status = document.getElementById('form-status');
+
       document.querySelectorAll('.error').forEach(el => el.classList.add('hidden'));
       let isValid = true;
 
       if (!username) {
+        document.getElementById('username-error').textContent = 'Please enter a username';
         document.getElementById('username-error').classList.remove('hidden');
         isValid = false;
       } else {
         const users = JSON.parse(localStorage.getItem('users') || '[]');
         if (users.some(user => user.username === username)) {
-          document.getElementById('username-error').textContent = 'Username already exists';
+          document.getElementById('username-error').textContent = 'Username already taken';
           document.getElementById('username-error').classList.remove('hidden');
           isValid = false;
         }
@@ -435,18 +419,14 @@
         return;
       }
 
-      // Store user data
       const users = JSON.parse(localStorage.getItem('users') || '[]');
       users.push({ username, email, password });
       localStorage.setItem('users', JSON.stringify(users));
-
-      // Show success message and redirect
-      status.textContent = 'Account created successfully';
+      status.textContent = 'Account created successfully! Redirecting to sign in...';
       status.className = 'success';
-      document.getElementById('create-account-form').reset();
       setTimeout(() => {
         window.location.href = 'signin.html';
-      }, 2000);
+      }, 1500);
     });
   </script>
 </body>
