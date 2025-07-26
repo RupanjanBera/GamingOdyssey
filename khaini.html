@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KhaNiFi - The Art of Khaini</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #2a0a0a 0%, #3c0f0f 100%);
+            color: #f5e6e6;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+            color: #f5e6e6;
+        }
+        .nav-sticky {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: linear-gradient(to right, #6b0f0f, #8b0000);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+            padding: 1rem 2rem;
+        }
+        .nav-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
+        }
+        .hero-bg {
+            background-image: url('https://images.unsplash.com/photo-1627308595208-26db80575db9?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.7);
+        }
+        .carousel-item {
+            transition: transform 0.5s ease-in-out, box-shadow 0.3s ease;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .carousel-item:hover {
+            transform: scale(1.08);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+        }
+        .btn-primary {
+            background: linear-gradient(to right, #a11212, #c82323);
+            color: #f5e6e6;
+            transition: all 0.3s ease;
+            border-radius: 9999px;
+            padding: 0.75rem 2rem;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(to right, #6b0f0f, #8b0000);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+        }
+        .product-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+        }
+        .video-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 9/16;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .video-section {
+            position: relative;
+            padding: 3rem 1rem;
+            background: linear-gradient(to bottom, #4a1c1c, #3c0f0f);
+            border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+            margin: 2rem auto;
+            max-width: 90%;
+        }
+        .video-section::before,
+        .video-section::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 80px;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1627308595208-26db80575db9?auto=format&fit=crop&w=80') repeat-y;
+            opacity: 0.4;
+            background-size: cover;
+        }
+        .video-section::before {
+            left: 0;
+        }
+        .video-section::after {
+            right: 0;
+        }
+        .section-bg {
+            background: linear-gradient(to bottom, #4a1c1c, #3c0f0f);
+            padding: 3rem 1rem;
+        }
+        @media (min-width: 768px) {
+            .video-container {
+                max-width: 400px;
+            }
+            .video-section::before,
+            .video-section::after {
+                width: 120px;
+            }
+        }
+        @media (min-width: 1024px) {
+            .video-container {
+                max-width: 500px;
+            }
+            .video-section::before,
+            .video-section::after {
+                width: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="nav-sticky flex flex-col md:grid md:grid-cols-3 items-center text-white">
+        <div class="flex justify-center md:justify-start col-span-1 mb-2 md:mb-0 p-4">
+            <span class="nav-title">KhaNiFi</span>
+        </div>
+        <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-8 col-span-1 p-4">
+            <a href="#home" class="text-xl hover:text-yellow-500 transition-colors duration-300">Home</a>
+            <a href="#shop" class="text-xl hover:text-yellow-500 transition-colors duration-300">Shop</a>
+            <a href="#info" class="text-xl hover:text-yellow-500 transition-colors duration-300">Info</a>
+            <a href="#contact" class="text-xl hover:text-yellow-500 transition-colors duration-300">Contact</a>
+            <a href="#blog" class="text-xl hover:text-yellow-500 transition-colors duration-300">Blog</a>
+        </div>
+        <div class="flex justify-center md:justify-end col-span-1 p-4">
+            <button onclick="alert('🔥 Yo, your cart’s loaded with non-existent khaini vibes! 🔥')" class="p-2">
+                <svg class="h-8 w-8 text-white hover:text-yellow-400 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-bg">
+        <div class="p-6 md:p-12 max-w-5xl mx-auto">
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 animate-pulse">The Art of Khaini – Refined. Restyled. Reimagined.</h1>
+            <p class="text-lg md:text-2xl lg:text-3xl mb-8">Discover premium tools for your khaini ritual. Pure vibes, no compromises.</p>
+            <a href="#shop" class="btn-primary text-lg md:text-xl lg:text-2xl">Shop Now</a>
+        </div>
+    </section>
+
+    <!-- Featured Product Slideshow -->
+    <section id="shop" class="section-bg">
+        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-12">Featured Products</h2>
+        <div class="flex overflow-x-auto space-x-6 px-4 snap-x snap-mandatory max-w-7xl mx-auto">
+            <div class="carousel-item flex-shrink-0 w-80 md:w-96 bg-gray-800 p-6">
+                <img src="https://www.dial4trade.com/uploaded_files/product_images/thumbs/chewing-tobacco-khaini-u-491225510771404208.jpg?auto=format&fit=crop&w=300&h=200&q=80" alt="Air Khaini" class="w-full h-48 object-cover">
+                <h3 class="text-xl md:text-2xl font-bold mt-4">Air Khaini (Invisible Experience)</h3>
+                <p class="text-sm md:text-base mt-2">A premium air-based khaini alternative for the modern enthusiast. Pure vibes, no substance.</p>
+                <p class="text-yellow-600 mt-2 text-sm md:text-base">★★★★★ "The perfect companion for your daily ritual."</p>
+                <button class="btn-primary mt-4 w-full text-sm md:text-base" onclick="alert('🔥 Yo, your cart’s loaded with non-existent khaini vibes! 🔥')">Add to Cart</button>
+            </div>
+            <div class="carousel-item flex-shrink-0 w-80 md:w-96 bg-gray-800 p-6">
+                <img src="https://images.meesho.com/images/products/361311969/2p0ha_512.jpg?auto=compress&cs=tinysrgb&w=300&h=200" alt="Chuna Master Kit" class="w-full h-48 object-cover">
+                <h3 class="text-xl md:text-2xl font-bold mt-4">Chuna Master Kit</h3>
+                <p class="text-sm md:text-base mt-2">Elegantly designed chuna dispenser for perfect balance and precision.</p>
+                <p class="text-yellow-600 mt-2 text-sm md:text-base">★★★★★ "A must-have for khaini artisans."</p>
+                <button class="btn-primary mt-4 w-full text-sm md:text-base" onclick="alert('🔥 Yo, your cart’s loaded with non-existent khaini vibes! 🔥')">Add to Cart</button>
+            </div>
+            <div class="carousel-item flex-shrink-0 w-80 md:w-96 bg-gray-800 p-6">
+                <img src="https://5.imimg.com/data5/SELLER/Default/2023/9/343256771/BZ/UP/YO/2562900/khaini-dibba.jpg?auto=format&fit=crop&w=300&h=200&q=80" alt="Rubber 3000" class="w-full h-48 object-cover">
+                <h3 class="text-xl md:text-2xl font-bold mt-4">Rubber 3000™</h3>
+                <p class="text-sm md:text-base mt-2">High-end hand rub tool for authentic khaini preparation. Crafted for perfection.</p>
+                <p class="text-yellow-600 mt-2 text-sm md:text-base">★★★★★ "5-star rub rating – feels like the real deal."</p>
+                <button class="btn-primary mt-4 w-full text-sm md:text-base" onclick="alert('🔥 Yo, your cart’s loaded with non-existent khaini vibes! 🔥')">Add to Cart</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Best Sellers Section -->
+    <section class="section-bg">
+        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-12">Best Sellers</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-4 max-w-7xl mx-auto">
+            <div class="product-card bg-gray-800 p-6">
+                <img src="https://m.media-amazon.com/images/I/91LPogMJZCL.jpg?auto=compress&cs=tinysrgb&w=300&h=200" alt="Chuna Dispenser Deluxe" class="w-full h-48 object-cover">
+                <h3 class="text-xl md:text-2xl font-bold mt-4">Chuna Dispenser Deluxe</h3>
+                <p class="text-sm md:text-base mt-2">Elegant packaging with precision dispensing for the perfect chuna mix. Weight: 200g. Ingredients: Pure Vibes.</p>
+                <p class="text-lg md:text-xl font-semibold mt-2">₹1,499</p>
+                <button class="btn-primary mt-4 w-full text-sm md:text-base" onclick="alert('🔥 Yo, your cart’s loaded with non-existent khaini vibes! 🔥')">Add to Cart</button>
+            </div>
+            <div class="product-card bg-gray-800 p-6">
+                <img src="https://5.imimg.com/data5/SELLER/Default/2023/9/343256771/BZ/UP/YO/2562900/khaini-dibba.jpg?auto=format&fit=crop&w=300&h=200&q=80" alt="Handcrafted Khaini Rubbers" class="w-full h-48 object-cover">
+                <h3 class="text-xl md:text-2xl font-bold mt-4">Handcrafted Khaini Rubbers</h3>
+                <p class="text-sm md:text-base mt-2">Limited edition, premium feel rubbers for the ultimate khaini experience. Weight: 150g.</p>
+                <p class="text-lg md:text-xl font-semibold mt-2">₹2,299</p>
+                <button class="btn-primary mt-4 w-full text-sm md:text-base" onclick="alert('🔥 Yo, your cart’s loaded with non-existent khaini vibes! 🔥')">Add to Cart</button>
+            </div>
+            <div class="product-card bg-gray-800 p-6">
+                <img src="http://tabacindia.com/imgs/blog3Banner.jpg?auto=compress&cs=tinysrgb&w=300&h=200" alt="Invisible Air Khaini" class="w-full h-48 object-cover">
+                <h3 class="text-xl md:text-2xl font-bold mt-4">Invisible Air Khaini (Refill Pack)</h3>
+                <p class="text-sm md:text-base mt-2">Refill your Air Khaini for endless vibes. No mess, no fuss, just pure ritual. Weight: 50g.</p>
+                <p class="text-lg md:text-xl font-semibold mt-2">₹999</p>
+                <button class="btn-primary mt-4 w-full text-sm md:text-base" onclick="alert('🔥 Yo, your cart’s loaded with non-existent khaini vibes! 🔥')">Add to Cart</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Section (Side by Side) -->
+    <section id="info" class="section-bg video-section">
+        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-12">Khaini Mastery Tutorials</h2>
+        <div class="flex flex-col md:flex-row justify-center gap-8 max-w-7xl mx-auto px-4">
+            <div class="flex-1">
+                <h3 class="text-xl md:text-2xl font-bold text-center mb-4">How Our Premium Khaini is Made</h3>
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/sIG7QAsc16g" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            </div>
+            <div class="flex-1">
+                <h3 class="text-xl md:text-2xl font-bold text-center mb-4">How to Rub Khaini Like a Pro</h3>
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/AqrHSeleY6o" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Us Section -->
+    <section id="contact" class="section-bg">
+        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-12">Get in Touch</h2>
+        <div class="max-w-lg mx-auto px-4">
+            <form class="space-y-6 bg-gray-800 p-6 rounded-xl shadow-lg">
+                <input type="text" placeholder="Name" class="w-full p-4 rounded-lg border border-gray-300 bg-gray-900 text-white text-base md:text-lg">
+                <input type="email" placeholder="Email" class="w-full p-4 rounded-lg border border-gray-300 bg-gray-900 text-white text-base md:text-lg">
+                <textarea placeholder="Have a question about your khaini experience?" class="w-full p-4 rounded-lg border border-gray-300 bg-gray-900 text-white h-40 text-base md:text-lg"></textarea>
+                <button type="button" class="btn-primary w-full text-base md:text-lg">Get in Touch</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="section-bg">
+        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-12">What Our Customers Say</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-4 max-w-7xl mx-auto">
+            <div class="bg-gray-800 p-6 rounded-xl shadow-lg">
+                <p class="text-yellow-600 text-lg">★★★★★</p>
+                <p class="mt-2 text-sm md:text-base">"My hands have never been smoother. The Rubber 3000™ is top-notch."</p>
+                <p class="mt-2 font-semibold text-sm md:text-base">– Rajesh K., Khaini Enthusiast</p>
+            </div>
+            <div class="bg-gray-800 p-6 rounded-xl shadow-lg">
+                <p class="text-yellow-600 text-lg">★★★★★</p>
+                <p class="mt-2 text-sm md:text-base">"Air Khaini is the future – feels just like the real thing without any of the risks!"</p>
+                <p class="mt-2 font-semibold text-sm md:text-base">– Priya S., Ritual Master</p>
+            </div>
+            <div class="bg-gray-800 p-6 rounded-xl shadow-lg">
+                <p class="text-yellow-600 text-lg">★★★★★</p>
+                <p class="mt-2 text-sm md:text-base">"The Chuna Master Kit has elevated my daily ritual to an art form."</p>
+                <p class="mt-2 font-semibold text-sm md:text-base">– Anil M., Khaini Connoisseur</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4">
+            <p class="text-center mb-6 text-lg md:text-xl">KhaNiFi is a parody website. We do not sell real khaini or tobacco products.</p>
+            <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-8 mb-6">
+                <a href="#" class="hover:text-yellow-500 text-base md:text-lg">About Us</a>
+                <a href="#" class="hover:text-yellow-500 text-base md:text-lg">Terms & Conditions</a>
+                <a href="#" class="hover:text-yellow-500 text-base md:text-lg">Privacy Policy</a>
+            </div>
+            <div class="flex justify-center space-x-8 mb-6">
+                <a href="#"><svg class="h-8 w-8 text-white hover:text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg></a>
+                <a href="#"><svg class="h-8 w-8 text-white hover:text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3H4.385C3.06 3 2 4.06 2 5.385v14.23C2 20.94 3.06 22 4.385 22h15.23c1.326 0 2.385-1.06 2.385-2.385V5.385C22 4.06 20.94 3 19.615 3zM12 17.5c-3.033 0-5.5-2.467-5.5-5.5S8.967 6.5 12 6.5 17.5 8.967 17.5 12s-2.467 5.5-5.5 5.5zm5.25-9.75c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25z"/></svg></a>
+                <a href="#"><svg class="h-8 w-8 text-white hover:text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg></a>
+            </div>
+            <div class="max-w-md mx-auto">
+                <form class="flex">
+                    <input type="email" placeholder="Stay updated on the latest khaini innovations!" class="w-full p-4 rounded-l-lg border border-gray-300 bg-gray-900 text-white text-base md:text-lg">
+                    <button type="button" class="btn-primary px-6 py-4 rounded-r-lg text-base md:text-lg">Subscribe</button>
+                </form>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Carousel functionality
+        const carousel = document.querySelector('.flex.overflow-x-auto');
+        let scrollAmount = 0;
+        setInterval(() => {
+            scrollAmount += 320;
+            if (scrollAmount >= carousel.scrollWidth - carousel.clientWidth) {
+                scrollAmount = 0;
+            }
+            carousel.scrollTo({ left: scrollAmount, behavior: 'smooth' });
+        }, 3000);
+    </script>
+</body>
+</html>
