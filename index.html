@@ -119,14 +119,21 @@
       opacity: 1;
       transform: translateY(0);
     }
-    .card {
-      background: linear-gradient(145deg, #1E293B, #0F172A);
-      border-radius: 0.75rem;
-      padding: 1.25rem;
-      transition: transform 0.2s ease;
+    input, textarea {
+      background: #1E293B;
+      color: #F1F5F9;
+      border: 1px solid #3B82F6;
+      border-radius: 0.5rem;
+      padding: 0.75rem;
+      width: 100%;
+      transition: border-color 0.2s ease;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.9375rem;
     }
-    .card:hover {
-      transform: translateY(-4px);
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #D946EF;
+      box-shadow: 0 0 6px rgba(217, 70, 239, 0.2);
     }
     .submit-btn {
       background: linear-gradient(90deg, #3B82F6, #D946EF);
@@ -141,6 +148,63 @@
     }
     .submit-btn:hover {
       transform: translateY(-2px);
+    }
+    .error {
+      color: #F87171;
+      font-size: 0.8125rem;
+      margin-top: 0.25rem;
+      font-family: 'Poppins', sans-serif;
+    }
+    .success {
+      color: #3B82F6;
+      font-size: 0.8125rem;
+      margin-top: 0.25rem;
+      font-family: 'Poppins', sans-serif;
+    }
+    .nav-link, #mobile-menu a {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      transition: color 0.2s ease;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 1.0625rem;
+      padding: 0.5rem 0;
+    }
+    .nav-link::after, #mobile-menu a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: 0;
+      left: 0;
+      background: linear-gradient(to right, #3B82F6, #D946EF);
+      transition: width 0.2s ease;
+    }
+    .nav-link:hover::after, #mobile-menu a:hover::after {
+      width: 100%;
+    }
+    .nav-link:hover, #mobile-menu a:hover {
+      color: #3B82F6;
+    }
+    .mobile-menu {
+      background: linear-gradient(180deg, #1E293B, #0F172A);
+      opacity: 0;
+      transform: translateX(-100%);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .mobile-menu.active {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .card {
+      background: linear-gradient(145deg, #1E293B, #0F172A);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      transition: transform 0.2s ease;
+    }
+    .card:hover {
+      transform: translateY(-4px);
     }
     @media (max-width: 640px) {
       .submit-btn {
@@ -164,6 +228,12 @@
       }
       .hero-bg p {
         font-size: 1rem;
+      }
+      .nav-link, #mobile-menu a {
+        font-size: 1rem;
+      }
+      .arrow {
+        padding: 12px;
       }
     }
     @media (min-width: 640px) and (max-width: 768px) {
@@ -215,11 +285,10 @@
 
   <!-- Mobile Hamburger Menu -->
   <div class="md:hidden fixed top-0 left-0 w-full bg-[#1E293B] z-30 p-4 flex justify-between items-center gradient-glow">
+    <h1 class="text-lg font-bold text-white leading-relaxed">Gaming Odyssey</h1>
     <button id="hamburger" class="text-[#3B82F6]">
       <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
     </button>
-    <h1 class="text-lg font-bold text-white leading-relaxed">Gaming Odyssey</h1>
-    <div class="w-7 h-7"></div> <!-- Spacer for alignment -->
   </div>
   <div id="mobile-menu" class="hidden md:hidden fixed top-0 left-0 w-full h-full bg-[#1E293B] z-20 p-4 mobile-menu">
     <button id="close-menu" class="absolute top-4 right-4 text-[#3B82F6] gradient-glow rounded-full p-2">
@@ -476,6 +545,15 @@
     // Initialize EmailJS
     emailjs.init('__S5AyIeoL526kGwQ');
 
+    // Handle protected links
+    document.querySelectorAll('.nav-link, .submit-btn').forEach(link => {
+      link.addEventListener('click', function(event) {
+        event.preventDefault();
+        const targetLink = this.getAttribute('data-link') || this.getAttribute('href');
+        window.location.href = targetLink;
+      });
+    });
+
     // Hamburger Menu Toggle
     const hamburger = document.getElementById('hamburger');
     const mobileMenu = document.getElementById('mobile-menu');
@@ -499,14 +577,6 @@
       });
     }, { threshold: 0.1 });
     fadeIns.forEach(element => observer.observe(element));
-
-    // Handle link clicks
-    document.querySelectorAll('[data-link]').forEach(link => {
-      link.addEventListener('click', function(e) {
-        e.preventDefault();
-        window.location.href = this.getAttribute('data-link');
-      });
-    });
 
     // Contact Form Submission
     document.getElementById('contact-form').addEventListener('submit', function(event) {
