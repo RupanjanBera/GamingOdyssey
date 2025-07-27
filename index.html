@@ -261,6 +261,19 @@
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-5px); }
     }
+    .clear-chat-btn {
+      background: #1E293B;
+      color: #F1F5F9;
+      border: 1px solid #3B82F6;
+      border-radius: 0.5rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+    }
+    .clear-chat-btn:hover {
+      background: #3B82F6;
+      color: #0F172A;
+    }
     @media (max-width: 640px) {
       .submit-btn {
         width: 100%;
@@ -623,17 +636,20 @@
             <li>Upcoming tournaments</li>
             <li>Minecraft server info</li>
             <li>Order tracking</li>
-            <li>Or anything else!</li>
+            <li>Or any other general questions!</li>
           </ul>
         </div>
       </div>
-      <div class="p-3 border-t border-[#1E293B]">
+      <div class="p-3 border-t border-[#1E293B] flex flex-col gap-2">
         <div class="flex gap-2">
           <input id="chatbot-input" type="text" placeholder="Type your message..." class="flex-1 bg-[#1E293B] text-[#F1F5F9] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#3B82F6]">
           <button id="chatbot-send" class="bg-gradient-to-r from-[#3B82F6] to-[#D946EF] text-white rounded-lg px-4 py-2 text-sm font-medium hover:opacity-90 transition">
             Send
           </button>
         </div>
+        <button id="clear-chat" class="clear-chat-btn self-end">
+          Clear Chat
+        </button>
       </div>
     </div>
   </div>
@@ -825,7 +841,7 @@
     // Update slideshow on window resize
     window.addEventListener('resize', updateSlides);
 
-    // Chatbot Functionality
+    // Enhanced Chatbot Functionality
     const chatbotContainer = document.getElementById('chatbot-container');
     const chatbotHeader = document.getElementById('chatbot-header');
     const chatbotBody = document.getElementById('chatbot-body');
@@ -834,19 +850,40 @@
     const chatbotSend = document.getElementById('chatbot-send');
     const chatbotToggle = document.getElementById('chatbot-toggle');
     const chatbotIcon = document.getElementById('chatbot-icon');
+    const clearChatBtn = document.getElementById('clear-chat');
 
     // Together AI API Key
     const TOGETHER_API_KEY = 'tgp_v1_qQeqHwW67jDbBrgxYS2SPbA6Had-zvMeWeZRFdKG4TU';
     const TOGETHER_API_URL = 'https://api.together.xyz/v1/chat/completions';
-
+    
     // Chatbot state
     let isChatbotOpen = false;
-    const conversationHistory = [
-      {
-        role: "system",
-        content: "You are a helpful assistant for Gaming Odyssey, a gaming platform that sells gaming gear, hosts tournaments, and runs a Minecraft server. Be friendly, concise, and helpful. Provide accurate information about products, tournaments, and the Minecraft server. If you don't know something, say so. Keep responses under 3 sentences when possible."
-      }
-    ];
+    let conversationHistory = [];
+    
+    // Initialize conversation
+    function initializeConversation() {
+      conversationHistory = [
+        {
+          role: "system",
+          content: `You are a helpful assistant for Gaming Odyssey, a gaming platform that sells gaming gear, hosts tournaments, and runs a Minecraft server. 
+          Your primary focus is on gaming-related topics, but you can also answer general questions. 
+          Be friendly, concise, and helpful. For gaming topics, provide accurate information about products, tournaments, and the Minecraft server. 
+          For non-gaming questions, do your best to answer or explain that you're primarily focused on gaming topics.
+          Keep responses under 3 sentences when possible.`
+        }
+      ];
+      
+      // Add welcome message
+      addMessage('bot', `Hello! I'm your Gaming Odyssey assistant. How can I help you today? 😊
+      You can ask me about:
+      <ul class="list-disc pl-5 mt-1">
+        <li>Our gaming products</li>
+        <li>Upcoming tournaments</li>
+        <li>Minecraft server info</li>
+        <li>Order tracking</li>
+        <li>Or any other general questions!</li>
+      </ul>`);
+    }
 
     // Toggle chatbot visibility
     function toggleChatbot() {
@@ -868,16 +905,16 @@
       messageDiv.className = `${role}-message p-3 text-sm`;
       
       // Check if content contains markdown-like formatting for lists
-      if (content.includes('\n- ') || content.includes('\n* ')) {
+      if (content.includes('\n- ') || content.includes('\n* ') || content.includes('<ul>')) {
         const parts = content.split('\n');
         let htmlContent = '';
         
         for (const part of parts) {
-          if (part.startsWith('- ') || part.startsWith('* ')) {
+          if (part.startsWith('- ') || part.startsWith('* ') || part.includes('<li>')) {
             if (!htmlContent.includes('<ul>')) {
               htmlContent += '<ul class="list-disc pl-5 mt-1">';
             }
-            htmlContent += `<li>${part.substring(2)}</li>`;
+            htmlContent += `<li>${part.replace(/^[-*] /, '').replace('<li>', '').replace('</li>', '')}</li>`;
           } else {
             if (htmlContent.includes('<ul>') && !htmlContent.includes('</ul>')) {
               htmlContent += '</ul>';
@@ -965,6 +1002,12 @@
       }
     }
 
+    // Clear chat history
+    function clearChat() {
+      chatbotMessages.innerHTML = '';
+      initializeConversation();
+    }
+
     // Handle send button click
     chatbotSend.addEventListener('click', () => {
       const message = chatbotInput.value.trim();
@@ -987,6 +1030,9 @@
       }
     });
 
+    // Handle clear chat button
+    clearChatBtn.addEventListener('click', clearChat);
+
     // Toggle chatbot with header click
     chatbotHeader.addEventListener('click', toggleChatbot);
     chatbotToggle.addEventListener('click', (e) => {
@@ -994,7 +1040,8 @@
       toggleChatbot();
     });
 
-    // Initialize chatbot in closed state
+    // Initialize chatbot
+    initializeConversation();
     toggleChatbot();
   </script>
 </body>
