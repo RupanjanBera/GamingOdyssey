@@ -143,6 +143,33 @@
       background-color: #1E293B;
       color: #F1F5F9;
     }
+    .cart-icon-container {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(30, 41, 59, 0.7);
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      transition: all 0.2s ease;
+      z-index: 30;
+    }
+    .cart-icon-container:hover {
+      background: rgba(30, 41, 59, 0.9);
+    }
+    .cart-count {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: linear-gradient(90deg, #3B82F6, #D946EF);
+      color: #0F172A;
+      font-size: 0.75rem;
+      font-weight: bold;
+      border-radius: 50%;
+      padding: 2px 6px;
+    }
     @media (max-width: 640px) {
       .submit-btn {
         width: 100%;
@@ -152,57 +179,62 @@
       .nav-link, #mobile-menu a {
         font-size: 1rem;
       }
+      .cart-icon-container {
+        position: relative;
+        top: auto;
+        right: auto;
+      }
     }
   </style>
 </head>
 <body>
+  <!-- Desktop Cart Icon -->
+  <a href="cart.html" class="cart-icon-container gradient-glow hidden md:flex">
+    <svg class="w-6 h-6 text-[#3B82F6]" fill="currentColor" viewBox="0 0 20 20"><path d="M0 1h3l2 11h10l2-9H5l-.5-2H0v1zm6 15a2 2 0 100 4 2 2 0 000-4zm9 0a2 2 0 100 4 2 2 0 000-4z"/></svg>
+    <span class="text-[#F1F5F9]">Cart</span>
+    <span id="cart-count-desktop" class="cart-count">0</span>
+  </a>
+
   <!-- Sidebar -->
   <div class="fixed top-0 left-0 h-full w-64 sidebar gradient-glow z-20 hidden md:block">
     <div class="p-4 sm:p-6">
       <h1 class="text-2xl font-bold text-white leading-relaxed">Gaming Odyssey</h1>
       <nav class="mt-8 space-y-3">
-        <a href="#" data-link="index.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+        <a href="index.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Home</span>
         </a>
-        <a href="#" data-link="store.html" class="flex items-center space-x-2 text-[#3B82F6] font-semibold nav-link">
+        <a href="store.html" class="flex items-center space-x-2 text-[#3B82F6] font-semibold nav-link">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Store</span>
         </a>
-        <a href="#" data-link="tournaments.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+        <a href="tournaments.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Tournaments</span>
         </a>
-        <a href="#" data-link="trackorder.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+        <a href="trackorder.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Track Order</span>
         </a>
-        <a href="#" data-link="contactus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+        <a href="contactus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Contact Us</span>
         </a>
-        <a href="#" data-link="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+        <a href="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>About Us</span>
         </a>
-        <a href="signin.html" id="signin-link" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>Sign In</span>
-        </a>
-        <a href="createaccount.html" id="createaccount-link" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>Create Account</span>
-        </a>
-        <div id="user-display" class="hidden flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>User</span>
-        </div>
       </nav>
     </div>
   </div>
 
   <!-- Mobile Hamburger Menu -->
   <div class="md:hidden fixed top-0 left-0 w-full bg-[#1E293B] z-30 p-4 flex justify-between items-center gradient-glow">
+    <a href="cart.html" class="cart-icon-container flex md:hidden">
+      <svg class="w-6 h-6 text-[#3B82F6]" fill="currentColor" viewBox="0 0 20 20"><path d="M0 1h3l2 11h10l2-9H5l-.5-2H0v1zm6 15a2 2 0 100 4 2 2 0 000-4zm9 0a2 2 0 100 4 2 2 0 000-4z"/></svg>
+      <span class="text-[#F1F5F9]">Cart</span>
+      <span id="cart-count-mobile" class="cart-count">0</span>
+    </a>
     <span class="text-[#F1F5F9] font-semibold text-xl">Gaming Odyssey</span>
     <button id="hamburger" class="text-[#3B82F6]">
       <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
@@ -213,42 +245,30 @@
       <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
     </button>
     <nav class="space-y-3 mt-12">
-      <a href="#" data-link="index.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+      <a href="index.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
         <span>Home</span>
       </a>
-      <a href="#" data-link="store.html" class="flex items-center space-x-2 text-[#3B82F6] font-semibold nav-link">
+      <a href="store.html" class="flex items-center space-x-2 text-[#3B82F6] font-semibold nav-link">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
         <span>Store</span>
       </a>
-      <a href="#" data-link="tournaments.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+      <a href="tournaments.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
         <span>Tournaments</span>
       </a>
-      <a href="#" data-link="trackorder.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+      <a href="trackorder.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
         <span>Track Order</span>
       </a>
-      <a href="#" data-link="contactus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+      <a href="contactus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
         <span>Contact Us</span>
       </a>
-      <a href="#" data-link="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+      <a href="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
         <span>About Us</span>
       </a>
-      <a href="signin.html" id="mobile-signin-link" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-        <span>Sign In</span>
-      </a>
-      <a href="createaccount.html" id="mobile-createaccount-link" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-        <span>Create Account</span>
-      </a>
-      <div id="mobile-user-display" class="hidden flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-        <span>User</span>
-      </div>
     </nav>
   </div>
 
@@ -285,15 +305,46 @@
         <div id="payment-forms" class="space-y-8">
           <!-- UPI Form -->
           <div id="upi-form" class="payment-card gradient-glow">
-            <h3 class="text-lg font-bold text-white mb-2">UPI</h3>
-            <p class="text-[#F1F5F9] text-sm mb-4">Pay via Google Pay, PhonePe, etc.</p>
+            <h3 class="text-lg font-bold text-white mb-2">UPI Payment</h3>
+            <p class="text-[#F1F5F9] text-sm mb-4">Pay via Google Pay, PhonePe, Paytm, etc.</p>
             <form id="upi-payment-form" class="space-y-4">
-              <div class="text-center">
-                <p class="text-[#F1F5F9] mb-2">Scan the QR code to pay:</p>
-                <div id="upi-qr-code" class="inline-block bg-white p-2 rounded-lg"></div>
-                <p class="text-[#F1F5F9] mt-2 text-sm">Amount: <span id="upi-amount"></span></p>
+              <div>
+                <label for="upi-id" class="block text-[#F1F5F9] mb-2">Enter UPI ID (e.g., 1234567890@upi)</label>
+                <input type="text" id="upi-id" placeholder="yourname@upi" required class="w-full">
               </div>
-              <button type="submit" class="submit-btn w-full">Confirm Payment</button>
+              <div class="text-center">
+                <p class="text-[#F1F5F9] mb-2">Or scan the QR code to pay:</p>
+                <div id="upi-qr-code" class="inline-block bg-white p-2 rounded-lg mb-2"></div>
+                <p class="text-[#F1F5F9] text-sm">Amount: <span id="upi-amount"></span></p>
+              </div>
+              <button type="submit" class="submit-btn w-full">Pay via UPI</button>
+            </form>
+          </div>
+
+          <!-- Card Payment Form -->
+          <div id="card-form" class="payment-card gradient-glow">
+            <h3 class="text-lg font-bold text-white mb-2">Credit/Debit Card</h3>
+            <p class="text-[#F1F5F9] text-sm mb-4">Secure payment with your card</p>
+            <form id="card-payment-form" class="space-y-4">
+              <div>
+                <label for="card-number" class="block text-[#F1F5F9] mb-2">Card Number</label>
+                <input type="text" id="card-number" placeholder="1234 5678 9012 3456" required class="w-full">
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label for="expiry-date" class="block text-[#F1F5F9] mb-2">Expiry Date</label>
+                  <input type="text" id="expiry-date" placeholder="MM/YY" required class="w-full">
+                </div>
+                <div>
+                  <label for="cvv" class="block text-[#F1F5F9] mb-2">CVV</label>
+                  <input type="text" id="cvv" placeholder="123" required class="w-full">
+                </div>
+              </div>
+              <div>
+                <label for="card-name" class="block text-[#F1F5F9] mb-2">Name on Card</label>
+                <input type="text" id="card-name" placeholder="John Doe" required class="w-full">
+              </div>
+              <button type="submit" class="submit-btn w-full">Pay $<span id="card-amount"></span></button>
             </form>
           </div>
 
@@ -328,13 +379,12 @@
         <div>
           <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Useful Links</h3>
           <ul class="space-y-2">
-            <li><a href="#" data-link="index.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Home</a></li>
-            <li><a href="#" data-link="store.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Store</a></li>
-            <li><a href="#" data-link="tournaments.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Tournaments</a></li>
-            <li><a href="#" data-link="trackorder.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Track Order</a></li>
-            <li><a href="#" data-link="contactus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Contact Us</a></li>
-            <li><a href="#" data-link="aboutus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">About Us</a></li>
-            <li><a href="terms.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Terms & Conditions</a></li>
+            <li><a href="index.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Home</a></li>
+            <li><a href="store.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Store</a></li>
+            <li><a href="tournaments.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Tournaments</a></li>
+            <li><a href="trackorder.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Track Order</a></li>
+            <li><a href="contactus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Contact Us</a></li>
+            <li><a href="aboutus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">About Us</a></li>
           </ul>
         </div>
         <div>
@@ -403,6 +453,7 @@
     const totalAmountElement = document.getElementById('totalAmount');
     const codAmountElement = document.getElementById('cod-amount');
     const upiAmountElement = document.getElementById('upi-amount');
+    const cardAmountElement = document.getElementById('card-amount');
     const orderSummaryElement = document.getElementById('order-summary');
     const shippingDetailsElement = document.getElementById('shipping-details');
 
@@ -411,6 +462,7 @@
     totalAmountElement.textContent = order.total ? `$${order.total.toFixed(2)}` : '$0.00';
     codAmountElement.textContent = order.total ? `$${order.total.toFixed(2)}` : '$0.00';
     upiAmountElement.textContent = order.total ? `$${order.total.toFixed(2)}` : '$0.00';
+    cardAmountElement.textContent = order.total ? order.total.toFixed(2) : '0.00';
 
     // Display Order Summary
     if (cart.length > 0) {
@@ -448,11 +500,11 @@
     // Generate Dynamic UPI QR Code
     const upiQRCodeElement = document.getElementById('upi-qr-code');
 
-    function generateUPIQRCode() {
-      const upiId = 'rupanjanbera5-1@okicici';
+    function generateUPIQRCode(upiId = '') {
+      const defaultUpiId = '43629445686@sbi'; // Your UPI ID
       const amount = order.total ? order.total.toFixed(2) : '0.00';
       const transactionNote = `Order Payment ${order.orderId || 'Unknown'}`;
-      const upiLink = `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent('Gaming Odyssey')}&am=${amount}&cu=USD&tn=${encodeURIComponent(transactionNote)}`;
+      const upiLink = `upi://pay?pa=${encodeURIComponent(upiId || defaultUpiId)}&pn=${encodeURIComponent('Gaming Odyssey')}&am=${amount}&cu=USD&tn=${encodeURIComponent(transactionNote)}`;
 
       upiQRCodeElement.innerHTML = '';
 
@@ -488,8 +540,15 @@
       upiQRCodeElement.innerHTML = '<p class="text-[#F1F5F9] text-center">UPI QR Code Placeholder</p>';
     }
 
+    // Update UPI QR Code when user enters their UPI ID
+    document.getElementById('upi-id').addEventListener('input', (e) => {
+      if (e.target.value.includes('@')) {
+        generateUPIQRCode(e.target.value);
+      }
+    });
+
     // Store Order and Redirect
-    function storeOrder(method) {
+    function storeOrder(method, details = {}) {
       if (isPreviewMode) {
         alert('Order confirmation disabled in preview mode.');
         return;
@@ -497,9 +556,10 @@
       const finalOrder = {
         ...order,
         paymentMethod: method,
+        paymentDetails: details,
         shippingAddress: shippingAddress,
         items: cart,
-        status: method === 'PayPal' ? 'Completed' : 'Pending',
+        status: method === 'PayPal' || method === 'Card' ? 'Completed' : 'Pending',
         timestamp: new Date().toISOString()
       };
       try {
@@ -517,7 +577,48 @@
     // UPI Payment Form Submission
     document.getElementById('upi-payment-form').addEventListener('submit', (e) => {
       e.preventDefault();
-      storeOrder('UPI');
+      const upiId = document.getElementById('upi-id').value;
+      if (!upiId || !upiId.includes('@')) {
+        alert('Please enter a valid UPI ID (e.g., yourname@upi)');
+        return;
+      }
+      
+      // Simulate UPI payment processing
+      alert(`UPI payment request sent to ${upiId}. Please complete the payment in your UPI app.`);
+      
+      // In a real implementation, you would integrate with a UPI payment gateway here
+      // For demo purposes, we'll simulate a successful payment after 3 seconds
+      setTimeout(() => {
+        storeOrder('UPI', { upiId });
+      }, 3000);
+    });
+
+    // Card Payment Form Submission
+    document.getElementById('card-payment-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const cardNumber = document.getElementById('card-number').value;
+      const expiryDate = document.getElementById('expiry-date').value;
+      const cvv = document.getElementById('cvv').value;
+      const cardName = document.getElementById('card-name').value;
+      
+      if (!cardNumber || !expiryDate || !cvv || !cardName) {
+        alert('Please fill in all card details');
+        return;
+      }
+      
+      // Simulate card payment processing
+      alert('Redirecting to bank payment gateway...');
+      
+      // In a real implementation, you would integrate with a payment processor
+      // For demo purposes, we'll simulate a successful payment after 3 seconds
+      setTimeout(() => {
+        storeOrder('Card', { 
+          last4: cardNumber.slice(-4),
+          bank: 'SBI',
+          accountNo: '43629445686',
+          ifsc: 'SBIN0016641'
+        });
+      }, 3000);
     });
 
     // Cash on Delivery Form Submission
@@ -526,57 +627,31 @@
       storeOrder('Cash on Delivery');
     });
 
-    // PayPal Integration with Server-Side API
+    // PayPal Integration
     const paypalContainer = document.getElementById('paypal-button-container');
     if (order.total && !isPreviewMode && typeof paypal !== 'undefined' && paypal.Buttons) {
       try {
         paypal.Buttons({
-          createOrder: async (data, actions) => {
-            try {
-              const response = await fetch('http://localhost:3000/api/paypal/create-order', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json'
+          createOrder: function(data, actions) {
+            return actions.order.create({
+              purchase_units: [{
+                amount: {
+                  value: order.total.toFixed(2),
+                  currency_code: 'USD'
                 },
-                body: JSON.stringify({
-                  amount: order.total.toFixed(2),
-                  currency: 'USD'
-                })
-              });
-              const orderData = await response.json();
-              if (orderData.id) {
-                return orderData.id;
-              } else {
-                throw new Error('Failed to create PayPal order');
-              }
-            } catch (error) {
-              console.error('Create order error:', error);
-              alert('Failed to create PayPal order. Please try again.');
-            }
+                description: `Order #${order.orderId || 'Unknown'}`
+              }]
+            });
           },
-          onApprove: async (data, actions) => {
-            try {
-              const response = await fetch('http://localhost:3000/api/paypal/capture-order', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                  orderID: data.orderID
-                })
+          onApprove: function(data, actions) {
+            return actions.order.capture().then(function(details) {
+              storeOrder('PayPal', {
+                transactionId: details.id,
+                payerEmail: details.payer.email_address
               });
-              const captureData = await response.json();
-              if (captureData.status === 'COMPLETED') {
-                storeOrder('PayPal');
-              } else {
-                throw new Error('Payment capture failed');
-              }
-            } catch (error) {
-              console.error('Capture order error:', error);
-              alert('Failed to capture PayPal payment. Please try again.');
-            }
+            });
           },
-          onError: (err) => {
+          onError: function(err) {
             console.error('PayPal Error:', err);
             alert('An error occurred with PayPal. Please try again or choose another payment method.');
           }
@@ -627,55 +702,13 @@
       }
     }
 
-    function handleProtectedLink(event) {
-      if (isPreviewMode) return;
-      event.preventDefault();
-      const link = event.currentTarget.getAttribute('data-link') || event.currentTarget.getAttribute('href');
-      if (link === 'signin.html' || link === 'createaccount.html' || link === 'terms.html' || link === 'cart.html' || link.startsWith('http')) {
-        window.location.href = link;
-        return;
-      }
-      if (isAuthenticated()) {
-        window.location.href = link;
-      } else {
-        window.location.href = 'createaccount.html';
-      }
+    // Update cart count
+    function updateCartCount() {
+      const count = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+      document.getElementById('cart-count-desktop').textContent = count;
+      document.getElementById('cart-count-mobile').textContent = count;
     }
-
-    document.querySelectorAll('.nav-link, .submit-btn').forEach(link => {
-      link.addEventListener('click', handleProtectedLink);
-    });
-
-    // Display Username in Sidebar and Mobile Menu
-    const userDisplay = document.getElementById('user-display');
-    const mobileUserDisplay = document.getElementById('mobile-user-display');
-    const signInLink = document.getElementById('signin-link');
-    const createAccountLink = document.getElementById('createaccount-link');
-    const mobileSignInLink = document.getElementById('mobile-signin-link');
-    const mobileCreateAccountLink = document.getElementById('mobile-createaccount-link');
-    if (isAuthenticated() && !isPreviewMode) {
-      let username;
-      try {
-        username = localStorage.getItem('currentUser');
-      } catch (e) {
-        console.error('Error accessing localStorage:', e);
-      }
-      if (username) {
-        userDisplay.classList.remove('hidden');
-        mobileUserDisplay.classList.remove('hidden');
-        userDisplay.querySelector('span').textContent = username;
-        mobileUserDisplay.querySelector('span').textContent = username;
-        signInLink.style.display = 'none';
-        createAccountLink.style.display = 'none';
-        mobileSignInLink.style.display = 'none';
-        mobileCreateAccountLink.style.display = 'none';
-      }
-    } else {
-      signInLink.style.display = 'flex';
-      createAccountLink.style.display = 'flex';
-      mobileSignInLink.style.display = 'flex';
-      mobileCreateAccountLink.style.display = 'flex';
-    }
+    updateCartCount();
 
     // Fade-in Animation on Scroll
     const fadeIns = document.querySelectorAll('.fade-in');
