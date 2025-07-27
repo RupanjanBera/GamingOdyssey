@@ -274,6 +274,106 @@
       background: #3B82F6;
       color: #0F172A;
     }
+    /* New styles for file upload and image generation */
+    .file-upload-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .file-upload-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      color: #F1F5F9;
+      font-size: 0.875rem;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      background: rgba(59, 130, 246, 0.1);
+      transition: background 0.2s ease;
+    }
+    
+    .file-upload-label:hover {
+      background: rgba(59, 130, 246, 0.2);
+    }
+    
+    .file-upload-input {
+      display: none;
+    }
+    
+    .file-preview {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    
+    .file-preview-item {
+      position: relative;
+      width: 60px;
+      height: 60px;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      background: #1E293B;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .file-preview-item img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+    
+    .file-preview-item .remove-file {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6rem;
+      cursor: pointer;
+    }
+    
+    .image-generation-btn {
+      background: linear-gradient(90deg, #10B981, #3B82F6);
+      color: #0F172A;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      margin-left: 0.5rem;
+      transition: transform 0.2s ease;
+    }
+    
+    .image-generation-btn:hover {
+      transform: translateY(-2px);
+    }
+    
+    .generated-image {
+      max-width: 100%;
+      max-height: 300px;
+      border-radius: 0.5rem;
+      margin-top: 0.5rem;
+      border: 1px solid #3B82F6;
+    }
+    
+    .action-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+    }
+    
     @media (max-width: 640px) {
       .submit-btn {
         width: 100%;
@@ -311,6 +411,14 @@
       }
       .chatbot-messages {
         height: 300px;
+      }
+      .action-buttons {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .image-generation-btn {
+        margin-left: 0;
+        width: 100%;
       }
     }
     @media (min-width: 640px) and (max-width: 768px) {
@@ -616,7 +724,7 @@
     </footer>
   </div>
 
-  <!-- Chatbot UI -->
+  <!-- Enhanced Chatbot UI with File Attachments and Image Generation -->
   <div id="chatbot-container" class="fixed bottom-6 right-6 z-50 w-80 sm:w-96 transition-all duration-300 ease-in-out">
     <div id="chatbot-header" class="bg-gradient-to-r from-[#3B82F6] to-[#D946EF] text-white p-3 rounded-t-lg flex justify-between items-center cursor-pointer">
       <h3 class="font-bold">Gaming Odyssey Assistant</h3>
@@ -636,20 +744,34 @@
             <li>Upcoming tournaments</li>
             <li>Minecraft server info</li>
             <li>Order tracking</li>
-            <li>Or any other general questions!</li>
+            <li>Generate images based on your description</li>
+            <li>Or upload files for me to analyze</li>
           </ul>
         </div>
       </div>
-      <div class="p-3 border-t border-[#1E293B] flex flex-col gap-2">
+      <div class="p-3 border-t border-[#1E293B]">
+        <div class="file-upload-container">
+          <label for="file-upload" class="file-upload-label">
+            <i class="fas fa-paperclip"></i>
+            <span>Attach files (images, text, PDF)</span>
+            <input type="file" id="file-upload" class="file-upload-input" multiple>
+          </label>
+          <div id="file-preview" class="file-preview"></div>
+        </div>
         <div class="flex gap-2">
           <input id="chatbot-input" type="text" placeholder="Type your message..." class="flex-1 bg-[#1E293B] text-[#F1F5F9] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#3B82F6]">
           <button id="chatbot-send" class="bg-gradient-to-r from-[#3B82F6] to-[#D946EF] text-white rounded-lg px-4 py-2 text-sm font-medium hover:opacity-90 transition">
             Send
           </button>
         </div>
-        <button id="clear-chat" class="clear-chat-btn self-end">
-          Clear Chat
-        </button>
+        <div class="action-buttons">
+          <button id="clear-chat" class="clear-chat-btn">
+            <i class="fas fa-trash-alt mr-1"></i> Clear Chat
+          </button>
+          <button id="generate-image" class="image-generation-btn">
+            <i class="fas fa-image mr-1"></i> Generate Image
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -841,7 +963,7 @@
     // Update slideshow on window resize
     window.addEventListener('resize', updateSlides);
 
-    // Enhanced Chatbot Functionality
+    // Enhanced Chatbot Functionality with File Attachments and Image Generation
     const chatbotContainer = document.getElementById('chatbot-container');
     const chatbotHeader = document.getElementById('chatbot-header');
     const chatbotBody = document.getElementById('chatbot-body');
@@ -851,15 +973,20 @@
     const chatbotToggle = document.getElementById('chatbot-toggle');
     const chatbotIcon = document.getElementById('chatbot-icon');
     const clearChatBtn = document.getElementById('clear-chat');
+    const generateImageBtn = document.getElementById('generate-image');
+    const fileUploadInput = document.getElementById('file-upload');
+    const filePreview = document.getElementById('file-preview');
 
     // Together AI API Key
     const TOGETHER_API_KEY = 'tgp_v1_qQeqHwW67jDbBrgxYS2SPbA6Had-zvMeWeZRFdKG4TU';
     const TOGETHER_API_URL = 'https://api.together.xyz/v1/chat/completions';
-    
+    const TOGETHER_IMAGE_API_URL = 'https://api.together.xyz/v1/images/generate';
+
     // Chatbot state
     let isChatbotOpen = false;
     let conversationHistory = [];
-    
+    let attachedFiles = [];
+
     // Initialize conversation
     function initializeConversation() {
       conversationHistory = [
@@ -869,9 +996,14 @@
           Your primary focus is on gaming-related topics, but you can also answer general questions. 
           Be friendly, concise, and helpful. For gaming topics, provide accurate information about products, tournaments, and the Minecraft server. 
           For non-gaming questions, do your best to answer or explain that you're primarily focused on gaming topics.
+          You can also generate images based on user descriptions and analyze uploaded files.
           Keep responses under 3 sentences when possible.`
         }
       ];
+      
+      // Clear file attachments
+      attachedFiles = [];
+      filePreview.innerHTML = '';
       
       // Add welcome message
       addMessage('bot', `Hello! I'm your Gaming Odyssey assistant. How can I help you today? 😊
@@ -881,7 +1013,8 @@
         <li>Upcoming tournaments</li>
         <li>Minecraft server info</li>
         <li>Order tracking</li>
-        <li>Or any other general questions!</li>
+        <li>Generate images based on your description</li>
+        <li>Or upload files for me to analyze</li>
       </ul>`);
     }
 
@@ -900,7 +1033,7 @@
     }
 
     // Add message to chat
-    function addMessage(role, content) {
+    function addMessage(role, content, files = []) {
       const messageDiv = document.createElement('div');
       messageDiv.className = `${role}-message p-3 text-sm`;
       
@@ -933,6 +1066,37 @@
         messageDiv.innerHTML = `<p>${content}</p>`;
       }
       
+      // Add file previews if any
+      if (files.length > 0) {
+        const filesContainer = document.createElement('div');
+        filesContainer.className = 'file-preview mt-2 flex flex-wrap gap-2';
+        
+        files.forEach(file => {
+          const fileItem = document.createElement('div');
+          fileItem.className = 'file-preview-item relative w-16 h-16 bg-[#1E293B] rounded flex items-center justify-center';
+          
+          if (file.type.startsWith('image/')) {
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(file);
+            img.className = 'max-w-full max-h-full object-contain';
+            fileItem.appendChild(img);
+          } else {
+            const icon = document.createElement('i');
+            icon.className = 'fas fa-file text-2xl text-[#3B82F6]';
+            fileItem.appendChild(icon);
+            
+            const fileName = document.createElement('div');
+            fileName.className = 'absolute bottom-0 left-0 right-0 bg-black bg-opacity-70 text-white text-xs truncate px-1';
+            fileName.textContent = file.name.length > 10 ? file.name.substring(0, 7) + '...' : file.name;
+            fileItem.appendChild(fileName);
+          }
+          
+          filesContainer.appendChild(fileItem);
+        });
+        
+        messageDiv.appendChild(filesContainer);
+      }
+      
       chatbotMessages.appendChild(messageDiv);
       chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
     }
@@ -961,11 +1125,64 @@
       }
     }
 
+    // Handle file uploads
+    fileUploadInput.addEventListener('change', (e) => {
+      const files = Array.from(e.target.files);
+      if (files.length > 0) {
+        attachedFiles = [...attachedFiles, ...files];
+        updateFilePreview();
+      }
+    });
+
+    // Update file preview display
+    function updateFilePreview() {
+      filePreview.innerHTML = '';
+      attachedFiles.forEach((file, index) => {
+        const fileItem = document.createElement('div');
+        fileItem.className = 'file-preview-item relative';
+        
+        if (file.type.startsWith('image/')) {
+          const img = document.createElement('img');
+          img.src = URL.createObjectURL(file);
+          img.className = 'max-w-full max-h-full object-contain';
+          fileItem.appendChild(img);
+        } else {
+          const icon = document.createElement('i');
+          icon.className = 'fas fa-file text-2xl text-[#3B82F6]';
+          fileItem.appendChild(icon);
+          
+          const fileName = document.createElement('div');
+          fileName.className = 'absolute bottom-0 left-0 right-0 bg-black bg-opacity-70 text-white text-xs truncate px-1';
+          fileName.textContent = file.name.length > 10 ? file.name.substring(0, 7) + '...' : file.name;
+          fileItem.appendChild(fileName);
+        }
+        
+        const removeBtn = document.createElement('span');
+        removeBtn.className = 'remove-file';
+        removeBtn.innerHTML = '&times;';
+        removeBtn.addEventListener('click', () => {
+          attachedFiles.splice(index, 1);
+          updateFilePreview();
+        });
+        
+        fileItem.appendChild(removeBtn);
+        filePreview.appendChild(fileItem);
+      });
+    }
+
     // Send message to Together AI
-    async function sendMessageToAI(message) {
+    async function sendMessageToAI(message, files = []) {
       try {
         // Add user message to conversation history
         conversationHistory.push({ role: "user", content: message });
+        
+        // If there are files, add them to the context
+        if (files.length > 0) {
+          conversationHistory.push({
+            role: "user",
+            content: `[User attached ${files.length} file(s): ${files.map(f => f.name).join(', ')}]`
+          });
+        }
         
         showTypingIndicator();
         
@@ -995,10 +1212,77 @@
         
         hideTypingIndicator();
         addMessage('bot', aiResponse);
+        
+        // Clear attached files after sending
+        attachedFiles = [];
+        filePreview.innerHTML = '';
+        fileUploadInput.value = '';
       } catch (error) {
         console.error('Error calling Together AI API:', error);
         hideTypingIndicator();
         addMessage('bot', "Sorry, I'm having trouble connecting to the AI service. Please try again later.");
+      }
+    }
+
+    // Generate image from text prompt
+    async function generateImage(prompt) {
+      if (!prompt.trim()) {
+        addMessage('bot', "Please provide a description for the image you'd like me to generate.");
+        return;
+      }
+      
+      try {
+        showTypingIndicator();
+        
+        const response = await fetch(TOGETHER_IMAGE_API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${TOGETHER_API_KEY}`
+          },
+          body: JSON.stringify({
+            prompt: prompt,
+            model: "stability-ai/sdxl",
+            width: 512,
+            height: 512,
+            steps: 30,
+            seed: Math.floor(Math.random() * 1000000)
+          })
+        });
+        
+        if (!response.ok) {
+          throw new Error(`Image generation failed with status ${response.status}`);
+        }
+        
+        const data = await response.json();
+        const imageUrl = data.output.choices[0].image_base64;
+        
+        // Create image element
+        const img = document.createElement('img');
+        img.src = `data:image/png;base64,${imageUrl}`;
+        img.className = 'generated-image';
+        img.alt = 'Generated image based on: ' + prompt;
+        
+        // Create message container
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'bot-message p-3 text-sm';
+        messageDiv.innerHTML = `<p>Here's the image generated based on your description:</p>`;
+        messageDiv.appendChild(img);
+        
+        chatbotMessages.appendChild(messageDiv);
+        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        
+        // Add to conversation history
+        conversationHistory.push({
+          role: "assistant",
+          content: `[Generated image based on: ${prompt}]`
+        });
+        
+        hideTypingIndicator();
+      } catch (error) {
+        console.error('Error generating image:', error);
+        hideTypingIndicator();
+        addMessage('bot', "Sorry, I couldn't generate an image. Please try again with a different description.");
       }
     }
 
@@ -1011,10 +1295,10 @@
     // Handle send button click
     chatbotSend.addEventListener('click', () => {
       const message = chatbotInput.value.trim();
-      if (message) {
-        addMessage('user', message);
+      if (message || attachedFiles.length > 0) {
+        addMessage('user', message, attachedFiles);
         chatbotInput.value = '';
-        sendMessageToAI(message);
+        sendMessageToAI(message, attachedFiles);
       }
     });
 
@@ -1022,11 +1306,23 @@
     chatbotInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') {
         const message = chatbotInput.value.trim();
-        if (message) {
-          addMessage('user', message);
+        if (message || attachedFiles.length > 0) {
+          addMessage('user', message, attachedFiles);
           chatbotInput.value = '';
-          sendMessageToAI(message);
+          sendMessageToAI(message, attachedFiles);
         }
+      }
+    });
+
+    // Handle image generation button
+    generateImageBtn.addEventListener('click', () => {
+      const prompt = chatbotInput.value.trim();
+      if (prompt) {
+        addMessage('user', `Generate an image: ${prompt}`);
+        chatbotInput.value = '';
+        generateImage(prompt);
+      } else {
+        addMessage('bot', "Please describe the image you'd like me to generate in the message box first.");
       }
     });
 
