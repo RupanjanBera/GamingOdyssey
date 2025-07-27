@@ -19,7 +19,6 @@
       --shadow-glow-hover: 0 0 10px rgba(59, 130, 246, 0.4);
       --font-size-base: clamp(14px, 2.5vw, 16px);
       --padding-base: clamp(0.75rem, 2vw, 1rem);
-      /* To customize, update these values */
     }
     body {
       font-family: var(--font-family);
@@ -44,8 +43,8 @@
       box-shadow: 2px 0 6px rgba(59, 130, 246, 0.1);
     }
     .sidebar {
-      width: 80vw; /* Responsive width for mobile */
-      max-width: 16rem; /* Consistent with desktop */
+      width: 80vw;
+      max-width: 16rem;
     }
     .category-menu {
       transition: transform 0.3s ease;
@@ -111,7 +110,7 @@
       border-radius: 0.5rem;
       transition: transform 0.2s ease;
       font-size: var(--font-size-base);
-      min-width: 120px; /* Touch-friendly */
+      min-width: 120px;
       text-align: center;
     }
     .submit-btn:hover {
@@ -166,6 +165,16 @@
     }
     .cart-icon-container {
       position: relative;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(30, 41, 59, 0.7);
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      transition: all 0.2s ease;
+    }
+    .cart-icon-container:hover {
+      background: rgba(30, 41, 59, 0.9);
     }
     .cart-count {
       position: absolute;
@@ -326,10 +335,28 @@
     .category-toggle svg.rotate-180 {
       transform: rotate(180deg);
     }
+    .filter-dropdown {
+      background: #1E293B;
+      color: var(--text-color);
+      border: 1px solid var(--primary-color);
+      border-radius: 0.5rem;
+      padding: var(--padding-base);
+      font-family: var(--font-family);
+      font-size: var(--font-size-base);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .filter-dropdown:hover {
+      border-color: var(--secondary-color);
+    }
+    .filter-dropdown:focus {
+      outline: none;
+      box-shadow: 0 0 6px rgba(217, 70, 239, 0.2);
+    }
     /* Mobile-specific styles */
     @media (max-width: 640px) {
       .sidebar, .category-menu {
-        display: none; /* Hidden by default, shown via toggles */
+        display: none;
       }
       .sidebar.active, .category-menu.active {
         display: block;
@@ -354,7 +381,7 @@
         grid-template-columns: 1fr;
       }
       .product-card img {
-        height: 10rem; /* Smaller images on mobile */
+        height: 10rem;
       }
       .product-card h3 {
         font-size: 1.125rem;
@@ -405,6 +432,9 @@
         font-size: 0.625rem;
         padding: 1px 4px;
       }
+      .cart-icon-container {
+        padding: 0.3rem 0.8rem;
+      }
     }
     @media (min-width: 768px) {
       .category-menu {
@@ -414,8 +444,13 @@
       .sidebar {
         display: block;
       }
+      .cart-icon-container {
+        position: fixed;
+        top: 1rem;
+        left: 1rem;
+        z-index: 30;
+      }
     }
-    /* Customization tip: Adjust variables in :root to change theme */
   </style>
 </head>
 <body>
@@ -439,6 +474,15 @@
         <a href="address.html" class="buy-now" id="overlay-buy-now">Buy Now</a>
       </div>
     </div>
+  </div>
+
+  <!-- Desktop Cart Icon -->
+  <div class="hidden md:block">
+    <a href="cart.html" class="cart-icon-container gradient-glow">
+      <svg class="w-6 h-6 text-[#3B82F6]" fill="currentColor" viewBox="0 0 20 20"><path d="M0 1h3l2 11h10l2-9H5l-.5-2H0v1zm6 15a2 2 0 100 4 2 2 0 000-4zm9 0a2 2 0 100 4 2 2 0 000-4z"/></svg>
+      <span class="text-[#F1F5F9]">Cart</span>
+      <span id="cart-count-desktop" class="cart-count">0</span>
+    </a>
   </div>
 
   <!-- Sidebar (Navigation Menu) -->
@@ -470,35 +514,23 @@
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>About Us</span>
         </a>
-        <a href="signin.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>Sign In</span>
-        </a>
-        <a href="createaccount.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>Create Account</span>
-        </a>
-        <a href="cart.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link cart-icon-container">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M0 1h3l2 11h10l2-9H5l-.5-2H0v1zm6 15a2 2 0 100 4 2 2 0 000-4zm9 0a2 2 0 100 4 2 2 0 000-4z"/></svg>
-          <span>Cart</span>
-          <span id="cart-count-sidebar" class="cart-count">0</span>
-        </a>
       </nav>
     </div>
   </div>
 
   <!-- Mobile Hamburger Menu -->
   <div class="md:hidden fixed top-0 left-0 w-full bg-[#1E293B] z-30 p-4 flex justify-between items-center gradient-glow">
-    <h1 class="text-lg font-bold text-white leading-relaxed">Gaming Odyssey</h1>
     <div class="flex items-center space-x-4">
       <a href="cart.html" class="cart-icon-container">
         <svg class="w-6 h-6 text-[#3B82F6]" fill="currentColor" viewBox="0 0 20 20"><path d="M0 1h3l2 11h10l2-9H5l-.5-2H0v1zm6 15a2 2 0 100 4 2 2 0 000-4zm9 0a2 2 0 100 4 2 2 0 000-4z"/></svg>
+        <span class="text-[#F1F5F9]">Cart</span>
         <span id="cart-count-mobile" class="cart-count">0</span>
       </a>
-      <button id="hamburger" class="text-[#3B82F6]">
-        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-      </button>
     </div>
+    <h1 class="text-lg font-bold text-white leading-relaxed">Gaming Odyssey</h1>
+    <button id="hamburger" class="text-[#3B82F6]">
+      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
   </div>
   <div id="mobile-menu" class="hidden md:hidden fixed top-0 left-0 w-full h-full mobile-menu z-20 p-4">
     <button id="close-menu" class="absolute top-4 right-4 text-[#3B82F6] gradient-glow rounded-full p-2">
@@ -528,19 +560,6 @@
       <a href="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
         <span>About Us</span>
-      </a>
-      <a href="signin.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-        <span>Sign In</span>
-      </a>
-      <a href="createaccount.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-        <span>Create Account</span>
-      </a>
-      <a href="cart.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link cart-icon-container">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M0 1h3l2 11h10l2-9H5l-.5-2H0v1zm6 15a2 2 0 100 4 2 2 0 000-4zm9 0a2 2 0 100 4 2 2 0 000-4z"/></svg>
-        <span>Cart</span>
-        <span id="cart-count-mobile-menu" class="cart-count">0</span>
       </a>
     </nav>
   </div>
@@ -617,15 +636,17 @@
         <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
           <div class="w-full flex flex-col sm:flex-row items-center space-x-0 sm:space-x-4 space-y-2 sm:space-y-0">
             <input type="text" id="search-input" placeholder="Search products..." class="w-full">
+            <button id="search-btn" class="submit-btn w-full sm:w-auto">Search</button>
           </div>
           <div class="flex flex-col sm:flex-row items-center space-x-0 sm:space-x-4 space-y-2 sm:space-y-0 w-full">
             <button id="category-toggle" class="md:hidden submit-btn w-full sm:w-auto">Categories</button>
-            <div class="flex items-center space-x-2 w-full">
-              <input type="number" id="min-price" placeholder="Min Price" class="w-full sm:w-24">
-              <span class="text-[#F1F5F9]">-</span>
-              <input type="number" id="max-price" placeholder="Max Price" class="w-full sm:w-24">
-              <button id="filter-btn" class="submit-btn w-full sm:w-auto">Filter</button>
-            </div>
+            <select id="sort-filter" class="filter-dropdown w-full sm:w-auto">
+              <option value="">Sort By</option>
+              <option value="price-low">Price: Low to High</option>
+              <option value="price-high">Price: High to Low</option>
+              <option value="name-asc">Alphabetical: A-Z</option>
+              <option value="name-desc">Alphabetical: Z-A</option>
+            </select>
           </div>
         </div>
       </div>
@@ -694,7 +715,7 @@
     hamburger.addEventListener('click', () => {
       mobileMenu.classList.remove('hidden');
       mobileMenu.classList.add('active');
-      document.querySelector('.sidebar').classList.remove('active'); // Ensure sidebar doesn't conflict
+      document.querySelector('.sidebar').classList.remove('active');
     });
     closeMenu.addEventListener('click', () => {
       mobileMenu.classList.add('hidden');
@@ -714,7 +735,6 @@
     categoryButtons.forEach(button => {
       button.addEventListener('click', () => {
         const subcategory = button.nextElementSibling;
-        subca
         subcategory.classList.toggle('hidden');
         const arrow = button.querySelector('svg');
         arrow.classList.toggle('rotate-180');
@@ -742,16 +762,14 @@
 
     // Cart Functionality
     const cartCountElements = {
-      sidebar: document.getElementById('cart-count-sidebar'),
-      mobile: document.getElementById('cart-count-mobile'),
-      mobileMenu: document.getElementById('cart-count-mobile-menu')
+      desktop: document.getElementById('cart-count-desktop'),
+      mobile: document.getElementById('cart-count-mobile')
     };
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
     function updateCartCount() {
       const count = cart.reduce((total, item) => total + item.quantity, 0);
-      cartCountElements.sidebar.textContent = count;
+      cartCountElements.desktop.textContent = count;
       cartCountElements.mobile.textContent = count;
-      cartCountElements.mobileMenu.textContent = count;
     }
     function addToCart(name, price) {
       const existingItem = cart.find(item => item.name === name);
@@ -902,32 +920,47 @@
 
     // Search and Filter Functionality
     const searchInput = document.getElementById('search-input');
-    const minPriceInput = document.getElementById('min-price');
-    const maxPriceInput = document.getElementById('max-price');
-    const filterBtn = document.getElementById('filter-btn');
+    const searchBtn = document.getElementById('search-btn');
+    const sortFilter = document.getElementById('sort-filter');
 
     function applyFilters() {
       const searchTerm = searchInput.value.toLowerCase();
-      const minPrice = parseFloat(minPriceInput.value) || 0;
-      const maxPrice = parseFloat(maxPriceInput.value) || Infinity;
+      const sortValue = sortFilter.value;
 
       let filteredProducts = allProducts;
+      
+      // Apply search filter
       if (searchTerm) {
         filteredProducts = filteredProducts.filter(product => 
           product.name.toLowerCase().includes(searchTerm)
         );
       }
-      if (minPrice || maxPrice !== Infinity) {
-        filteredProducts = filteredProducts.filter(product => {
-          const convertedPrice = product.price * conversionRates[selectedCurrency];
-          return convertedPrice >= minPrice && convertedPrice <= maxPrice;
-        });
+      
+      // Apply sorting
+      switch(sortValue) {
+        case 'price-low':
+          filteredProducts.sort((a, b) => a.price - b.price);
+          break;
+        case 'price-high':
+          filteredProducts.sort((a, b) => b.price - a.price);
+          break;
+        case 'name-asc':
+          filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
+          break;
+        case 'name-desc':
+          filteredProducts.sort((a, b) => b.name.localeCompare(a.name));
+          break;
+        default:
+          // No sorting
+          break;
       }
+      
       renderProducts(filteredProducts);
     }
 
     searchInput.addEventListener('input', applyFilters);
-    filterBtn.addEventListener('click', applyFilters);
+    searchBtn.addEventListener('click', applyFilters);
+    sortFilter.addEventListener('change', applyFilters);
 
     // Initial render of all products
     renderProducts(allProducts);
