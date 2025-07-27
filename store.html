@@ -445,12 +445,6 @@
       .sidebar {
         display: block;
       }
-      .cart-icon-container {
-        position: fixed;
-        top: 1rem;
-        right: 1rem;
-        z-index: 30;
-      }
     }
   </style>
 </head>
@@ -475,15 +469,6 @@
         <a href="address.html" class="buy-now" id="overlay-buy-now">Buy Now</a>
       </div>
     </div>
-  </div>
-
-  <!-- Desktop Cart Icon -->
-  <div class="hidden md:block">
-    <a href="cart.html" class="cart-icon-container gradient-glow">
-      <svg class="w-6 h-6 text-[#3B82F6]" fill="currentColor" viewBox="0 0 20 20"><path d="M0 1h3l2 11h10l2-9H5l-.5-2H0v1zm6 15a2 2 0 100 4 2 2 0 000-4zm9 0a2 2 0 100 4 2 2 0 000-4z"/></svg>
-      <span class="text-[#F1F5F9]">Cart</span>
-      <span id="cart-count-desktop" class="cart-count">0</span>
-    </a>
   </div>
 
   <!-- Sidebar (Navigation Menu) -->
@@ -648,6 +633,11 @@
               <option value="name-asc">Alphabetical: A-Z</option>
               <option value="name-desc">Alphabetical: Z-A</option>
             </select>
+            <a href="cart.html" class="cart-icon-container gradient-glow hidden md:flex">
+              <svg class="w-6 h-6 text-[#3B82F6]" fill="currentColor" viewBox="0 0 20 20"><path d="M0 1h3l2 11h10l2-9H5l-.5-2H0v1zm6 15a2 2 0 100 4 2 2 0 000-4zm9 0a2 2 0 100 4 2 2 0 000-4z"/></svg>
+              <span class="text-[#F1F5F9]">Cart</span>
+              <span id="cart-count-desktop" class="cart-count">0</span>
+            </a>
           </div>
         </div>
       </div>
