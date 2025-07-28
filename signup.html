@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up - Gaming Odyssey</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #0F172A;
+      color: #F1F5F9;
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    .gradient-glow {
+      box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+    }
+    .gradient-glow:hover {
+      box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+      transform: translateY(-3px);
+    }
+    .sidebar {
+      background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
+      box-shadow: 4px 0 10px rgba(59, 130, 246, 0.15);
+    }
+    .hero-bg {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(217, 70, 239, 0.15), #0F172A);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-bg::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.2), transparent 70%);
+      animation: glow 20s ease-in-out infinite;
+      opacity: 0.5;
+    }
+    input, textarea, select {
+      background: #1E293B;
+      color: #F1F5F9;
+      border: 1px solid #3B82F6;
+      border-radius: 0.5rem;
+      padding: 0.75rem;
+      width: 100%;
+      transition: all 0.3s ease;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.9375rem;
+    }
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #D946EF;
+      box-shadow: 0 0 8px rgba(217, 70, 239, 0.3);
+    }
+    .submit-btn {
+      background: linear-gradient(90deg, #3B82F6, #D946EF);
+      color: #0F172A;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      padding: 1rem 1.5rem;
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+      touch-action: manipulation;
+      font-size: 1rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+    }
+    .error {
+      color: #F87171;
+      font-size: 0.8125rem;
+      margin-top: 0.25rem;
+      font-family: 'Poppins', sans-serif;
+    }
+    .success {
+      color: #4ADE80;
+      font-size: 0.8125rem;
+      margin-top: 0.25rem;
+      font-family: 'Poppins', sans-serif;
+    }
+    .nav-link, #mobile-menu a {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      transition: all 0.3s ease;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 1.0625rem;
+      padding: 0.5rem 0;
+    }
+    .nav-link::after, #mobile-menu a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: 0;
+      left: 0;
+      background: linear-gradient(to right, #3B82F6, #D946EF);
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover::after, #mobile-menu a:hover::after {
+      width: 100%;
+    }
+    .nav-link:hover, #mobile-menu a:hover {
+      color: #3B82F6;
+    }
+    .mobile-menu {
+      background: linear-gradient(180deg, #1E293B, #0F172A);
+      opacity: 0;
+      transform: translateX(-100%);
+      transition: all 0.3s ease;
+      box-shadow: 4px 0 15px rgba(0, 0, 0, 0.3);
+    }
+    .mobile-menu.active {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .card {
+      background: linear-gradient(145deg, #1E293B, #0F172A);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+    }
+    .fade-in {
+      opacity: 0;
+      transform: translateY(15px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    @keyframes glow {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 0.7; }
+    }
+    .password-toggle {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #94A3B8;
+    }
+    .password-toggle:hover {
+      color: #3B82F6;
+    }
+    @media (max-width: 640px) {
+      .submit-btn {
+        width: 100%;
+        padding: 0.875rem;
+        font-size: 0.9375rem;
+      }
+      .nav-link, #mobile-menu a {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="fixed top-0 left-0 h-full w-64 sidebar gradient-glow z-20 hidden md:block">
+    <div class="p-4 sm:p-6">
+      <div class="flex items-center space-x-3">
+        <img src="https://cdn-icons-png.flaticon.com/512/3612/3612569.png" alt="Logo" class="w-10 h-10">
+        <h1 class="text-xl sm:text-2xl font-bold text-white leading-relaxed">Gaming Odyssey</h1>
+      </div>
+      <nav class="mt-10 space-y-4">
+        <a href="index.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+          <i class="fas fa-home w-5 h-5"></i>
+          <span>Home</span>
+        </a>
+        <a href="store.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+          <i class="fas fa-gamepad w-5 h-5"></i>
+          <span>Store</span>
+        </a>
+        <a href="tournaments.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+          <i class="fas fa-trophy w-5 h-5"></i>
+          <span>Tournaments</span>
+        </a>
+        <a href="trackorder.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+          <i class="fas fa-shipping-fast w-5 h-5"></i>
+          <span>Track Order</span>
+        </a>
+        <a href="contactus.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+          <i class="fas fa-headset w-5 h-5"></i>
+          <span>Contact Us</span>
+        </a>
+        <a href="aboutus.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+          <i class="fas fa-info-circle w-5 h-5"></i>
+          <span>About Us</span>
+        </a>
+        <a href="signup.html" class="flex items-center space-x-3 text-[#3B82F6] font-semibold nav-link">
+          <i class="fas fa-user-plus w-5 h-5"></i>
+          <span>Sign Up</span>
+        </a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Mobile Hamburger Menu -->
+  <div class="md:hidden fixed top-0 left-0 w-full bg-[#1E293B] z-30 p-4 flex justify-between items-center gradient-glow">
+    <div class="flex items-center space-x-2">
+      <img src="https://cdn-icons-png.flaticon.com/512/3612/3612569.png" alt="Logo" class="w-8 h-8">
+      <h1 class="text-lg font-bold text-white leading-relaxed">Gaming Odyssey</h1>
+    </div>
+    <button id="hamburger" class="text-[#3B82F6]">
+      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+  </div>
+  <div id="mobile-menu" class="hidden md:hidden fixed top-0 left-0 w-full h-full bg-[#1E293B] z-20 p-4 mobile-menu">
+    <button id="close-menu" class="absolute top-4 right-4 text-[#3B82F6] gradient-glow rounded-full p-2">
+      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+    <nav class="space-y-4 mt-16">
+      <a href="index.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+        <i class="fas fa-home w-5 h-5"></i>
+        <span>Home</span>
+      </a>
+      <a href="store.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+        <i class="fas fa-gamepad w-5 h-5"></i>
+        <span>Store</span>
+      </a>
+      <a href="tournaments.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+        <i class="fas fa-trophy w-5 h-5"></i>
+        <span>Tournaments</span>
+      </a>
+      <a href="trackorder.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+        <i class="fas fa-shipping-fast w-5 h-5"></i>
+        <span>Track Order</span>
+      </a>
+      <a href="contactus.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+        <i class="fas fa-headset w-5 h-5"></i>
+        <span>Contact Us</span>
+      </a>
+      <a href="aboutus.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+        <i class="fas fa-info-circle w-5 h-5"></i>
+        <span>About Us</span>
+      </a>
+      <a href="signup.html" class="flex items-center space-x-3 text-[#3B82F6] font-semibold nav-link">
+        <i class="fas fa-user-plus w-5 h-5"></i>
+        <span>Sign Up</span>
+      </a>
+    </nav>
+  </div>
+
+  <!-- Main Content -->
+  <div class="md:ml-64">
+    <!-- Hero Section -->
+    <section class="hero-bg min-h-[50vh] flex items-center justify-center text-center p-4 sm:p-6 md:p-8">
+      <div class="fade-in max-w-2xl mx-auto">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">Join Gaming Odyssey</h1>
+        <p class="text-base sm:text-lg md:text-xl text-[#F1F5F9] mb-8 leading-relaxed">Create your account and start your gaming journey today</p>
+      </div>
+    </section>
+
+    <!-- Signup Form Section -->
+    <section class="py-12 sm:py-16 px-4 sm:px-6 md:px-8">
+      <div class="max-w-2xl mx-auto card gradient-glow fade-in">
+        <form id="signup-form" class="p-6">
+          <h2 class="text-2xl font-bold text-white mb-6 text-center">Create Your Account</h2>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div>
+              <label for="first-name" class="block text-[#F1F5F9] mb-2 font-semibold text-sm">First Name</label>
+              <input type="text" id="first-name" name="first-name" required placeholder="First name" />
+              <p id="first-name-error" class="error hidden">Please enter your first name</p>
+            </div>
+            <div>
+              <label for="last-name" class="block text-[#F1F5F9] mb-2 font-semibold text-sm">Last Name</label>
+              <input type="text" id="last-name" name="last-name" required placeholder="Last name" />
+              <p id="last-name-error" class="error hidden">Please enter your last name</p>
+            </div>
+          </div>
+          
+          <div class="mb-6">
+            <label for="email" class="block text-[#F1F5F9] mb-2 font-semibold text-sm">Email Address</label>
+            <input type="email" id="email" name="email" required placeholder="Your email" />
+            <p id="email-error" class="error hidden">Please enter a valid email</p>
+          </div>
+          
+          <div class="mb-6">
+            <label for="username" class="block text-[#F1F5F9] mb-2 font-semibold text-sm">Username</label>
+            <input type="text" id="username" name="username" required placeholder="Choose a username" />
+            <p id="username-error" class="error hidden">Please choose a username</p>
+          </div>
+          
+          <div class="mb-6">
+            <label for="password" class="block text-[#F1F5F9] mb-2 font-semibold text-sm">Password</label>
+            <div class="relative">
+              <input type="password" id="password" name="password" required placeholder="Create a password" />
+              <i class="fas fa-eye-slash password-toggle" id="toggle-password"></i>
+            </div>
+            <p id="password-error" class="error hidden">Password must be at least 8 characters</p>
+            <div class="text-xs text-[#94A3B8] mt-2">
+              <p>Password must contain:</p>
+              <ul class="list-disc pl-5">
+                <li>At least 8 characters</li>
+                <li>1 uppercase letter</li>
+                <li>1 number</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="mb-6">
+            <label for="confirm-password" class="block text-[#F1F5F9] mb-2 font-semibold text-sm">Confirm Password</label>
+            <div class="relative">
+              <input type="password" id="confirm-password" name="confirm-password" required placeholder="Confirm your password" />
+              <i class="fas fa-eye-slash password-toggle" id="toggle-confirm-password"></i>
+            </div>
+            <p id="confirm-password-error" class="error hidden">Passwords do not match</p>
+          </div>
+          
+          <div class="mb-6">
+            <label for="dob" class="block text-[#F1F5F9] mb-2 font-semibold text-sm">Date of Birth</label>
+            <input type="date" id="dob" name="dob" required />
+            <p id="dob-error" class="error hidden">Please enter your date of birth</p>
+          </div>
+          
+          <div class="mb-6">
+            <label for="country" class="block text-[#F1F5F9] mb-2 font-semibold text-sm">Country</label>
+            <select id="country" name="country" required>
+              <option value="" disabled selected>Select your country</option>
+              <option value="USA">United States</option>
+              <option value="UK">United Kingdom</option>
+              <option value="Canada">Canada</option>
+              <option value="Australia">Australia</option>
+              <option value="India">India</option>
+              <option value="Germany">Germany</option>
+              <option value="France">France</option>
+              <option value="Japan">Japan</option>
+              <option value="Other">Other</option>
+            </select>
+            <p id="country-error" class="error hidden">Please select your country</p>
+          </div>
+          
+          <div class="mb-6">
+            <label class="flex items-center space-x-2 text-[#F1F5F9] text-sm">
+              <input type="checkbox" id="terms" name="terms" required class="rounded bg-[#1E293B] border-[#3B82F6] focus:ring-[#D946EF]">
+              <span>I agree to the <a href="terms.html" class="text-[#3B82F6] hover:underline">Terms of Service</a> and <a href="privacy.html" class="text-[#3B82F6] hover:underline">Privacy Policy</a></span>
+            </label>
+            <p id="terms-error" class="error hidden">You must agree to the terms</p>
+          </div>
+          
+          <div class="text-center">
+            <button type="submit" class="submit-btn w-full flex items-center justify-center gap-2">
+              <i class="fas fa-user-plus"></i> Create Account
+            </button>
+            <p id="form-status" class="mt-3 text-sm"></p>
+          </div>
+          
+          <div class="text-center mt-6 text-[#94A3B8] text-sm">
+            Already have an account? <a href="login.html" class="text-[#3B82F6] hover:underline">Log in</a>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-[#0F172A] py-12 px-4 sm:px-6 md:px-8 border-t border-[#1E293B]">
+      <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+        <div>
+          <div class="flex items-center space-x-3 mb-4">
+            <img src="https://cdn-icons-png.flaticon.com/512/3612/3612569.png" alt="Logo" class="w-10 h-10">
+            <h3 class="text-xl font-bold text-white">Gaming Odyssey</h3>
+          </div>
+          <p class="text-[#94A3B8] text-sm mb-4 leading-relaxed">Where Gaming Meets Glory. Join our community of passionate gamers and elevate your gaming experience.</p>
+          <div class="flex space-x-4">
+            <a href="https://www.instagram.com/noticedveil" target="_blank" class="text-[#F1F5F9] hover:text-[#E1306C] transition">
+              <i class="fab fa-instagram text-xl"></i>
+            </a>
+            <a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="text-[#F1F5F9] hover:text-[#FF0000] transition">
+              <i class="fab fa-youtube text-xl"></i>
+            </a>
+            <a href="https://www.facebook.com" target="_blank" class="text-[#F1F5F9] hover:text-[#1877F2] transition">
+              <i class="fab fa-facebook text-xl"></i>
+            </a>
+            <a href="https://www.twitter.com" target="_blank" class="text-[#F1F5F9] hover:text-[#1DA1F2] transition">
+              <i class="fab fa-twitter text-xl"></i>
+            </a>
+          </div>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-white mb-4 leading-relaxed">Quick Links</h3>
+          <ul class="space-y-3">
+            <li><a href="index.html" class="text-[#94A3B8] text-sm leading-relaxed hover:text-[#3B82F6] transition">Home</a></li>
+            <li><a href="store.html" class="text-[#94A3B8] text-sm leading-relaxed hover:text-[#3B82F6] transition">Store</a></li>
+            <li><a href="tournaments.html" class="text-[#94A3B8] text-sm leading-relaxed hover:text-[#3B82F6] transition">Tournaments</a></li>
+            <li><a href="trackorder.html" class="text-[#94A3B8] text-sm leading-relaxed hover:text-[#3B82F6] transition">Track Order</a></li>
+            <li><a href="signup.html" class="text-[#3B82F6] text-sm leading-relaxed hover:text-[#D946EF] transition">Sign Up</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-white mb-4 leading-relaxed">Support</h3>
+          <ul class="space-y-3">
+            <li><a href="contactus.html" class="text-[#94A3B8] text-sm leading-relaxed hover:text-[#3B82F6] transition">Contact Us</a></li>
+            <li><a href="aboutus.html" class="text-[#94A3B8] text-sm leading-relaxed hover:text-[#3B82F6] transition">About Us</a></li>
+            <li><a href="terms.html" class="text-[#94A3B8] text-sm leading-relaxed hover:text-[#3B82F6] transition">Terms & Conditions</a></li>
+            <li><a href="privacy.html" class="text-[#94A3B8] text-sm leading-relaxed hover:text-[#3B82F6] transition">Privacy Policy</a></li>
+            <li><a href="faq.html" class="text-[#94A3B8] text-sm leading-relaxed hover:text-[#3B82F6] transition">FAQ</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-white mb-4 leading-relaxed">Contact Info</h3>
+          <ul class="space-y-3">
+            <li class="text-[#94A3B8] text-sm leading-relaxed flex items-start gap-3">
+              <i class="fas fa-map-marker-alt mt-1 text-[#3B82F6]"></i>
+              <span>123 Gaming Street, Virtual City, VC 12345</span>
+            </li>
+            <li class="text-[#94A3B8] text-sm leading-relaxed flex items-center gap-3">
+              <i class="fas fa-envelope text-[#3B82F6]"></i>
+              <a href="mailto:support@gamingodyssey.in" class="hover:text-[#3B82F6] transition">support@gamingodyssey.in</a>
+            </li>
+            <li class="text-[#94A3B8] text-sm leading-relaxed flex items-center gap-3">
+              <i class="fas fa-phone text-[#3B82F6]"></i>
+              <span>6290994382</span>
+            </li>
+            <li class="text-[#94A3B8] text-sm leading-relaxed flex items-center gap-3">
+              <i class="fas fa-server text-[#3B82F6]"></i>
+              <span>play.gamingodyssey.in</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-[#1E293B] mt-10 pt-6 text-center">
+        <p class="text-[#94A3B8] text-sm leading-relaxed">© 2025 Gaming Odyssey. All rights reserved.</p>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Hamburger Menu Toggle
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const closeMenu = document.getElementById('close-menu');
+    hamburger.addEventListener('click', () => {
+      mobileMenu.classList.remove('hidden');
+      mobileMenu.classList.add('active');
+    });
+    closeMenu.addEventListener('click', () => {
+      mobileMenu.classList.add('hidden');
+      mobileMenu.classList.remove('active');
+    });
+
+    // Fade-in Animation on Scroll
+    const fadeIns = document.querySelectorAll('.fade-in');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+    fadeIns.forEach(element => observer.observe(element));
+
+    // Toggle password visibility
+    const togglePassword = document.getElementById('toggle-password');
+    const passwordInput = document.getElementById('password');
+    const toggleConfirmPassword = document.getElementById('toggle-confirm-password');
+    const confirmPasswordInput = document.getElementById('confirm-password');
+
+    togglePassword.addEventListener('click', () => {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      togglePassword.classList.toggle('fa-eye');
+      togglePassword.classList.toggle('fa-eye-slash');
+    });
+
+    toggleConfirmPassword.addEventListener('click', () => {
+      const type = confirmPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      confirmPasswordInput.setAttribute('type', type);
+      toggleConfirmPassword.classList.toggle('fa-eye');
+      toggleConfirmPassword.classList.toggle('fa-eye-slash');
+    });
+
+    // Form validation and submission
+    document.getElementById('signup-form').addEventListener('submit', function(event) {
+      event.preventDefault();
+      
+      // Get form values
+      const firstName = document.getElementById('first-name').value.trim();
+      const lastName = document.getElementById('last-name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+      const dob = document.getElementById('dob').value;
+      const country = document.getElementById('country').value;
+      const terms = document.getElementById('terms').checked;
+      
+      // Reset error messages
+      document.querySelectorAll('.error').forEach(el => el.classList.add('hidden'));
+      let isValid = true;
+      
+      // Validate fields
+      if (!firstName) {
+        document.getElementById('first-name-error').classList.remove('hidden');
+        isValid = false;
+      }
+      
+      if (!lastName) {
+        document.getElementById('last-name-error').classList.remove('hidden');
+        isValid = false;
+      }
+      
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        document.getElementById('email-error').classList.remove('hidden');
+        isValid = false;
+      }
+      
+      if (!username) {
+        document.getElementById('username-error').classList.remove('hidden');
+        isValid = false;
+      }
+      
+      if (!password || password.length < 8 || !/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
+        document.getElementById('password-error').classList.remove('hidden');
+        isValid = false;
+      }
+      
+      if (password !== confirmPassword) {
+        document.getElementById('confirm-password-error').classList.remove('hidden');
+        isValid = false;
+      }
+      
+      if (!dob) {
+        document.getElementById('dob-error').classList.remove('hidden');
+        isValid = false;
+      }
+      
+      if (!country) {
+        document.getElementById('country-error').classList.remove('hidden');
+        isValid = false;
+      }
+      
+      if (!terms) {
+        document.getElementById('terms-error').classList.remove('hidden');
+        isValid = false;
+      }
+      
+      if (!isValid) {
+        document.getElementById('form-status').textContent = 'Please fill all fields correctly';
+        document.getElementById('form-status').className = 'error';
+        return;
+      }
+      
+      // Create user object
+      const userData = {
+        firstName,
+        lastName,
+        email,
+        username,
+        password, // Note: In a real app, you would hash the password before storing
+        dob,
+        country,
+        signupDate: new Date().toISOString()
+      };
+      
+      // Get existing users from localStorage or create empty array
+      let users = JSON.parse(localStorage.getItem('users')) || [];
+      
+      // Check if email or username already exists
+      const emailExists = users.some(user => user.email === email);
+      const usernameExists = users.some(user => user.username === username);
+      
+      if (emailExists) {
+        document.getElementById('email-error').textContent = 'Email already exists';
+        document.getElementById('email-error').classList.remove('hidden');
+        document.getElementById('form-status').textContent = 'Email already registered';
+        document.getElementById('form-status').className = 'error';
+        return;
+      }
+      
+      if (usernameExists) {
+        document.getElementById('username-error').textContent = 'Username already taken';
+        document.getElementById('username-error').classList.remove('hidden');
+        document.getElementById('form-status').textContent = 'Username already taken';
+        document.getElementById('form-status').className = 'error';
+        return;
+      }
+      
+      // Add new user to array
+      users.push(userData);
+      
+      // Save to localStorage
+      localStorage.setItem('users', JSON.stringify(users));
+      
+      // Also store current user data for the avatar display
+      localStorage.setItem('userData', JSON.stringify({
+        name: firstName,
+        username,
+        email
+      }));
+      
+      // Show success message
+      document.getElementById('form-status').textContent = 'Account created successfully! Redirecting...';
+      document.getElementById('form-status').className = 'success';
+      
+      // Redirect to home page after 2 seconds
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 2000);
+    });
+  </script>
+</body>
+</html>
