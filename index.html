@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gaming Odyssey</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -17,16 +17,16 @@
       -webkit-font-smoothing: antialiased;
     }
     .gradient-glow {
-      box-shadow: 0 0 6px rgba(59, 130, 246, 0.2);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
     }
     .gradient-glow:hover {
-      box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+      box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
       transform: translateY(-3px);
     }
     .sidebar {
       background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
-      box-shadow: 2px 0 6px rgba(59, 130, 246, 0.1);
+      box-shadow: 4px 0 10px rgba(59, 130, 246, 0.15);
     }
     .hero-bg {
       background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(217, 70, 239, 0.15), #0F172A);
@@ -61,7 +61,7 @@
       background: linear-gradient(145deg, #1E293B, #0F172A);
       border-radius: 0.75rem;
       margin: 0 8px;
-      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
     }
     .slide-content {
       opacity: 0;
@@ -80,11 +80,13 @@
       padding: 16px;
       border-radius: 50%;
       cursor: pointer;
-      transition: background 0.2s ease;
+      transition: all 0.3s ease;
       touch-action: manipulation;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
     .arrow:hover {
       background: linear-gradient(45deg, #D946EF, #3B82F6);
+      transform: translateY(-50%) scale(1.1);
     }
     .prev { left: 10px; }
     .next { right: 10px; }
@@ -94,17 +96,17 @@
     }
     .dot {
       display: inline-block;
-      width: 8px;
-      height: 8px;
-      margin: 0 5px;
+      width: 10px;
+      height: 10px;
+      margin: 0 6px;
       background: #3B82F6;
       border-radius: 50%;
       cursor: pointer;
-      transition: background 0.2s ease, transform 0.2s ease;
+      transition: all 0.3s ease;
     }
     .dot.active, .dot:hover {
       background: #D946EF;
-      transform: scale(1.2);
+      transform: scale(1.3);
     }
     @keyframes glow {
       0%, 100% { opacity: 0.5; }
@@ -126,14 +128,14 @@
       border-radius: 0.5rem;
       padding: 0.75rem;
       width: 100%;
-      transition: border-color 0.2s ease;
+      transition: all 0.3s ease;
       font-family: 'Poppins', sans-serif;
       font-size: 0.9375rem;
     }
     input:focus, textarea:focus {
       outline: none;
       border-color: #D946EF;
-      box-shadow: 0 0 6px rgba(217, 70, 239, 0.2);
+      box-shadow: 0 0 8px rgba(217, 70, 239, 0.3);
     }
     .submit-btn {
       background: linear-gradient(90deg, #3B82F6, #D946EF);
@@ -142,12 +144,14 @@
       font-weight: 600;
       padding: 1rem 1.5rem;
       border-radius: 0.5rem;
-      transition: transform 0.2s ease;
+      transition: all 0.3s ease;
       touch-action: manipulation;
       font-size: 1rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
     .submit-btn:hover {
       transform: translateY(-2px);
+      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
     }
     .error {
       color: #F87171;
@@ -156,7 +160,7 @@
       font-family: 'Poppins', sans-serif;
     }
     .success {
-      color: #3B82F6;
+      color: #4ADE80;
       font-size: 0.8125rem;
       margin-top: 0.25rem;
       font-family: 'Poppins', sans-serif;
@@ -165,7 +169,7 @@
       position: relative;
       display: inline-flex;
       align-items: center;
-      transition: color 0.2s ease;
+      transition: all 0.3s ease;
       font-family: 'Poppins', sans-serif;
       font-weight: 600;
       font-size: 1.0625rem;
@@ -179,7 +183,7 @@
       bottom: 0;
       left: 0;
       background: linear-gradient(to right, #3B82F6, #D946EF);
-      transition: width 0.2s ease;
+      transition: width 0.3s ease;
     }
     .nav-link:hover::after, #mobile-menu a:hover::after {
       width: 100%;
@@ -191,7 +195,8 @@
       background: linear-gradient(180deg, #1E293B, #0F172A);
       opacity: 0;
       transform: translateX(-100%);
-      transition: opacity 0.3s ease, transform 0.3s ease;
+      transition: all 0.3s ease;
+      box-shadow: 4px 0 15px rgba(0, 0, 0, 0.3);
     }
     .mobile-menu.active {
       opacity: 1;
@@ -200,180 +205,50 @@
     .card {
       background: linear-gradient(145deg, #1E293B, #0F172A);
       border-radius: 0.75rem;
-      padding: 1.25rem;
-      transition: transform 0.2s ease;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
     .card:hover {
-      transform: translateY(-4px);
+      transform: translateY(-5px);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
     }
-    /* Chatbot Styles */
-    .chatbot-container {
-      transform: translateY(100%);
-      opacity: 0;
+    .user-avatar {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #3B82F6, #D946EF);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      z-index: 40;
+      cursor: pointer;
       transition: all 0.3s ease;
     }
-    .chatbot-container.open {
-      transform: translateY(0);
-      opacity: 1;
+    .user-avatar:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
     }
-    .chatbot-messages {
-      height: 400px;
-      overflow-y: auto;
-      scrollbar-width: thin;
-      scrollbar-color: #3B82F6 #1E293B;
-    }
-    .chatbot-messages::-webkit-scrollbar {
-      width: 6px;
-    }
-    .chatbot-messages::-webkit-scrollbar-track {
-      background: #1E293B;
-    }
-    .chatbot-messages::-webkit-scrollbar-thumb {
-      background-color: #3B82F6;
-      border-radius: 3px;
-    }
-    .user-message {
-      background: linear-gradient(90deg, #3B82F6, #4f46e5);
-      color: white;
-      border-radius: 1rem 1rem 0 1rem;
-    }
-    .bot-message {
-      background: #1E293B;
-      color: #F1F5F9;
-      border-radius: 1rem 1rem 1rem 0;
-    }
-    .typing-indicator span {
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      background-color: #9CA3AF;
-      border-radius: 50%;
-      margin: 0 2px;
-      animation: typing 1s infinite ease-in-out;
-    }
-    .typing-indicator span:nth-child(2) {
-      animation-delay: 0.2s;
-    }
-    .typing-indicator span:nth-child(3) {
-      animation-delay: 0.4s;
-    }
-    @keyframes typing {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-5px); }
-    }
-    .clear-chat-btn {
-      background: #1E293B;
-      color: #F1F5F9;
-      border: 1px solid #3B82F6;
-      border-radius: 0.5rem;
-      padding: 0.5rem 1rem;
-      font-size: 0.875rem;
+    .footer-link {
       transition: all 0.2s ease;
     }
-    .clear-chat-btn:hover {
-      background: #3B82F6;
-      color: #0F172A;
+    .footer-link:hover {
+      color: #3B82F6;
+      transform: translateX(3px);
     }
-    /* New styles for file upload and image generation */
-    .file-upload-container {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      margin-bottom: 0.5rem;
+    .social-icon {
+      transition: all 0.3s ease;
     }
-    
-    .file-upload-label {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      cursor: pointer;
-      color: #F1F5F9;
-      font-size: 0.875rem;
-      padding: 0.5rem;
-      border-radius: 0.5rem;
-      background: rgba(59, 130, 246, 0.1);
-      transition: background 0.2s ease;
+    .social-icon:hover {
+      transform: translateY(-3px) scale(1.1);
     }
-    
-    .file-upload-label:hover {
-      background: rgba(59, 130, 246, 0.2);
-    }
-    
-    .file-upload-input {
-      display: none;
-    }
-    
-    .file-preview {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-top: 0.5rem;
-    }
-    
-    .file-preview-item {
-      position: relative;
-      width: 60px;
-      height: 60px;
-      border-radius: 0.5rem;
-      overflow: hidden;
-      background: #1E293B;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .file-preview-item img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-    }
-    
-    .file-preview-item .remove-file {
-      position: absolute;
-      top: 2px;
-      right: 2px;
-      background: rgba(0, 0, 0, 0.7);
-      color: white;
-      border-radius: 50%;
-      width: 18px;
-      height: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.6rem;
-      cursor: pointer;
-    }
-    
-    .image-generation-btn {
-      background: linear-gradient(90deg, #10B981, #3B82F6);
-      color: #0F172A;
-      font-family: 'Poppins', sans-serif;
-      font-weight: 600;
-      padding: 0.5rem 1rem;
-      border-radius: 0.5rem;
-      font-size: 0.875rem;
-      margin-left: 0.5rem;
-      transition: transform 0.2s ease;
-    }
-    
-    .image-generation-btn:hover {
-      transform: translateY(-2px);
-    }
-    
-    .generated-image {
-      max-width: 100%;
-      max-height: 300px;
-      border-radius: 0.5rem;
-      margin-top: 0.5rem;
-      border: 1px solid #3B82F6;
-    }
-    
-    .action-buttons {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 0.5rem;
-    }
-    
     @media (max-width: 640px) {
       .submit-btn {
         width: 100%;
@@ -403,22 +278,10 @@
       .arrow {
         padding: 12px;
       }
-      /* Chatbot mobile styles */
-      .chatbot-container {
-        width: 90vw;
-        right: 5vw;
-        bottom: 1rem;
-      }
-      .chatbot-messages {
-        height: 300px;
-      }
-      .action-buttons {
-        flex-direction: column;
-        gap: 0.5rem;
-      }
-      .image-generation-btn {
-        margin-left: 0;
-        width: 100%;
+      .user-avatar {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
       }
     }
     @media (min-width: 640px) and (max-width: 768px) {
@@ -438,39 +301,52 @@
   <!-- Sidebar -->
   <div class="fixed top-0 left-0 h-full w-64 sidebar gradient-glow z-20 hidden md:block">
     <div class="p-4 sm:p-6">
-      <h1 class="text-xl sm:text-2xl font-bold text-white leading-relaxed">Gaming Odyssey</h1>
-      <nav class="mt-8 space-y-3">
-        <a href="#" data-link="index.html" class="flex items-center space-x-2 text-[#3B82F6] font-semibold nav-link">
+      <div class="flex items-center space-x-3">
+        <img src="https://cdn-icons-png.flaticon.com/512/3612/3612569.png" alt="Logo" class="w-10 h-10">
+        <h1 class="text-xl sm:text-2xl font-bold text-white leading-relaxed">Gaming Odyssey</h1>
+      </div>
+      <nav class="mt-10 space-y-4">
+        <a href="#" data-link="index.html" class="flex items-center space-x-3 text-[#3B82F6] font-semibold nav-link">
           <i class="fas fa-home w-5 h-5"></i>
           <span>Home</span>
         </a>
-        <a href="#" data-link="store.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <i class="fas fa-store w-5 h-5"></i>
+        <a href="#" data-link="store.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+          <i class="fas fa-gamepad w-5 h-5"></i>
           <span>Store</span>
         </a>
-        <a href="#" data-link="tournaments.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+        <a href="#" data-link="tournaments.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
           <i class="fas fa-trophy w-5 h-5"></i>
           <span>Tournaments</span>
         </a>
-        <a href="#" data-link="trackorder.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <i class="fas fa-truck-fast w-5 h-5"></i>
+        <a href="#" data-link="trackorder.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+          <i class="fas fa-shipping-fast w-5 h-5"></i>
           <span>Track Order</span>
         </a>
-        <a href="#" data-link="contactus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <i class="fas fa-envelope w-5 h-5"></i>
+        <a href="#" data-link="contactus.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+          <i class="fas fa-headset w-5 h-5"></i>
           <span>Contact Us</span>
         </a>
-        <a href="#" data-link="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+        <a href="#" data-link="aboutus.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
           <i class="fas fa-info-circle w-5 h-5"></i>
           <span>About Us</span>
+        </a>
+        <a href="signup.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+          <i class="fas fa-user-plus w-5 h-5"></i>
+          <span>Sign Up</span>
         </a>
       </nav>
     </div>
   </div>
 
+  <!-- User Avatar (shown after signup) -->
+  <div id="user-avatar" class="user-avatar hidden"></div>
+
   <!-- Mobile Hamburger Menu -->
   <div class="md:hidden fixed top-0 left-0 w-full bg-[#1E293B] z-30 p-4 flex justify-between items-center gradient-glow">
-    <h1 class="text-lg font-bold text-white leading-relaxed">Gaming Odyssey</h1>
+    <div class="flex items-center space-x-2">
+      <img src="https://cdn-icons-png.flaticon.com/512/3612/3612569.png" alt="Logo" class="w-8 h-8">
+      <h1 class="text-lg font-bold text-white leading-relaxed">Gaming Odyssey</h1>
+    </div>
     <button id="hamburger" class="text-[#3B82F6]">
       <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
     </button>
@@ -479,30 +355,34 @@
     <button id="close-menu" class="absolute top-4 right-4 text-[#3B82F6] gradient-glow rounded-full p-2">
       <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
     </button>
-    <nav class="space-y-3 mt-12">
-      <a href="#" data-link="index.html" class="flex items-center space-x-2 text-[#3B82F6] font-semibold nav-link">
+    <nav class="space-y-4 mt-16">
+      <a href="#" data-link="index.html" class="flex items-center space-x-3 text-[#3B82F6] font-semibold nav-link">
         <i class="fas fa-home w-5 h-5"></i>
         <span>Home</span>
       </a>
-      <a href="#" data-link="store.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <i class="fas fa-store w-5 h-5"></i>
+      <a href="#" data-link="store.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+        <i class="fas fa-gamepad w-5 h-5"></i>
         <span>Store</span>
       </a>
-      <a href="#" data-link="tournaments.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+      <a href="#" data-link="tournaments.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
         <i class="fas fa-trophy w-5 h-5"></i>
         <span>Tournaments</span>
       </a>
-      <a href="#" data-link="trackorder.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <i class="fas fa-truck-fast w-5 h-5"></i>
+      <a href="#" data-link="trackorder.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+        <i class="fas fa-shipping-fast w-5 h-5"></i>
         <span>Track Order</span>
       </a>
-      <a href="#" data-link="contactus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <i class="fas fa-envelope w-5 h-5"></i>
+      <a href="#" data-link="contactus.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+        <i class="fas fa-headset w-5 h-5"></i>
         <span>Contact Us</span>
       </a>
-      <a href="#" data-link="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+      <a href="#" data-link="aboutus.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
         <i class="fas fa-info-circle w-5 h-5"></i>
         <span>About Us</span>
+      </a>
+      <a href="signup.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+        <i class="fas fa-user-plus w-5 h-5"></i>
+        <span>Sign Up</span>
       </a>
     </nav>
   </div>
@@ -512,16 +392,25 @@
     <!-- Hero Section -->
     <section class="hero-bg min-h-[80vh] flex items-center justify-center text-center p-4 sm:p-6 md:p-8">
       <div class="fade-in max-w-2xl mx-auto">
+        <div class="flex justify-center mb-6">
+          <img src="https://cdn-icons-png.flaticon.com/512/3612/3612569.png" alt="Logo" class="w-16 h-16">
+        </div>
         <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">Gaming Odyssey</h1>
         <p class="text-base sm:text-lg md:text-xl text-[#F1F5F9] mb-8 leading-relaxed">Where Gaming Meets Glory</p>
-        <div class="flex flex-col sm:flex-row justify-center gap-3">
-          <a href="#" data-link="tournaments.html" class="submit-btn">View Tournaments</a>
+        <div class="flex flex-col sm:flex-row justify-center gap-4">
+          <a href="#" data-link="tournaments.html" class="submit-btn flex items-center justify-center gap-2">
+            <i class="fas fa-trophy"></i> View Tournaments
+          </a>
+          <a href="signup.html" class="submit-btn flex items-center justify-center gap-2 bg-gradient-to-r from-[#10B981] to-[#3B82F6]">
+            <i class="fas fa-user-plus"></i> Join Now
+          </a>
         </div>
       </div>
     </section>
 
     <!-- Slideshow Section -->
     <section class="py-12 sm:py-16 px-4 sm:px-6 md:px-8">
+      <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12">Featured Content</h2>
       <div class="slideshow-container">
         <div class="slides-wrapper">
           <div class="slide flex items-center justify-center md:flex-row flex-col gap-6 active">
@@ -529,7 +418,9 @@
             <div class="slide-content text-center md:text-left max-w-md">
               <h3 class="text-2xl font-bold text-white mb-3">Discover Our Latest Gaming Gear</h3>
               <p class="text-base text-[#F1F5F9] mb-4 leading-relaxed">Explore the newest controllers, keyboards, and headsets designed for ultimate performance.</p>
-              <a href="#" data-link="store.html" class="submit-btn">Shop Now</a>
+              <a href="#" data-link="store.html" class="submit-btn flex items-center justify-center gap-2">
+                <i class="fas fa-shopping-cart"></i> Shop Now
+              </a>
             </div>
           </div>
           <div class="slide flex items-center justify-center md:flex-row flex-col gap-6">
@@ -537,7 +428,9 @@
             <div class="slide-content text-center md:text-left max-w-md">
               <h3 class="text-2xl font-bold text-white mb-3">Join Our Minecraft Server</h3>
               <p class="text-base text-[#F1F5F9] mb-4 leading-relaxed">Dive into epic adventures on our server at <code>play.gamingodyssey.in</code>. Build, battle, and connect!</p>
-              <a href="http://play.gamingodyssey.in" class="submit-btn">Join Server</a>
+              <a href="http://play.gamingodyssey.in" class="submit-btn flex items-center justify-center gap-2">
+                <i class="fas fa-server"></i> Join Server
+              </a>
             </div>
           </div>
           <div class="slide flex items-center justify-center md:flex-row flex-col gap-6">
@@ -545,7 +438,9 @@
             <div class="slide-content text-center md:text-left max-w-md">
               <h3 class="text-2xl font-bold text-white mb-3">Unlock Exclusive Server Ranks</h3>
               <p class="text-base text-[#F1F5F9] mb-4 leading-relaxed">Earn ranks like Legend, Hero, and Elite with unique perks. Level up your Minecraft experience!</p>
-              <a href="#" data-link="ranks.html" class="submit-btn">Learn More</a>
+              <a href="#" data-link="ranks.html" class="submit-btn flex items-center justify-center gap-2">
+                <i class="fas fa-medal"></i> Learn More
+              </a>
             </div>
           </div>
           <div class="slide flex items-center justify-center md:flex-row flex-col gap-6">
@@ -553,7 +448,9 @@
             <div class="slide-content text-center md:text-left max-w-md">
               <h3 class="text-2xl font-bold text-white mb-3">Shop at Gaming Odyssey Store</h3>
               <p class="text-base text-[#F1F5F9] mb-4 leading-relaxed">From RGB peripherals to esports apparel, find everything you need to dominate.</p>
-              <a href="#" data-link="store.html" class="submit-btn">Visit Store</a>
+              <a href="#" data-link="store.html" class="submit-btn flex items-center justify-center gap-2">
+                <i class="fas fa-store"></i> Visit Store
+              </a>
             </div>
           </div>
           <div class="slide flex items-center justify-center md:flex-row flex-col gap-6">
@@ -561,7 +458,9 @@
             <div class="slide-content text-center md:text-left max-w-md">
               <h3 class="text-2xl font-bold text-white mb-3">Build Your Dream Gaming PC</h3>
               <p class="text-base text-[#F1F5F9] mb-4 leading-relaxed">Customize your rig with our expert PC building service. Power up your gameplay!</p>
-              <a href="#" data-link="pcbuild.html" class="submit-btn">Start Building</a>
+              <a href="#" data-link="pcbuild.html" class="submit-btn flex items-center justify-center gap-2">
+                <i class="fas fa-desktop"></i> Start Building
+              </a>
             </div>
           </div>
         </div>
@@ -586,69 +485,102 @@
       <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-10">Featured Gaming Gear</h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
         <div class="card gradient-glow fade-in">
-          <img src="https://m.media-amazon.com/images/I/61UIHG3egGL._AC_.jpg" alt="Razer Cobra Pro" class="w-full h-48 object-contain rounded-lg mb-3 aspect-[4/3]" loading="lazy">
+          <img src="https://m.media-amazon.com/images/I/61UIHG3egGL._AC_.jpg" alt="Razer Cobra Pro" class="w-full h-48 object-contain rounded-lg mb-4 aspect-[4/3]" loading="lazy">
           <h3 class="text-lg font-bold text-white">Razer Cobra Pro</h3>
-          <p class="text-[#F1F5F9] mb-3 text-sm">$165.99</p>
-          <a href="#" data-link="store.html" class="submit-btn block text-center">Shop Now</a>
+          <p class="text-[#F1F5F9] mb-4 text-sm">$165.99</p>
+          <a href="#" data-link="store.html" class="submit-btn flex items-center justify-center gap-2">
+            <i class="fas fa-shopping-cart"></i> Shop Now
+          </a>
         </div>
         <div class="card gradient-glow fade-in">
-          <img src="https://m.media-amazon.com/images/I/711iU01TgJL._AC_.jpg" alt="Logitech G213 Prodigy" class="w-full h-48 object-contain rounded-lg mb-3 aspect-[4/3]" loading="lazy">
+          <img src="https://m.media-amazon.com/images/I/711iU01TgJL._AC_.jpg" alt="Logitech G213 Prodigy" class="w-full h-48 object-contain rounded-lg mb-4 aspect-[4/3]" loading="lazy">
           <h3 class="text-lg font-bold text-white">Logitech G213 Prodigy</h3>
-          <p class="text-[#F1F5F9] mb-3 text-sm">$49.99</p>
-          <a href="#" data-link="store.html" class="submit-btn block text-center">Shop Now</a>
+          <p class="text-[#F1F5F9] mb-4 text-sm">$49.99</p>
+          <a href="#" data-link="store.html" class="submit-btn flex items-center justify-center gap-2">
+            <i class="fas fa-shopping-cart"></i> Shop Now
+          </a>
         </div>
         <div class="card gradient-glow fade-in">
-          <img src="https://m.media-amazon.com/images/I/71NZawTvdDL._AC_.jpg" alt="HyperX Cloud III" class="w-full h-48 object-contain rounded-lg mb-3 aspect-[4/3]" loading="lazy">
+          <img src="https://m.media-amazon.com/images/I/71NZawTvdDL._AC_.jpg" alt="HyperX Cloud III" class="w-full h-48 object-contain rounded-lg mb-4 aspect-[4/3]" loading="lazy">
           <h3 class="text-lg font-bold text-white">HyperX Cloud III</h3>
-          <p class="text-[#F1F5F9] mb-3 text-sm">$105.99</p>
-          <a href="#" data-link="store.html" class="submit-btn block text-center">Shop Now</a>
+          <p class="text-[#F1F5F9] mb-4 text-sm">$105.99</p>
+          <a href="#" data-link="store.html" class="submit-btn flex items-center justify-center gap-2">
+            <i class="fas fa-shopping-cart"></i> Shop Now
+          </a>
         </div>
         <div class="card gradient-glow fade-in">
-          <img src="https://m.media-amazon.com/images/I/71LCmvrndjL._SL1500_.jpg" alt="FIFINE Gaming Microphone" class="w-full h-48 object-contain rounded-lg mb-3 aspect-[4/3]" loading="lazy">
+          <img src="https://m.media-amazon.com/images/I/71LCmvrndjL._SL1500_.jpg" alt="FIFINE Gaming Microphone" class="w-full h-48 object-contain rounded-lg mb-4 aspect-[4/3]" loading="lazy">
           <h3 class="text-lg font-bold text-white">FIFINE Gaming Microphone</h3>
-          <p class="text-[#F1F5F9] mb-3 text-sm">$34.99</p>
-          <a href="#" data-link="store.html" class="submit-btn block text-center">Shop Now</a>
+          <p class="text-[#F1F5F9] mb-4 text-sm">$34.99</p>
+          <a href="#" data-link="store.html" class="submit-btn flex items-center justify-center gap-2">
+            <i class="fas fa-shopping-cart"></i> Shop Now
+          </a>
         </div>
       </div>
     </section>
 
     <!-- Upcoming Tournaments Section -->
-    <section class="py-12 sm:py-16 px-4 sm:px-6 md:px-8 bg-[#1E293B]">
+    <section class="py-12 sm:py-16 px-4 sm:px-6 md:px-8 bg-gradient-to-b from-[#1E293B] to-[#0F172A]">
       <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-10">Upcoming Tournaments</h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
         <div class="card gradient-glow fade-in">
-          <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=800&auto=format&fit=crop" alt="Cyber Clash 2025" class="w-full h-40 object-cover rounded-lg mb-3" loading="lazy">
+          <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=800&auto=format&fit=crop" alt="Cyber Clash 2025" class="w-full h-40 object-cover rounded-lg mb-4" loading="lazy">
           <h3 class="text-lg font-bold text-white">Cyber Clash 2025</h3>
-          <p class="text-[#F1F5F9] mb-1 text-sm">Game: Valorant</p>
-          <p class="text-[#F1F5F9] mb-1 text-sm">Date: May 15, 2025</p>
-          <p class="text-[#F1F5F9] mb-3 text-sm">Prize: $10,000</p>
-          <a href="#" data-link="tournaments.html" class="submit-btn block text-center">Register</a>
+          <p class="text-[#F1F5F9] mb-2 text-sm flex items-center gap-2"><i class="fas fa-gamepad text-[#3B82F6]"></i> Valorant</p>
+          <p class="text-[#F1F5F9] mb-2 text-sm flex items-center gap-2"><i class="fas fa-calendar-alt text-[#3B82F6]"></i> May 15, 2025</p>
+          <p class="text-[#F1F5F9] mb-4 text-sm flex items-center gap-2"><i class="fas fa-award text-[#3B82F6]"></i> $10,000</p>
+          <a href="#" data-link="tournaments.html" class="submit-btn flex items-center justify-center gap-2">
+            <i class="fas fa-user-plus"></i> Register
+          </a>
         </div>
         <div class="card gradient-glow fade-in">
-          <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=800&auto=format&fit=crop" alt="Neon Strike" class="w-full h-40 object-cover rounded-lg mb-3" loading="lazy">
+          <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=800&auto=format&fit=crop" alt="Neon Strike" class="w-full h-40 object-cover rounded-lg mb-4" loading="lazy">
           <h3 class="text-lg font-bold text-white">Neon Strike</h3>
-          <p class="text-[#F1F5F9] mb-1 text-sm">Game: Overwatch</p>
-          <p class="text-[#F1F5F9] mb-1 text-sm">Date: June 10, 2025</p>
-          <p class="text-[#F1F5F9] mb-3 text-sm">Prize: $15,000</p>
-          <a href="#" data-link="tournaments.html" class="submit-btn block text-center">Register</a>
+          <p class="text-[#F1F5F9] mb-2 text-sm flex items-center gap-2"><i class="fas fa-gamepad text-[#3B82F6]"></i> Overwatch</p>
+          <p class="text-[#F1F5F9] mb-2 text-sm flex items-center gap-2"><i class="fas fa-calendar-alt text-[#3B82F6]"></i> June 10, 2025</p>
+          <p class="text-[#F1F5F9] mb-4 text-sm flex items-center gap-2"><i class="fas fa-award text-[#3B82F6]"></i> $15,000</p>
+          <a href="#" data-link="tournaments.html" class="submit-btn flex items-center justify-center gap-2">
+            <i class="fas fa-user-plus"></i> Register
+          </a>
         </div>
         <div class="card gradient-glow fade-in">
-          <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=800&auto=format&fit=crop" alt="Odyssey League" class="w-full h-40 object-cover rounded-lg mb-3" loading="lazy">
+          <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=800&auto=format&fit=crop" alt="Odyssey League" class="w-full h-40 object-cover rounded-lg mb-4" loading="lazy">
           <h3 class="text-lg font-bold text-white">Odyssey League</h3>
-          <p class="text-[#F1F5F9] mb-1 text-sm">Game: League of Legends</p>
-          <p class="text-[#F1F5F9] mb-1 text-sm">Date: July 5, 2025</p>
-          <p class="text-[#F1F5F9] mb-3 text-sm">Prize: $20,000</p>
-          <a href="#" data-link="tournaments.html" class="submit-btn block text-center">Register</a>
+          <p class="text-[#F1F5F9] mb-2 text-sm flex items-center gap-2"><i class="fas fa-gamepad text-[#3B82F6]"></i> League of Legends</p>
+          <p class="text-[#F1F5F9] mb-2 text-sm flex items-center gap-2"><i class="fas fa-calendar-alt text-[#3B82F6]"></i> July 5, 2025</p>
+          <p class="text-[#F1F5F9] mb-4 text-sm flex items-center gap-2"><i class="fas fa-award text-[#3B82F6]"></i> $20,000</p>
+          <a href="#" data-link="tournaments.html" class="submit-btn flex items-center justify-center gap-2">
+            <i class="fas fa-user-plus"></i> Register
+          </a>
         </div>
       </div>
     </section>
 
     <!-- About Us Section -->
-    <section class="py-12 sm:py-16 px-4 sm:px-6 md:px-8 text-center">
+    <section class="py-12 sm:py-16 px-4 sm:px-6 md:px-8 text-center bg-gradient-to-b from-[#0F172A] to-[#1E293B]">
       <h2 class="text-3xl sm:text-4xl font-bold text-white mb-8">About Gaming Odyssey</h2>
       <div class="max-w-2xl mx-auto fade-in">
         <p class="text-base sm:text-lg text-[#F1F5F9] mb-6 leading-relaxed">Gaming Odyssey is your gateway to competitive gaming. From thrilling tournaments to top-tier gaming gear, we bring the future of esports directly to you. Join a community of passionate gamers and level up your experience!</p>
-        <svg class="w-12 h-12 mx-auto text-[#3B82F6] gradient-glow" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <div class="flex justify-center space-x-6 mt-8">
+          <div class="flex flex-col items-center">
+            <div class="bg-[#1E293B] p-4 rounded-full mb-2 gradient-glow">
+              <i class="fas fa-trophy text-2xl text-[#D946EF]"></i>
+            </div>
+            <p class="text-sm text-[#F1F5F9]">50+ Tournaments</p>
+          </div>
+          <div class="flex flex-col items-center">
+            <div class="bg-[#1E293B] p-4 rounded-full mb-2 gradient-glow">
+              <i class="fas fa-users text-2xl text-[#3B82F6]"></i>
+            </div>
+            <p class="text-sm text-[#F1F5F9]">10,000+ Members</p>
+          </div>
+          <div class="flex flex-col items-center">
+            <div class="bg-[#1E293B] p-4 rounded-full mb-2 gradient-glow">
+              <i class="fas fa-gamepad text-2xl text-[#10B981]"></i>
+            </div>
+            <p class="text-sm text-[#F1F5F9]">100+ Games</p>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -678,7 +610,9 @@
             <p id="message-error" class="error hidden">Please enter a message</p>
           </div>
           <div class="text-center">
-            <button type="submit" class="submit-btn w-full">Send Message</button>
+            <button type="submit" class="submit-btn w-full flex items-center justify-center gap-2">
+              <i class="fas fa-paper-plane"></i> Send Message
+            </button>
             <p id="form-status" class="mt-3 text-sm"></p>
           </div>
         </form>
@@ -686,45 +620,78 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-[#1E293B] py-10 px-4 sm:px-6 md:px-8">
-      <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    <footer class="bg-[#0F172A] py-12 px-4 sm:px-6 md:px-8 border-t border-[#1E293B]">
+      <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
         <div>
-          <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Contact</h3>
-          <p class="text-[#F1F5F9] mb-2 text-sm leading-relaxed">📧 <a href="mailto:support@gamingodyssey.in" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link">support@gamingodyssey.in</a></p>
-          <p class="text-[#F1F5F9] text-sm leading-relaxed">📞 6290994382</p>
-        </div>
-        <div>
-          <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Useful Links</h3>
-          <ul class="space-y-2">
-            <li><a href="#" data-link="index.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Home</a></li>
-            <li><a href="#" data-link="store.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Store</a></li>
-            <li><a href="#" data-link="tournaments.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Tournaments</a></li>
-            <li><a href="#" data-link="trackorder.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Track Order</a></li>
-            <li><a href="#" data-link="contactus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Contact Us</a></li>
-            <li><a href="#" data-link="aboutus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">About Us</a></li>
-            <li><a href="terms.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Terms & Conditions</a></li>
-          </ul>
-        </div>
-        <div>
-          <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Follow Us</h3>
-          <div class="flex space-x-3">
-            <a href="https://www.instagram.com/noticedveil" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full">
-              <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" class="w-5 h-5">
+          <div class="flex items-center space-x-3 mb-4">
+            <img src="https://cdn-icons-png.flaticon.com/512/3612/3612569.png" alt="Logo" class="w-10 h-10">
+            <h3 class="text-xl font-bold text-white">Gaming Odyssey</h3>
+          </div>
+          <p class="text-[#94A3B8] text-sm mb-4 leading-relaxed">Where Gaming Meets Glory. Join our community of passionate gamers and elevate your gaming experience.</p>
+          <div class="flex space-x-4">
+            <a href="https://www.instagram.com/noticedveil" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#E1306C]">
+              <i class="fab fa-instagram text-xl"></i>
             </a>
-            <a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full">
-              <img src="https://cdn-icons-png.flaticon.com/512/3938/3938026.png" alt="YouTube" class="w-5 h-5">
+            <a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#FF0000]">
+              <i class="fab fa-youtube text-xl"></i>
             </a>
-            <a href="https://www.facebook.com" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full">
-              <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" class="w-5 h-5">
+            <a href="https://www.facebook.com" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#1877F2]">
+              <i class="fab fa-facebook text-xl"></i>
+            </a>
+            <a href="https://www.twitter.com" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#1DA1F2]">
+              <i class="fab fa-twitter text-xl"></i>
             </a>
           </div>
         </div>
+        <div>
+          <h3 class="text-lg font-bold text-white mb-4 leading-relaxed">Quick Links</h3>
+          <ul class="space-y-3">
+            <li><a href="#" data-link="index.html" class="footer-link text-[#94A3B8] text-sm leading-relaxed flex items-center gap-2"><i class="fas fa-chevron-right text-xs text-[#3B82F6]"></i> Home</a></li>
+            <li><a href="#" data-link="store.html" class="footer-link text-[#94A3B8] text-sm leading-relaxed flex items-center gap-2"><i class="fas fa-chevron-right text-xs text-[#3B82F6]"></i> Store</a></li>
+            <li><a href="#" data-link="tournaments.html" class="footer-link text-[#94A3B8] text-sm leading-relaxed flex items-center gap-2"><i class="fas fa-chevron-right text-xs text-[#3B82F6]"></i> Tournaments</a></li>
+            <li><a href="#" data-link="trackorder.html" class="footer-link text-[#94A3B8] text-sm leading-relaxed flex items-center gap-2"><i class="fas fa-chevron-right text-xs text-[#3B82F6]"></i> Track Order</a></li>
+            <li><a href="signup.html" class="footer-link text-[#94A3B8] text-sm leading-relaxed flex items-center gap-2"><i class="fas fa-chevron-right text-xs text-[#3B82F6]"></i> Sign Up</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-white mb-4 leading-relaxed">Support</h3>
+          <ul class="space-y-3">
+            <li><a href="#" data-link="contactus.html" class="footer-link text-[#94A3B8] text-sm leading-relaxed flex items-center gap-2"><i class="fas fa-chevron-right text-xs text-[#3B82F6]"></i> Contact Us</a></li>
+            <li><a href="#" data-link="aboutus.html" class="footer-link text-[#94A3B8] text-sm leading-relaxed flex items-center gap-2"><i class="fas fa-chevron-right text-xs text-[#3B82F6]"></i> About Us</a></li>
+            <li><a href="terms.html" class="footer-link text-[#94A3B8] text-sm leading-relaxed flex items-center gap-2"><i class="fas fa-chevron-right text-xs text-[#3B82F6]"></i> Terms & Conditions</a></li>
+            <li><a href="privacy.html" class="footer-link text-[#94A3B8] text-sm leading-relaxed flex items-center gap-2"><i class="fas fa-chevron-right text-xs text-[#3B82F6]"></i> Privacy Policy</a></li>
+            <li><a href="faq.html" class="footer-link text-[#94A3B8] text-sm leading-relaxed flex items-center gap-2"><i class="fas fa-chevron-right text-xs text-[#3B82F6]"></i> FAQ</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-white mb-4 leading-relaxed">Contact Info</h3>
+          <ul class="space-y-3">
+            <li class="text-[#94A3B8] text-sm leading-relaxed flex items-start gap-3">
+              <i class="fas fa-map-marker-alt mt-1 text-[#3B82F6]"></i>
+              <span>123 Gaming Street, Virtual City, VC 12345</span>
+            </li>
+            <li class="text-[#94A3B8] text-sm leading-relaxed flex items-center gap-3">
+              <i class="fas fa-envelope text-[#3B82F6]"></i>
+              <a href="mailto:support@gamingodyssey.in" class="hover:text-[#3B82F6] transition">support@gamingodyssey.in</a>
+            </li>
+            <li class="text-[#94A3B8] text-sm leading-relaxed flex items-center gap-3">
+              <i class="fas fa-phone text-[#3B82F6]"></i>
+              <span>6290994382</span>
+            </li>
+            <li class="text-[#94A3B8] text-sm leading-relaxed flex items-center gap-3">
+              <i class="fas fa-server text-[#3B82F6]"></i>
+              <span>play.gamingodyssey.in</span>
+            </li>
+          </ul>
+        </div>
       </div>
-      <p class="text-center text-[#F1F5F9] mt-6 text-sm leading-relaxed">© 2025 Gaming Odyssey. All rights reserved.</p>
+      <div class="border-t border-[#1E293B] mt-10 pt-6 text-center">
+        <p class="text-[#94A3B8] text-sm leading-relaxed">© 2025 Gaming Odyssey. All rights reserved.</p>
+      </div>
     </footer>
   </div>
 
-  <!-- Enhanced Chatbot UI with File Attachments and Image Generation -->
+  <!-- Chatbot UI (unchanged from original) -->
   <div id="chatbot-container" class="fixed bottom-6 right-6 z-50 w-80 sm:w-96 transition-all duration-300 ease-in-out">
     <div id="chatbot-header" class="bg-gradient-to-r from-[#3B82F6] to-[#D946EF] text-white p-3 rounded-t-lg flex justify-between items-center cursor-pointer">
       <h3 class="font-bold">Gaming Odyssey Assistant</h3>
@@ -781,6 +748,19 @@
   <script>
     // Initialize EmailJS
     emailjs.init('__S5AyIeoL526kGwQ');
+
+    // Check for user data in localStorage and show avatar if exists
+    const userAvatar = document.getElementById('user-avatar');
+    const userData = localStorage.getItem('userData');
+    
+    if (userData) {
+      const user = JSON.parse(userData);
+      userAvatar.textContent = user.name.charAt(0).toUpperCase();
+      userAvatar.classList.remove('hidden');
+      
+      // Add tooltip with username
+      userAvatar.title = `Welcome, ${user.name}`;
+    }
 
     // Handle protected links
     document.querySelectorAll('.nav-link, .submit-btn').forEach(link => {
@@ -963,7 +943,7 @@
     // Update slideshow on window resize
     window.addEventListener('resize', updateSlides);
 
-    // Enhanced Chatbot Functionality with File Attachments and Image Generation
+    // Chatbot Functionality (unchanged from original)
     const chatbotContainer = document.getElementById('chatbot-container');
     const chatbotHeader = document.getElementById('chatbot-header');
     const chatbotBody = document.getElementById('chatbot-body');
