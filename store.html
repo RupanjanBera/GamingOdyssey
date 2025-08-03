@@ -471,16 +471,30 @@
       }
       
       /* Sidebar and category menu */
-      .sidebar, .category-menu {
+      .sidebar {
         display: none;
         width: 85vw;
         z-index: 50;
       }
-      .sidebar.active, .category-menu.active {
+      .sidebar.active {
         display: block;
         position: fixed;
         height: 100vh;
         top: 0;
+      }
+      
+      .category-menu {
+        display: none;
+        width: 85vw;
+        z-index: 50;
+        transform: translateX(100%);
+      }
+      .category-menu.active {
+        display: block;
+        position: fixed;
+        height: 100vh;
+        top: 0;
+        transform: translateX(0);
       }
       
       /* Mobile menu */
@@ -624,13 +638,6 @@
       }
     }
 
-    /* Extra large screens */
-    @media (min-width: 1280px) {
-      #products-grid {
-        grid-template-columns: repeat(4, 1fr);
-      }
-    }
-
     /* Footer improvements */
     footer {
       background: #1E293B;
@@ -687,27 +694,6 @@
     }
     .filter-icon {
       margin-right: 0.5rem;
-    }
-
-    /* Improved product card layout for mobile */
-    .product-card {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-    }
-    .product-card img {
-      width: 100%;
-      height: auto;
-      aspect-ratio: 1/1;
-      object-fit: contain;
-    }
-    .product-card-content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-    .product-card-buttons {
-      margin-top: auto;
     }
   </style>
 </head>
@@ -843,7 +829,7 @@
   </div>
 
   <!-- Category Sliding Menu (Right Side) -->
-  <div id="category-menu" class="fixed top-0 right-0 h-full category-menu gradient-glow z-30 hidden md:block">
+  <div id="category-menu" class="fixed top-0 right-0 h-full category-menu gradient-glow z-30">
     <div class="p-6">
       <h2 class="text-xl font-bold text-white mb-6 flex items-center">
         <i class="fas fa-list mr-2"></i> Categories
@@ -990,11 +976,11 @@
     </section>
 
     <!-- Products Section -->
-    <section class="py-8 px-4 sm:px-6 md:px-8">
-      <h2 class="text-3xl md:text-4xl font-bold text-white text-center mb-8 md:mb-12 flex items-center justify-center">
-        <i class="fas fa-store mr-2 md:mr-4"></i> Store
+    <section class="py-16 px-4 sm:px-6 md:px-8">
+      <h2 class="text-4xl font-bold text-white text-center mb-12 flex items-center justify-center">
+        <i class="fas fa-store mr-4"></i> Store
       </h2>
-      <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-6xl mx-auto">
+      <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
         <!-- Products will be loaded dynamically from database.html -->
       </div>
     </section>
@@ -1094,7 +1080,7 @@
         <p class="text-center text-[#F1F5F9] mt-6 text-sm leading-relaxed">
           <i class="fas fa-copyright mr-1"></i> 2025 Gaming Odyssey. All rights reserved.
         </p>
-        <div class="flex flex-wrap justify-center gap-2 md:gap-4 mt-2">
+        <div class="flex justify-center space-x-4 mt-2">
           <a href="#" class="text-[#F1F5F9] hover:text-[#3B82F6] text-xs">Privacy Policy</a>
           <a href="#" class="text-[#F1F5F9] hover:text-[#3B82F6] text-xs">Terms of Service</a>
           <a href="#" class="text-[#F1F5F9] hover:text-[#3B82F6] text-xs">Shipping Policy</a>
@@ -1105,6 +1091,66 @@
   </div>
 
   <script>
+    // Default products data in case localStorage is empty
+    const defaultProducts = [
+      {
+        id: "prod_1",
+        name: "Razer DeathAdder V2",
+        price: 69.99,
+        category: "Mouse",
+        description: "The Razer DeathAdder V2 is an ergonomic gaming mouse with Razer Optical Mouse Switches and Focus+ 20K DPI Optical Sensor for ultimate speed and accuracy.",
+        images: ["https://m.media-amazon.com/images/I/61IkmqVBRZL._AC_SL1500_.jpg"]
+      },
+      {
+        id: "prod_2",
+        name: "Logitech G Pro X Keyboard",
+        price: 149.99,
+        category: "Keyboard",
+        description: "Logitech G PRO X Mechanical Gaming Keyboard with swappable GX mechanical switches and LIGHTSYNC RGB.",
+        images: ["https://m.media-amazon.com/images/I/71hH+Qy4i+L._AC_SL1500_.jpg"]
+      },
+      {
+        id: "prod_3",
+        name: "ASUS TUF Gaming Monitor",
+        price: 249.99,
+        category: "Monitor",
+        description: "ASUS TUF Gaming 27\" 1440P HDR Monitor (VG27AQ) - QHD (2560 x 1440), 165Hz, 1ms, Extreme Low Motion Blur, G-SYNC Compatible.",
+        images: ["https://m.media-amazon.com/images/I/81WrBJdJNIL._AC_SL1500_.jpg"]
+      },
+      {
+        id: "prod_4",
+        name: "HyperX Cloud II Headset",
+        price: 99.99,
+        category: "Headset",
+        description: "HyperX Cloud II Gaming Headset with 7.1 Surround Sound, Memory Foam Ear Pads, Durable Aluminum Frame, Detachable Microphone.",
+        images: ["https://m.media-amazon.com/images/I/71Lq+9g5udL._AC_SL1500_.jpg"]
+      },
+      {
+        id: "prod_5",
+        name: "SteelSeries QcK Gaming Mousepad",
+        price: 14.99,
+        category: "Accessories",
+        description: "SteelSeries QcK Gaming Surface - Optimized for Gaming Sensors and Tracking - Non-Slip Rubber Base.",
+        images: ["https://m.media-amazon.com/images/I/71QYwX+7X+L._AC_SL1500_.jpg"]
+      },
+      {
+        id: "prod_6",
+        name: "Elgato Stream Deck",
+        price: 149.99,
+        category: "Streaming",
+        description: "Elgato Stream Deck - Live Content Creation Controller with 15 customizable LCD keys, adjustable stand, for Windows 10 and macOS.",
+        images: ["https://m.media-amazon.com/images/I/61W9m6k5uRL._AC_SL1500_.jpg"]
+      }
+    ];
+
+    // Initialize products in localStorage if empty
+    function initializeProducts() {
+      const storedProducts = JSON.parse(localStorage.getItem('products'));
+      if (!storedProducts || storedProducts.length === 0) {
+        localStorage.setItem('products', JSON.stringify(defaultProducts));
+      }
+    }
+
     // Currency Conversion Rates (relative to USD)
     const conversionRates = {
       USD: 1
@@ -1122,6 +1168,7 @@
       mobileMenu.classList.remove('hidden');
       mobileMenu.classList.add('active');
       document.querySelector('.sidebar').classList.remove('active');
+      document.getElementById('category-menu').classList.add('hidden');
     });
     closeMenu.addEventListener('click', () => {
       mobileMenu.classList.add('hidden');
@@ -1131,18 +1178,27 @@
     // Category Menu Toggle (Mobile)
     const categoryToggle = document.getElementById('category-toggle');
     const categoryMenu = document.getElementById('category-menu');
+    
+    // Initialize category menu state based on screen size
+    function initCategoryMenu() {
+      if (window.innerWidth < 768) {
+        categoryMenu.classList.add('hidden');
+      } else {
+        categoryMenu.classList.remove('hidden');
+      }
+    }
+
     categoryToggle.addEventListener('click', () => {
       categoryMenu.classList.toggle('hidden');
-      categoryMenu.classList.toggle('active');
       mobileMenu.classList.remove('active');
       mobileMenu.classList.add('hidden');
+      document.querySelector('.sidebar').classList.remove('active');
     });
 
     // Close category menu when clicking outside
     document.addEventListener('click', (e) => {
       if (!categoryMenu.contains(e.target) && e.target !== categoryToggle && window.innerWidth < 768) {
         categoryMenu.classList.add('hidden');
-        categoryMenu.classList.remove('active');
       }
     });
 
@@ -1171,11 +1227,12 @@
 
     // Ensure category menu is visible on desktop load
     window.addEventListener('DOMContentLoaded', () => {
-      if (window.innerWidth >= 768) {
-        categoryMenu.classList.remove('hidden');
-        categoryMenu.classList.add('active');
-      }
+      initializeProducts(); // Initialize products if empty
+      initCategoryMenu(); // Initialize category menu state
     });
+
+    // Update menu state when window is resized
+    window.addEventListener('resize', initCategoryMenu);
 
     // Cart Functionality
     const cartCountElements = {
@@ -1372,28 +1429,26 @@
         card.className = 'product-card gradient-glow fade-in cursor-pointer';
         card.setAttribute('data-id', product.id);
         card.innerHTML = `
-          <div class="product-card-content">
-            <img src="${product.images[0]}" alt="${product.name}" class="w-full h-auto aspect-square object-contain rounded-lg mb-4">
-            <h3 class="text-lg md:text-xl font-bold text-white mb-2">${product.name}</h3>
-            <div class="flex justify-between items-center mb-3">
-              <p class="text-[#F1F5F9]">${currencySymbols[selectedCurrency]}${convertedPrice}</p>
-              <div class="average-rating">
-                <div class="average-rating-stars">
-                  ${'★'.repeat(Math.round(averageRating))}${'☆'.repeat(5 - Math.round(averageRating))}
-                </div>
-                <div class="average-rating-count">
-                  (${productReviews.length})
-                </div>
+          <img src="${product.images[0]}" alt="Product" class="w-full h-48 object-contain rounded-lg mb-4">
+          <h3 class="text-xl font-bold text-white">${product.name}</h3>
+          <div class="flex justify-between items-center">
+            <p class="text-[#F1F5F9] mb-4">${currencySymbols[selectedCurrency]}${convertedPrice}</p>
+            <div class="average-rating">
+              <div class="average-rating-stars">
+                ${'★'.repeat(Math.round(averageRating))}${'☆'.repeat(5 - Math.round(averageRating))}
+              </div>
+              <div class="average-rating-count">
+                (${productReviews.length})
               </div>
             </div>
-            <div class="product-card-buttons flex flex-col sm:flex-row gap-2 mt-auto">
-              <a href="#" class="submit-btn text-center buy-now-btn">
-                <i class="fas fa-bolt mr-2"></i> Buy Now
-              </a>
-              <button class="submit-btn text-center add-to-cart" data-name="${product.name}" data-price="${product.price * conversionRates[selectedCurrency]}">
-                <i class="fas fa-cart-plus mr-2"></i> Add to Cart
-              </button>
-            </div>
+          </div>
+          <div class="flex space-x-2">
+            <a href="#" class="submit-btn flex-1 text-center buy-now-btn">
+              <i class="fas fa-bolt mr-2"></i> Buy Now
+            </a>
+            <button class="submit-btn flex-1 text-center add-to-cart" data-name="${product.name}" data-price="${product.price * conversionRates[selectedCurrency]}">
+              <i class="fas fa-cart-plus mr-2"></i> Add to Cart
+            </button>
           </div>
         `;
         productsGrid.appendChild(card);
@@ -1546,6 +1601,7 @@
     }
 
     // Initial load of products
+    initializeProducts();
     loadProducts();
 
     // Update cart count on page load
