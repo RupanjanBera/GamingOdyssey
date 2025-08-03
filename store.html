@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Gaming Odyssey - Store</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -354,57 +354,97 @@
       outline: none;
       box-shadow: 0 0 6px rgba(217, 70, 239, 0.2);
     }
+
     /* Mobile-specific styles */
-    @media (max-width: 640px) {
+    @media (max-width: 767px) {
+      /* Layout adjustments */
+      .md\:ml-64, .md\:mr-64 {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+      }
+      
+      /* Sidebar and category menu */
       .sidebar, .category-menu {
         display: none;
+        width: 85vw;
+        z-index: 50;
       }
       .sidebar.active, .category-menu.active {
         display: block;
+        position: fixed;
+        height: 100vh;
+        top: 0;
       }
+      
+      /* Mobile menu */
+      #mobile-menu {
+        width: 85vw;
+      }
+      
+      /* Hero section */
       .hero-bg {
-        padding: 0.5rem;
+        padding: 0.75rem;
       }
       .hero-bg .flex {
         flex-direction: column;
-        gap: 1rem;
+        gap: 0.75rem;
       }
+      
+      /* Input and buttons */
       input, select {
         font-size: 14px;
-        padding: 0.625rem;
+        padding: 0.75rem;
       }
       .submit-btn {
         width: 100%;
         padding: 0.875rem;
         font-size: 14px;
       }
+      
+      /* Products grid */
       #products-grid {
         grid-template-columns: 1fr;
+        padding: 0 0.75rem;
+        gap: 1rem;
+      }
+      .product-card {
+        padding: 1rem;
       }
       .product-card img {
-        height: 10rem;
+        height: 180px;
+        object-fit: contain;
       }
       .product-card h3 {
-        font-size: 1.125rem;
+        font-size: 1.1rem;
+        margin: 0.5rem 0;
       }
       .product-card p {
-        font-size: 0.875rem;
+        font-size: 0.95rem;
+        margin-bottom: 0.75rem;
       }
+      .product-card .buttons {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .product-card .buttons button, 
+      .product-card .buttons a {
+        width: 100%;
+      }
+      
+      /* Product detail overlay */
       .product-detail {
         padding: 0.75rem;
-        width: 98%;
+        width: 95%;
+        top: 55%;
       }
       .product-detail img {
-        max-height: 250px;
+        max-height: 220px;
       }
       .product-detail h3 {
-        font-size: 1.25rem;
+        font-size: 1.3rem;
       }
       .product-detail .price {
-        font-size: 1rem;
-      }
-      .product-detail .description h4 {
-        font-size: 0.875rem;
+        font-size: 1.1rem;
       }
       .product-detail .buttons {
         flex-direction: column;
@@ -417,26 +457,41 @@
         padding: 0.3rem;
         font-size: 1rem;
       }
+      
+      /* Navigation */
       .nav-link, #mobile-menu a {
-        font-size: 0.9375rem;
+        font-size: 0.95rem;
+      }
+      
+      /* Footer */
+      footer {
+        padding: 1.5rem 0.75rem;
       }
       footer .grid {
         grid-template-columns: 1fr;
+        gap: 1.5rem;
       }
       footer h3 {
-        font-size: 1rem;
+        font-size: 1.1rem;
+        margin-bottom: 0.75rem;
       }
       footer p, footer a {
-        font-size: 0.875rem;
+        font-size: 0.9rem;
+      }
+      footer .social-icons {
+        justify-content: flex-start;
+        margin-top: 0.5rem;
       }
       .cart-count {
-        font-size: 0.625rem;
-        padding: 1px 4px;
+        font-size: 0.7rem;
+        padding: 1px 5px;
       }
       .cart-icon-container {
-        padding: 0.3rem 0.8rem;
+        padding: 0.4rem 0.9rem;
       }
     }
+
+    /* Tablet and desktop styles */
     @media (min-width: 768px) {
       .category-menu {
         transform: translateX(0);
@@ -445,6 +500,74 @@
       .sidebar {
         display: block;
       }
+      #products-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* Large desktop styles */
+    @media (min-width: 1024px) {
+      #products-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    /* Footer improvements */
+    footer {
+      background: #1E293B;
+      padding: 2rem 1rem;
+    }
+    footer h3 {
+      color: var(--primary-color);
+      font-weight: 600;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    footer a {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.2s ease;
+    }
+    footer a:hover {
+      color: var(--primary-color);
+    }
+    .social-icons {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+    .social-icons a {
+      background: rgba(30, 41, 59, 0.7);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .social-icons a:hover {
+      background: var(--primary-color);
+      transform: translateY(-2px);
+    }
+    .copyright {
+      text-align: center;
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    /* Additional icons */
+    .icon-text {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .filter-icon {
+      margin-right: 0.5rem;
     }
   </style>
 </head>
@@ -465,8 +588,12 @@
         <div id="product-description"></div>
       </div>
       <div class="buttons">
-        <button class="add-to-cart" id="overlay-add-to-cart">Add to Cart</button>
-        <a href="address.html" class="buy-now" id="overlay-buy-now">Buy Now</a>
+        <button class="add-to-cart" id="overlay-add-to-cart">
+          <i class="fas fa-cart-plus mr-2"></i> Add to Cart
+        </button>
+        <a href="address.html" class="buy-now" id="overlay-buy-now">
+          <i class="fas fa-bolt mr-2"></i> Buy Now
+        </a>
       </div>
     </div>
   </div>
@@ -509,18 +636,18 @@
     <h1 class="text-lg font-bold text-white leading-relaxed">Gaming Odyssey</h1>
     <div class="flex items-center space-x-4">
       <a href="cart.html" class="cart-icon-container">
-        <svg class="w-6 h-6 text-[#3B82F6]" fill="currentColor" viewBox="0 0 20 20"><path d="M0 1h3l2 11h10l2-9H5l-.5-2H0v1zm6 15a2 2 0 100 4 2 2 0 000-4zm9 0a2 2 0 100 4 2 2 0 000-4z"/></svg>
+        <i class="fas fa-shopping-cart text-[#3B82F6]"></i>
         <span class="text-[#F1F5F9]">Cart</span>
         <span id="cart-count-mobile" class="cart-count">0</span>
       </a>
       <button id="hamburger" class="text-[#3B82F6]">
-        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <i class="fas fa-bars text-2xl"></i>
       </button>
     </div>
   </div>
   <div id="mobile-menu" class="hidden md:hidden fixed top-0 left-0 w-full h-full mobile-menu z-20 p-4">
     <button id="close-menu" class="absolute top-4 right-4 text-[#3B82F6] gradient-glow rounded-full p-2">
-      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      <i class="fas fa-times"></i>
     </button>
     <nav class="space-y-3 mt-12">
       <a href="index.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
@@ -553,61 +680,103 @@
   <!-- Category Sliding Menu (Right Side) -->
   <div id="category-menu" class="fixed top-0 right-0 h-full category-menu gradient-glow z-30 hidden md:block">
     <div class="p-6">
-      <h2 class="text-xl font-bold text-white mb-6">Categories</h2>
+      <h2 class="text-xl font-bold text-white mb-6 flex items-center">
+        <i class="fas fa-list mr-2"></i> Categories
+      </h2>
       <nav class="space-y-4">
         <div>
           <button class="category-toggle flex items-center justify-between w-full text-lg text-[#F1F5F9] font-semibold nav-link">
-            Mouse
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            <span class="flex items-center">
+              <i class="fas fa-mouse mr-2"></i> Mouse
+            </span>
+            <i class="fas fa-chevron-down text-sm transition-transform"></i>
           </button>
           <div class="subcategory ml-4 mt-2 space-y-2 hidden">
-            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link">Razer</a>
-            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link">Logitech</a>
-            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link">Roccat</a>
+            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link flex items-center">
+              <i class="fas fa-chevron-right mr-2 text-xs"></i> Razer
+            </a>
+            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link flex items-center">
+              <i class="fas fa-chevron-right mr-2 text-xs"></i> Logitech
+            </a>
+            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link flex items-center">
+              <i class="fas fa-chevron-right mr-2 text-xs"></i> Roccat
+            </a>
           </div>
         </div>
         <div>
           <button class="category-toggle flex items-center justify-between w-full text-lg text-[#F1F5F9] font-semibold nav-link">
-            Keyboard
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            <span class="flex items-center">
+              <i class="fas fa-keyboard mr-2"></i> Keyboard
+            </span>
+            <i class="fas fa-chevron-down text-sm transition-transform"></i>
           </button>
           <div class="subcategory ml-4 mt-2 space-y-2 hidden">
-            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link">Razer</a>
-            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link">Logitech</a>
-            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link">Roccat</a>
+            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link flex items-center">
+              <i class="fas fa-chevron-right mr-2 text-xs"></i> Razer
+            </a>
+            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link flex items-center">
+              <i class="fas fa-chevron-right mr-2 text-xs"></i> Logitech
+            </a>
+            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link flex items-center">
+              <i class="fas fa-chevron-right mr-2 text-xs"></i> Roccat
+            </a>
           </div>
         </div>
         <div>
           <button class="category-toggle flex items-center justify-between w-full text-lg text-[#F1F5F9] font-semibold nav-link">
-            Monitor
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            <span class="flex items-center">
+              <i class="fas fa-desktop mr-2"></i> Monitor
+            </span>
+            <i class="fas fa-chevron-down text-sm transition-transform"></i>
           </button>
           <div class="subcategory ml-4 mt-2 space-y-2 hidden">
-            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link">ASUS</a>
-            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link">Acer</a>
-            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link">LG</a>
+            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link flex items-center">
+              <i class="fas fa-chevron-right mr-2 text-xs"></i> ASUS
+            </a>
+            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link flex items-center">
+              <i class="fas fa-chevron-right mr-2 text-xs"></i> Acer
+            </a>
+            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link flex items-center">
+              <i class="fas fa-chevron-right mr-2 text-xs"></i> LG
+            </a>
           </div>
         </div>
         <div>
           <button class="category-toggle flex items-center justify-between w-full text-lg text-[#F1F5F9] font-semibold nav-link">
-            Speakers
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            <span class="flex items-center">
+              <i class="fas fa-volume-up mr-2"></i> Speakers
+            </span>
+            <i class="fas fa-chevron-down text-sm transition-transform"></i>
           </button>
           <div class="subcategory ml-4 mt-2 space-y-2 hidden">
-            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link">Bose</a>
-            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link">Logitech</a>
-            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link">JBL</a>
+            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link flex items-center">
+              <i class="fas fa-chevron-right mr-2 text-xs"></i> Bose
+            </a>
+            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link flex items-center">
+              <i class="fas fa-chevron-right mr-2 text-xs"></i> Logitech
+            </a>
+            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link flex items-center">
+              <i class="fas fa-chevron-right mr-2 text-xs"></i> JBL
+            </a>
           </div>
         </div>
         <div>
           <button class="category-toggle flex items-center justify-between w-full text-lg text-[#F1F5F9] font-semibold nav-link">
-            Webcam
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            <span class="flex items-center">
+              <i class="fas fa-video mr-2"></i> Webcam
+            </span>
+            <i class="fas fa-chevron-down text-sm transition-transform"></i>
           </button>
           <div class="subcategory ml-4 mt-2 space-y-2 hidden">
-            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link">Logitech</a>
-            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link">Razer</a>
-            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link">Elgato</a>
+            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link flex items-center">
+              <i class="fas fa-chevron-right mr-2 text-xs"></i> Logitech
+            </a>
+            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link flex items-center">
+              <i class="fas fa-chevron-right mr-2 text-xs"></i> Razer
+            </a>
+            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link flex items-center">
+              <i class="fas fa-chevron-right mr-2 text-xs"></i> Elgato
+            </a>
           </div>
         </div>
       </nav>
@@ -621,20 +790,30 @@
       <div class="max-w-6xl mx-auto">
         <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
           <div class="w-full flex flex-col sm:flex-row items-center space-x-0 sm:space-x-4 space-y-2 sm:space-y-0">
-            <input type="text" id="search-input" placeholder="Search products..." class="w-full">
-            <button id="search-btn" class="submit-btn w-full sm:w-auto">Search</button>
+            <div class="relative w-full">
+              <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+              <input type="text" id="search-input" placeholder="Search products..." class="w-full pl-10">
+            </div>
+            <button id="search-btn" class="submit-btn w-full sm:w-auto">
+              <i class="fas fa-search mr-2"></i> Search
+            </button>
           </div>
           <div class="flex flex-col sm:flex-row items-center space-x-0 sm:space-x-4 space-y-2 sm:space-y-0 w-full">
-            <button id="category-toggle" class="md:hidden submit-btn w-full sm:w-auto">Categories</button>
-            <select id="sort-filter" class="filter-dropdown w-full sm:w-auto">
-              <option value="">Sort By</option>
-              <option value="price-low">Price: Low to High</option>
-              <option value="price-high">Price: High to Low</option>
-              <option value="name-asc">Alphabetical: A-Z</option>
-              <option value="name-desc">Alphabetical: Z-A</option>
-            </select>
+            <button id="category-toggle" class="md:hidden submit-btn w-full sm:w-auto">
+              <i class="fas fa-filter mr-2"></i> Categories
+            </button>
+            <div class="relative w-full sm:w-auto">
+              <i class="fas fa-sort-amount-down absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+              <select id="sort-filter" class="filter-dropdown w-full pl-10">
+                <option value="">Sort By</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="name-asc">Alphabetical: A-Z</option>
+                <option value="name-desc">Alphabetical: Z-A</option>
+              </select>
+            </div>
             <a href="cart.html" class="cart-icon-container gradient-glow hidden md:flex">
-              <svg class="w-6 h-6 text-[#3B82F6]" fill="currentColor" viewBox="0 0 20 20"><path d="M0 1h3l2 11h10l2-9H5l-.5-2H0v1zm6 15a2 2 0 100 4 2 2 0 000-4zm9 0a2 2 0 100 4 2 2 0 000-4z"/></svg>
+              <i class="fas fa-shopping-cart text-[#3B82F6]"></i>
               <span class="text-[#F1F5F9]">Cart</span>
               <span id="cart-count-desktop" class="cart-count">0</span>
             </a>
@@ -645,47 +824,223 @@
 
     <!-- Products Section -->
     <section class="py-16 px-4 sm:px-6 md:px-8">
-      <h2 class="text-4xl font-bold text-white text-center mb-12">Store</h2>
+      <h2 class="text-4xl font-bold text-white text-center mb-12 flex items-center justify-center">
+        <i class="fas fa-store mr-4"></i> Store
+      </h2>
       <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-        <!-- Products will be dynamically added -->
+        <!-- Sample Products (will be replaced by dynamic content) -->
+        <div class="product-card gradient-glow fade-in cursor-pointer" 
+             data-name="Razer DeathAdder V2" 
+             data-price="69.99"
+             data-images='["https://assets2.razerzone.com/images/pnx.assets/6086f2c4f5f766a9e20b5f9e7a5b3c4d/razer-deathadder-v2-pro-500x500.png"]'
+             data-description="The Razer DeathAdder V2 is a gaming mouse with Razer Focus+ 20K DPI Optical Sensor, 8 programmable buttons, and Razer Optical Mouse Switches for blistering fast actuation.">
+          <img src="https://assets2.razerzone.com/images/pnx.assets/6086f2c4f5f766a9e20b5f9e7a5b3c4d/razer-deathadder-v2-pro-500x500.png" alt="Product" class="w-full h-48 object-contain rounded-lg mb-4">
+          <h3 class="text-xl font-bold text-white">Razer DeathAdder V2</h3>
+          <p class="text-[#F1F5F9] mb-4">$69.99</p>
+          <div class="flex space-x-2">
+            <a href="#" class="submit-btn flex-1 text-center buy-now-btn">
+              <i class="fas fa-bolt mr-2"></i> Buy Now
+            </a>
+            <button class="submit-btn flex-1 text-center add-to-cart" data-name="Razer DeathAdder V2" data-price="69.99">
+              <i class="fas fa-cart-plus mr-2"></i> Add to Cart
+            </button>
+          </div>
+        </div>
+        
+        <div class="product-card gradient-glow fade-in cursor-pointer" 
+             data-name="Logitech G Pro X Keyboard" 
+             data-price="149.99"
+             data-images='["https://resource.logitechg.com/w_692,c_lpad,ar_4:3,q_auto,f_auto,dpr_1.0/d_transparent.gif/content/dam/gaming/en/products/pro-x-keyboard/pro-x-keyboard-gallery-1.png?v=1"]'
+             data-description="Logitech G PRO X Mechanical Gaming Keyboard featuring swappable GX mechanical switches, LIGHTSYNC RGB, and a portable tenkeyless design.">
+          <img src="https://resource.logitechg.com/w_692,c_lpad,ar_4:3,q_auto,f_auto,dpr_1.0/d_transparent.gif/content/dam/gaming/en/products/pro-x-keyboard/pro-x-keyboard-gallery-1.png?v=1" alt="Product" class="w-full h-48 object-contain rounded-lg mb-4">
+          <h3 class="text-xl font-bold text-white">Logitech G Pro X Keyboard</h3>
+          <p class="text-[#F1F5F9] mb-4">$149.99</p>
+          <div class="flex space-x-2">
+            <a href="#" class="submit-btn flex-1 text-center buy-now-btn">
+              <i class="fas fa-bolt mr-2"></i> Buy Now
+            </a>
+            <button class="submit-btn flex-1 text-center add-to-cart" data-name="Logitech G Pro X Keyboard" data-price="149.99">
+              <i class="fas fa-cart-plus mr-2"></i> Add to Cart
+            </button>
+          </div>
+        </div>
+        
+        <div class="product-card gradient-glow fade-in cursor-pointer" 
+             data-name="ASUS ROG Swift PG279Q" 
+             data-price="699.99"
+             data-images='["https://dlcdnwebimgs.asus.com/gain/5A1A4E8C-3F4A-4D0E-8C4D-7B1E3B7F7A7B/w717/h525"]'
+             data-description="27-inch WQHD (2560x1440) IPS gaming monitor with 165Hz refresh rate and NVIDIA G-SYNC technology for ultra-smooth gameplay.">
+          <img src="https://dlcdnwebimgs.asus.com/gain/5A1A4E8C-3F4A-4D0E-8C4D-7B1E3B7F7A7B/w717/h525" alt="Product" class="w-full h-48 object-contain rounded-lg mb-4">
+          <h3 class="text-xl font-bold text-white">ASUS ROG Swift PG279Q</h3>
+          <p class="text-[#F1F5F9] mb-4">$699.99</p>
+          <div class="flex space-x-2">
+            <a href="#" class="submit-btn flex-1 text-center buy-now-btn">
+              <i class="fas fa-bolt mr-2"></i> Buy Now
+            </a>
+            <button class="submit-btn flex-1 text-center add-to-cart" data-name="ASUS ROG Swift PG279Q" data-price="699.99">
+              <i class="fas fa-cart-plus mr-2"></i> Add to Cart
+            </button>
+          </div>
+        </div>
+        
+        <div class="product-card gradient-glow fade-in cursor-pointer" 
+             data-name="Bose Companion 20" 
+             data-price="249.00"
+             data-images='["https://assets.bose.com/content/dam/Bose_DAM/Web/consumer_electronics/global/products/speakers/companion_20_multimedia_speaker_system/product_silo_images/Companion_20_Black_EC_hero.jpg/jcr:content/renditions/cq5dam.web.1000.1000.jpeg"]'
+             data-description="Premium desktop speakers with proprietary TrueSpace stereo digital processing circuitry for clear, spacious sound at any volume.">
+          <img src="https://assets.bose.com/content/dam/Bose_DAM/Web/consumer_electronics/global/products/speakers/companion_20_multimedia_speaker_system/product_silo_images/Companion_20_Black_EC_hero.jpg/jcr:content/renditions/cq5dam.web.1000.1000.jpeg" alt="Product" class="w-full h-48 object-contain rounded-lg mb-4">
+          <h3 class="text-xl font-bold text-white">Bose Companion 20</h3>
+          <p class="text-[#F1F5F9] mb-4">$249.00</p>
+          <div class="flex space-x-2">
+            <a href="#" class="submit-btn flex-1 text-center buy-now-btn">
+              <i class="fas fa-bolt mr-2"></i> Buy Now
+            </a>
+            <button class="submit-btn flex-1 text-center add-to-cart" data-name="Bose Companion 20" data-price="249.00">
+              <i class="fas fa-cart-plus mr-2"></i> Add to Cart
+            </button>
+          </div>
+        </div>
+        
+        <div class="product-card gradient-glow fade-in cursor-pointer" 
+             data-name="Logitech C922 Pro Stream" 
+             data-price="99.99"
+             data-images='["https://resource.logitech.com/w_692,c_lpad,ar_4:3,q_auto,f_auto,dpr_1.0/d_transparent.gif/content/dam/logitech/en/products/webcams/c922-pro-stream-webcam/gallery/c922-pro-stream-webcam-top-view.png?v=1"]'
+             data-description="Full HD 1080p streaming webcam at 30fps or 720p at 60fps with background replacement technology and stereo audio.">
+          <img src="https://resource.logitech.com/w_692,c_lpad,ar_4:3,q_auto,f_auto,dpr_1.0/d_transparent.gif/content/dam/logitech/en/products/webcams/c922-pro-stream-webcam/gallery/c922-pro-stream-webcam-top-view.png?v=1" alt="Product" class="w-full h-48 object-contain rounded-lg mb-4">
+          <h3 class="text-xl font-bold text-white">Logitech C922 Pro Stream</h3>
+          <p class="text-[#F1F5F9] mb-4">$99.99</p>
+          <div class="flex space-x-2">
+            <a href="#" class="submit-btn flex-1 text-center buy-now-btn">
+              <i class="fas fa-bolt mr-2"></i> Buy Now
+            </a>
+            <button class="submit-btn flex-1 text-center add-to-cart" data-name="Logitech C922 Pro Stream" data-price="99.99">
+              <i class="fas fa-cart-plus mr-2"></i> Add to Cart
+            </button>
+          </div>
+        </div>
+        
+        <div class="product-card gradient-glow fade-in cursor-pointer" 
+             data-name="Razer BlackWidow V3" 
+             data-price="139.99"
+             data-images='["https://assets2.razerzone.com/images/pnx.assets/6086f2c4f5f766a9e20b5f9e7a5b3c4d/blackwidow-v3-500x500.png"]'
+             data-description="Mechanical gaming keyboard with Razer Green Mechanical Switches, Doubleshot ABS keycaps, and Razer Chroma RGB backlighting.">
+          <img src="https://assets2.razerzone.com/images/pnx.assets/6086f2c4f5f766a9e20b5f9e7a5b3c4d/blackwidow-v3-500x500.png" alt="Product" class="w-full h-48 object-contain rounded-lg mb-4">
+          <h3 class="text-xl font-bold text-white">Razer BlackWidow V3</h3>
+          <p class="text-[#F1F5F9] mb-4">$139.99</p>
+          <div class="flex space-x-2">
+            <a href="#" class="submit-btn flex-1 text-center buy-now-btn">
+              <i class="fas fa-bolt mr-2"></i> Buy Now
+            </a>
+            <button class="submit-btn flex-1 text-center add-to-cart" data-name="Razer BlackWidow V3" data-price="139.99">
+              <i class="fas fa-cart-plus mr-2"></i> Add to Cart
+            </button>
+          </div>
+        </div>
       </div>
     </section>
 
     <!-- Footer -->
     <footer class="bg-[#1E293B] py-10 px-4 sm:px-6 md:px-8">
-      <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
         <div>
-          <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Contact</h3>
-          <p class="text-[#F1F5F9] mb-2 text-sm leading-relaxed">📧 <a href="mailto:support@gamingodyssey.in" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link">support@gamingodyssey.in</a></p>
-          <p class="text-[#F1F5F9] text-sm leading-relaxed">📞 6290994382</p>
+          <h3 class="text-lg font-bold text-white mb-3 leading-relaxed flex items-center">
+            <i class="fas fa-headset mr-2"></i> Contact & Support
+          </h3>
+          <p class="text-[#F1F5F9] mb-2 text-sm leading-relaxed flex items-center">
+            <i class="fas fa-envelope mr-2"></i>
+            <a href="mailto:support@gamingodyssey.in" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link">
+              support@gamingodyssey.in
+            </a>
+          </p>
+          <p class="text-[#F1F5F9] text-sm leading-relaxed flex items-center">
+            <i class="fas fa-phone-alt mr-2"></i> 6290994382
+          </p>
+          <p class="text-[#F1F5F9] text-sm leading-relaxed flex items-center mt-2">
+            <i class="fas fa-map-marker-alt mr-2"></i> Kolkata, West Bengal, India
+          </p>
         </div>
         <div>
-          <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Useful Links</h3>
+          <h3 class="text-lg font-bold text-white mb-3 leading-relaxed flex items-center">
+            <i class="fas fa-link mr-2"></i> Quick Links
+          </h3>
           <ul class="space-y-2">
-            <li><a href="index.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed"><i class="fas fa-home mr-2"></i>Home</a></li>
-            <li><a href="store.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed"><i class="fas fa-store mr-2"></i>Store</a></li>
-            <li><a href="tournaments.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed"><i class="fas fa-trophy mr-2"></i>Tournaments</a></li>
-            <li><a href="trackorder.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed"><i class="fas fa-truck-fast mr-2"></i>Track Order</a></li>
-            <li><a href="contactus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed"><i class="fas fa-envelope mr-2"></i>Contact Us</a></li>
-            <li><a href="aboutus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed"><i class="fas fa-info-circle mr-2"></i>About Us</a></li>
+            <li>
+              <a href="index.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed flex items-center">
+                <i class="fas fa-home mr-2"></i> Home
+              </a>
+            </li>
+            <li>
+              <a href="store.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed flex items-center">
+                <i class="fas fa-store mr-2"></i> Store
+              </a>
+            </li>
+            <li>
+              <a href="tournaments.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed flex items-center">
+                <i class="fas fa-trophy mr-2"></i> Tournaments
+              </a>
+            </li>
+            <li>
+              <a href="trackorder.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed flex items-center">
+                <i class="fas fa-truck-fast mr-2"></i> Track Order
+              </a>
+            </li>
+            <li>
+              <a href="contactus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed flex items-center">
+                <i class="fas fa-envelope mr-2"></i> Contact Us
+              </a>
+            </li>
+            <li>
+              <a href="aboutus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed flex items-center">
+                <i class="fas fa-info-circle mr-2"></i> About Us
+              </a>
+            </li>
           </ul>
         </div>
         <div>
-          <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Follow Us</h3>
-          <div class="flex space-x-3">
-            <a href="https://www.instagram.com/noticedveil" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full">
-              <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" class="w-5 h-5">
+          <h3 class="text-lg font-bold text-white mb-3 leading-relaxed flex items-center">
+            <i class="fas fa-share-alt mr-2"></i> Connect With Us
+          </h3>
+          <div class="social-icons">
+            <a href="https://www.instagram.com/noticedveil" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow">
+              <i class="fab fa-instagram"></i>
             </a>
-            <a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full">
-              <img src="https://cdn-icons-png.flaticon.com/512/3938/3938026.png" alt="YouTube" class="w-5 h-5">
+            <a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow">
+              <i class="fab fa-youtube"></i>
             </a>
-            <a href="https://www.facebook.com" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full">
-              <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" class="w-5 h-5">
+            <a href="https://www.facebook.com" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow">
+              <i class="fab fa-facebook-f"></i>
             </a>
+            <a href="https://www.twitter.com" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow">
+              <i class="fab fa-twitter"></i>
+            </a>
+            <a href="https://www.discord.com" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow">
+              <i class="fab fa-discord"></i>
+            </a>
+          </div>
+          <div class="mt-4">
+            <h4 class="text-sm font-semibold text-[#F1F5F9] mb-2 flex items-center">
+              <i class="fas fa-newspaper mr-2"></i> Newsletter
+            </h4>
+            <div class="flex">
+              <input type="email" placeholder="Your email" class="bg-[#1E293B] text-[#F1F5F9] px-3 py-2 rounded-l-md focus:outline-none focus:ring-1 focus:ring-[#3B82F6] w-full">
+              <button class="bg-[#3B82F6] text-[#0F172A] px-3 py-2 rounded-r-md font-semibold hover:bg-[#2563EB] transition">
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </div>
           </div>
         </div>
       </div>
-      <p class="text-center text-[#F1F5F9] mt-6 text-sm leading-relaxed">© 2025 Gaming Odyssey. All rights reserved.</p>
+      <div class="copyright">
+        <p class="text-center text-[#F1F5F9] mt-6 text-sm leading-relaxed">
+          <i class="fas fa-copyright mr-1"></i> 2025 Gaming Odyssey. All rights reserved.
+        </p>
+        <div class="flex justify-center space-x-4 mt-2">
+          <a href="#" class="text-[#F1F5F9] hover:text-[#3B82F6] text-xs">Privacy Policy</a>
+          <a href="#" class="text-[#F1F5F9] hover:text-[#3B82F6] text-xs">Terms of Service</a>
+          <a href="#" class="text-[#F1F5F9] hover:text-[#3B82F6] text-xs">Shipping Policy</a>
+          <a href="#" class="text-[#F1F5F9] hover:text-[#3B82F6] text-xs">Returns & Refunds</a>
+        </div>
+      </div>
     </footer>
   </div>
 
@@ -719,16 +1074,27 @@
     categoryToggle.addEventListener('click', () => {
       categoryMenu.classList.toggle('hidden');
       categoryMenu.classList.toggle('active');
+      mobileMenu.classList.remove('active');
+      mobileMenu.classList.add('hidden');
+    });
+
+    // Close category menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!categoryMenu.contains(e.target) && e.target !== categoryToggle && window.innerWidth < 768) {
+        categoryMenu.classList.add('hidden');
+        categoryMenu.classList.remove('active');
+      }
     });
 
     // Subcategory Dropdown Toggle
     const categoryButtons = document.querySelectorAll('.category-toggle');
     categoryButtons.forEach(button => {
-      button.addEventListener('click', () => {
+      button.addEventListener('click', (e) => {
+        e.stopPropagation();
         const subcategory = button.nextElementSibling;
         subcategory.classList.toggle('hidden');
-        const arrow = button.querySelector('svg');
-        arrow.classList.toggle('rotate-180');
+        const icon = button.querySelector('.fa-chevron-down');
+        icon.classList.toggle('rotate-180');
       });
     });
 
@@ -771,7 +1137,18 @@
       }
       localStorage.setItem('cart', JSON.stringify(cart));
       updateCartCount();
-      alert(`${name} has been added to your cart!`);
+      
+      // Show notification
+      const notification = document.createElement('div');
+      notification.className = 'fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-md shadow-lg flex items-center z-50';
+      notification.innerHTML = `
+        <i class="fas fa-check-circle mr-2"></i>
+        <span>${name} added to cart!</span>
+      `;
+      document.body.appendChild(notification);
+      setTimeout(() => {
+        notification.remove();
+      }, 3000);
     }
 
     // Product Overlay Functionality
@@ -797,6 +1174,7 @@
       overlayAddToCart.setAttribute('data-name', name);
       overlayAddToCart.setAttribute('data-price', price * conversionRates[selectedCurrency]);
       productOverlay.classList.add('visible');
+      document.body.style.overflow = 'hidden';
     }
 
     function changeImage(direction) {
@@ -807,6 +1185,7 @@
 
     closeBtn.addEventListener('click', () => {
       productOverlay.classList.remove('visible');
+      document.body.style.overflow = '';
     });
 
     overlayAddToCart.addEventListener('click', () => {
@@ -842,8 +1221,12 @@
           <h3 class="text-xl font-bold text-white">${product.name}</h3>
           <p class="text-[#F1F5F9] mb-4">${currencySymbols[selectedCurrency]}${convertedPrice}</p>
           <div class="flex space-x-2">
-            <a href="#" class="submit-btn flex-1 text-center buy-now-btn">Buy Now</a>
-            <button class="submit-btn flex-1 text-center add-to-cart" data-name="${product.name}" data-price="${product.price * conversionRates[selectedCurrency]}">Add to Cart</button>
+            <a href="#" class="submit-btn flex-1 text-center buy-now-btn">
+              <i class="fas fa-bolt mr-2"></i> Buy Now
+            </a>
+            <button class="submit-btn flex-1 text-center add-to-cart" data-name="${product.name}" data-price="${product.price * conversionRates[selectedCurrency]}">
+              <i class="fas fa-cart-plus mr-2"></i> Add to Cart
+            </button>
           </div>
         `;
         productsGrid.appendChild(card);
@@ -887,6 +1270,7 @@
       addToCartButtons.forEach(button => {
         button.addEventListener('click', (e) => {
           e.preventDefault();
+          e.stopPropagation();
           const name = button.getAttribute('data-name');
           const price = parseFloat(button.getAttribute('data-price'));
           addToCart(name, price);
@@ -897,6 +1281,7 @@
       buyNowButtons.forEach(button => {
         button.addEventListener('click', (e) => {
           e.preventDefault();
+          e.stopPropagation();
           const card = button.closest('.product-card');
           const name = card.getAttribute('data-name');
           const price = parseFloat(card.getAttribute('data-price'));
@@ -958,6 +1343,15 @@
 
     // Update cart count on page load
     updateCartCount();
+
+    // Close menus when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!mobileMenu.contains(e.target) && e.target !== hamburger) {
+        mobileMenu.classList.add('hidden');
+        mobileMenu.classList.remove('active');
+      }
+    });
   </script>
 </body>
 </html>
+
