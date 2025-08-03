@@ -465,10 +465,6 @@
     /* Mobile-specific styles */
     @media (max-width: 767px) {
       /* Layout adjustments */
-      body {
-        padding-top: 60px; /* Add space for fixed header */
-      }
-      
       .md\:ml-64, .md\:mr-64 {
         margin-left: 0 !important;
         margin-right: 0 !important;
@@ -503,94 +499,75 @@
       
       /* Input and buttons */
       input, select {
-        font-size: 16px; /* Larger for mobile */
+        font-size: 14px;
         padding: 0.75rem;
       }
       .submit-btn {
         width: 100%;
         padding: 0.875rem;
-        font-size: 16px; /* Larger for mobile */
-        min-height: 48px; /* Better touch target */
+        font-size: 14px;
       }
       
       /* Products grid */
       #products-grid {
         grid-template-columns: 1fr;
         padding: 0 0.75rem;
-        gap: 1.5rem;
+        gap: 1rem;
       }
       .product-card {
         padding: 1rem;
-        margin-bottom: 0.5rem;
       }
       .product-card img {
-        height: 200px; /* Larger images */
+        height: 180px;
         object-fit: contain;
       }
       .product-card h3 {
-        font-size: 1.2rem; /* Larger text */
-        margin: 0.75rem 0;
+        font-size: 1.1rem;
+        margin: 0.5rem 0;
       }
       .product-card p {
-        font-size: 1rem; /* Larger text */
-        margin-bottom: 1rem;
+        font-size: 0.95rem;
+        margin-bottom: 0.75rem;
       }
       .product-card .buttons {
         flex-direction: column;
-        gap: 0.75rem; /* More space between buttons */
+        gap: 0.5rem;
       }
       .product-card .buttons button, 
       .product-card .buttons a {
         width: 100%;
-        padding: 0.75rem;
-        min-height: 48px; /* Better touch target */
       }
       
       /* Product detail overlay */
       .product-detail {
-        padding: 1rem;
+        padding: 0.75rem;
         width: 95%;
         top: 55%;
-        max-height: 85vh;
       }
       .product-detail img {
-        max-height: 250px;
+        max-height: 220px;
       }
       .product-detail h3 {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
       }
       .product-detail .price {
-        font-size: 1.25rem;
+        font-size: 1.1rem;
       }
       .product-detail .buttons {
         flex-direction: column;
-        gap: 0.75rem;
-      }
-      .product-detail .buttons button,
-      .product-detail .buttons a {
-        width: 100%;
-        padding: 0.75rem;
       }
       .close-btn {
-        padding: 0.75rem;
-        font-size: 1rem;
-        min-width: 80px;
-        min-height: 40px;
+        padding: 0.5rem;
+        font-size: 0.875rem;
       }
       .arrow {
-        padding: 0.5rem;
-        font-size: 1.25rem;
-        min-width: 40px;
-        min-height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        padding: 0.3rem;
+        font-size: 1rem;
       }
       
       /* Navigation */
       .nav-link, #mobile-menu a {
-        font-size: 1rem;
-        padding: 0.75rem 0;
+        font-size: 0.95rem;
       }
       
       /* Footer */
@@ -599,37 +576,30 @@
       }
       footer .grid {
         grid-template-columns: 1fr;
-        gap: 2rem;
+        gap: 1.5rem;
       }
       footer h3 {
-        font-size: 1.2rem;
-        margin-bottom: 1rem;
+        font-size: 1.1rem;
+        margin-bottom: 0.75rem;
       }
       footer p, footer a {
-        font-size: 1rem;
-        padding: 0.25rem 0;
+        font-size: 0.9rem;
       }
       footer .social-icons {
         justify-content: flex-start;
-        margin-top: 1rem;
+        margin-top: 0.5rem;
       }
       .cart-count {
-        font-size: 0.8rem;
-        padding: 2px 6px;
-        min-width: 18px;
-        min-height: 18px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        font-size: 0.7rem;
+        padding: 1px 5px;
       }
       .cart-icon-container {
-        padding: 0.5rem 1rem;
-        min-height: 40px;
+        padding: 0.4rem 0.9rem;
       }
       
       /* Rating adjustments */
       .rating label {
-        font-size: 1.25rem;
+        font-size: 1rem;
       }
     }
 
@@ -690,8 +660,8 @@
     }
     .social-icons a {
       background: rgba(30, 41, 59, 0.7);
-      width: 40px;
-      height: 40px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -719,18 +689,25 @@
       margin-right: 0.5rem;
     }
 
-    /* Touch target improvements */
-    button, a, input[type="checkbox"], input[type="radio"] {
-      touch-action: manipulation;
+    /* Improved product card layout for mobile */
+    .product-card {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
     }
-
-    /* Prevent zoom on input focus */
-    @media screen and (-webkit-min-device-pixel-ratio:0) {
-      select:focus,
-      textarea:focus,
-      input:focus {
-        font-size: 16px;
-      }
+    .product-card img {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1/1;
+      object-fit: contain;
+    }
+    .product-card-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .product-card-buttons {
+      margin-top: auto;
     }
   </style>
 </head>
@@ -1013,11 +990,11 @@
     </section>
 
     <!-- Products Section -->
-    <section class="py-16 px-4 sm:px-6 md:px-8">
-      <h2 class="text-4xl font-bold text-white text-center mb-12 flex items-center justify-center">
-        <i class="fas fa-store mr-4"></i> Store
+    <section class="py-8 px-4 sm:px-6 md:px-8">
+      <h2 class="text-3xl md:text-4xl font-bold text-white text-center mb-8 md:mb-12 flex items-center justify-center">
+        <i class="fas fa-store mr-2 md:mr-4"></i> Store
       </h2>
-      <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+      <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-6xl mx-auto">
         <!-- Products will be loaded dynamically from database.html -->
       </div>
     </section>
@@ -1117,7 +1094,7 @@
         <p class="text-center text-[#F1F5F9] mt-6 text-sm leading-relaxed">
           <i class="fas fa-copyright mr-1"></i> 2025 Gaming Odyssey. All rights reserved.
         </p>
-        <div class="flex justify-center space-x-4 mt-2">
+        <div class="flex flex-wrap justify-center gap-2 md:gap-4 mt-2">
           <a href="#" class="text-[#F1F5F9] hover:text-[#3B82F6] text-xs">Privacy Policy</a>
           <a href="#" class="text-[#F1F5F9] hover:text-[#3B82F6] text-xs">Terms of Service</a>
           <a href="#" class="text-[#F1F5F9] hover:text-[#3B82F6] text-xs">Shipping Policy</a>
@@ -1395,26 +1372,28 @@
         card.className = 'product-card gradient-glow fade-in cursor-pointer';
         card.setAttribute('data-id', product.id);
         card.innerHTML = `
-          <img src="${product.images[0]}" alt="Product" class="w-full h-48 object-contain rounded-lg mb-4">
-          <h3 class="text-xl font-bold text-white">${product.name}</h3>
-          <div class="flex justify-between items-center">
-            <p class="text-[#F1F5F9] mb-4">${currencySymbols[selectedCurrency]}${convertedPrice}</p>
-            <div class="average-rating">
-              <div class="average-rating-stars">
-                ${'★'.repeat(Math.round(averageRating))}${'☆'.repeat(5 - Math.round(averageRating))}
-              </div>
-              <div class="average-rating-count">
-                (${productReviews.length})
+          <div class="product-card-content">
+            <img src="${product.images[0]}" alt="${product.name}" class="w-full h-auto aspect-square object-contain rounded-lg mb-4">
+            <h3 class="text-lg md:text-xl font-bold text-white mb-2">${product.name}</h3>
+            <div class="flex justify-between items-center mb-3">
+              <p class="text-[#F1F5F9]">${currencySymbols[selectedCurrency]}${convertedPrice}</p>
+              <div class="average-rating">
+                <div class="average-rating-stars">
+                  ${'★'.repeat(Math.round(averageRating))}${'☆'.repeat(5 - Math.round(averageRating))}
+                </div>
+                <div class="average-rating-count">
+                  (${productReviews.length})
+                </div>
               </div>
             </div>
-          </div>
-          <div class="flex space-x-2">
-            <a href="#" class="submit-btn flex-1 text-center buy-now-btn">
-              <i class="fas fa-bolt mr-2"></i> Buy Now
-            </a>
-            <button class="submit-btn flex-1 text-center add-to-cart" data-name="${product.name}" data-price="${product.price * conversionRates[selectedCurrency]}">
-              <i class="fas fa-cart-plus mr-2"></i> Add to Cart
-            </button>
+            <div class="product-card-buttons flex flex-col sm:flex-row gap-2 mt-auto">
+              <a href="#" class="submit-btn text-center buy-now-btn">
+                <i class="fas fa-bolt mr-2"></i> Buy Now
+              </a>
+              <button class="submit-btn text-center add-to-cart" data-name="${product.name}" data-price="${product.price * conversionRates[selectedCurrency]}">
+                <i class="fas fa-cart-plus mr-2"></i> Add to Cart
+              </button>
+            </div>
           </div>
         `;
         productsGrid.appendChild(card);
