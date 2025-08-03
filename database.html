@@ -7,6 +7,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Include Quill rich text editor -->
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+  <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
   <style>
     body {
       font-family: 'Poppins', sans-serif;
@@ -165,6 +168,159 @@
     tr:hover {
       background-color: rgba(30, 41, 59, 0.5);
     }
+    /* Rich text editor styles */
+    .ql-toolbar {
+      background: #1E293B;
+      border: 1px solid #3B82F6 !important;
+      border-radius: 0.5rem 0.5rem 0 0;
+    }
+    .ql-container {
+      background: #1E293B;
+      border: 1px solid #3B82F6 !important;
+      border-top: none !important;
+      border-radius: 0 0 0.5rem 0.5rem;
+      font-family: 'Poppins', sans-serif;
+    }
+    .ql-editor {
+      min-height: 200px;
+      color: #F1F5F9;
+    }
+    .ql-snow .ql-stroke {
+      stroke: #F1F5F9;
+    }
+    .ql-snow .ql-fill {
+      fill: #F1F5F9;
+    }
+    .ql-snow .ql-picker {
+      color: #F1F5F9;
+    }
+    .ql-snow .ql-picker-options {
+      background-color: #1E293B;
+      border: 1px solid #3B82F6;
+    }
+    /* Image preview styles */
+    .image-preview-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .image-preview {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      border: 1px solid #3B82F6;
+    }
+    .image-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .remove-image {
+      position: absolute;
+      top: 0.25rem;
+      right: 0.25rem;
+      background: rgba(239, 68, 68, 0.8);
+      color: white;
+      border-radius: 50%;
+      width: 1.5rem;
+      height: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    /* Tab styles */
+    .tab-container {
+      display: flex;
+      border-bottom: 1px solid #1E293B;
+      margin-bottom: 1.5rem;
+    }
+    .tab {
+      padding: 0.75rem 1.5rem;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s ease;
+    }
+    .tab.active {
+      border-bottom: 3px solid #3B82F6;
+      color: #3B82F6;
+      font-weight: 600;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    /* Stock status styles */
+    .in-stock {
+      color: #4ADE80;
+    }
+    .low-stock {
+      color: #FBBF24;
+    }
+    .out-of-stock {
+      color: #F87171;
+    }
+    /* Color picker styles */
+    .color-option {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.2s ease;
+    }
+    .color-option.selected {
+      border-color: #F1F5F9;
+      transform: scale(1.1);
+    }
+    /* Switch toggle styles */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+    }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #1E293B;
+      border: 1px solid #3B82F6;
+      transition: .4s;
+      border-radius: 24px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 4px;
+      bottom: 3px;
+      background-color: #3B82F6;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background-color: #1E293B;
+      border-color: #D946EF;
+    }
+    input:checked + .slider:before {
+      transform: translateX(26px);
+      background-color: #D946EF;
+    }
     @keyframes glow {
       0%, 100% { opacity: 0.5; }
       50% { opacity: 0.7; }
@@ -177,6 +333,10 @@
       }
       .nav-link, #mobile-menu a {
         font-size: 1rem;
+      }
+      .tab {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
       }
     }
   </style>
@@ -249,8 +409,8 @@
     <!-- Hero Section -->
     <section class="hero-bg min-h-[50vh] flex items-center justify-center text-center p-4 sm:p-6 md:p-8">
       <div class="fade-in max-w-2xl mx-auto">
-        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">User Database</h1>
-        <p class="text-base sm:text-lg md:text-xl text-[#F1F5F9] mb-8 leading-relaxed">View and manage registered users</p>
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">Admin Dashboard</h1>
+        <p class="text-base sm:text-lg md:text-xl text-[#F1F5F9] mb-8 leading-relaxed">Manage users and products</p>
       </div>
     </section>
 
@@ -269,44 +429,216 @@
             </div>
             <div class="text-center">
               <button type="submit" class="submit-btn w-full flex items-center justify-center gap-2">
-                <i class="fas fa-lock"></i> Access Database
+                <i class="fas fa-lock"></i> Access Dashboard
               </button>
               <p id="form-status" class="mt-3 text-sm"></p>
             </div>
           </form>
           
-          <div id="database-content" class="hidden">
-            <div class="flex justify-between items-center mb-6">
-              <h2 class="text-2xl font-bold text-white">Registered Users</h2>
-              <div class="text-[#94A3B8] text-sm">
-                Total Users: <span id="user-count" class="font-bold text-[#3B82F6]">0</span>
+          <div id="dashboard-content" class="hidden">
+            <div class="tab-container">
+              <div class="tab active" data-tab="users">Users</div>
+              <div class="tab" data-tab="products">Products</div>
+            </div>
+            
+            <!-- Users Tab Content -->
+            <div id="users-tab" class="tab-content active">
+              <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-white">Registered Users</h2>
+                <div class="text-[#94A3B8] text-sm">
+                  Total Users: <span id="user-count" class="font-bold text-[#3B82F6]">0</span>
+                </div>
+              </div>
+              
+              <div class="table-container">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Username</th>
+                      <th>Email</th>
+                      <th>Country</th>
+                      <th>Signup Date</th>
+                    </tr>
+                  </thead>
+                  <tbody id="user-table">
+                    <!-- Users will be populated here -->
+                  </tbody>
+                </table>
+              </div>
+              
+              <div class="mt-6 flex justify-between items-center">
+                <div class="text-[#94A3B8] text-sm">
+                  Showing <span id="showing-count" class="font-bold text-[#3B82F6]">0</span> users
+                </div>
+                <button id="export-users-btn" class="submit-btn flex items-center justify-center gap-2 bg-gradient-to-r from-[#10B981] to-[#3B82F6]">
+                  <i class="fas fa-file-export"></i> Export as CSV
+                </button>
               </div>
             </div>
             
-            <div class="table-container">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Country</th>
-                    <th>Signup Date</th>
-                  </tr>
-                </thead>
-                <tbody id="user-table">
-                  <!-- Users will be populated here -->
-                </tbody>
-              </table>
-            </div>
-            
-            <div class="mt-6 flex justify-between items-center">
-              <div class="text-[#94A3B8] text-sm">
-                Showing <span id="showing-count" class="font-bold text-[#3B82F6]">0</span> users
+            <!-- Products Tab Content -->
+            <div id="products-tab" class="tab-content">
+              <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-white">Product Management</h2>
+                <button id="add-product-btn" class="submit-btn flex items-center justify-center gap-2 bg-gradient-to-r from-[#D946EF] to-[#3B82F6]">
+                  <i class="fas fa-plus"></i> Add New Product
+                </button>
               </div>
-              <button id="export-btn" class="submit-btn flex items-center justify-center gap-2 bg-gradient-to-r from-[#10B981] to-[#3B82F6]">
-                <i class="fas fa-file-export"></i> Export as CSV
-              </button>
+              
+              <div class="table-container">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Product</th>
+                      <th>Price</th>
+                      <th>Stock</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="product-table">
+                    <!-- Products will be populated here -->
+                  </tbody>
+                </table>
+              </div>
+              
+              <!-- Add/Edit Product Modal -->
+              <div id="product-modal" class="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center p-4 hidden">
+                <div class="bg-[#1E293B] rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+                  <div class="p-6">
+                    <div class="flex justify-between items-center mb-6">
+                      <h3 class="text-xl font-bold text-white" id="modal-title">Add New Product</h3>
+                      <button id="close-modal" class="text-[#94A3B8] hover:text-[#F1F5F9]">
+                        <i class="fas fa-times text-xl"></i>
+                      </button>
+                    </div>
+                    
+                    <form id="product-form">
+                      <input type="hidden" id="product-id">
+                      
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Left Column -->
+                        <div class="space-y-6">
+                          <div>
+                            <label for="product-name" class="block text-[#F1F5F9] mb-2 font-semibold text-sm">Product Name*</label>
+                            <input type="text" id="product-name" required placeholder="Enter product name">
+                          </div>
+                          
+                          <div>
+                            <label for="product-category" class="block text-[#F1F5F9] mb-2 font-semibold text-sm">Category*</label>
+                            <select id="product-category" required>
+                              <option value="">Select category</option>
+                              <option value="mouse">Mouse</option>
+                              <option value="keyboard">Keyboard</option>
+                              <option value="monitor">Monitor</option>
+                              <option value="speakers">Speakers</option>
+                              <option value="webcam">Webcam</option>
+                              <option value="headset">Headset</option>
+                              <option value="accessories">Accessories</option>
+                            </select>
+                          </div>
+                          
+                          <div>
+                            <label for="product-brand" class="block text-[#F1F5F9] mb-2 font-semibold text-sm">Brand*</label>
+                            <input type="text" id="product-brand" required placeholder="Enter brand name">
+                          </div>
+                          
+                          <div>
+                            <label class="block text-[#F1F5F9] mb-2 font-semibold text-sm">Available Colors</label>
+                            <div class="flex flex-wrap gap-2">
+                              <div class="color-option bg-black selected" data-color="black"></div>
+                              <div class="color-option bg-white" data-color="white"></div>
+                              <div class="color-option bg-red-500" data-color="red"></div>
+                              <div class="color-option bg-blue-500" data-color="blue"></div>
+                              <div class="color-option bg-green-500" data-color="green"></div>
+                              <div class="color-option bg-yellow-500" data-color="yellow"></div>
+                              <div class="color-option bg-purple-500" data-color="purple"></div>
+                              <div class="color-option bg-pink-500" data-color="pink"></div>
+                              <div class="color-option bg-gray-500" data-color="gray"></div>
+                            </div>
+                            <input type="hidden" id="product-colors" value="black">
+                          </div>
+                          
+                          <div>
+                            <label for="product-mrp" class="block text-[#F1F5F9] mb-2 font-semibold text-sm">MRP*</label>
+                            <input type="number" id="product-mrp" required placeholder="Enter MRP" min="0" step="0.01">
+                          </div>
+                          
+                          <div>
+                            <label for="product-price" class="block text-[#F1F5F9] mb-2 font-semibold text-sm">Selling Price*</label>
+                            <input type="number" id="product-price" required placeholder="Enter selling price" min="0" step="0.01">
+                          </div>
+                        </div>
+                        
+                        <!-- Right Column -->
+                        <div class="space-y-6">
+                          <div>
+                            <label class="block text-[#F1F5F9] mb-2 font-semibold text-sm">Stock Status*</label>
+                            <div class="flex items-center space-x-4">
+                              <label class="inline-flex items-center">
+                                <input type="radio" name="stock-status" value="in-stock" checked class="form-radio text-[#3B82F6]">
+                                <span class="ml-2">In Stock</span>
+                              </label>
+                              <label class="inline-flex items-center">
+                                <input type="radio" name="stock-status" value="out-of-stock" class="form-radio text-[#3B82F6]">
+                                <span class="ml-2">Out of Stock</span>
+                              </label>
+                            </div>
+                          </div>
+                          
+                          <div id="stock-quantity-container">
+                            <label for="product-stock" class="block text-[#F1F5F9] mb-2 font-semibold text-sm">Stock Quantity*</label>
+                            <input type="number" id="product-stock" required placeholder="Enter quantity in stock" min="0">
+                          </div>
+                          
+                          <div>
+                            <label class="block text-[#F1F5F9] mb-2 font-semibold text-sm">Featured Product</label>
+                            <label class="switch">
+                              <input type="checkbox" id="product-featured">
+                              <span class="slider"></span>
+                            </label>
+                          </div>
+                          
+                          <div>
+                            <label class="block text-[#F1F5F9] mb-2 font-semibold text-sm">Product Images*</label>
+                            <div class="border border-dashed border-[#3B82F6] rounded-lg p-4 text-center">
+                              <input type="file" id="product-images" multiple accept="image/*" class="hidden">
+                              <label for="product-images" class="cursor-pointer">
+                                <i class="fas fa-cloud-upload-alt text-3xl text-[#3B82F6] mb-2"></i>
+                                <p class="text-sm text-[#94A3B8]">Click to upload or drag and drop</p>
+                                <p class="text-xs text-[#64748B]">PNG, JPG, GIF up to 5MB</p>
+                              </label>
+                            </div>
+                            <div class="image-preview-container" id="image-preview-container">
+                              <!-- Image previews will be added here -->
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="mt-6">
+                        <label for="product-description" class="block text-[#F1F5F9] mb-2 font-semibold text-sm">Description*</label>
+                        <div id="product-description-editor" style="min-height: 200px;"></div>
+                      </div>
+                      
+                      <div class="mt-6">
+                        <label for="product-specs" class="block text-[#F1F5F9] mb-2 font-semibold text-sm">Specifications*</label>
+                        <div id="product-specs-editor" style="min-height: 200px;"></div>
+                      </div>
+                      
+                      <div class="mt-8 flex justify-end space-x-4">
+                        <button type="button" id="cancel-product" class="px-6 py-2 border border-[#3B82F6] text-[#3B82F6] rounded-md hover:bg-[#3B82F6] hover:text-[#0F172A] transition">
+                          Cancel
+                        </button>
+                        <button type="submit" class="submit-btn flex items-center justify-center gap-2">
+                          <i class="fas fa-save"></i> Save Product
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -404,6 +736,34 @@
     }, { threshold: 0.1 });
     fadeIns.forEach(element => observer.observe(element));
 
+    // Initialize Quill editors
+    const descriptionEditor = new Quill('#product-description-editor', {
+      theme: 'snow',
+      modules: {
+        toolbar: [
+          [{ 'header': [1, 2, 3, false] }],
+          ['bold', 'italic', 'underline', 'strike'],
+          [{ 'color': [] }, { 'background': [] }],
+          [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+          ['link', 'image'],
+          ['clean']
+        ]
+      },
+      placeholder: 'Write detailed product description...'
+    });
+
+    const specsEditor = new Quill('#product-specs-editor', {
+      theme: 'snow',
+      modules: {
+        toolbar: [
+          ['bold', 'italic'],
+          [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+          ['clean']
+        ]
+      },
+      placeholder: 'Add product specifications (one per line)...'
+    });
+
     // Admin login form
     document.getElementById('login-form').addEventListener('submit', function(event) {
       event.preventDefault();
@@ -416,19 +776,40 @@
       
       // Check password (the password is "gaming2025" as requested)
       if (password === 'gaming2025') {
-        formStatus.textContent = 'Access granted! Loading user data...';
+        formStatus.textContent = 'Access granted! Loading dashboard...';
         formStatus.className = 'success';
         
-        // Show database content
-        document.getElementById('database-content').classList.remove('hidden');
+        // Show dashboard content
+        document.getElementById('dashboard-content').classList.remove('hidden');
         
         // Load and display user data
         loadUserData();
+        loadProductData();
       } else {
         passwordError.classList.remove('hidden');
         formStatus.textContent = 'Access denied. Incorrect password.';
         formStatus.className = 'error';
       }
+    });
+
+    // Tab switching
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Remove active class from all tabs
+        tabs.forEach(t => t.classList.remove('active'));
+        // Add active class to clicked tab
+        tab.classList.add('active');
+        
+        // Hide all tab contents
+        document.querySelectorAll('.tab-content').forEach(content => {
+          content.classList.remove('active');
+        });
+        
+        // Show the corresponding tab content
+        const tabId = tab.getAttribute('data-tab');
+        document.getElementById(`${tabId}-tab`).classList.add('active');
+      });
     });
 
     // Load user data from localStorage
@@ -470,8 +851,76 @@
       showingCount.textContent = users.length;
     }
 
-    // Export to CSV
-    document.getElementById('export-btn').addEventListener('click', () => {
+    // Load product data from localStorage
+    function loadProductData() {
+      const products = JSON.parse(localStorage.getItem('products')) || [];
+      const productTable = document.getElementById('product-table');
+      
+      // Clear existing rows
+      productTable.innerHTML = '';
+      
+      // Add product rows
+      products.forEach((product, index) => {
+        const row = document.createElement('tr');
+        row.className = 'hover:bg-[#1E293B] transition';
+        
+        // Determine stock status
+        let stockStatus = '';
+        let statusClass = '';
+        if (product.stockStatus === 'out-of-stock') {
+          stockStatus = 'Out of Stock';
+          statusClass = 'out-of-stock';
+        } else if (product.stock <= 5) {
+          stockStatus = 'Low Stock';
+          statusClass = 'low-stock';
+        } else {
+          stockStatus = 'In Stock';
+          statusClass = 'in-stock';
+        }
+        
+        row.innerHTML = `
+          <td class="py-3">
+            <div class="flex items-center space-x-3">
+              <img src="${product.images[0]}" alt="${product.name}" class="w-10 h-10 object-cover rounded">
+              <span>${product.name}</span>
+            </div>
+          </td>
+          <td class="py-3">$${product.price.toFixed(2)}</td>
+          <td class="py-3">${product.stock}</td>
+          <td class="py-3 ${statusClass}">${stockStatus}</td>
+          <td class="py-3">
+            <div class="flex space-x-2">
+              <button class="edit-product p-2 text-[#3B82F6] hover:text-[#D946EF]" data-id="${index}">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="delete-product p-2 text-[#F87171] hover:text-[#EF4444]" data-id="${index}">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        `;
+        
+        productTable.appendChild(row);
+      });
+      
+      // Add event listeners to edit and delete buttons
+      document.querySelectorAll('.edit-product').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const productId = e.currentTarget.getAttribute('data-id');
+          editProduct(productId);
+        });
+      });
+      
+      document.querySelectorAll('.delete-product').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const productId = e.currentTarget.getAttribute('data-id');
+          deleteProduct(productId);
+        });
+      });
+    }
+
+    // Export Users to CSV
+    document.getElementById('export-users-btn').addEventListener('click', () => {
       const users = JSON.parse(localStorage.getItem('users')) || [];
       
       if (users.length === 0) {
@@ -495,15 +944,408 @@
       });
       
       // Create download link
+      downloadCSV(csv, 'gaming_odyssey_users.csv');
+    });
+
+    // Export Products to CSV
+    document.getElementById('export-products-btn')?.addEventListener('click', () => {
+      const products = JSON.parse(localStorage.getItem('products')) || [];
+      
+      if (products.length === 0) {
+        alert('No product data to export');
+        return;
+      }
+      
+      // Create CSV header
+      let csv = 'Name,Category,Brand,MRP,Price,Stock,Status,Featured\n';
+      
+      // Add product data
+      products.forEach(product => {
+        csv += `"${product.name}",${product.category},${product.brand},${product.mrp},${product.price},${product.stock},${product.stockStatus},${product.featured}\n`;
+      });
+      
+      // Create download link
+      downloadCSV(csv, 'gaming_odyssey_products.csv');
+    });
+
+    function downloadCSV(csv, filename) {
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.setAttribute('href', url);
-      link.setAttribute('download', 'gaming_odyssey_users.csv');
+      link.setAttribute('download', filename);
       link.style.visibility = 'hidden';
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+    }
+
+    // Product Management
+    const productModal = document.getElementById('product-modal');
+    const addProductBtn = document.getElementById('add-product-btn');
+    const closeModalBtn = document.getElementById('close-modal');
+    const cancelProductBtn = document.getElementById('cancel-product');
+    const productForm = document.getElementById('product-form');
+    const productImagesInput = document.getElementById('product-images');
+    const imagePreviewContainer = document.getElementById('image-preview-container');
+    const stockStatusRadios = document.querySelectorAll('input[name="stock-status"]');
+    const stockQuantityContainer = document.getElementById('stock-quantity-container');
+    const colorOptions = document.querySelectorAll('.color-option');
+
+    // Color selection
+    colorOptions.forEach(option => {
+      option.addEventListener('click', () => {
+        // Remove selected class from all options
+        colorOptions.forEach(opt => opt.classList.remove('selected'));
+        // Add selected class to clicked option
+        option.classList.add('selected');
+        
+        // Update hidden input with selected colors
+        const selectedColors = Array.from(document.querySelectorAll('.color-option.selected')).map(el => el.getAttribute('data-color'));
+        document.getElementById('product-colors').value = selectedColors.join(',');
+      });
+    });
+
+    // Allow multiple color selection with Ctrl/Cmd click
+    colorOptions.forEach(option => {
+      option.addEventListener('click', (e) => {
+        if (e.ctrlKey || e.metaKey) {
+          // Toggle selection without clearing others
+          option.classList.toggle('selected');
+          
+          // Update hidden input with selected colors
+          const selectedColors = Array.from(document.querySelectorAll('.color-option.selected')).map(el => el.getAttribute('data-color'));
+          document.getElementById('product-colors').value = selectedColors.join(',');
+        }
+      });
+    });
+
+    // Stock status change
+    stockStatusRadios.forEach(radio => {
+      radio.addEventListener('change', () => {
+        if (radio.value === 'in-stock') {
+          stockQuantityContainer.style.display = 'block';
+          document.getElementById('product-stock').required = true;
+        } else {
+          stockQuantityContainer.style.display = 'none';
+          document.getElementById('product-stock').required = false;
+          document.getElementById('product-stock').value = '0';
+        }
+      });
+    });
+
+    // Image upload and preview
+    productImagesInput.addEventListener('change', (e) => {
+      const files = e.target.files;
+      imagePreviewContainer.innerHTML = '';
+      
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        if (!file.type.match('image.*')) continue;
+        
+        const reader = new FileReader();
+        reader.onload = (function(file) {
+          return function(e) {
+            const imagePreview = document.createElement('div');
+            imagePreview.className = 'image-preview';
+            imagePreview.innerHTML = `
+              <img src="${e.target.result}" alt="${file.name}">
+              <div class="remove-image" data-index="${i}">
+                <i class="fas fa-times text-xs"></i>
+              </div>
+            `;
+            imagePreviewContainer.appendChild(imagePreview);
+            
+            // Add remove image functionality
+            imagePreview.querySelector('.remove-image').addEventListener('click', (e) => {
+              e.stopPropagation();
+              imagePreview.remove();
+              
+              // Create new FileList without the removed image
+              const dataTransfer = new DataTransfer();
+              const filesArray = Array.from(productImagesInput.files);
+              filesArray.splice(parseInt(e.currentTarget.getAttribute('data-index')), 1);
+              
+              filesArray.forEach(file => dataTransfer.items.add(file));
+              productImagesInput.files = dataTransfer.files;
+            });
+          };
+        })(file);
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Drag and drop for images
+    imagePreviewContainer.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      imagePreviewContainer.classList.add('border-[#3B82F6]');
+    });
+
+    imagePreviewContainer.addEventListener('dragleave', () => {
+      imagePreviewContainer.classList.remove('border-[#3B82F6]');
+    });
+
+    imagePreviewContainer.addEventListener('drop', (e) => {
+      e.preventDefault();
+      imagePreviewContainer.classList.remove('border-[#3B82F6]');
+      productImagesInput.files = e.dataTransfer.files;
+      
+      // Trigger change event
+      const event = new Event('change');
+      productImagesInput.dispatchEvent(event);
+    });
+
+    // Open modal for adding new product
+    addProductBtn.addEventListener('click', () => {
+      document.getElementById('modal-title').textContent = 'Add New Product';
+      document.getElementById('product-id').value = '';
+      productForm.reset();
+      descriptionEditor.root.innerHTML = '';
+      specsEditor.root.innerHTML = '';
+      imagePreviewContainer.innerHTML = '';
+      productImagesInput.value = '';
+      
+      // Reset color selection
+      colorOptions.forEach(opt => opt.classList.remove('selected'));
+      document.querySelector('.color-option[data-color="black"]').classList.add('selected');
+      document.getElementById('product-colors').value = 'black';
+      
+      // Reset stock status
+      document.querySelector('input[name="stock-status"][value="in-stock"]').checked = true;
+      stockQuantityContainer.style.display = 'block';
+      
+      productModal.classList.remove('hidden');
+    });
+
+    // Close modal
+    function closeModal() {
+      productModal.classList.add('hidden');
+    }
+
+    closeModalBtn.addEventListener('click', closeModal);
+    cancelProductBtn.addEventListener('click', closeModal);
+
+    // Edit product
+    function editProduct(id) {
+      const products = JSON.parse(localStorage.getItem('products')) || [];
+      const product = products[id];
+      
+      if (!product) return;
+      
+      document.getElementById('modal-title').textContent = 'Edit Product';
+      document.getElementById('product-id').value = id;
+      document.getElementById('product-name').value = product.name;
+      document.getElementById('product-category').value = product.category;
+      document.getElementById('product-brand').value = product.brand;
+      document.getElementById('product-mrp').value = product.mrp;
+      document.getElementById('product-price').value = product.price;
+      
+      // Set stock status
+      document.querySelector(`input[name="stock-status"][value="${product.stockStatus}"]`).checked = true;
+      if (product.stockStatus === 'in-stock') {
+        document.getElementById('product-stock').value = product.stock;
+        stockQuantityContainer.style.display = 'block';
+      } else {
+        stockQuantityContainer.style.display = 'none';
+      }
+      
+      // Set featured status
+      document.getElementById('product-featured').checked = product.featured || false;
+      
+      // Set colors
+      colorOptions.forEach(opt => opt.classList.remove('selected'));
+      const colors = product.colors ? product.colors.split(',') : ['black'];
+      colors.forEach(color => {
+        const option = document.querySelector(`.color-option[data-color="${color}"]`);
+        if (option) option.classList.add('selected');
+      });
+      document.getElementById('product-colors').value = colors.join(',');
+      
+      // Set description and specs
+      descriptionEditor.root.innerHTML = product.description || '';
+      specsEditor.root.innerHTML = product.specs || '';
+      
+      // Set images preview
+      imagePreviewContainer.innerHTML = '';
+      product.images.forEach((image, index) => {
+        const imagePreview = document.createElement('div');
+        imagePreview.className = 'image-preview';
+        imagePreview.innerHTML = `
+          <img src="${image}" alt="Product Image ${index + 1}">
+          <div class="remove-image" data-index="${index}">
+            <i class="fas fa-times text-xs"></i>
+          </div>
+        `;
+        imagePreviewContainer.appendChild(imagePreview);
+        
+        // Add remove image functionality
+        imagePreview.querySelector('.remove-image').addEventListener('click', (e) => {
+          e.stopPropagation();
+          imagePreview.remove();
+          
+          // Remove image from product.images array
+          product.images.splice(parseInt(e.currentTarget.getAttribute('data-index')), 1);
+        });
+      });
+      
+      productModal.classList.remove('hidden');
+    }
+
+    // Delete product
+    function deleteProduct(id) {
+      if (!confirm('Are you sure you want to delete this product?')) return;
+      
+      const products = JSON.parse(localStorage.getItem('products')) || [];
+      products.splice(id, 1);
+      localStorage.setItem('products', JSON.stringify(products));
+      
+      loadProductData();
+    }
+
+    // Save product
+    productForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const productId = document.getElementById('product-id').value;
+      const name = document.getElementById('product-name').value;
+      const category = document.getElementById('product-category').value;
+      const brand = document.getElementById('product-brand').value;
+      const colors = document.getElementById('product-colors').value;
+      const mrp = parseFloat(document.getElementById('product-mrp').value);
+      const price = parseFloat(document.getElementById('product-price').value);
+      const stockStatus = document.querySelector('input[name="stock-status"]:checked').value;
+      const stock = stockStatus === 'in-stock' ? parseInt(document.getElementById('product-stock').value) : 0;
+      const featured = document.getElementById('product-featured').checked;
+      const description = descriptionEditor.root.innerHTML;
+      const specs = specsEditor.root.innerHTML;
+      
+      // Get images - either from preview (for edits) or from file input (for new products)
+      let images = [];
+      const previewImages = imagePreviewContainer.querySelectorAll('.image-preview img');
+      if (previewImages.length > 0) {
+        // For edits - use existing images from preview
+        previewImages.forEach(img => images.push(img.src));
+      } else {
+        // For new products - read uploaded files
+        const files = productImagesInput.files;
+        if (files.length === 0) {
+          alert('Please upload at least one product image');
+          return;
+        }
+        
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          if (!file.type.match('image.*')) continue;
+          
+          const reader = new FileReader();
+          reader.onload = (function(file) {
+            return function(e) {
+              images.push(e.target.result);
+              
+              // If this is the last image, save the product
+              if (images.length === files.length) {
+                saveProduct();
+              }
+            };
+          })(file);
+          reader.readAsDataURL(file);
+        }
+        
+        // If no images were valid, show error
+        if (images.length === 0) {
+          alert('Please upload valid image files');
+          return;
+        }
+        
+        // If we're uploading files, wait for all to be processed before saving
+        return;
+      }
+      
+      // If we have images already (from preview), save immediately
+      saveProduct();
+      
+      function saveProduct() {
+        const product = {
+          name,
+          category,
+          brand,
+          colors,
+          mrp,
+          price,
+          stockStatus,
+          stock,
+          featured,
+          description,
+          specs,
+          images,
+          createdAt: new Date().toISOString()
+        };
+        
+        const products = JSON.parse(localStorage.getItem('products')) || [];
+        
+        if (productId === '') {
+          // Add new product
+          products.push(product);
+        } else {
+          // Update existing product
+          products[productId] = product;
+        }
+        
+        localStorage.setItem('products', JSON.stringify(products));
+        closeModal();
+        loadProductData();
+        
+        // Show success notification
+        const notification = document.createElement('div');
+        notification.className = 'fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-md shadow-lg flex items-center z-50';
+        notification.innerHTML = `
+          <i class="fas fa-check-circle mr-2"></i>
+          <span>Product ${productId === '' ? 'added' : 'updated'} successfully!</span>
+        `;
+        document.body.appendChild(notification);
+        setTimeout(() => {
+          notification.remove();
+        }, 3000);
+      }
+    });
+
+    // Initialize the page with sample products if none exist
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!localStorage.getItem('products')) {
+        const sampleProducts = [
+          {
+            name: "Razer DeathAdder V2",
+            category: "mouse",
+            brand: "Razer",
+            colors: "black",
+            mrp: 79.99,
+            price: 69.99,
+            stockStatus: "in-stock",
+            stock: 15,
+            featured: true,
+            description: "<p>The Razer DeathAdder V2 is a gaming mouse with Razer Focus+ 20K DPI Optical Sensor, 8 programmable buttons, and Razer Optical Mouse Switches for blistering fast actuation.</p>",
+            specs: "<ul><li>Razer Focus+ 20K DPI Optical Sensor</li><li>Razer Optical Mouse Switches</li><li>8 Programmable Buttons</li><li>Speedflex Cable</li></ul>",
+            images: ["https://assets2.razerzone.com/images/pnx.assets/6086f2c4f5f766a9e20b5f9e7a5b3c4d/razer-deathadder-v2-pro-500x500.png"],
+            createdAt: new Date().toISOString()
+          },
+          {
+            name: "Logitech G Pro X Keyboard",
+            category: "keyboard",
+            brand: "Logitech",
+            colors: "black",
+            mrp: 169.99,
+            price: 149.99,
+            stockStatus: "in-stock",
+            stock: 8,
+            featured: true,
+            description: "<p>Logitech G PRO X Mechanical Gaming Keyboard featuring swappable GX mechanical switches, LIGHTSYNC RGB, and a portable tenkeyless design.</p>",
+            specs: "<ul><li>Swappable GX Mechanical Switches</li><li>LIGHTSYNC RGB</li><li>Tenkeyless Design</li><li>Detachable Micro USB Cable</li></ul>",
+            images: ["https://resource.logitechg.com/w_692,c_lpad,ar_4:3,q_auto,f_auto,dpr_1.0/d_transparent.gif/content/dam/gaming/en/products/pro-x-keyboard/pro-x-keyboard-gallery-1.png?v=1"],
+            createdAt: new Date().toISOString()
+          }
+        ];
+        localStorage.setItem('products', JSON.stringify(sampleProducts));
+      }
     });
   </script>
 </body>
