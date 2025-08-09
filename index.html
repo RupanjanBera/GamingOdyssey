@@ -3,36 +3,123 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gaming Odyssey</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>Gaming Odyssey | Premium Gaming Gear & Tournaments</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    :root {
+      --primary: #3B82F6;
+      --secondary: #D946EF;
+      --accent: #10B981;
+      --dark: #0F172A;
+      --darker: #020617;
+      --light: #F1F5F9;
+      --mid: #1E293B;
+    }
+    
     body {
       font-family: 'Poppins', sans-serif;
-      background-color: #0F172A;
-      color: #F1F5F9;
+      background-color: var(--dark);
+      color: var(--light);
       scroll-behavior: smooth;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
+      background-image: 
+        radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.1) 0%, transparent 25%),
+        radial-gradient(circle at 80% 70%, rgba(217, 70, 239, 0.1) 0%, transparent 25%);
     }
-    .gradient-glow {
-      box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
-      transition: transform 0.2s ease, box-shadow 0.3s ease;
+    
+    .tech-font {
+      font-family: 'Orbitron', sans-serif;
+      letter-spacing: 1px;
     }
-    .gradient-glow:hover {
-      box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
-      transform: translateY(-3px);
+    
+    .gradient-text {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
+    
+    .gradient-bg {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+    }
+    
+    .gradient-border {
+      position: relative;
+      background: var(--dark);
+    }
+    
+    .gradient-border::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      z-index: -1;
+      border-radius: inherit;
+    }
+    
+    .holographic-effect {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
+      box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+    }
+    
+    .holographic-effect::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        45deg,
+        rgba(59, 130, 246, 0.1) 0%,
+        rgba(217, 70, 239, 0.1) 50%,
+        rgba(59, 130, 246, 0.1) 100%
+      );
+      background-size: 200% 200%;
+      animation: holographic 8s ease infinite;
+      z-index: 1;
+      pointer-events: none;
+    }
+    
+    @keyframes holographic {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    .holographic-card {
+      perspective: 1000px;
+      transform-style: preserve-3d;
+    }
+    
+    .holographic-card-inner {
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+    }
+    
+    .holographic-card:hover .holographic-card-inner {
+      transform: rotateY(15deg) rotateX(5deg) translateY(-10px);
+    }
+    
     .sidebar {
-      background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
-      box-shadow: 4px 0 10px rgba(59, 130, 246, 0.15);
+      background: linear-gradient(180deg, var(--mid) 0%, var(--dark) 100%);
+      box-shadow: 4px 0 15px rgba(59, 130, 246, 0.2);
     }
+    
     .hero-bg {
-      background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(217, 70, 239, 0.15), #0F172A);
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(217, 70, 239, 0.15), var(--dark));
       position: relative;
       overflow: hidden;
     }
+    
     .hero-bg::before {
       content: '';
       position: absolute;
@@ -40,141 +127,79 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.2), transparent 70%);
-      animation: glow 20s ease-in-out infinite;
+      background: 
+        radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.2), transparent 70%),
+        radial-gradient(circle at 80% 80%, rgba(217, 70, 239, 0.2), transparent 70%);
+      animation: glow 15s ease-in-out infinite alternate;
       opacity: 0.5;
+      z-index: 0;
     }
-    .slideshow-container {
-      max-width: 100%;
-      margin: 0 auto;
+    
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .pixel-grid {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 20px 20px;
+      z-index: 0;
+    }
+    
+    .glow-button {
       position: relative;
       overflow: hidden;
-      touch-action: pan-y;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
     }
-    .slides-wrapper {
-      display: flex;
-      transition: transform 0.5s ease-out;
-    }
-    .slide {
-      flex: 0 0 92vw;
-      padding: 1.5rem;
-      background: linear-gradient(145deg, #1E293B, #0F172A);
-      border-radius: 0.75rem;
-      margin: 0 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-    }
-    .slide-content {
-      opacity: 0;
-      transform: translateY(15px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    .slide.active .slide-content {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .arrow {
+    
+    .glow-button::before {
+      content: '';
       position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: linear-gradient(45deg, #3B82F6, #D946EF);
-      padding: 16px;
-      border-radius: 50%;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      touch-action: manipulation;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        45deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.1) 50%,
+        transparent 100%
+      );
+      transform: rotate(45deg);
+      animation: shine 3s infinite;
+      opacity: 0;
     }
-    .arrow:hover {
-      background: linear-gradient(45deg, #D946EF, #3B82F6);
-      transform: translateY(-50%) scale(1.1);
+    
+    .glow-button:hover::before {
+      opacity: 1;
     }
-    .prev { left: 10px; }
-    .next { right: 10px; }
-    .dots {
-      text-align: center;
-      padding: 10px 0;
+    
+    @keyframes shine {
+      0% { transform: translateX(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) rotate(45deg); }
     }
-    .dot {
-      display: inline-block;
-      width: 10px;
-      height: 10px;
-      margin: 0 6px;
-      background: #3B82F6;
-      border-radius: 50%;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    .dot.active, .dot:hover {
-      background: #D946EF;
-      transform: scale(1.3);
-    }
+    
     @keyframes glow {
       0%, 100% { opacity: 0.5; }
-      50% { opacity: 0.7; }
+      50% { opacity: 0.8; }
     }
-    .fade-in {
-      opacity: 0;
-      transform: translateY(15px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    input, textarea {
-      background: #1E293B;
-      color: #F1F5F9;
-      border: 1px solid #3B82F6;
-      border-radius: 0.5rem;
-      padding: 0.75rem;
-      width: 100%;
-      transition: all 0.3s ease;
-      font-family: 'Poppins', sans-serif;
-      font-size: 0.9375rem;
-    }
-    input:focus, textarea:focus {
-      outline: none;
-      border-color: #D946EF;
-      box-shadow: 0 0 8px rgba(217, 70, 239, 0.3);
-    }
-    .submit-btn {
-      background: linear-gradient(90deg, #3B82F6, #D946EF);
-      color: #0F172A;
-      font-family: 'Poppins', sans-serif;
-      font-weight: 600;
-      padding: 1rem 1.5rem;
-      border-radius: 0.5rem;
-      transition: all 0.3s ease;
-      touch-action: manipulation;
-      font-size: 1rem;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    .submit-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
-    }
-    .error {
-      color: #F87171;
-      font-size: 0.8125rem;
-      margin-top: 0.25rem;
-      font-family: 'Poppins', sans-serif;
-    }
-    .success {
-      color: #4ADE80;
-      font-size: 0.8125rem;
-      margin-top: 0.25rem;
-      font-family: 'Poppins', sans-serif;
-    }
+    
     .nav-link, #mobile-menu a {
       position: relative;
       display: inline-flex;
       align-items: center;
       transition: all 0.3s ease;
-      font-family: 'Poppins', sans-serif;
       font-weight: 600;
-      font-size: 1.0625rem;
-      padding: 0.5rem 0;
     }
+    
     .nav-link::after, #mobile-menu a::after {
       content: '';
       position: absolute;
@@ -182,37 +207,46 @@
       height: 2px;
       bottom: 0;
       left: 0;
-      background: linear-gradient(to right, #3B82F6, #D946EF);
+      background: linear-gradient(to right, var(--primary), var(--secondary));
       transition: width 0.3s ease;
     }
+    
     .nav-link:hover::after, #mobile-menu a:hover::after {
       width: 100%;
     }
+    
     .nav-link:hover, #mobile-menu a:hover {
-      color: #3B82F6;
+      color: var(--primary);
     }
-    .mobile-menu {
-      background: linear-gradient(180deg, #1E293B, #0F172A);
+    
+    .fade-in {
       opacity: 0;
-      transform: translateX(-100%);
-      transition: all 0.3s ease;
-      box-shadow: 4px 0 15px rgba(0, 0, 0, 0.3);
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
     }
-    .mobile-menu.active {
+    
+    .fade-in.visible {
       opacity: 1;
-      transform: translateX(0);
+      transform: translateY(0);
     }
-    .card {
-      background: linear-gradient(145deg, #1E293B, #0F172A);
-      border-radius: 0.75rem;
-      padding: 1.5rem;
+    
+    .input-field {
+      background: rgba(30, 41, 59, 0.7);
+      color: var(--light);
+      border: 1px solid rgba(59, 130, 246, 0.5);
+      border-radius: 0.5rem;
+      padding: 0.75rem;
+      width: 100%;
       transition: all 0.3s ease;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(5px);
     }
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+    
+    .input-field:focus {
+      outline: none;
+      border-color: var(--secondary);
+      box-shadow: 0 0 10px rgba(217, 70, 239, 0.3);
     }
+    
     .user-avatar {
       position: fixed;
       top: 20px;
@@ -220,92 +254,199 @@
       width: 50px;
       height: 50px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #3B82F6, #D946EF);
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
       font-weight: bold;
       font-size: 1.2rem;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
       z-index: 40;
       cursor: pointer;
       transition: all 0.3s ease;
     }
+    
     .user-avatar:hover {
       transform: scale(1.1);
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
     }
-    .footer-link {
-      transition: all 0.2s ease;
-    }
-    .footer-link:hover {
-      color: #3B82F6;
-      transform: translateX(3px);
-    }
+    
     .social-icon {
       transition: all 0.3s ease;
     }
+    
     .social-icon:hover {
       transform: translateY(-3px) scale(1.1);
     }
+    
+    .tournament-card {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .tournament-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(
+        to bottom,
+        transparent 60%,
+        rgba(0, 0, 0, 0.7) 90%
+      );
+      z-index: 1;
+    }
+    
+    .tournament-card-content {
+      position: relative;
+      z-index: 2;
+    }
+    
+    .tournament-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
+    
+    .holographic-product {
+      position: relative;
+      transform-style: preserve-3d;
+      transition: all 0.5s ease;
+      perspective: 1000px;
+    }
+    
+    .holographic-product:hover {
+      transform: translateY(-10px) rotateX(5deg);
+    }
+    
+    .holographic-product::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(
+        135deg,
+        rgba(59, 130, 246, 0.1) 0%,
+        rgba(217, 70, 239, 0.1) 50%,
+        rgba(59, 130, 246, 0.1) 100%
+      );
+      animation: holographic 8s ease infinite;
+      z-index: 1;
+      pointer-events: none;
+    }
+    
+    .holographic-product::after {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(
+        45deg,
+        var(--primary),
+        var(--secondary),
+        var(--primary)
+      );
+      z-index: -1;
+      filter: blur(5px);
+      opacity: 0.7;
+      transition: all 0.3s ease;
+    }
+    
+    .holographic-product:hover::after {
+      opacity: 0.9;
+    }
+    
+    .price-tag {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      color: var(--dark);
+      font-weight: bold;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      font-size: 0.875rem;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      z-index: 2;
+    }
+    
+    .section-title {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 50%;
+      height: 3px;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      border-radius: 3px;
+    }
+    
+    .stats-item {
+      position: relative;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+    
+    .stats-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        135deg,
+        rgba(59, 130, 246, 0.2),
+        rgba(217, 70, 239, 0.2)
+      );
+      z-index: -1;
+    }
+    
     @media (max-width: 640px) {
-      .submit-btn {
-        width: 100%;
-        padding: 0.875rem;
-        font-size: 0.9375rem;
-      }
-      .slide {
-        flex: 0 0 90vw;
-        padding: 1rem;
-        margin: 0 6px;
-      }
-      .slide-content h3 {
-        font-size: 1.375rem;
-      }
-      .slide-content p {
-        font-size: 0.875rem;
-      }
       .hero-bg h1 {
-        font-size: 2.25rem;
+        font-size: 2.5rem;
       }
+      
       .hero-bg p {
         font-size: 1rem;
       }
-      .nav-link, #mobile-menu a {
-        font-size: 1rem;
-      }
-      .arrow {
-        padding: 12px;
-      }
+      
       .user-avatar {
         width: 40px;
         height: 40px;
         font-size: 1rem;
       }
     }
-    @media (min-width: 640px) and (max-width: 768px) {
-      .grid-cols-2 {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-      .slide {
-        flex: 0 0 45vw;
-      }
+    
+    @media (min-width: 641px) and (max-width: 768px) {
       .hero-bg h1 {
-        font-size: 3rem;
+        font-size: 3.5rem;
       }
     }
   </style>
 </head>
 <body>
   <!-- Sidebar -->
-  <div class="fixed top-0 left-0 h-full w-64 sidebar gradient-glow z-20 hidden md:block">
-    <div class="p-4 sm:p-6">
+  <div class="fixed top-0 left-0 h-full w-64 sidebar z-20 hidden md:block">
+    <div class="p-6">
       <div class="flex items-center space-x-3">
         <img src="https://cdn-icons-png.flaticon.com/512/3612/3612569.png" alt="Logo" class="w-10 h-10">
-        <h1 class="text-xl sm:text-2xl font-bold text-white leading-relaxed">Gaming Odyssey</h1>
+        <h1 class="text-2xl font-bold text-white leading-relaxed tech-font">GAMING ODYSSEY</h1>
       </div>
-      <nav class="mt-10 space-y-4">
+      <nav class="mt-12 space-y-4">
         <a href="#" data-link="index.html" class="flex items-center space-x-3 text-[#3B82F6] font-semibold nav-link">
           <i class="fas fa-home w-5 h-5"></i>
           <span>Home</span>
@@ -338,21 +479,22 @@
     </div>
   </div>
 
-  <!-- User Avatar (shown after signup) -->
+  <!-- User Avatar -->
   <div id="user-avatar" class="user-avatar hidden"></div>
 
-  <!-- Mobile Hamburger Menu -->
-  <div class="md:hidden fixed top-0 left-0 w-full bg-[#1E293B] z-30 p-4 flex justify-between items-center gradient-glow">
+  <!-- Mobile Menu -->
+  <div class="md:hidden fixed top-0 left-0 w-full bg-[#1E293B] z-30 p-4 flex justify-between items-center shadow-lg">
     <div class="flex items-center space-x-2">
       <img src="https://cdn-icons-png.flaticon.com/512/3612/3612569.png" alt="Logo" class="w-8 h-8">
-      <h1 class="text-lg font-bold text-white leading-relaxed">Gaming Odyssey</h1>
+      <h1 class="text-lg font-bold text-white leading-relaxed tech-font">GAMING ODYSSEY</h1>
     </div>
     <button id="hamburger" class="text-[#3B82F6]">
       <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
     </button>
   </div>
-  <div id="mobile-menu" class="hidden md:hidden fixed top-0 left-0 w-full h-full bg-[#1E293B] z-20 p-4 mobile-menu">
-    <button id="close-menu" class="absolute top-4 right-4 text-[#3B82F6] gradient-glow rounded-full p-2">
+  
+  <div id="mobile-menu" class="hidden md:hidden fixed top-0 left-0 w-full h-full bg-[#1E293B] z-20 p-4 transition-all duration-300 ease-in-out transform -translate-x-full">
+    <button id="close-menu" class="absolute top-4 right-4 text-[#3B82F6] p-2 rounded-full hover:bg-[#1E293B]">
       <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
     </button>
     <nav class="space-y-4 mt-16">
@@ -390,308 +532,506 @@
   <!-- Main Content -->
   <div class="md:ml-64">
     <!-- Hero Section -->
-    <section class="hero-bg min-h-[80vh] flex items-center justify-center text-center p-4 sm:p-6 md:p-8">
-      <div class="fade-in max-w-2xl mx-auto">
+    <section class="hero-bg min-h-screen flex items-center justify-center text-center p-6 relative overflow-hidden">
+      <div class="pixel-grid"></div>
+      <div class="hero-content max-w-4xl mx-auto fade-in">
         <div class="flex justify-center mb-6">
-          <img src="https://cdn-icons-png.flaticon.com/512/3612/3612569.png" alt="Logo" class="w-16 h-16">
+          <img src="https://cdn-icons-png.flaticon.com/512/3612/3612569.png" alt="Logo" class="w-20 h-20 animate-pulse">
         </div>
-        <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">Gaming Odyssey</h1>
-        <p class="text-base sm:text-lg md:text-xl text-[#F1F5F9] mb-8 leading-relaxed">Where Gaming Meets Glory</p>
+        <h1 class="text-5xl sm:text-6xl md:text-7xl font-bold text-white mb-6 leading-tight tech-font">
+          <span class="gradient-text">GAMING ODYSSEY</span>
+        </h1>
+        <p class="text-xl sm:text-2xl text-[#F1F5F9] mb-8 leading-relaxed">Where Gaming Meets Glory</p>
         <div class="flex flex-col sm:flex-row justify-center gap-4">
-          <a href="#" data-link="tournaments.html" class="submit-btn flex items-center justify-center gap-2">
+          <a href="#" data-link="tournaments.html" class="glow-button px-8 py-3 rounded-lg font-semibold text-white gradient-bg flex items-center justify-center gap-2">
             <i class="fas fa-trophy"></i> View Tournaments
           </a>
-          <a href="signup.html" class="submit-btn flex items-center justify-center gap-2 bg-gradient-to-r from-[#10B981] to-[#3B82F6]">
+          <a href="signup.html" class="glow-button px-8 py-3 rounded-lg font-semibold text-white bg-gradient-to-r from-[#10B981] to-[#3B82F6] flex items-center justify-center gap-2">
             <i class="fas fa-user-plus"></i> Join Now
           </a>
         </div>
       </div>
     </section>
 
-    <!-- Slideshow Section -->
-    <section class="py-12 sm:py-16 px-4 sm:px-6 md:px-8">
-      <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12">Featured Content</h2>
-      <div class="slideshow-container">
-        <div class="slides-wrapper">
-          <div class="slide flex items-center justify-center md:flex-row flex-col gap-6 active">
-            <img src="https://9to5toys.com/wp-content/uploads/sites/5/2022/11/best-peripherals-feature.png" alt="Recent Products" class="w-full md:w-1/2 h-56 object-cover rounded-lg gradient-glow" loading="lazy">
-            <div class="slide-content text-center md:text-left max-w-md">
-              <h3 class="text-2xl font-bold text-white mb-3">Discover Our Latest Gaming Gear</h3>
-              <p class="text-base text-[#F1F5F9] mb-4 leading-relaxed">Explore the newest controllers, keyboards, and headsets designed for ultimate performance.</p>
-              <a href="#" data-link="store.html" class="submit-btn flex items-center justify-center gap-2">
-                <i class="fas fa-shopping-cart"></i> Shop Now
-              </a>
-            </div>
-          </div>
-          <div class="slide flex items-center justify-center md:flex-row flex-col gap-6">
-            <img src="https://static1.thegamerimages.com/wordpress/wp-content/uploads/2023/05/10-best-minecraft-minigames.jpg" alt="Minecraft Server" class="w-full md:w-1/2 h-56 object-cover rounded-lg gradient-glow" loading="lazy">
-            <div class="slide-content text-center md:text-left max-w-md">
-              <h3 class="text-2xl font-bold text-white mb-3">Join Our Minecraft Server</h3>
-              <p class="text-base text-[#F1F5F9] mb-4 leading-relaxed">Dive into epic adventures on our server at <code>play.gamingodyssey.in</code>. Build, battle, and connect!</p>
-              <a href="http://play.gamingodyssey.in" class="submit-btn flex items-center justify-center gap-2">
-                <i class="fas fa-server"></i> Join Server
-              </a>
-            </div>
-          </div>
-          <div class="slide flex items-center justify-center md:flex-row flex-col gap-6">
-            <img src="https://api.mcmodels.net/storage/product-images/9564/g2vgT3WJv3Bcrean.png" alt="Server Ranks" class="w-full md:w-1/2 h-56 object-cover rounded-lg gradient-glow" loading="lazy">
-            <div class="slide-content text-center md:text-left max-w-md">
-              <h3 class="text-2xl font-bold text-white mb-3">Unlock Exclusive Server Ranks</h3>
-              <p class="text-base text-[#F1F5F9] mb-4 leading-relaxed">Earn ranks like Legend, Hero, and Elite with unique perks. Level up your Minecraft experience!</p>
-              <a href="#" data-link="ranks.html" class="submit-btn flex items-center justify-center gap-2">
-                <i class="fas fa-medal"></i> Learn More
-              </a>
-            </div>
-          </div>
-          <div class="slide flex items-center justify-center md:flex-row flex-col gap-6">
-            <img src="https://static1.pocketlintimages.com/wordpress/wp-content/uploads/161133-games-news-feature-razer-explains-why-peripheral-choice-is-so-important-to-pc-gamers-image1-yawgpnyt3w.jpg" alt="Gaming Odyssey Store" class="w-full md:w-1/2 h-56 object-cover rounded-lg gradient-glow" loading="lazy">
-            <div class="slide-content text-center md:text-left max-w-md">
-              <h3 class="text-2xl font-bold text-white mb-3">Shop at Gaming Odyssey Store</h3>
-              <p class="text-base text-[#F1F5F9] mb-4 leading-relaxed">From RGB peripherals to esports apparel, find everything you need to dominate.</p>
-              <a href="#" data-link="store.html" class="submit-btn flex items-center justify-center gap-2">
-                <i class="fas fa-store"></i> Visit Store
-              </a>
-            </div>
-          </div>
-          <div class="slide flex items-center justify-center md:flex-row flex-col gap-6">
-            <img src="https://pcbros.tech/cdn/shop/products/PXL_20220113_154409279.PORTRAIT.jpg?v" alt="Custom PC Building" class="w-full md:w-1/2 h-56 object-cover rounded-lg gradient-glow" loading="lazy">
-            <div class="slide-content text-center md:text-left max-w-md">
-              <h3 class="text-2xl font-bold text-white mb-3">Build Your Dream Gaming PC</h3>
-              <p class="text-base text-[#F1F5F9] mb-4 leading-relaxed">Customize your rig with our expert PC building service. Power up your gameplay!</p>
-              <a href="#" data-link="pcbuild.html" class="submit-btn flex items-center justify-center gap-2">
-                <i class="fas fa-desktop"></i> Start Building
-              </a>
-            </div>
-          </div>
-        </div>
-        <div class="arrow prev">
-          <svg class="w-5 h-5 text-[#0F172A]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-        </div>
-        <div class="arrow next">
-          <svg class="w-5 h-5 text-[#0F172A]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-        </div>
-        <div class="dots">
-          <span class="dot active"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-        </div>
-      </div>
-    </section>
-
     <!-- Featured Products Section -->
-    <section class="py-12 sm:py-16 px-4 sm:px-6 md:px-8">
-      <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-10">Featured Gaming Gear</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-        <div class="card gradient-glow fade-in">
-          <img src="https://m.media-amazon.com/images/I/61UIHG3egGL._AC_.jpg" alt="Razer Cobra Pro" class="w-full h-48 object-contain rounded-lg mb-4 aspect-[4/3]" loading="lazy">
-          <h3 class="text-lg font-bold text-white">Razer Cobra Pro</h3>
-          <p class="text-[#F1F5F9] mb-4 text-sm">$165.99</p>
-          <a href="#" data-link="store.html" class="submit-btn flex items-center justify-center gap-2">
-            <i class="fas fa-shopping-cart"></i> Shop Now
-          </a>
+    <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B] relative overflow-hidden">
+      <div class="max-w-7xl mx-auto">
+        <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Featured Gaming Gear</h2>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <!-- Product 1 -->
+          <div class="holographic-product rounded-xl p-6 fade-in">
+            <div class="price-tag">$149.99</div>
+            <div class="h-48 flex items-center justify-center mb-6">
+              <img src="https://m.media-amazon.com/images/I/71v2+oc1WIL._AC_SL1500_.jpg" alt="Razer BlackWidow V4 Pro" class="max-h-full object-contain">
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2">Razer BlackWidow V4 Pro</h3>
+            <p class="text-[#94A3B8] text-sm mb-4">Mechanical Gaming Keyboard with Razer™ Yellow Mechanical Switches</p>
+            <div class="flex justify-between items-center">
+              <div class="flex text-yellow-400 text-sm">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+                <span class="text-[#94A3B8] ml-1">(428)</span>
+              </div>
+              <a href="#" data-link="store.html" class="text-[#3B82F6] hover:text-[#D946EF] transition">
+                <i class="fas fa-shopping-cart"></i>
+              </a>
+            </div>
+          </div>
+          
+          <!-- Product 2 -->
+          <div class="holographic-product rounded-xl p-6 fade-in">
+            <div class="price-tag">$199.99</div>
+            <div class="h-48 flex items-center justify-center mb-6">
+              <img src="https://m.media-amazon.com/images/I/61UIHG3egGL._AC_SL1500_.jpg" alt="Razer Cobra Pro" class="max-h-full object-contain">
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2">Razer Cobra Pro</h3>
+            <p class="text-[#94A3B8] text-sm mb-4">Wireless Gaming Mouse with Chroma™ RGB</p>
+            <div class="flex justify-between items-center">
+              <div class="flex text-yellow-400 text-sm">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <span class="text-[#94A3B8] ml-1">(512)</span>
+              </div>
+              <a href="#" data-link="store.html" class="text-[#3B82F6] hover:text-[#D946EF] transition">
+                <i class="fas fa-shopping-cart"></i>
+              </a>
+            </div>
+          </div>
+          
+          <!-- Product 3 -->
+          <div class="holographic-product rounded-xl p-6 fade-in">
+            <div class="price-tag">$299.99</div>
+            <div class="h-48 flex items-center justify-center mb-6">
+              <img src="https://m.media-amazon.com/images/I/71NZawTvdDL._AC_SL1500_.jpg" alt="HyperX Cloud III" class="max-h-full object-contain">
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2">HyperX Cloud III</h3>
+            <p class="text-[#94A3B8] text-sm mb-4">Wireless Gaming Headset with DTS Headphone:X</p>
+            <div class="flex justify-between items-center">
+              <div class="flex text-yellow-400 text-sm">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+                <span class="text-[#94A3B8] ml-1">(387)</span>
+              </div>
+              <a href="#" data-link="store.html" class="text-[#3B82F6] hover:text-[#D946EF] transition">
+                <i class="fas fa-shopping-cart"></i>
+              </a>
+            </div>
+          </div>
+          
+          <!-- Product 4 -->
+          <div class="holographic-product rounded-xl p-6 fade-in">
+            <div class="price-tag">$249.99</div>
+            <div class="h-48 flex items-center justify-center mb-6">
+              <img src="https://m.media-amazon.com/images/I/71LCmvrndjL._AC_SL1500_.jpg" alt="FIFINE Gaming Microphone" class="max-h-full object-contain">
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2">FIFINE AmpliGame AM8</h3>
+            <p class="text-[#94A3B8] text-sm mb-4">Professional USB Condenser Streaming Microphone</p>
+            <div class="flex justify-between items-center">
+              <div class="flex text-yellow-400 text-sm">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="far fa-star"></i>
+                <span class="text-[#94A3B8] ml-1">(276)</span>
+              </div>
+              <a href="#" data-link="store.html" class="text-[#3B82F6] hover:text-[#D946EF] transition">
+                <i class="fas fa-shopping-cart"></i>
+              </a>
+            </div>
+          </div>
         </div>
-        <div class="card gradient-glow fade-in">
-          <img src="https://m.media-amazon.com/images/I/711iU01TgJL._AC_.jpg" alt="Logitech G213 Prodigy" class="w-full h-48 object-contain rounded-lg mb-4 aspect-[4/3]" loading="lazy">
-          <h3 class="text-lg font-bold text-white">Logitech G213 Prodigy</h3>
-          <p class="text-[#F1F5F9] mb-4 text-sm">$49.99</p>
-          <a href="#" data-link="store.html" class="submit-btn flex items-center justify-center gap-2">
-            <i class="fas fa-shopping-cart"></i> Shop Now
-          </a>
-        </div>
-        <div class="card gradient-glow fade-in">
-          <img src="https://m.media-amazon.com/images/I/71NZawTvdDL._AC_.jpg" alt="HyperX Cloud III" class="w-full h-48 object-contain rounded-lg mb-4 aspect-[4/3]" loading="lazy">
-          <h3 class="text-lg font-bold text-white">HyperX Cloud III</h3>
-          <p class="text-[#F1F5F9] mb-4 text-sm">$105.99</p>
-          <a href="#" data-link="store.html" class="submit-btn flex items-center justify-center gap-2">
-            <i class="fas fa-shopping-cart"></i> Shop Now
-          </a>
-        </div>
-        <div class="card gradient-glow fade-in">
-          <img src="https://m.media-amazon.com/images/I/71LCmvrndjL._SL1500_.jpg" alt="FIFINE Gaming Microphone" class="w-full h-48 object-contain rounded-lg mb-4 aspect-[4/3]" loading="lazy">
-          <h3 class="text-lg font-bold text-white">FIFINE Gaming Microphone</h3>
-          <p class="text-[#F1F5F9] mb-4 text-sm">$34.99</p>
-          <a href="#" data-link="store.html" class="submit-btn flex items-center justify-center gap-2">
-            <i class="fas fa-shopping-cart"></i> Shop Now
+        
+        <div class="text-center mt-12">
+          <a href="#" data-link="store.html" class="inline-block glow-button px-8 py-3 rounded-lg font-semibold text-white gradient-bg">
+            View All Products <i class="fas fa-arrow-right ml-2"></i>
           </a>
         </div>
       </div>
     </section>
 
     <!-- Upcoming Tournaments Section -->
-    <section class="py-12 sm:py-16 px-4 sm:px-6 md:px-8 bg-gradient-to-b from-[#1E293B] to-[#0F172A]">
-      <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-10">Upcoming Tournaments</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-        <div class="card gradient-glow fade-in">
-          <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=800&auto=format&fit=crop" alt="Cyber Clash 2025" class="w-full h-40 object-cover rounded-lg mb-4" loading="lazy">
-          <h3 class="text-lg font-bold text-white">Cyber Clash 2025</h3>
-          <p class="text-[#F1F5F9] mb-2 text-sm flex items-center gap-2"><i class="fas fa-gamepad text-[#3B82F6]"></i> Valorant</p>
-          <p class="text-[#F1F5F9] mb-2 text-sm flex items-center gap-2"><i class="fas fa-calendar-alt text-[#3B82F6]"></i> May 15, 2025</p>
-          <p class="text-[#F1F5F9] mb-4 text-sm flex items-center gap-2"><i class="fas fa-award text-[#3B82F6]"></i> $10,000</p>
-          <a href="#" data-link="tournaments.html" class="submit-btn flex items-center justify-center gap-2">
-            <i class="fas fa-user-plus"></i> Register
-          </a>
+    <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A] relative overflow-hidden">
+      <div class="max-w-7xl mx-auto">
+        <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Upcoming Tournaments</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Tournament 1 -->
+          <div class="tournament-card rounded-xl overflow-hidden fade-in">
+            <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Cyber Clash 2025" class="w-full h-64 object-cover">
+            <div class="tournament-card-content p-6 absolute bottom-0 left-0 right-0">
+              <div class="flex justify-between items-start mb-2">
+                <h3 class="text-xl font-bold text-white">Cyber Clash 2025</h3>
+                <span class="bg-[#3B82F6] text-[#0F172A] text-xs font-bold px-2 py-1 rounded">$10K Prize</span>
+              </div>
+              <div class="flex items-center text-[#94A3B8] text-sm mb-4">
+                <i class="fas fa-gamepad mr-2 text-[#3B82F6]"></i>
+                <span>Valorant</span>
+              </div>
+              <div class="flex items-center text-[#94A3B8] text-sm mb-4">
+                <i class="fas fa-calendar-alt mr-2 text-[#3B82F6]"></i>
+                <span>May 15, 2025</span>
+              </div>
+              <a href="#" data-link="tournaments.html" class="inline-block w-full text-center bg-gradient-to-r from-[#3B82F6] to-[#D946EF] text-white py-2 rounded-lg font-medium hover:opacity-90 transition">
+                Register Now
+              </a>
+            </div>
+          </div>
+          
+          <!-- Tournament 2 -->
+          <div class="tournament-card rounded-xl overflow-hidden fade-in">
+            <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80" alt="Neon Strike" class="w-full h-64 object-cover">
+            <div class="tournament-card-content p-6 absolute bottom-0 left-0 right-0">
+              <div class="flex justify-between items-start mb-2">
+                <h3 class="text-xl font-bold text-white">Neon Strike</h3>
+                <span class="bg-[#D946EF] text-[#0F172A] text-xs font-bold px-2 py-1 rounded">$15K Prize</span>
+              </div>
+              <div class="flex items-center text-[#94A3B8] text-sm mb-4">
+                <i class="fas fa-gamepad mr-2 text-[#3B82F6]"></i>
+                <span>Overwatch 2</span>
+              </div>
+              <div class="flex items-center text-[#94A3B8] text-sm mb-4">
+                <i class="fas fa-calendar-alt mr-2 text-[#3B82F6]"></i>
+                <span>June 10, 2025</span>
+              </div>
+              <a href="#" data-link="tournaments.html" class="inline-block w-full text-center bg-gradient-to-r from-[#3B82F6] to-[#D946EF] text-white py-2 rounded-lg font-medium hover:opacity-90 transition">
+                Register Now
+              </a>
+            </div>
+          </div>
+          
+          <!-- Tournament 3 -->
+          <div class="tournament-card rounded-xl overflow-hidden fade-in">
+            <img src="https://images.unsplash.com/photo-1633613286848-e6f43bbafb8d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Odyssey League" class="w-full h-64 object-cover">
+            <div class="tournament-card-content p-6 absolute bottom-0 left-0 right-0">
+              <div class="flex justify-between items-start mb-2">
+                <h3 class="text-xl font-bold text-white">Odyssey League</h3>
+                <span class="bg-[#10B981] text-[#0F172A] text-xs font-bold px-2 py-1 rounded">$20K Prize</span>
+              </div>
+              <div class="flex items-center text-[#94A3B8] text-sm mb-4">
+                <i class="fas fa-gamepad mr-2 text-[#3B82F6]"></i>
+                <span>League of Legends</span>
+              </div>
+              <div class="flex items-center text-[#94A3B8] text-sm mb-4">
+                <i class="fas fa-calendar-alt mr-2 text-[#3B82F6]"></i>
+                <span>July 5, 2025</span>
+              </div>
+              <a href="#" data-link="tournaments.html" class="inline-block w-full text-center bg-gradient-to-r from-[#3B82F6] to-[#D946EF] text-white py-2 rounded-lg font-medium hover:opacity-90 transition">
+                Register Now
+              </a>
+            </div>
+          </div>
         </div>
-        <div class="card gradient-glow fade-in">
-          <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=800&auto=format&fit=crop" alt="Neon Strike" class="w-full h-40 object-cover rounded-lg mb-4" loading="lazy">
-          <h3 class="text-lg font-bold text-white">Neon Strike</h3>
-          <p class="text-[#F1F5F9] mb-2 text-sm flex items-center gap-2"><i class="fas fa-gamepad text-[#3B82F6]"></i> Overwatch</p>
-          <p class="text-[#F1F5F9] mb-2 text-sm flex items-center gap-2"><i class="fas fa-calendar-alt text-[#3B82F6]"></i> June 10, 2025</p>
-          <p class="text-[#F1F5F9] mb-4 text-sm flex items-center gap-2"><i class="fas fa-award text-[#3B82F6]"></i> $15,000</p>
-          <a href="#" data-link="tournaments.html" class="submit-btn flex items-center justify-center gap-2">
-            <i class="fas fa-user-plus"></i> Register
-          </a>
-        </div>
-        <div class="card gradient-glow fade-in">
-          <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=800&auto=format&fit=crop" alt="Odyssey League" class="w-full h-40 object-cover rounded-lg mb-4" loading="lazy">
-          <h3 class="text-lg font-bold text-white">Odyssey League</h3>
-          <p class="text-[#F1F5F9] mb-2 text-sm flex items-center gap-2"><i class="fas fa-gamepad text-[#3B82F6]"></i> League of Legends</p>
-          <p class="text-[#F1F5F9] mb-2 text-sm flex items-center gap-2"><i class="fas fa-calendar-alt text-[#3B82F6]"></i> July 5, 2025</p>
-          <p class="text-[#F1F5F9] mb-4 text-sm flex items-center gap-2"><i class="fas fa-award text-[#3B82F6]"></i> $20,000</p>
-          <a href="#" data-link="tournaments.html" class="submit-btn flex items-center justify-center gap-2">
-            <i class="fas fa-user-plus"></i> Register
+        
+        <div class="text-center mt-12">
+          <a href="#" data-link="tournaments.html" class="inline-block glow-button px-8 py-3 rounded-lg font-semibold text-white gradient-bg">
+            View All Tournaments <i class="fas fa-arrow-right ml-2"></i>
           </a>
         </div>
       </div>
     </section>
 
-    <!-- About Us Section -->
-    <section class="py-12 sm:py-16 px-4 sm:px-6 md:px-8 text-center bg-gradient-to-b from-[#0F172A] to-[#1E293B]">
-      <h2 class="text-3xl sm:text-4xl font-bold text-white mb-8">About Gaming Odyssey</h2>
-      <div class="max-w-2xl mx-auto fade-in">
-        <p class="text-base sm:text-lg text-[#F1F5F9] mb-6 leading-relaxed">Gaming Odyssey is your gateway to competitive gaming. From thrilling tournaments to top-tier gaming gear, we bring the future of esports directly to you. Join a community of passionate gamers and level up your experience!</p>
-        <div class="flex justify-center space-x-6 mt-8">
-          <div class="flex flex-col items-center">
-            <div class="bg-[#1E293B] p-4 rounded-full mb-2 gradient-glow">
-              <i class="fas fa-trophy text-2xl text-[#D946EF]"></i>
+    <!-- Minecraft Server Section -->
+    <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B] relative overflow-hidden">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row items-center gap-8">
+          <div class="md:w-1/2 fade-in">
+            <h2 class="text-3xl sm:text-4xl font-bold text-white mb-6 section-title">Join Our Minecraft Server</h2>
+            <p class="text-[#F1F5F9] mb-6 leading-relaxed">
+              Experience the ultimate Minecraft adventure on our dedicated server. Join thousands of players in an expansive world with custom minigames, survival, and creative modes.
+            </p>
+            <div class="bg-[#1E293B] p-4 rounded-lg mb-6">
+              <div class="flex items-center">
+                <i class="fas fa-server text-2xl text-[#3B82F6] mr-3"></i>
+                <div>
+                  <p class="text-[#94A3B8] text-sm">Server Address</p>
+                  <p class="text-white font-mono">play.gamingodyssey.in</p>
+                </div>
+              </div>
             </div>
-            <p class="text-sm text-[#F1F5F9]">50+ Tournaments</p>
+            <div class="flex flex-col sm:flex-row gap-4">
+              <a href="http://play.gamingodyssey.in" class="glow-button px-6 py-3 rounded-lg font-semibold text-white gradient-bg flex items-center justify-center gap-2">
+                <i class="fas fa-plug"></i> Connect Now
+              </a>
+              <a href="#" data-link="ranks.html" class="glow-button px-6 py-3 rounded-lg font-semibold text-white bg-[#1E293B] border border-[#3B82F6] flex items-center justify-center gap-2">
+                <i class="fas fa-crown"></i> View Ranks
+              </a>
+            </div>
           </div>
-          <div class="flex flex-col items-center">
-            <div class="bg-[#1E293B] p-4 rounded-full mb-2 gradient-glow">
-              <i class="fas fa-users text-2xl text-[#3B82F6]"></i>
+          <div class="md:w-1/2 fade-in">
+            <div class="holographic-effect rounded-xl overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1627855437693-dcc7b0c4ba7b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Minecraft Server" class="w-full h-auto object-cover">
             </div>
-            <p class="text-sm text-[#F1F5F9]">10,000+ Members</p>
           </div>
-          <div class="flex flex-col items-center">
-            <div class="bg-[#1E293B] p-4 rounded-full mb-2 gradient-glow">
-              <i class="fas fa-gamepad text-2xl text-[#10B981]"></i>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A]">
+      <div class="max-w-7xl mx-auto">
+        <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Why Choose Gaming Odyssey?</h2>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="stats-item fade-in">
+            <div class="text-center p-6">
+              <div class="bg-[#3B82F6] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-trophy text-2xl text-white"></i>
+              </div>
+              <h3 class="text-3xl font-bold text-white text-center mb-2">50+</h3>
+              <p class="text-[#94A3B8] text-center">Tournaments Hosted</p>
             </div>
-            <p class="text-sm text-[#F1F5F9]">100+ Games</p>
+          </div>
+          
+          <div class="stats-item fade-in">
+            <div class="text-center p-6">
+              <div class="bg-[#D946EF] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-users text-2xl text-white"></i>
+              </div>
+              <h3 class="text-3xl font-bold text-white text-center mb-2">10K+</h3>
+              <p class="text-[#94A3B8] text-center">Active Members</p>
+            </div>
+          </div>
+          
+          <div class="stats-item fade-in">
+            <div class="text-center p-6">
+              <div class="bg-[#10B981] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-gamepad text-2xl text-white"></i>
+              </div>
+              <h3 class="text-3xl font-bold text-white text-center mb-2">100+</h3>
+              <p class="text-[#94A3B8] text-center">Supported Games</p>
+            </div>
+          </div>
+          
+          <div class="stats-item fade-in">
+            <div class="text-center p-6">
+              <div class="bg-[#F59E0B] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-headset text-2xl text-white"></i>
+              </div>
+              <h3 class="text-3xl font-bold text-white text-center mb-2">24/7</h3>
+              <p class="text-[#94A3B8] text-center">Customer Support</p>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
     <!-- Contact Us Section -->
-    <section class="py-12 sm:py-16 px-4 sm:px-6 md:px-8 bg-[#1E293B]">
-      <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-10">Contact Us</h2>
-      <div class="max-w-lg mx-auto card gradient-glow fade-in">
-        <form id="contact-form" class="p-6">
-          <div class="mb-5">
-            <label for="name" class="block text-[#F1F5F9] mb-2 font-semibold text-sm">Name</label>
-            <input type="text" id="name" name="name" required placeholder="Your name" />
-            <p id="name-error" class="error hidden">Please enter your name</p>
+    <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B]">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Contact Us</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="fade-in">
+            <div class="holographic-effect rounded-xl p-6 h-full">
+              <h3 class="text-xl font-bold text-white mb-4">Get In Touch</h3>
+              <div class="space-y-4">
+                <div class="flex items-start">
+                  <i class="fas fa-map-marker-alt mt-1 text-[#3B82F6] mr-3"></i>
+                  <div>
+                    <h4 class="text-white font-medium">Address</h4>
+                    <p class="text-[#94A3B8] text-sm">123 Gaming Street, Virtual City, VC 12345</p>
+                  </div>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-envelope text-[#3B82F6] mr-3"></i>
+                  <div>
+                    <h4 class="text-white font-medium">Email</h4>
+                    <a href="mailto:support@gamingodyssey.in" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition">support@gamingodyssey.in</a>
+                  </div>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-phone text-[#3B82F6] mr-3"></i>
+                  <div>
+                    <h4 class="text-white font-medium">Phone</h4>
+                    <p class="text-[#94A3B8] text-sm">6290994382</p>
+                  </div>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-server text-[#3B82F6] mr-3"></i>
+                  <div>
+                    <h4 class="text-white font-medium">Minecraft Server</h4>
+                    <p class="text-[#94A3B8] text-sm">play.gamingodyssey.in</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="mt-8">
+                <h3 class="text-xl font-bold text-white mb-4">Follow Us</h3>
+                <div class="flex space-x-4">
+                  <a href="https://www.instagram.com/noticedveil" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#E1306C]">
+                    <i class="fab fa-instagram text-2xl"></i>
+                  </a>
+                  <a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#FF0000]">
+                    <i class="fab fa-youtube text-2xl"></i>
+                  </a>
+                  <a href="https://www.facebook.com" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#1877F2]">
+                    <i class="fab fa-facebook text-2xl"></i>
+                  </a>
+                  <a href="https://www.twitter.com" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#1DA1F2]">
+                    <i class="fab fa-twitter text-2xl"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="mb-5">
-            <label for="email" class="block text-[#F1F5F9] mb-2 font-semibold text-sm">Email</label>
-            <input type="email" id="email" name="email" required placeholder="Your email" />
-            <p id="email-error" class="error hidden">Please enter a valid email</p>
+          
+          <div class="fade-in">
+            <div class="holographic-effect rounded-xl p-6">
+              <form id="contact-form">
+                <div class="mb-5">
+                  <label for="name" class="block text-[#F1F5F9] mb-2 font-medium">Name</label>
+                  <input type="text" id="name" name="name" required placeholder="Your name" class="input-field">
+                  <p id="name-error" class="text-red-500 text-sm mt-1 hidden">Please enter your name</p>
+                </div>
+                <div class="mb-5">
+                  <label for="email" class="block text-[#F1F5F9] mb-2 font-medium">Email</label>
+                  <input type="email" id="email" name="email" required placeholder="Your email" class="input-field">
+                  <p id="email-error" class="text-red-500 text-sm mt-1 hidden">Please enter a valid email</p>
+                </div>
+                <div class="mb-5">
+                  <label for="subject" class="block text-[#F1F5F9] mb-2 font-medium">Subject</label>
+                  <input type="text" id="subject" name="subject" required placeholder="Subject" class="input-field">
+                  <p id="subject-error" class="text-red-500 text-sm mt-1 hidden">Please enter a subject</p>
+                </div>
+                <div class="mb-5">
+                  <label for="message" class="block text-[#F1F5F9] mb-2 font-medium">Message</label>
+                  <textarea id="message" name="message" rows="4" required placeholder="Your message" class="input-field"></textarea>
+                  <p id="message-error" class="text-red-500 text-sm mt-1 hidden">Please enter a message</p>
+                </div>
+                <button type="submit" class="w-full glow-button px-6 py-3 rounded-lg font-semibold text-white gradient-bg flex items-center justify-center gap-2">
+                  <i class="fas fa-paper-plane"></i> Send Message
+                </button>
+                <p id="form-status" class="mt-3 text-sm text-center"></p>
+              </form>
+            </div>
           </div>
-          <div class="mb-5">
-            <label for="subject" class="block text-[#F1F5F9] mb-2 font-semibold text-sm">Subject</label>
-            <input type="text" id="subject" name="subject" required placeholder="Subject" />
-            <p id="subject-error" class="error hidden">Please enter a subject</p>
-          </div>
-          <div class="mb-5">
-            <label for="message" class="block text-[#F1F5F9] mb-2 font-semibold text-sm">Message</label>
-            <textarea id="message" name="message" rows="4" required placeholder="Your message"></textarea>
-            <p id="message-error" class="error hidden">Please enter a message</p>
-          </div>
-          <div class="text-center">
-            <button type="submit" class="submit-btn w-full flex items-center justify-center gap-2">
-              <i class="fas fa-paper-plane"></i> Send Message
-            </button>
-            <p id="form-status" class="mt-3 text-sm"></p>
-          </div>
-        </form>
+        </div>
       </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-[#0F172A] py-12 px-4 sm:px-6 md:px-8 border-t border-[#1E293B]">
-      <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-        <div>
-          <div class="flex items-center space-x-3 mb-4">
-            <img src="https://cdn-icons-png.flaticon.com/512/3612/3612569.png" alt="Logo" class="w-10 h-10">
-            <h3 class="text-xl font-bold text-white">Gaming Odyssey</h3>
+    <footer class="bg-[#020617] py-12 px-6 border-t border-[#1E293B]">
+      <div class="max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div>
+            <div class="flex items-center space-x-3 mb-4">
+              <img src="https://cdn-icons-png.flaticon.com/512/3612/3612569.png" alt="Logo" class="w-10 h-10">
+              <h3 class="text-xl font-bold text-white tech-font">GAMING ODYSSEY</h3>
+            </div>
+            <p class="text-[#94A3B8] text-sm mb-4 leading-relaxed">
+              Where Gaming Meets Glory. Join our community of passionate gamers and elevate your gaming experience.
+            </p>
+            <div class="flex space-x-4">
+              <a href="https://www.instagram.com/noticedveil" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#E1306C]">
+                <i class="fab fa-instagram"></i>
+              </a>
+              <a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#FF0000]">
+                <i class="fab fa-youtube"></i>
+              </a>
+              <a href="https://www.facebook.com" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#1877F2]">
+                <i class="fab fa-facebook"></i>
+              </a>
+              <a href="https://www.twitter.com" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#1DA1F2]">
+                <i class="fab fa-twitter"></i>
+              </a>
+            </div>
           </div>
-          <p class="text-[#94A3B8] text-sm mb-4 leading-relaxed">Where Gaming Meets Glory. Join our community of passionate gamers and elevate your gaming experience.</p>
-          <div class="flex space-x-4">
-            <a href="https://www.instagram.com/noticedveil" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#E1306C]">
-              <i class="fab fa-instagram text-xl"></i>
-            </a>
-            <a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#FF0000]">
-              <i class="fab fa-youtube text-xl"></i>
-            </a>
-            <a href="https://www.facebook.com" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#1877F2]">
-              <i class="fab fa-facebook text-xl"></i>
-            </a>
-            <a href="https://www.twitter.com" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#1DA1F2]">
-              <i class="fab fa-twitter text-xl"></i>
-            </a>
+          
+          <div>
+            <h3 class="text-lg font-bold text-white mb-4">Quick Links</h3>
+            <ul class="space-y-3">
+              <li>
+                <a href="#" data-link="index.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center">
+                  <i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Home
+                </a>
+              </li>
+              <li>
+                <a href="#" data-link="store.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center">
+                  <i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Store
+                </a>
+              </li>
+              <li>
+                <a href="#" data-link="tournaments.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center">
+                  <i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Tournaments
+                </a>
+              </li>
+              <li>
+                <a href="#" data-link="trackorder.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center">
+                  <i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Track Order
+                </a>
+              </li>
+              <li>
+                <a href="signup.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center">
+                  <i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Sign Up
+                </a>
+              </li>
+            </ul>
+          </div>
+          
+          <div>
+            <h3 class="text-lg font-bold text-white mb-4">Support</h3>
+            <ul class="space-y-3">
+              <li>
+                <a href="#" data-link="contactus.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center">
+                  <i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Contact Us
+                </a>
+              </li>
+              <li>
+                <a href="#" data-link="aboutus.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center">
+                  <i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> About Us
+                </a>
+              </li>
+              <li>
+                <a href="terms.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center">
+                  <i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Terms & Conditions
+                </a>
+              </li>
+              <li>
+                <a href="privacy.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center">
+                  <i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Privacy Policy
+                </a>
+              </li>
+              <li>
+                <a href="faq.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center">
+                  <i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> FAQ
+                </a>
+              </li>
+            </ul>
+          </div>
+          
+          <div>
+            <h3 class="text-lg font-bold text-white mb-4">Newsletter</h3>
+            <p class="text-[#94A3B8] text-sm mb-4">
+              Subscribe to our newsletter for the latest updates on tournaments, products, and special offers.
+            </p>
+            <form class="flex">
+              <input type="email" placeholder="Your email" class="input-field rounded-r-none">
+              <button type="submit" class="bg-gradient-to-r from-[#3B82F6] to-[#D946EF] text-white px-4 rounded-r-lg">
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </form>
           </div>
         </div>
-        <div>
-          <h3 class="text-lg font-bold text-white mb-4 leading-relaxed">Quick Links</h3>
-          <ul class="space-y-3">
-            <li><a href="#" data-link="index.html" class="footer-link text-[#94A3B8] text-sm leading-relaxed flex items-center gap-2"><i class="fas fa-chevron-right text-xs text-[#3B82F6]"></i> Home</a></li>
-            <li><a href="#" data-link="store.html" class="footer-link text-[#94A3B8] text-sm leading-relaxed flex items-center gap-2"><i class="fas fa-chevron-right text-xs text-[#3B82F6]"></i> Store</a></li>
-            <li><a href="#" data-link="tournaments.html" class="footer-link text-[#94A3B8] text-sm leading-relaxed flex items-center gap-2"><i class="fas fa-chevron-right text-xs text-[#3B82F6]"></i> Tournaments</a></li>
-            <li><a href="#" data-link="trackorder.html" class="footer-link text-[#94A3B8] text-sm leading-relaxed flex items-center gap-2"><i class="fas fa-chevron-right text-xs text-[#3B82F6]"></i> Track Order</a></li>
-            <li><a href="signup.html" class="footer-link text-[#94A3B8] text-sm leading-relaxed flex items-center gap-2"><i class="fas fa-chevron-right text-xs text-[#3B82F6]"></i> Sign Up</a></li>
-          </ul>
+        
+        <div class="border-t border-[#1E293B] mt-10 pt-6 text-center">
+          <p class="text-[#94A3B8] text-sm">&copy; 2025 Gaming Odyssey. All rights reserved.</p>
         </div>
-        <div>
-          <h3 class="text-lg font-bold text-white mb-4 leading-relaxed">Support</h3>
-          <ul class="space-y-3">
-            <li><a href="#" data-link="contactus.html" class="footer-link text-[#94A3B8] text-sm leading-relaxed flex items-center gap-2"><i class="fas fa-chevron-right text-xs text-[#3B82F6]"></i> Contact Us</a></li>
-            <li><a href="#" data-link="aboutus.html" class="footer-link text-[#94A3B8] text-sm leading-relaxed flex items-center gap-2"><i class="fas fa-chevron-right text-xs text-[#3B82F6]"></i> About Us</a></li>
-            <li><a href="terms.html" class="footer-link text-[#94A3B8] text-sm leading-relaxed flex items-center gap-2"><i class="fas fa-chevron-right text-xs text-[#3B82F6]"></i> Terms & Conditions</a></li>
-            <li><a href="privacy.html" class="footer-link text-[#94A3B8] text-sm leading-relaxed flex items-center gap-2"><i class="fas fa-chevron-right text-xs text-[#3B82F6]"></i> Privacy Policy</a></li>
-            <li><a href="faq.html" class="footer-link text-[#94A3B8] text-sm leading-relaxed flex items-center gap-2"><i class="fas fa-chevron-right text-xs text-[#3B82F6]"></i> FAQ</a></li>
-          </ul>
-        </div>
-        <div>
-          <h3 class="text-lg font-bold text-white mb-4 leading-relaxed">Contact Info</h3>
-          <ul class="space-y-3">
-            <li class="text-[#94A3B8] text-sm leading-relaxed flex items-start gap-3">
-              <i class="fas fa-map-marker-alt mt-1 text-[#3B82F6]"></i>
-              <span>123 Gaming Street, Virtual City, VC 12345</span>
-            </li>
-            <li class="text-[#94A3B8] text-sm leading-relaxed flex items-center gap-3">
-              <i class="fas fa-envelope text-[#3B82F6]"></i>
-              <a href="mailto:support@gamingodyssey.in" class="hover:text-[#3B82F6] transition">support@gamingodyssey.in</a>
-            </li>
-            <li class="text-[#94A3B8] text-sm leading-relaxed flex items-center gap-3">
-              <i class="fas fa-phone text-[#3B82F6]"></i>
-              <span>6290994382</span>
-            </li>
-            <li class="text-[#94A3B8] text-sm leading-relaxed flex items-center gap-3">
-              <i class="fas fa-server text-[#3B82F6]"></i>
-              <span>play.gamingodyssey.in</span>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div class="border-t border-[#1E293B] mt-10 pt-6 text-center">
-        <p class="text-[#94A3B8] text-sm leading-relaxed">© 2025 Gaming Odyssey. All rights reserved.</p>
       </div>
     </footer>
   </div>
 
-  <!-- Chatbot UI (unchanged from original) -->
+  <!-- Chatbot UI -->
   <div id="chatbot-container" class="fixed bottom-6 right-6 z-50 w-80 sm:w-96 transition-all duration-300 ease-in-out">
     <div id="chatbot-header" class="bg-gradient-to-r from-[#3B82F6] to-[#D946EF] text-white p-3 rounded-t-lg flex justify-between items-center cursor-pointer">
       <h3 class="font-bold">Gaming Odyssey Assistant</h3>
@@ -702,8 +1042,8 @@
       </button>
     </div>
     <div id="chatbot-body" class="hidden bg-[#0F172A] border border-[#1E293B] rounded-b-lg shadow-lg">
-      <div id="chatbot-messages" class="chatbot-messages p-4 space-y-3">
-        <div class="bot-message p-3 text-sm">
+      <div id="chatbot-messages" class="chatbot-messages p-4 space-y-3 max-h-96 overflow-y-auto">
+        <div class="bot-message p-3 text-sm rounded-lg bg-[#1E293B]">
           <p>Hello! I'm your Gaming Odyssey assistant. How can I help you today? 😊</p>
           <p class="mt-2">You can ask me about:</p>
           <ul class="list-disc pl-5 mt-1">
@@ -717,25 +1057,25 @@
         </div>
       </div>
       <div class="p-3 border-t border-[#1E293B]">
-        <div class="file-upload-container">
-          <label for="file-upload" class="file-upload-label">
-            <i class="fas fa-paperclip"></i>
+        <div class="file-upload-container mb-2">
+          <label for="file-upload" class="file-upload-label cursor-pointer text-sm text-[#94A3B8] hover:text-[#3B82F6] transition flex items-center">
+            <i class="fas fa-paperclip mr-2"></i>
             <span>Attach files (images, text, PDF)</span>
-            <input type="file" id="file-upload" class="file-upload-input" multiple>
+            <input type="file" id="file-upload" class="file-upload-input hidden" multiple>
           </label>
-          <div id="file-preview" class="file-preview"></div>
+          <div id="file-preview" class="file-preview flex flex-wrap gap-2 mt-2"></div>
         </div>
         <div class="flex gap-2">
           <input id="chatbot-input" type="text" placeholder="Type your message..." class="flex-1 bg-[#1E293B] text-[#F1F5F9] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#3B82F6]">
           <button id="chatbot-send" class="bg-gradient-to-r from-[#3B82F6] to-[#D946EF] text-white rounded-lg px-4 py-2 text-sm font-medium hover:opacity-90 transition">
-            Send
+            <i class="fas fa-paper-plane"></i>
           </button>
         </div>
-        <div class="action-buttons">
-          <button id="clear-chat" class="clear-chat-btn">
+        <div class="action-buttons flex justify-between mt-2 text-xs text-[#94A3B8]">
+          <button id="clear-chat" class="clear-chat-btn hover:text-[#3B82F6] transition flex items-center">
             <i class="fas fa-trash-alt mr-1"></i> Clear Chat
           </button>
-          <button id="generate-image" class="image-generation-btn">
+          <button id="generate-image" class="image-generation-btn hover:text-[#3B82F6] transition flex items-center">
             <i class="fas fa-image mr-1"></i> Generate Image
           </button>
         </div>
@@ -762,26 +1102,18 @@
       userAvatar.title = `Welcome, ${user.name}`;
     }
 
-    // Handle protected links
-    document.querySelectorAll('.nav-link, .submit-btn').forEach(link => {
-      link.addEventListener('click', function(event) {
-        event.preventDefault();
-        const targetLink = this.getAttribute('data-link') || this.getAttribute('href');
-        window.location.href = targetLink;
-      });
-    });
-
-    // Hamburger Menu Toggle
+    // Mobile Menu Toggle
     const hamburger = document.getElementById('hamburger');
     const mobileMenu = document.getElementById('mobile-menu');
     const closeMenu = document.getElementById('close-menu');
+    
     hamburger.addEventListener('click', () => {
       mobileMenu.classList.remove('hidden');
-      mobileMenu.classList.add('active');
+      mobileMenu.classList.remove('-translate-x-full');
     });
+    
     closeMenu.addEventListener('click', () => {
-      mobileMenu.classList.add('hidden');
-      mobileMenu.classList.remove('active');
+      mobileMenu.classList.add('-translate-x-full');
     });
 
     // Fade-in Animation on Scroll
@@ -793,6 +1125,7 @@
         }
       });
     }, { threshold: 0.1 });
+    
     fadeIns.forEach(element => observer.observe(element));
 
     // Contact Form Submission
@@ -803,29 +1136,36 @@
       const subject = document.getElementById('subject').value.trim();
       const message = document.getElementById('message').value.trim();
       const status = document.getElementById('form-status');
+      
       document.querySelectorAll('.error').forEach(el => el.classList.add('hidden'));
       let isValid = true;
+      
       if (!name) {
         document.getElementById('name-error').classList.remove('hidden');
         isValid = false;
       }
+      
       if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         document.getElementById('email-error').classList.remove('hidden');
         isValid = false;
       }
+      
       if (!subject) {
         document.getElementById('subject-error').classList.remove('hidden');
         isValid = false;
       }
+      
       if (!message) {
         document.getElementById('message-error').classList.remove('hidden');
         isValid = false;
       }
+      
       if (!isValid) {
         status.textContent = 'Please fill all fields correctly';
-        status.className = 'error';
+        status.className = 'text-red-500 text-sm text-center';
         return;
       }
+      
       emailjs.send('service_94tnfxp', 'template_6ahr5g1', {
         name: name,
         email: email,
@@ -833,117 +1173,15 @@
         message: message
       }).then(() => {
         status.textContent = 'Message sent successfully!';
-        status.className = 'success';
+        status.className = 'text-green-500 text-sm text-center';
         document.getElementById('contact-form').reset();
       }).catch((error) => {
         status.textContent = 'Failed to send message: ' + error.text;
-        status.className = 'error';
+        status.className = 'text-red-500 text-sm text-center';
       });
     });
 
-    // Slideshow Functionality with Swipe Support
-    const slidesWrapper = document.querySelector('.slides-wrapper');
-    const slides = document.querySelectorAll('.slide');
-    const dots = document.querySelectorAll('.dot');
-    const prevArrow = document.querySelector('.prev');
-    const nextArrow = document.querySelector('.next');
-    let currentSlide = 0;
-    let slideInterval = setInterval(nextSlide, 6000);
-    let touchStartX = 0;
-    let touchEndX = 0;
-
-    function updateSlides() {
-      const slideWidth = slides[0].offsetWidth + 16; // Include margin
-      slidesWrapper.style.transform = `translateX(-${currentSlide * slideWidth}px)`;
-      slides.forEach((slide, i) => {
-        slide.classList.remove('active');
-        dots[i].classList.remove('active');
-        if (i === currentSlide) {
-          slide.classList.add('active');
-          dots[i].classList.add('active');
-        }
-      });
-    }
-
-    function nextSlide() {
-      currentSlide = (currentSlide + 1) % slides.length;
-      updateSlides();
-    }
-
-    function prevSlide() {
-      currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-      updateSlides();
-    }
-
-    prevArrow.addEventListener('click', () => {
-      prevSlide();
-      resetInterval();
-    });
-
-    nextArrow.addEventListener('click', () => {
-      nextSlide();
-      resetInterval();
-    });
-
-    dots.forEach((dot, index) => {
-      dot.addEventListener('click', () => {
-        currentSlide = index;
-        updateSlides();
-        resetInterval();
-      });
-    });
-
-    function resetInterval() {
-      clearInterval(slideInterval);
-      slideInterval = setInterval(nextSlide, 6000);
-    }
-
-    // Swipe Gestures for Slideshow
-    document.querySelector('.slideshow-container').addEventListener('touchstart', e => {
-      touchStartX = e.changedTouches[0].screenX;
-    });
-
-    document.querySelector('.slideshow-container').addEventListener('touchend', e => {
-      touchEndX = e.changedTouches[0].screenX;
-      handleSwipe();
-    });
-
-    function handleSwipe() {
-      const swipeThreshold = 50;
-      if (touchEndX < touchStartX - swipeThreshold) {
-        nextSlide();
-        resetInterval();
-      }
-      if (touchEndX > touchStartX + swipeThreshold) {
-        prevSlide();
-        resetInterval();
-      }
-    }
-
-    // Pause slideshow on hover/touch
-    document.querySelector('.slideshow-container').addEventListener('mouseenter', () => {
-      clearInterval(slideInterval);
-    });
-
-    document.querySelector('.slideshow-container').addEventListener('mouseleave', () => {
-      slideInterval = setInterval(nextSlide, 6000);
-    });
-
-    document.querySelector('.slideshow-container').addEventListener('touchstart', () => {
-      clearInterval(slideInterval);
-    });
-
-    document.querySelector('.slideshow-container').addEventListener('touchend', () => {
-      slideInterval = setInterval(nextSlide, 6000);
-    });
-
-    // Initialize slideshow
-    updateSlides();
-
-    // Update slideshow on window resize
-    window.addEventListener('resize', updateSlides);
-
-    // Chatbot Functionality (unchanged from original)
+    // Chatbot Functionality
     const chatbotContainer = document.getElementById('chatbot-container');
     const chatbotHeader = document.getElementById('chatbot-header');
     const chatbotBody = document.getElementById('chatbot-body');
@@ -1015,7 +1253,7 @@
     // Add message to chat
     function addMessage(role, content, files = []) {
       const messageDiv = document.createElement('div');
-      messageDiv.className = `${role}-message p-3 text-sm`;
+      messageDiv.className = `${role}-message p-3 text-sm rounded-lg ${role === 'user' ? 'bg-[#1E40AF] text-white ml-auto' : 'bg-[#1E293B]'}`;
       
       // Check if content contains markdown-like formatting for lists
       if (content.includes('\n- ') || content.includes('\n* ') || content.includes('<ul>')) {
@@ -1084,13 +1322,13 @@
     // Show typing indicator
     function showTypingIndicator() {
       const typingDiv = document.createElement('div');
-      typingDiv.className = 'bot-message p-3 text-sm';
+      typingDiv.className = 'bot-message p-3 text-sm rounded-lg bg-[#1E293B]';
       typingDiv.id = 'typing-indicator';
       typingDiv.innerHTML = `
         <div class="typing-indicator flex items-center">
-          <span></span>
-          <span></span>
-          <span></span>
+          <span class="w-2 h-2 bg-[#3B82F6] rounded-full mx-1 animate-bounce"></span>
+          <span class="w-2 h-2 bg-[#3B82F6] rounded-full mx-1 animate-bounce" style="animation-delay: 0.2s"></span>
+          <span class="w-2 h-2 bg-[#3B82F6] rounded-full mx-1 animate-bounce" style="animation-delay: 0.4s"></span>
         </div>
       `;
       chatbotMessages.appendChild(typingDiv);
@@ -1119,7 +1357,7 @@
       filePreview.innerHTML = '';
       attachedFiles.forEach((file, index) => {
         const fileItem = document.createElement('div');
-        fileItem.className = 'file-preview-item relative';
+        fileItem.className = 'file-preview-item relative w-16 h-16 bg-[#1E293B] rounded flex items-center justify-center';
         
         if (file.type.startsWith('image/')) {
           const img = document.createElement('img');
@@ -1138,9 +1376,10 @@
         }
         
         const removeBtn = document.createElement('span');
-        removeBtn.className = 'remove-file';
+        removeBtn.className = 'absolute top-0 right-0 bg-red-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full transform translate-x-1 -translate-y-1 cursor-pointer';
         removeBtn.innerHTML = '&times;';
-        removeBtn.addEventListener('click', () => {
+        removeBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
           attachedFiles.splice(index, 1);
           updateFilePreview();
         });
@@ -1240,12 +1479,12 @@
         // Create image element
         const img = document.createElement('img');
         img.src = `data:image/png;base64,${imageUrl}`;
-        img.className = 'generated-image';
+        img.className = 'generated-image max-w-full rounded-lg mt-2';
         img.alt = 'Generated image based on: ' + prompt;
         
         // Create message container
         const messageDiv = document.createElement('div');
-        messageDiv.className = 'bot-message p-3 text-sm';
+        messageDiv.className = 'bot-message p-3 text-sm rounded-lg bg-[#1E293B]';
         messageDiv.innerHTML = `<p>Here's the image generated based on your description:</p>`;
         messageDiv.appendChild(img);
         
