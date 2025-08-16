@@ -520,7 +520,7 @@
                 <p>You deserve better, and I want to do better.</p>
                 <div>
                     <button class="btn" id="nextBtn2">I Understand</button>
-                    <button class="btn btn-secondary" id="angryBtn">I'm Still Upset</button>
+                    <button class="btn btn-secondary" onclick="location.href='super-apology.html'">I'm Still Upset</button>
                 </div>
             </div>
             
@@ -626,7 +626,6 @@
                 document.getElementById('nextBtn2'),
                 document.getElementById('nextBtn3')
             ];
-            const angryBtn = document.getElementById('angryBtn');
             const notSureBtn = document.getElementById('notSureBtn');
             const finalBtn = document.getElementById('finalBtn');
             const finalScreen = document.getElementById('finalScreen');
@@ -637,7 +636,6 @@
             
             // Game State
             let currentCard = 0;
-            let isAngry = false;
             let isUnsure = false;
             
             // Initialize
@@ -650,11 +648,6 @@
                 
                 nextBtns.forEach((btn, index) => {
                     btn.addEventListener('click', () => navigateToCard(index + 1));
-                });
-                
-                angryBtn.addEventListener('click', () => {
-                    isAngry = true;
-                    showResponse("I understand you're still upset. I'll give you space and wait for when you're ready to talk.", 2);
                 });
                 
                 notSureBtn.addEventListener('click', () => {
@@ -743,18 +736,7 @@
             
             // Update character expression
             function updateCharacter() {
-                if (isAngry) {
-                    // Make character look sad on all cards
-                    document.querySelectorAll('.mouth').forEach(mouth => mouth.className = 'mouth sad');
-                    document.querySelectorAll('.eye-brow').forEach(brow => brow.style.transform = 'rotate(10deg)');
-                    document.querySelectorAll('.eye').forEach(eye => {
-                        eye.style.height = '10px';
-                        eye.style.borderRadius = '10px';
-                    });
-                    
-                    // Remove hearts
-                    hearts.forEach(heart => heart.classList.remove('show'));
-                } else if (isUnsure) {
+                if (isUnsure) {
                     // Neutral expression
                     document.querySelectorAll('.mouth').forEach(mouth => mouth.className = 'mouth');
                     document.querySelectorAll('.eye-brow').forEach(brow => brow.style.transform = '');
@@ -790,7 +772,7 @@
                 }
             }
             
-            // Show response to angry/unsure
+            // Show response to unsure
             function showResponse(message, cardIndex) {
                 const card = cards[cardIndex];
                 const lastP = card.querySelector('p:last-child');
