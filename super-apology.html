@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Adwitya - My Deepest Apology 💔</title>
+    <style>
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Marker Felt', 'Arial Rounded', sans-serif;
+            background: linear-gradient(135deg, #ffcce6, #ffb3d9);
+            color: #5a2a4a;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Scroll Container */
+        .scroll-container {
+            width: 100%;
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            position: relative;
+        }
+
+        /* Apology Cards */
+        .apology-card {
+            width: 100%;
+            height: 100vh;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-content {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.8s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .apology-card.active .card-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        h1 {
+            color: #ff4d88;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        p {
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        /* Crying Character */
+        .character {
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+
+        .character-face {
+            width: 100%;
+            height: 100%;
+            background-color: #ffe0b3;
+            border-radius: 50%;
+            position: relative;
+            overflow: hidden;
+            transform: scale(0.8);
+            transition: all 0.5s ease;
+        }
+
+        .apology-card.active .character-face {
+            transform: scale(1);
+        }
+
+        .eyes {
+            position: absolute;
+            top: 40px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .eye {
+            width: 20px;
+            height: 10px;
+            background-color: #5a2a4a;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tear {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background-color: #a0d8ff;
+            border-radius: 50%;
+            bottom: -5px;
+            left: 7px;
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+
+        .apology-card.active .tear {
+            animation: tearDrop 2s infinite;
+        }
+
+        @keyframes tearDrop {
+            0% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+        }
+
+        .eye-brow {
+            position: absolute;
+            width: 25px;
+            height: 6px;
+            background-color: #5a2a4a;
+            top: 30px;
+            transform: rotate(15deg);
+        }
+
+        .eye-brow.left {
+            left: 25px;
+        }
+
+        .eye-brow.right {
+            right: 25px;
+            transform: rotate(-15deg);
+        }
+
+        .mouth {
+            position: absolute;
+            width: 40px;
+            height: 10px;
+            background-color: #5a2a4a;
+            border-radius: 40px 40px 0 0;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Broken Heart */
+        .broken-heart {
+            font-size: 3rem;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .broken-heart .left {
+            position: absolute;
+            left: 35px;
+            animation: heartBreakLeft 2s infinite;
+        }
+
+        .broken-heart .right {
+            position: absolute;
+            left: 65px;
+            animation: heartBreakRight 2s infinite;
+        }
+
+        @keyframes heartBreakLeft {
+            0%, 100% {
+                transform: rotate(0deg) translate(0, 0);
+            }
+            50% {
+                transform: rotate(-15deg) translate(-5px, 5px);
+            }
+        }
+
+        @keyframes heartBreakRight {
+            0%, 100% {
+                transform: rotate(0deg) translate(0, 0);
+            }
+            50% {
+                transform: rotate(15deg) translate(5px, 5px);
+            }
+        }
+
+        /* Buttons */
+        .btn {
+            background-color: #ff4d88;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin: 10px 5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(255, 77, 136, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(255, 77, 136, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .btn-secondary {
+            background-color: white;
+            color: #ff4d88;
+            border: 2px solid #ff4d88;
+        }
+
+        /* Progress Indicator */
+        .progress-indicator {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .progress-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #ffb3d9;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .progress-dot.active {
+            background-color: #ff4d88;
+            transform: scale(1.3);
+            border-color: white;
+        }
+
+        /* Background Elements */
+        .bg-heart {
+            position: absolute;
+            font-size: 10rem;
+            color: rgba(255, 77, 136, 0.1);
+            z-index: 1;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        /* Final Screen */
+        .final-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.5s ease;
+        }
+
+        .final-screen.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .final-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            transform: scale(0.9);
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+
+        .final-screen.active .final-content {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .close-final {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #888;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Responsive */
+        @media (max-width: 500px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .card-content {
+                padding: 20px;
+            }
+        }
+
+        @media (prefers-reduced-motion) {
+            .scroll-container {
+                scroll-behavior: auto;
+            }
+            
+            .card-content, .character-face, .tear, 
+            .broken-heart .left, .broken-heart .right {
+                transition: none !important;
+                animation: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Scroll Container -->
+    <div class="scroll-container" id="scrollContainer">
+        <!-- Card 1 - Deep Regret -->
+        <div class="apology-card" id="card1">
+            <div class="card-content">
+                <div class="character">
+                    <div class="character-face">
+                        <div class="eye-brow left"></div>
+                        <div class="eye-brow right"></div>
+                        <div class="eyes">
+                            <div class="eye"><div class="tear"></div></div>
+                            <div class="eye"><div class="tear"></div></div>
+                        </div>
+                        <div class="mouth"></div>
+                    </div>
+                </div>
+                <div class="broken-heart">
+                    <span class="left">💔</span>
+                    <span class="right">💔</span>
+                </div>
+                <h1>Adwitya, I'm Devastated</h1>
+                <p>Knowing I've hurt you this deeply breaks my heart into pieces.</p>
+                <p>I can't stop thinking about how I've made you feel.</p>
+                <button class="btn" id="nextBtn1">Continue</button>
+            </div>
+            
+            <!-- Background elements -->
+            <div class="bg-heart" style="bottom: 10%; right: 15%;">💔</div>
+        </div>
+
+        <!-- Card 2 - Full Responsibility -->
+        <div class="apology-card" id="card2">
+            <div class="card-content">
+                <div class="character">
+                    <div class="character-face">
+                        <div class="eye-brow left" style="transform: rotate(20deg);"></div>
+                        <div class="eye-brow right" style="transform: rotate(-20deg);"></div>
+                        <div class="eyes">
+                            <div class="eye"><div class="tear"></div></div>
+                            <div class="eye"><div class="tear"></div></div>
+                        </div>
+                        <div class="mouth"></div>
+                    </div>
+                </div>
+                <h1>No Excuses</h1>
+                <p>I take full responsibility for my actions. There's no justification for how I made you feel.</p>
+                <p>You deserved better from me, and I failed you.</p>
+                <button class="btn" id="nextBtn2">I Want to Make It Right</button>
+            </div>
+            
+            <!-- Background elements -->
+            <div class="bg-heart" style="top: 20%; left: 5%; animation-delay: 1s;">💔</div>
+        </div>
+
+        <!-- Card 3 - Commitment to Change -->
+        <div class="apology-card" id="card3">
+            <div class="card-content">
+                <div class="character">
+                    <div class="character-face">
+                        <div class="eye-brow left"></div>
+                        <div class="eye-brow right"></div>
+                        <div class="eyes">
+                            <div class="eye"><div class="tear"></div></div>
+                            <div class="eye"><div class="tear"></div></div>
+                        </div>
+                        <div class="mouth"></div>
+                    </div>
+                </div>
+                <h1>I Will Do Better</h1>
+                <p>I'm committed to changing my behavior and being the friend you deserve.</p>
+                <p>This isn't just words - I'll prove it through my actions every day.</p>
+                <button class="btn" id="nextBtn3">Please Give Me a Chance</button>
+            </div>
+            
+            <!-- Background elements -->
+            <div class="bg-heart" style="bottom: 15%; right: 10%; animation-delay: 3s;">💔</div>
+        </div>
+
+        <!-- Card 4 - Humble Request -->
+        <div class="apology-card" id="card4">
+            <div class="card-content">
+                <div class="character">
+                    <div class="character-face">
+                        <div class="eyes">
+                            <div class="eye"><div class="tear"></div></div>
+                            <div class="eye"><div class="tear"></div></div>
+                        </div>
+                        <div class="mouth"></div>
+                    </div>
+                </div>
+                <h1>My Humble Request</h1>
+                <p>I understand if you need time and space.</p>
+                <p>When you're ready, I'll be here waiting to make things right between us.</p>
+                <button class="btn pulse" id="finalBtn">My Final Plea</button>
+            </div>
+            
+            <!-- Background elements -->
+            <div class="bg-heart" style="top: 30%; right: 5%; animation-delay: 2s;">💔</div>
+        </div>
+    </div>
+
+    <!-- Progress Indicator -->
+    <div class="progress-indicator" id="progressIndicator">
+        <div class="progress-dot active" data-card="0"></div>
+        <div class="progress-dot" data-card="1"></div>
+        <div class="progress-dot" data-card="2"></div>
+        <div class="progress-dot" data-card="3"></div>
+    </div>
+
+    <!-- Final Screen -->
+    <div class="final-screen" id="finalScreen">
+        <div class="final-content">
+            <button class="close-final" id="closeFinal">×</button>
+            <h1>From the Bottom of My Heart</h1>
+            <p>Adwitya, I can't express how truly sorry I am.</p>
+            <p>Our friendship means everything to me, and I'm devastated that I've hurt you.</p>
+            <p>I promise to listen more, think before I act, and cherish you the way you deserve.</p>
+            <p>With all my love and regret,</p>
+            <p class="pulse">[Your Name]</p>
+            <button class="btn" id="begBtn">😢 Please Forgive Me 😢</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const scrollContainer = document.getElementById('scrollContainer');
+            const cards = [
+                document.getElementById('card1'),
+                document.getElementById('card2'),
+                document.getElementById('card3'),
+                document.getElementById('card4')
+            ];
+            const nextBtns = [
+                document.getElementById('nextBtn1'),
+                document.getElementById('nextBtn2'),
+                document.getElementById('nextBtn3')
+            ];
+            const finalBtn = document.getElementById('finalBtn');
+            const finalScreen = document.getElementById('finalScreen');
+            const closeFinal = document.getElementById('closeFinal');
+            const begBtn = document.getElementById('begBtn');
+            const dots = document.querySelectorAll('.progress-dot');
+            const tears = document.querySelectorAll('.tear');
+            
+            // Initialize
+            function init() {
+                // Set up event listeners
+                nextBtns.forEach((btn, index) => {
+                    btn.addEventListener('click', () => navigateToCard(index + 1));
+                });
+                
+                finalBtn.addEventListener('click', showFinalScreen);
+                closeFinal.addEventListener('click', closeFinalScreen);
+                begBtn.addEventListener('click', begForForgiveness);
+                
+                // Dot navigation
+                dots.forEach(dot => {
+                    dot.addEventListener('click', () => {
+                        const cardIndex = parseInt(dot.dataset.card);
+                        navigateToCard(cardIndex);
+                    });
+                });
+                
+                // Set up scroll detection
+                scrollContainer.addEventListener('scroll', updateActiveCard);
+                
+                // Initialize first card
+                setTimeout(() => {
+                    cards[0].classList.add('active');
+                }, 100);
+            }
+            
+            // Navigate to specific card
+            function navigateToCard(index) {
+                currentCard = index;
+                cards[index].scrollIntoView({ behavior: 'smooth' });
+                updateActiveStates();
+            }
+            
+            // Update active states based on scroll
+            function updateActiveCard() {
+                const containerTop = scrollContainer.getBoundingClientRect().top;
+                let newActiveCard = 0;
+                let minDistance = Infinity;
+                
+                cards.forEach((card, index) => {
+                    const cardTop = card.getBoundingClientRect().top;
+                    const distance = Math.abs(containerTop - cardTop);
+                    
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        newActiveCard = index;
+                    }
+                });
+                
+                if (newActiveCard !== currentCard) {
+                    currentCard = newActiveCard;
+                    updateActiveStates();
+                }
+            }
+            
+            // Update all active states
+            function updateActiveStates() {
+                // Update cards
+                cards.forEach((card, index) => {
+                    if (index === currentCard) {
+                        card.classList.add('active');
+                    } else {
+                        card.classList.remove('active');
+                    }
+                });
+                
+                // Update dots
+                dots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === currentCard);
+                });
+            }
+            
+            // Show final screen
+            function showFinalScreen() {
+                finalScreen.classList.add('active');
+            }
+            
+            // Close final screen
+            function closeFinalScreen() {
+                finalScreen.classList.remove('active');
+            }
+            
+            // Beg for forgiveness
+            function begForForgiveness() {
+                // Change button text
+                begBtn.textContent = '😭 PLEASE 😭';
+                begBtn.disabled = true;
+                
+                // Make tears flow faster
+                tears.forEach(tear => {
+                    tear.style.animationDuration = '1s';
+                });
+                
+                // Create broken hearts
+                createBrokenHearts();
+                
+                // Reset after delay
+                setTimeout(() => {
+                    begBtn.textContent = 'I Beg You For Another Chance';
+                    begBtn.disabled = false;
+                    tears.forEach(tear => {
+                        tear.style.animationDuration = '';
+                    });
+                }, 3000);
+            }
+            
+            // Create broken hearts effect
+            function createBrokenHearts() {
+                const container = document.querySelector('.final-content');
+                
+                for (let i = 0; i < 10; i++) {
+                    const heart = document.createElement('div');
+                    heart.innerHTML = '💔';
+                    heart.style.position = 'absolute';
+                    heart.style.fontSize = '2rem';
+                    heart.style.left = `${Math.random() * 80 + 10}%`;
+                    heart.style.top = '-40px';
+                    heart.style.opacity = '0';
+                    heart.style.transform = 'rotate(0deg)';
+                    heart.style.transition = 'all 1s ease-out';
+                    
+                    container.appendChild(heart);
+                    
+                    // Animate
+                    setTimeout(() => {
+                        heart.style.opacity = '1';
+                        heart.style.transform = `rotate(${(Math.random() - 0.5) * 90}deg) translate(${(Math.random() - 0.5) * 100}px, ${Math.random() * 200 + 100}px)`;
+                        
+                        // Remove after animation
+                        setTimeout(() => {
+                            heart.remove();
+                        }, 2000);
+                    }, i * 300);
+                }
+            }
+            
+            // Start the experience
+            init();
+        });
+    </script>
+</body>
+</html>
