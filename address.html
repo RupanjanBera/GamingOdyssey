@@ -5,993 +5,221 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gaming Odyssey - Shipping Address</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
+    :root {
+      --primary-color: #3B82F6;
+      --secondary-color: #8B5CF6;
+      --background-color: #0F172A;
+      --text-color: #E2E8F0;
+      --card-background: #1E293B;
+      --card-border: #334155;
+      --font-family: 'Poppins', sans-serif;
+    }
     body {
-      font-family: 'Poppins', sans-serif;
-      background-color: #0F172A;
-      color: #F1F5F9;
-      scroll-behavior: smooth;
-      overflow-x: hidden;
+      font-family: var(--font-family);
+      background-color: var(--background-color);
+      color: var(--text-color);
       -webkit-font-smoothing: antialiased;
     }
-    .gradient-glow {
-      box-shadow: 0 0 6px rgba(59, 130, 246, 0.2);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    .input-field {
+      background-color: #2c3a4f;
+      border: 1px solid var(--card-border);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
-    .gradient-glow:hover {
-      box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
-      transform: translateY(-3px);
-    }
-    .sidebar {
-      background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
-      box-shadow: 2px 0 6px rgba(59, 130, 246, 0.1);
-    }
-    .hero-bg {
-      background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(217, 70, 239, 0.15), #0F172A);
-      position: relative;
-      overflow: hidden;
-    }
-    .hero-bg::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.2), transparent 70%);
-      animation: glow 20s ease-in-out infinite;
-      opacity: 0.5;
-    }
-    @keyframes glow {
-      0%, 100% { opacity: 0.5; }
-      50% { opacity: 0.7; }
-    }
-    .fade-in {
-      opacity: 0;
-      transform: translateY(15px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    input, select, textarea {
-      background: #1E293B;
-      color: #F1F5F9;
-      border: 1px solid #3B82F6;
-      border-radius: 0.5rem;
-      padding: 0.75rem;
-      width: 100%;
-      transition: border-color 0.2s ease;
-      font-family: 'Poppins', sans-serif;
-      font-size: 0.9375rem;
-    }
-    input:focus, select:focus, textarea:focus {
+    .input-field:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4);
       outline: none;
-      border-color: #D946EF;
-      box-shadow: 0 0 6px rgba(217, 70, 239, 0.2);
-    }
-    select {
-      appearance: none;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      background: url('data:image/svg+xml;utf8,<svg fill="%23F1F5F9" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 0.75rem center/12px 12px #1E293B;
-    }
-    option {
-      background-color: #1E293B;
-      color: #F1F5F9;
     }
     .submit-btn {
-      background: linear-gradient(90deg, #3B82F6, #D946EF);
-      color: #0F172A;
-      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+      color: white;
       font-weight: 600;
-      padding: 1rem 1.5rem;
       border-radius: 0.5rem;
-      transition: transform 0.2s ease;
-      touch-action: manipulation;
-      font-size: 1rem;
-      border: none;
-      cursor: pointer;
-      text-align: center;
-      display: inline-block;
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     }
     .submit-btn:hover {
-      transform: translateY(-2px);
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
     }
-    .error {
-      color: #F87171;
-      font-size: 0.8125rem;
-      margin-top: 0.25rem;
-      font-family: 'Poppins', sans-serif;
+    .progress-step.active .step-circle {
+      border-color: var(--primary-color);
+      color: var(--primary-color);
     }
-    .success {
-      color: #3B82F6;
-      font-size: 0.8125rem;
-      margin-top: 0.25rem;
-      font-family: 'Poppins', sans-serif;
-    }
-    .nav-link {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      transition: color 0.2s ease;
-      font-family: 'Poppins', sans-serif;
-      font-weight: 600;
-      font-size: 1.0625rem;
-      padding: 0.5rem 0;
-    }
-    .nav-link::after {
-      content: '';
-      position: absolute;
-      width: 0;
-      height: 2px;
-      bottom: 0;
-      left: 0;
-      background: linear-gradient(to right, #3B82F6, #D946EF);
-      transition: width 0.2s ease;
-    }
-    .nav-link:hover::after {
-      width: 100%;
-    }
-    .nav-link:hover {
-      color: #3B82F6;
-    }
-    .mobile-menu {
-      background: linear-gradient(180deg, #1E293B, #0F172A);
-      opacity: 0;
-      transform: translateX(-100%);
-      transition: opacity 0.3s ease, transform 0.3s ease;
-    }
-    .mobile-menu.active {
-      opacity: 1;
-      transform: translateX(0);
-    }
-    .card {
-      background: linear-gradient(145deg, #1E293B, #0F172A);
-      border-radius: 0.75rem;
-      padding: 1.25rem;
-      transition: transform 0.2s ease;
-    }
-    .card:hover {
-      transform: translateY(-4px);
-    }
-    @media (max-width: 640px) {
-      .submit-btn {
-        width: 100%;
-        padding: 0.875rem;
-        font-size: 0.9375rem;
-      }
-      .hero-bg h1 {
-        font-size: 2.25rem;
-      }
-      .hero-bg p {
-        font-size: 1rem;
-      }
-      .nav-link {
-        font-size: 1rem;
-      }
-    }
-    @media (min-width: 640px) and (max-width: 768px) {
-      .grid-cols-2 {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-      .hero-bg h1 {
-        font-size: 3rem;
-      }
+     .progress-step.active p {
+      color: var(--primary-color);
     }
   </style>
 </head>
-<body>
-  <div class="fixed top-0 left-0 h-full w-64 sidebar gradient-glow z-20 hidden md:block">
-    <div class="p-4 sm:p-6">
-      <h1 class="text-xl sm:text-2xl font-bold text-white leading-relaxed">Gaming Odyssey</h1>
-      <nav class="mt-8 space-y-3">
-        <a href="index.html" class="flex items-center space-x-2 text-[#3B82F6] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>Home</span>
-        </a>
-        <a href="store.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>Store</span>
-        </a>
-        <a href="tournaments.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>Tournaments</span>
-        </a>
-        <a href="trackorder.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>Track Order</span>
-        </a>
-        <a href="contactus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>Contact Us</span>
-        </a>
-        <a href="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>About Us</span>
-        </a>
-        <a href="signin.html" id="signin-link" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>Sign In</span>
-        </a>
-        <a href="createaccount.html" id="createaccount-link" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>Create Account</span>
-        </a>
-        <div id="user-display" class="hidden flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>User</span>
+<body class="min-h-screen">
+
+  <!-- Main Content -->
+  <div class="container mx-auto px-4 py-8 md:py-16">
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center mb-12">
+        <h1 class="text-4xl md:text-5xl font-bold text-white">Checkout</h1>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="w-full max-w-xs mx-auto mb-12">
+        <div class="progress-step active flex flex-col items-center">
+            <div class="step-circle w-10 h-10 rounded-full border-2 border-card-border flex items-center justify-center font-bold text-lg">1</div>
+            <p class="text-sm font-semibold mt-2">Shipping</p>
         </div>
-      </nav>
-    </div>
-  </div>
-
-  <div class="md:hidden fixed top-0 left-0 w-full bg-[#1E293B] z-30 p-4 flex justify-between items-center gradient-glow">
-    <h1 class="text-lg font-bold text-white leading-relaxed">Gaming Odyssey</h1>
-    <button id="hamburger" class="text-[#3B82F6]">
-      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-    </button>
-  </div>
-  <div id="mobile-menu" class="hidden md:hidden fixed top-0 left-0 w-full h-full bg-[#1E293B] z-20 p-4 mobile-menu">
-    <button id="close-menu" class="absolute top-4 right-4 text-[#3B82F6] gradient-glow rounded-full p-2">
-      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-    </button>
-    <nav class="space-y-3 mt-12">
-      <a href="index.html" class="flex items-center space-x-2 text-[#3B82F6] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-        <span>Home</span>
-      </a>
-      <a href="store.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-        <span>Store</span>
-      </a>
-      <a href="tournaments.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-        <span>Tournaments</span>
-      </a>
-      <a href="trackorder.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-        <span>Track Order</span>
-      </a>
-      <a href="contactus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-        <span>Contact Us</span>
-      </a>
-      <a href="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-        <span>About Us</span>
-      </a>
-      <a href="signin.html" id="mobile-signin-link" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-        <span>Sign In</span>
-      </a>
-      <a href="createaccount.html" id="mobile-createaccount-link" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-        <span>Create Account</span>
-      </a>
-      <div id="mobile-user-display" class="hidden flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-        <span>User</span>
       </div>
-    </nav>
-  </div>
 
-  <div class="md:ml-64">
-    <section class="hero-bg py-12 sm:py-16 px-4 sm:px-6 md:px-8">
-      <div class="max-w-lg mx-auto card gradient-glow fade-in">
-        <h1 class="text-3xl sm:text-4xl font-bold text-white text-center mb-10">Shipping Address 📍</h1>
-        <form id="address-form" class="p-6 space-y-4">
-          <div>
-            <label class="block text-[#F1F5F9] mb-2 font-semibold text-sm" for="name">Full Name</label>
-            <input type="text" id="name" name="name" class="w-full" placeholder="John Doe" required>
-            <p id="name-error" class="error hidden">Please enter your full name</p>
-          </div>
-          <div>
-            <label class="block text-[#F1F5F9] mb-2 font-semibold text-sm" for="address-line1">Address Line 1</label>
-            <input type="text" id="address-line1" name="addressLine1" class="w-full" placeholder="123 Gaming Street" required>
-            <p id="address-line1-error" class="error hidden">Please enter your address</p>
-          </div>
-          <div>
-            <label class="block text-[#F1F5F9] mb-2 font-semibold text-sm" for="address-line2">Address Line 2 (Optional)</label>
-            <input type="text" id="address-line2" name="addressLine2" class="w-full" placeholder="Apartment 4B">
-          </div>
-          <div class="flex space-x-4">
-            <div class="w-1/2">
-              <label class="block text-[#F1F5F9] mb-2 font-semibold text-sm" for="city">City</label>
-              <input type="text" id="city" name="city" class="w-full" placeholder="New York" required>
-              <p id="city-error" class="error hidden">Please enter your city</p>
-            </div>
-            <div class="w-1/2">
-              <label class="block text-[#F1F5F9] mb-2 font-semibold text-sm" for="state">State</label>
-              <select id="state" name="state" class="w-full" required>
-                <option value="" disabled selected>Select State</option>
-              </select>
-              <input type="text" id="state-input" name="state-input" class="w-full hidden" placeholder="Enter State">
-              <p id="state-error" class="error hidden">Please select or enter a state</p>
-            </div>
-          </div>
-          <div class="flex space-x-4">
-            <div class="w-1/2">
-              <label class="block text-[#F1F5F9] mb-2 font-semibold text-sm" for="zip">ZIP Code</label>
-              <input type="text" id="zip" name="zip" class="w-full" placeholder="10001" required>
-              <p id="zip-error" class="error hidden">Please enter a valid ZIP code</p>
-            </div>
-            <div class="w-1/2">
-              <label class="block text-[#F1F5F9] mb-2 font-semibold text-sm" for="country">Country</label>
-              <select id="country" name="country" class="w-full" required>
-                <option value="" disabled selected>Select Country</option>
-                <option value="United States">🇺🇸 United States</option>
-                <option value="India">🇮🇳 India</option>
-                <option value="Canada">🇨🇦 Canada</option>
-                <option value="United Kingdom">🇬🇧 United Kingdom</option>
-                <option value="Australia">🇦🇺 Australia</option>
-                <option value="Afghanistan">🇦🇫 Afghanistan</option>
-                <option value="Albania">🇦🇱 Albania</option>
-                <option value="Algeria">🇩🇿 Algeria</option>
-                <option value="Andorra">🇦🇩 Andorra</option>
-                <option value="Angola">🇦🇴 Angola</option>
-                <option value="Antigua and Barbuda">🇦🇬 Antigua and Barbuda</option>
-                <option value="Argentina">🇦🇷 Argentina</option>
-                <option value="Armenia">🇦🇲 Armenia</option>
-                <option value="Austria">🇦🇹 Austria</option>
-                <option value="Azerbaijan">🇦🇿 Azerbaijan</option>
-                <option value="Bahamas">🇧🇸 Bahamas</option>
-                <option value="Bahrain">🇧🇭 Bahrain</option>
-                <option value="Bangladesh">🇧🇩 Bangladesh</option>
-                <option value="Barbados">🇧🇧 Barbados</option>
-                <option value="Belarus">🇧🇾 Belarus</option>
-                <option value="Belgium">🇧🇪 Belgium</option>
-                <option value="Belize">🇧🇿 Belize</option>
-                <option value="Benin">🇧🇯 Benin</option>
-                <option value="Bhutan">🇧🇹 Bhutan</option>
-                <option value="Bolivia">🇧🇴 Bolivia</option>
-                <option value="Bosnia and Herzegovina">🇧🇦 Bosnia and Herzegovina</option>
-                <option value="Botswana">🇧🇼 Botswana</option>
-                <option value="Brazil">🇧🇷 Brazil</option>
-                <option value="Brunei">🇧🇳 Brunei</option>
-                <option value="Bulgaria">🇧🇬 Bulgaria</option>
-                <option value="Burkina Faso">🇧🇫 Burkina Faso</option>
-                <option value="Burundi">🇧🇮 Burundi</option>
-                <option value="Cambodia">🇰🇭 Cambodia</option>
-                <option value="Cameroon">🇨🇲 Cameroon</option>
-                <option value="Cape Verde">🇨🇻 Cape Verde</option>
-                <option value="Central African Republic">🇨🇫 Central African Republic</option>
-                <option value="Chad">🇹🇩 Chad</option>
-                <option value="Chile">🇨🇱 Chile</option>
-                <option value="China">🇨🇳 China</option>
-                <option value="Colombia">🇨🇴 Colombia</option>
-                <option value="Comoros">🇰🇲 Comoros</option>
-                <option value="Congo (Congo-Brazzaville)">🇨🇬 Congo (Congo-Brazzaville)</option>
-                <option value="Costa Rica">🇨🇷 Costa Rica</option>
-                <option value="Croatia">🇭🇷 Croatia</option>
-                <option value="Cuba">🇨🇺 Cuba</option>
-                <option value="Cyprus">🇨🇾 Cyprus</option>
-                <option value="Czech Republic">🇨🇿 Czech Republic</option>
-                <option value="Democratic Republic of the Congo">🇨🇩 Democratic Republic of the Congo</option>
-                <option value="Denmark">🇩🇰 Denmark</option>
-                <option value="Djibouti">🇩🇯 Djibouti</option>
-                <option value="Dominica">🇩🇲 Dominica</option>
-                <option value="Dominican Republic">🇩🇴 Dominican Republic</option>
-                <option value="Ecuador">🇪🇨 Ecuador</option>
-                <option value="Egypt">🇪🇬 Egypt</option>
-                <option value="El Salvador">🇸🇻 El Salvador</option>
-                <option value="Equatorial Guinea">🇬🇶 Equatorial Guinea</option>
-                <option value="Eritrea">🇪🇷 Eritrea</option>
-                <option value="Estonia">🇪🇪 Estonia</option>
-                <option value="Eswatini">🇸🇿 Eswatini</option>
-                <option value="Ethiopia">🇪🇹 Ethiopia</option>
-                <option value="Fiji">🇫🇯 Fiji</option>
-                <option value="Finland">🇫🇮 Finland</option>
-                <option value="France">🇫🇷 France</option>
-                <option value="Gabon">🇬🇦 Gabon</option>
-                <option value="Gambia">🇬🇲 Gambia</option>
-                <option value="Georgia">🇬🇪 Georgia</option>
-                <option value="Germany">🇩🇪 Germany</option>
-                <option value="Ghana">🇬🇭 Ghana</option>
-                <option value="Greece">🇬🇷 Greece</option>
-                <option value="Grenada">🇬🇩 Grenada</option>
-                <option value="Guatemala">🇬🇹 Guatemala</option>
-                <option value="Guinea">🇬🇳 Guinea</option>
-                <option value="Guinea-Bissau">🇬🇼 Guinea-Bissau</option>
-                <option value="Guyana">🇬🇾 Guyana</option>
-                <option value="Haiti">🇭🇹 Haiti</option>
-                <option value="Honduras">🇭🇳 Honduras</option>
-                <option value="Hungary">🇭🇺 Hungary</option>
-                <option value="Iceland">🇮🇸 Iceland</option>
-                <option value="Indonesia">🇮🇩 Indonesia</option>
-                <option value="Iran">🇮🇷 Iran</option>
-                <option value="Iraq">🇮🇶 Iraq</option>
-                <option value="Ireland">🇮🇪 Ireland</option>
-                <option value="Israel">🇮🇱 Israel</option>
-                <option value="Italy">🇮🇹 Italy</option>
-                <option value="Jamaica">🇯🇲 Jamaica</option>
-                <option value="Japan">🇯🇵 Japan</option>
-                <option value="Jordan">🇯🇴 Jordan</option>
-                <option value="Kazakhstan">🇰🇿 Kazakhstan</option>
-                <option value="Kenya">🇰🇪 Kenya</option>
-                <option value="Kiribati">🇰🇮 Kiribati</option>
-                <option value="Kuwait">🇰🇼 Kuwait</option>
-                <option value="Kyrgyzstan">🇰🇬 Kyrgyzstan</option>
-                <option value="Laos">🇱🇦 Laos</option>
-                <option value="Latvia">🇱🇻 Latvia</option>
-                <option value="Lebanon">🇱🇧 Lebanon</option>
-                <option value="Lesotho">🇱🇸 Lesotho</option>
-                <option value="Liberia">🇱🇷 Liberia</option>
-                <option value="Libya">🇱🇾 Libya</option>
-                <option value="Liechtenstein">🇱🇮 Liechtenstein</option>
-                <option value="Lithuania">🇱🇹 Lithuania</option>
-                <option value="Luxembourg">🇱🇺 Luxembourg</option>
-                <option value="Madagascar">🇲🇬 Madagascar</option>
-                <option value="Malawi">🇲🇼 Malawi</option>
-                <option value="Malaysia">🇲🇾 Malaysia</option>
-                <option value="Maldives">🇲🇻 Maldives</option>
-                <option value="Mali">🇲🇱 Mali</option>
-                <option value="Malta">🇲🇹 Malta</option>
-                <option value="Marshall Islands">🇲🇭 Marshall Islands</option>
-                <option value="Mauritania">🇲🇷 Mauritania</option>
-                <option value="Mauritius">🇲🇺 Mauritius</option>
-                <option value="Mexico">🇲🇽 Mexico</option>
-                <option value="Micronesia">🇫🇲 Micronesia</option>
-                <option value="Moldova">🇲🇩 Moldova</option>
-                <option value="Monaco">🇲🇨 Monaco</option>
-                <option value="Mongolia">🇲🇳 Mongolia</option>
-                <option value="Montenegro">🇲🇪 Montenegro</option>
-                <option value="Morocco">🇲🇦 Morocco</option>
-                <option value="Mozambique">🇲🇿 Mozambique</option>
-                <option value="Myanmar">🇲🇲 Myanmar</option>
-                <option value="Namibia">🇳🇦 Namibia</option>
-                <option value="Nauru">🇳🇷 Nauru</option>
-                <option value="Nepal">🇳🇵 Nepal</option>
-                <option value="Netherlands">🇳🇱 Netherlands</option>
-                <option value="New Zealand">🇳🇿 New Zealand</option>
-                <option value="Nicaragua">🇳🇮 Nicaragua</option>
-                <option value="Niger">🇳🇪 Niger</option>
-                <option value="Nigeria">🇳🇬 Nigeria</option>
-                <option value="North Korea">🇰🇵 North Korea</option>
-                <option value="North Macedonia">🇲🇰 North Macedonia</option>
-                <option value="Norway">🇳🇴 Norway</option>
-                <option value="Oman">🇴🇲 Oman</option>
-                <option value="Pakistan">🇵🇰 Pakistan</option>
-                <option value="Palau">🇵🇼 Palau</option>
-                <option value="Palestine">🇵🇸 Palestine</option>
-                <option value="Panama">🇵🇦 Panama</option>
-                <option value="Papua New Guinea">🇵🇬 Papua New Guinea</option>
-                <option value="Paraguay">🇵🇾 Paraguay</option>
-                <option value="Peru">🇵🇪 Peru</option>
-                <option value="Philippines">🇵🇭 Philippines</option>
-                <option value="Poland">🇵🇱 Poland</option>
-                <option value="Portugal">🇵🇹 Portugal</option>
-                <option value="Qatar">🇶🇦 Qatar</option>
-                <option value="Romania">🇷🇴 Romania</option>
-                <option value="Russia">🇷🇺 Russia</option>
-                <option value="Rwanda">🇷🇼 Rwanda</option>
-                <option value="Saint Kitts and Nevis">🇰🇳 Saint Kitts and Nevis</option>
-                <option value="Saint Lucia">🇱🇨 Saint Lucia</option>
-                <option value="Saint Vincent and the Grenadines">🇻🇨 Saint Vincent and the Grenadines</option>
-                <option value="Samoa">🇼🇸 Samoa</option>
-                <option value="San Marino">🇸🇲 San Marino</option>
-                <option value="Sao Tome and Principe">🇸🇹 Sao Tome and Principe</option>
-                <option value="Saudi Arabia">🇸🇦 Saudi Arabia</option>
-                <option value="Senegal">🇸🇳 Senegal</option>
-                <option value="Serbia">🇷🇸 Serbia</option>
-                <option value="Seychelles">🇸🇨 Seychelles</option>
-                <option value="Sierra Leone">🇸🇱 Sierra Leone</option>
-                <option value="Singapore">🇸🇬 Singapore</option>
-                <option value="Slovakia">🇸🇰 Slovakia</option>
-                <option value="Slovenia">🇸🇮 Slovenia</option>
-                <option value="Solomon Islands">🇸🇧 Solomon Islands</option>
-                <option value="Somalia">🇸🇴 Somalia</option>
-                <option value="South Africa">🇿🇦 South Africa</option>
-                <option value="South Korea">🇰🇷 South Korea</option>
-                <option value="South Sudan">🇸🇸 South Sudan</option>
-                <option value="Spain">🇪🇸 Spain</option>
-                <option value="Sri Lanka">🇱🇰 Sri Lanka</option>
-                <option value="Sudan">🇸🇩 Sudan</option>
-                <option value="Suriname">🇸🇷 Suriname</option>
-                <option value="Sweden">🇸🇪 Sweden</option>
-                <option value="Switzerland">🇨🇭 Switzerland</option>
-                <option value="Syria">🇸🇾 Syria</option>
-                <option value="Taiwan">🇹🇼 Taiwan</option>
-                <option value="Tajikistan">🇹🇯 Tajikistan</option>
-                <option value="Tanzania">🇹🇿 Tanzania</option>
-                <option value="Thailand">🇹🇭 Thailand</option>
-                <option value="Timor-Leste">🇹🇱 Timor-Leste</option>
-                <option value="Togo">🇹🇬 Togo</option>
-                <option value="Tonga">🇹🇴 Tonga</option>
-                <option value="Trinidad and Tobago">🇹🇹 Trinidad and Tobago</option>
-                <option value="Tunisia">🇹🇳 Tunisia</option>
-                <option value="Turkey">🇹🇷 Turkey</option>
-                <option value="Turkmenistan">🇹🇲 Turkmenistan</option>
-                <option value="Tuvalu">🇹🇻 Tuvalu</option>
-                <option value="Uganda">🇺🇬 Uganda</option>
-                <option value="Ukraine">🇺🇦 Ukraine</option>
-                <option value="United Arab Emirates">🇦🇪 United Arab Emirates</option>
-                <option value="Uruguay">🇺🇾 Uruguay</option>
-                <option value="Uzbekistan">🇺🇿 Uzbekistan</option>
-                <option value="Vanuatu">🇻🇺 Vanuatu</option>
-                <option value="Vatican City">🇻🇦 Vatican City</option>
-                <option value="Venezuela">🇻🇪 Venezuela</option>
-                <option value="Vietnam">🇻🇳 Vietnam</option>
-                <option value="Yemen">🇾🇪 Yemen</option>
-                <option value="Zambia">🇿🇲 Zambia</option>
-                <option value="Zimbabwe">🇿🇼 Zimbabwe</option>
-              </select>
-              <p id="country-error" class="error hidden">Please select a country</p>
-            </div>
-          </div>
-          <div>
-            <label class="block text-[#F1F5F9] mb-2 font-semibold text-sm" for="phone">Phone Number</label>
-            <div class="flex space-x-2">
-              <select id="country-code" name="countryCode" class="w-1/3" required>
-                <option value="" disabled selected>Select Code</option>
-                <option value="+1">🇺🇸 +1 (United States)</option>
-                <option value="+91">🇮🇳 +91 (India)</option>
-                <option value="+1">🇨🇦 +1 (Canada)</option>
-                <option value="+44">🇬🇧 +44 (United Kingdom)</option>
-                <option value="+61">🇦🇺 +61 (Australia)</option>
-                <option value="+93">🇦🇫 +93 (Afghanistan)</option>
-                <option value="+355">🇦🇱 +355 (Albania)</option>
-                <option value="+213">🇩🇿 +213 (Algeria)</option>
-                <option value="+376">🇦🇩 +376 (Andorra)</option>
-                <option value="+244">🇦🇴 +244 (Angola)</option>
-                <option value="+1-268">🇦🇬 +1-268 (Antigua and Barbuda)</option>
-                <option value="+54">🇦🇷 +54 (Argentina)</option>
-                <option value="+374">🇦🇲 +374 (Armenia)</option>
-                <option value="+43">🇦🇹 +43 (Austria)</option>
-                <option value="+994">🇦🇿 +994 (Azerbaijan)</option>
-                <option value="+1-242">🇧🇸 +1-242 (Bahamas)</option>
-                <option value="+973">🇧🇭 +973 (Bahrain)</option>
-                <option value="+880">🇧🇩 +880 (Bangladesh)</option>
-                <option value="+1-246">🇧🇧 +1-246 (Barbados)</option>
-                <option value="+375">🇧🇾 +375 (Belarus)</option>
-                <option value="+32">🇧🇪 +32 (Belgium)</option>
-                <option value="+501">🇧🇿 +501 (Belize)</option>
-                <option value="+229">🇧🇯 +229 (Benin)</option>
-                <option value="+975">🇧🇹 +975 (Bhutan)</option>
-                <option value="+591">🇧🇴 +591 (Bolivia)</option>
-                <option value="+387">🇧🇦 +387 (Bosnia and Herzegovina)</option>
-                <option value="+267">🇧🇼 +267 (Botswana)</option>
-                <option value="+55">🇧🇷 +55 (Brazil)</option>
-                <option value="+673">🇧🇳 +673 (Brunei)</option>
-                <option value="+359">🇧🇬 +359 (Bulgaria)</option>
-                <option value="+226">🇧🇫 +226 (Burkina Faso)</option>
-                <option value="+257">🇧🇮 +257 (Burundi)</option>
-                <option value="+855">🇰🇭 +855 (Cambodia)</option>
-                <option value="+237">🇨🇲 +237 (Cameroon)</option>
-                <option value="+238">🇨🇻 +238 (Cape Verde)</option>
-                <option value="+236">🇨🇫 +236 (Central African Republic)</option>
-                <option value="+235">🇹🇩 +235 (Chad)</option>
-                <option value="+56">🇨🇱 +56 (Chile)</option>
-                <option value="+86">🇨🇳 +86 (China)</option>
-                <option value="+57">🇨🇴 +57 (Colombia)</option>
-                <option value="+269">🇰🇲 +269 (Comoros)</option>
-                <option value="+242">🇨🇬 +242 (Congo, Republic of the)</option>
-                <option value="+243">🇨🇩 +243 (Congo, Democratic Republic of the)</option>
-                <option value="+506">🇨🇷 +506 (Costa Rica)</option>
-                <option value="+385">🇭🇷 +385 (Croatia)</option>
-                <option value="+53">🇨🇺 +53 (Cuba)</option>
-                <option value="+357">🇨🇾 +357 (Cyprus)</option>
-                <option value="+420">🇨🇿 +420 (Czech Republic)</option>
-                <option value="+45">🇩🇰 +45 (Denmark)</option>
-                <option value="+253">🇩🇯 +253 (Djibouti)</option>
-                <option value="+1-767">🇩🇲 +1-767 (Dominica)</option>
-                <option value="+1-809">🇩🇴 +1-809 (Dominican Republic)</option>
-                <option value="+593">🇪🇨 +593 (Ecuador)</option>
-                <option value="+20">🇪🇬 +20 (Egypt)</option>
-                <option value="+503">🇸🇻 +503 (El Salvador)</option>
-                <option value="+240">🇬🇶 +240 (Equatorial Guinea)</option>
-                <option value="+291">🇪🇷 +291 (Eritrea)</option>
-                <option value="+372">🇪🇪 +372 (Estonia)</option>
-                <option value="+268">🇸🇿 +268 (Eswatini)</option>
-                <option value="+251">🇪🇹 +251 (Ethiopia)</option>
-                <option value="+679">🇫🇯 +679 (Fiji)</option>
-                <option value="+358">🇫🇮 +358 (Finland)</option>
-                <option value="+33">🇫🇷 +33 (France)</option>
-                <option value="+241">🇬🇦 +241 (Gabon)</option>
-                <option value="+220">🇬🇲 +220 (Gambia)</option>
-                <option value="+995">🇬🇪 +995 (Georgia)</option>
-                <option value="+49">🇩🇪 +49 (Germany)</option>
-                <option value="+233">🇬🇭 +233 (Ghana)</option>
-                <option value="+30">🇬🇷 +30 (Greece)</option>
-                <option value="+1-473">🇬🇩 +1-473 (Grenada)</option>
-                <option value="+502">🇬🇹 +502 (Guatemala)</option>
-                <option value="+224">🇬🇳 +224 (Guinea)</option>
-                <option value="+245">🇬🇼 +245 (Guinea-Bissau)</option>
-                <option value="+592">🇬🇾 +592 (Guyana)</option>
-                <option value="+509">🇭🇹 +509 (Haiti)</option>
-                <option value="+504">🇭🇳 +504 (Honduras)</option>
-                <option value="+36">🇭🇺 +36 (Hungary)</option>
-                <option value="+354">🇮🇸 +354 (Iceland)</option>
-                <option value="+62">🇮🇩 +62 (Indonesia)</option>
-                <option value="+98">🇮🇷 +98 (Iran)</option>
-                <option value="+964">🇮🇶 +964 (Iraq)</option>
-                <option value="+353">🇮🇪 +353 (Ireland)</option>
-                <option value="+972">🇮🇱 +972 (Israel)</option>
-                <option value="+39">🇮🇹 +39 (Italy)</option>
-                <option value="+1-876">🇯🇲 +1-876 (Jamaica)</option>
-                <option value="+81">🇯🇵 +81 (Japan)</option>
-                <option value="+962">🇯🇴 +962 (Jordan)</option>
-                <option value="+7">🇰🇿 +7 (Kazakhstan)</option>
-                <option value="+254">🇰🇪 +254 (Kenya)</option>
-                <option value="+686">🇰🇮 +686 (Kiribati)</option>
-                <option value="+965">🇰🇼 +965 (Kuwait)</option>
-                <option value="+996">🇰🇬 +996 (Kyrgyzstan)</option>
-                <option value="+856">🇱🇦 +856 (Laos)</option>
-                <option value="+371">🇱🇻 +371 (Latvia)</option>
-                <option value="+961">🇱🇧 +961 (Lebanon)</option>
-                <option value="+266">🇱🇸 +266 (Lesotho)</option>
-                <option value="+231">🇱🇷 +231 (Liberia)</option>
-                <option value="+218">🇬🇾 +218 (Libya)</option>
-                <option value="+423">🇱🇮 +423 (Liechtenstein)</option>
-                <option value="+370">🇱🇹 +370 (Lithuania)</option>
-                <option value="+352">🇱🇺 +352 (Luxembourg)</option>
-                <option value="+261">🇲🇬 +261 (Madagascar)</option>
-                <option value="+265">🇲🇼 +265 (Malawi)</option>
-                <option value="+60">🇲🇾 +60 (Malaysia)</option>
-                <option value="+960">🇲🇻 +960 (Maldives)</option>
-                <option value="+223">🇲🇱 +223 (Mli)</option>
-                <option value="+356">🇲🇹 +356 (Malta)</option>
-                <option value="+692">🇲🇭 +692 (Marshall Islands)</option>
-                <option value="+222">🇲🇷 +222 (Mauritania)</option>
-                <option value="+230">🇲🇺 +230 (Mauritius)</option>
-                <option value="+52">🇲🇽 +52 (Mexico)</option>
-                <option value="+691">🇫🇲 +691 (Micronesia)</option>
-                <option value="+373">🇲🇩 +373 (Moldova)</option>
-                <option value="+377">🇲🇨 +377 (Monaco)</option>
-                <option value="+976">🇲🇳 +976 (Mongolia)</option>
-                <option value="+382">🇲🇪 +382 (Montenegro)</option>
-                <option value="+212">🇲🇦 +212 (Morocco)</option>
-                <option value="+258">🇲🇿 +258 (Mozambique)</option>
-                <option value="+95">🇲🇲 +95 (Myanmar)</option>
-                <option value="+264">🇳🇦 +264 (Namibia)</option>
-                <option value="+674">🇳🇷 +674 (Nauru)</option>
-                <option value="+977">🇳🇵 +977 (Nepal)</option>
-                <option value="+31">🇳🇱 +31 (Netherlands)</option>
-                <option value="+64">🇳🇿 +64 (New Zealand)</option>
-                <option value="+505">🇳🇮 +505 (Nicaragua)</option>
-                <option value="+227">🇳🇪 +227 (Niger)</option>
-                <option value="+234">🇳🇬 +234 (Nigeria)</option>
-                <option value="+850">🇰🇵 +850 (North Korea)</option>
-                <option value="+389">🇲🇰 +389 (North Macedonia)</option>
-                <option value="+47">🇳🇴 +47 (Norway)</option>
-                <option value="+968">🇴🇲 +968 (Oman)</option>
-                <option value="+92">🇵🇰 +92 (Pakistan)</option>
-                <option value="+680">🇵🇼 +680 (Palau)</option>
-                <option value="+970">🇵🇸 +970 (Palestine)</option>
-                <option value="+507">🇵🇦 +507 (Panama)</option>
-                <option value="+675">🇵🇬 +675 (Papua New Guinea)</option>
-                <option value="+595">🇵🇾 +595 (Paraguay)</option>
-                <option value="+51">🇵🇪 +51 (Peru)</option>
-                <option value="+63">🇵🇭 +63 (Philippines)</option>
-                <option value="+48">🇵🇱 +48 (Poland)</option>
-                <option value="+351">🇵🇹 +351 (Portugal)</option>
-                <option value="+974">🇶🇦 +974 (Qatar)</option>
-                <option value="+40">🇷🇴 +40 (Romania)</option>
-                <option value="+7">🇷🇺 +7 (Russia)</option>
-                <option value="+250">🇷🇼 +250 (Rwanda)</option>
-                <option value="+1-869">🇰🇳 +1-869 (Saint Kitts and Nevis)</option>
-                <option value="+1-758">🇱🇨 +1-758 (Saint Lucia)</option>
-                <option value="+1-784">🇻🇨 +1-784 (Saint Vincent and the Grenadines)</option>
-                <option value="+685">🇼🇸 +685 (Samoa)</option>
-                <option value="+378">🇸🇲 +378 (San Marino)</option>
-                <option value="+239">🇸🇹 +239 (Sao Tome and Principe)</option>
-                <option value="+966">🇸🇦 +966 (Saudi Arabia)</option>
-                <option value="+221">🇸🇳 +221 (Senegal)</option>
-                <option value="+381">🇷🇸 +381 (Serbia)</option>
-                <option value="+248">🇸🇨 +248 (Seychelles)</option>
-                <option value="+232">🇸🇱 +232 (Sierra Leone)</option>
-                <option value="+65">🇸🇬 +65 (Singapore)</option>
-                <option value="+421">🇸🇰 +421 (Slovakia)</option>
-                <option value="+386">🇸🇮 +386 (Slovenia)</option>
-                <option value="+677">🇸🇧 +677 (Solomon Islands)</option>
-                <option value="+252">🇸🇴 +252 (Somalia)</option>
-                <option value="+27">🇿🇦 +27 (South Africa)</option>
-                <option value="+82">🇰🇷 +82 (South Korea)</option>
-                <option value="+211">🇸🇸 +211 (South Sudan)</option>
-                <option value="+34">🇪🇸 +34 (Spain)</option>
-                <option value="+94">🇱🇰 +94 (Sri Lanka)</option>
-                <option value="+249">🇸🇩 +249 (Sudan)</option>
-                <option value="+597">🇸🇷 +597 (Suriname)</option>
-                <option value="+46">🇸🇪 +46 (Sweden)</option>
-                <option value="+41">🇨🇭 +41 (Switzerland)</option>
-                <option value="+963">🇸🇾 +963 (Syria)</option>
-                <option value="+886">🇹🇼 +886 (Taiwan)</option>
-                <option value="+992">🇹🇯 +992 (Tajikistan)</option>
-                <option value="+255">🇹🇿 +255 (Tanzania)</option>
-                <option value="+66">🇹🇭 +66 (Thailand)</option>
-                <option value="+670">🇹🇱 +670 (Timor-Leste)</option>
-                <option value="+228">🇹🇬 +228 (Togo)</option>
-                <option value="+676">🇹🇴 +676 (Tonga)</option>
-                <option value="+1-868">🇹🇹 +1-868 (Trinidad and Tobago)</option>
-                <option value="+216">🇹🇳 +216 (Tunisia)</option>
-                <option value="+90">🇹🇷 +90 (Turkey)</option>
-                <option value="+993">🇹🇲 +993 (Turkmenistan)</option>
-                <option value="+688">🇹🇻 +688 (Tuvalu)</option>
-                <option value="+256">🇺🇬 +256 (Uganda)</option>
-                <option value="+380">🇺🇦 +380 (Ukraine)</option>
-                <option value="+971">🇦🇪 +971 (United Arab Emirates)</option>
-                <option value="+598">🇺🇾 +598 (Uruguay)</option>
-                <option value="+998">🇺🇿 +998 (Uzbekistan)</option>
-                <option value="+678">🇻🇺 +678 (Vanuatu)</option>
-                <option value="+379">🇻🇦 +379 (Vatican City)</option>
-                <option value="+58">🇻🇪 +58 (Venezuela)</option>
-                <option value="+84">🇻🇳 +84 (Vietnam)</option>
-                <option value="+967">🇾🇪 +967 (Yemen)</option>
-                <option value="+260">🇿🇲 +260 (Zambia)</option>
-                <option value="+263">🇿🇼 +263 (Zimbabwe)</option>
-              </select>
-              <input type="tel" id="phone" name="phone" class="w-2/3" placeholder="123-456-7890" required>
-            </div>
-            <p id="phone-error" class="error hidden">Please enter a valid phone number</p>
-          </div>
-          <div class="flex flex-col sm:flex-row sm:justify-between space-y-3 sm:space-y-0 sm:space-x-4 pt-6">
-            <a href="cart.html" class="submit-btn text-center">Back to Cart</a>
-            <button type="submit" id="continue-btn" class="submit-btn">Continue to Payment</button>
-          </div>
-          <p id="form-status" class="text-center pt-3 text-sm"></p>
-        </form>
-      </div>
-    </section>
-
-    <footer class="bg-[#1E293B] py-12 px-4 sm:px-6 md:px-8 border-t border-slate-700">
-        <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-            <div class="sm:col-span-2 md:col-span-1">
-                <h3 class="text-xl font-bold text-white mb-4 leading-relaxed">Gaming Odyssey</h3>
-                <p class="text-slate-400 text-sm leading-relaxed">Powering your gaming journey with custom PCs, tournaments, and a dedicated community.</p>
-            </div>
-
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        
+        <!-- Shipping Form -->
+        <div>
+          <h2 class="text-2xl font-bold mb-6">Shipping Information</h2>
+          <form id="address-form" class="space-y-4">
             <div>
-                <h3 class="text-lg font-semibold text-white mb-4 leading-relaxed">Quick Links</h3>
-                <ul class="space-y-2">
-                    <li><a href="index.html" class="text-slate-400 hover:text-[#3B82F6] transition text-sm">Home</a></li>
-                    <li><a href="store.html" class="text-slate-400 hover:text-[#3B82F6] transition text-sm">Store</a></li>
-                    <li><a href="tournaments.html" class="text-slate-400 hover:text-[#3B82F6] transition text-sm">Tournaments</a></li>
-                    <li><a href="aboutus.html" class="text-slate-400 hover:text-[#3B82F6] transition text-sm">About Us</a></li>
-                </ul>
+              <label for="name" class="block text-sm font-medium text-slate-300 mb-1">Full Name</label>
+              <input type="text" id="name" name="name" class="w-full p-3 rounded-md input-field" placeholder="John Doe" required>
             </div>
-
             <div>
-                <h3 class="text-lg font-semibold text-white mb-4 leading-relaxed">Customer Support</h3>
-                <ul class="space-y-2">
-                    <li><a href="contactus.html" class="text-slate-400 hover:text-[#3B82F6] transition text-sm">Contact Us</a></li>
-                    <li><a href="trackorder.html" class="text-slate-400 hover:text-[#3B82F6] transition text-sm">Track Order</a></li>
-                    <li><a href="terms.html" class="text-slate-400 hover:text-[#3B82F6] transition text-sm">Terms & Conditions</a></li>
-                    <li class="pt-2 text-slate-400 text-sm">📧 <a href="mailto:support@gamingodyssey.in" class="hover:text-[#3B82F6] transition">support@gamingodyssey.in</a></li>
-                    <li class="text-slate-400 text-sm">📞 +91 6289119156</li>
-                </ul>
+              <label for="address-line1" class="block text-sm font-medium text-slate-300 mb-1">Address</label>
+              <input type="text" id="address-line1" name="addressLine1" class="w-full p-3 rounded-md input-field" placeholder="123 Gaming Street" required>
             </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label for="city" class="block text-sm font-medium text-slate-300 mb-1">City</label>
+                <input type="text" id="city" name="city" class="w-full p-3 rounded-md input-field" placeholder="New York" required>
+              </div>
+              <div>
+                <label for="state" class="block text-sm font-medium text-slate-300 mb-1">State</label>
+                <input type="text" id="state" name="state" class="w-full p-3 rounded-md input-field" placeholder="NY" required>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+               <div>
+                <label for="zip" class="block text-sm font-medium text-slate-300 mb-1">ZIP Code</label>
+                <input type="text" id="zip" name="zip" class="w-full p-3 rounded-md input-field" placeholder="10001" required>
+              </div>
+              <div>
+                <label for="country" class="block text-sm font-medium text-slate-300 mb-1">Country</label>
+                <input type="text" id="country" name="country" class="w-full p-3 rounded-md input-field" placeholder="United States" required>
+              </div>
+            </div>
+             <div>
+              <label for="phone" class="block text-sm font-medium text-slate-300 mb-1">Phone Number</label>
+              <input type="tel" id="phone" name="phone" class="w-full p-3 rounded-md input-field" placeholder="(123) 456-7890" required>
+            </div>
+            <div class="pt-4">
+              <button type="submit" id="continue-btn" class="submit-btn w-full py-3">Continue to Payment</button>
+              <a href="cart.html" class="block mt-4 text-center text-sm text-primary-color hover:underline">
+                <i class="fas fa-arrow-left mr-2"></i>Back to Cart
+              </a>
+            </div>
+          </form>
+        </div>
 
-            <div>
-                <h3 class="text-lg font-semibold text-white mb-4 leading-relaxed">Follow Us</h3>
-                <div class="flex space-x-4">
-                    <a href="https://www.instagram.com/noticedveil" target="_blank" class="text-slate-400 hover:text-[#D946EF] transition">
-                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2c-4.068 0-4.59.017-6.2.09c-1.61.073-2.705.358-3.66.79c-.955.433-1.72.99-2.5 1.765c-.78.775-1.332 1.545-1.766 2.5c-.432.955-.717 2.05-.79 3.66C2.017 7.72 2 8.242 2 12.315c0 4.068.017 4.59.09 6.2c.073 1.61.358 2.705.79 3.66c.433.955.99 1.72 1.765 2.5c.775.78 1.545 1.332 2.5 1.766c.955.432 2.05.717 3.66.79c1.61.073 2.132.09 6.2.09c4.068 0 4.59-.017 6.2-.09c1.61-.073 2.705-.358 3.66-.79c.955-.433 1.72-.99 2.5-1.765c.78-.775 1.332-1.545 1.766-2.5c.432-.955.717-2.05.79-3.66c.073-1.61.09-2.132.09-6.2c0-4.068-.017-4.59-.09-6.2c-.073-1.61-.358-2.705-.79-3.66c-.433-.955-.99-1.72-1.765-2.5c-.775-.78-1.545-1.332-2.5-1.766c-.955-.432-2.05-.717-3.66-.79C16.905 2.017 16.383 2 12.315 2zm0 1.8c4.015 0 4.48.015 6.074.088c1.47.066 2.324.33 2.95.578c.69.273 1.254.64 1.812 1.198c.558.558.925 1.122 1.198 1.812c.248.626.512 1.48.578 2.95c.073 1.594.088 2.06.088 6.074s-.015 4.48-.088 6.074c-.066 1.47-.33 2.324-.578 2.95c-.273.69-.64 1.254-1.198 1.812c-.558.558-1.122.925-1.812 1.198c-.626.248-1.48.512-2.95.578c-1.594.073-2.06.088-6.074.088s-4.48-.015-6.074-.088c-1.47-.066-2.324-.33-2.95-.578c-.69-.273-1.254-.64-1.812-1.198c-.558-.558-.925-1.122-1.198-1.812c-.248-.626-.512-1.48-.578-2.95C4.095 16.795 4.08 16.33 4.08 12.315s.015-4.48.088-6.074c.066-1.47.33-2.324.578-2.95c.273-.69.64-1.254 1.198-1.812c.558-.558 1.122-.925 1.812-1.198c.626-.248 1.48-.512 2.95-.578C7.835 3.815 8.3 3.8 12.315 3.8zm0 3.96c-2.4 0-4.35 1.95-4.35 4.35s1.95 4.35 4.35 4.35s4.35-1.95 4.35-4.35s-1.95-4.35-4.35-4.35zm0 7.2c-1.575 0-2.85-1.275-2.85-2.85s1.275-2.85 2.85-2.85s2.85 1.275 2.85 2.85s-1.275 2.85-2.85 2.85zm4.845-7.56a1.05 1.05 0 11-2.1 0 1.05 1.05 0 012.1 0z" clip-rule="evenodd" /></svg>
-                        <span class="sr-only">Instagram</span>
-                    </a>
-                    <a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="text-slate-400 hover:text-[#D946EF] transition">
-                       <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0C.488 3.411 0 5.822 0 12s.488 8.589 4.385 8.816c3.6.245 11.626.246 15.23 0C23.512 20.589 24 18.178 24 12s-.488-8.589-4.385-8.816zM9.545 15.568V8.432L15.818 12 9.545 15.568z"/></svg>
-                        <span class="sr-only">YouTube</span>
-                    </a>
-                    <a href="https://www.facebook.com" target="_blank" class="text-slate-400 hover:text-[#D946EF] transition">
-                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" /></svg>
-                        <span class="sr-only">Facebook</span>
-                    </a>
+        <!-- Order Summary -->
+        <div class="bg-card-background rounded-lg p-6 h-fit sticky top-8">
+            <h2 class="text-2xl font-bold border-b border-card-border pb-4 mb-4">Your Order</h2>
+            <div id="order-summary-items" class="space-y-4 max-h-60 overflow-y-auto pr-2">
+                <!-- Order items will be dynamically inserted here -->
+            </div>
+             <div class="space-y-3 text-slate-300 border-t border-card-border pt-4 mt-4">
+                <div class="flex justify-between">
+                    <span>Subtotal</span>
+                    <span id="summary-subtotal">$0.00</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Shipping</span>
+                    <span>FREE</span>
+                </div>
+                <div class="flex justify-between text-white font-bold text-lg border-t border-card-border pt-4 mt-4">
+                    <span>Total</span>
+                    <span id="summary-total">$0.00</span>
                 </div>
             </div>
         </div>
-        <div class="mt-8 border-t border-slate-700 pt-6 text-center">
-            <p class="text-slate-400 text-sm leading-relaxed">© 2025 Gaming Odyssey. All rights reserved.</p>
-        </div>
-    </footer>
+      </div>
+    </div>
   </div>
 
   <script>
-    // State data for select countries
-    const statesByCountry = {
-      "United States": [
-        "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia",
-        "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland",
-        "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey",
-        "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina",
-        "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"
-      ],
-      "India": [
-        "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand",
-        "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab",
-        "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal"
-      ],
-      "Canada": [
-        "Alberta", "British Columbia", "Manitoba", "New Brunswick", "Newfoundland and Labrador", "Nova Scotia", "Ontario", "Prince Edward Island",
-        "Quebec", "Saskatchewan"
-      ],
-      "United Kingdom": [
-        "England", "Scotland", "Wales", "Northern Ireland"
-      ],
-      "Australia": [
-        "New South Wales", "Queensland", "South Australia", "Tasmania", "Victoria", "Western Australia"
-      ]
-    };
+    document.addEventListener('DOMContentLoaded', () => {
+        const orderSummaryItems = document.getElementById('order-summary-items');
+        const summarySubtotal = document.getElementById('summary-subtotal');
+        const summaryTotal = document.getElementById('summary-total');
+        const form = document.getElementById('address-form');
+        
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let buyNowItems = JSON.parse(localStorage.getItem('buyNowProduct')) || [];
 
-    // Elements
-    const countrySelect = document.getElementById('country');
-    const stateSelect = document.getElementById('state');
-    const stateInput = document.getElementById('state-input');
-    const form = document.getElementById('address-form');
-    const formStatus = document.getElementById('form-status');
+        // If buyNowItems exists, it takes precedence. It's a single item or an array from wishlist.
+        let itemsToDisplay = buyNowItems.length > 0 ? (Array.isArray(buyNowItems) ? buyNowItems : [buyNowItems]) : cart;
 
-    // Update state dropdown based on selected country
-    countrySelect.addEventListener('change', () => {
-      const selectedCountry = countrySelect.value;
-      stateSelect.innerHTML = '<option value="" disabled selected>Select State</option>';
-      stateSelect.classList.remove('hidden');
-      stateInput.classList.add('hidden');
-      stateSelect.required = true;
-      stateInput.required = false;
+        function renderOrderSummary() {
+            orderSummaryItems.innerHTML = '';
+            let subtotal = 0;
 
-      if (statesByCountry[selectedCountry]) {
-        statesByCountry[selectedCountry].forEach(state => {
-          const option = document.createElement('option');
-          option.value = state;
-          option.textContent = state;
-          stateSelect.appendChild(option);
-        });
-      } else {
-        stateSelect.classList.add('hidden');
-        stateInput.classList.remove('hidden');
-        stateSelect.required = false;
-        stateInput.required = true;
-      }
-    });
+            if (itemsToDisplay.length === 0) {
+                orderSummaryItems.innerHTML = '<p class="text-slate-400">No items to display.</p>';
+            } else {
+                itemsToDisplay.forEach(item => {
+                    const itemTotal = item.price * item.quantity;
+                    subtotal += itemTotal;
 
-    // Handle form submission
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const name = document.getElementById('name').value.trim();
-      const addressLine1 = document.getElementById('address-line1').value.trim();
-      const city = document.getElementById('city').value.trim();
-      const stateValue = stateSelect.classList.contains('hidden') ? stateInput.value.trim() : stateSelect.value;
-      const zip = document.getElementById('zip').value.trim();
-      const country = document.getElementById('country').value;
-      const countryCode = document.getElementById('country-code').value;
-      const phone = document.getElementById('phone').value.trim();
-
-      // Reset error messages
-      document.querySelectorAll('.error').forEach(el => el.classList.add('hidden'));
-      formStatus.textContent = '';
-      let isValid = true;
-
-      // Basic validation
-      if (!name) { document.getElementById('name-error').classList.remove('hidden'); isValid = false; }
-      if (!addressLine1) { document.getElementById('address-line1-error').classList.remove('hidden'); isValid = false; }
-      if (!city) { document.getElementById('city-error').classList.remove('hidden'); isValid = false; }
-      if (!stateValue) { document.getElementById('state-error').classList.remove('hidden'); isValid = false; }
-      if (!country) { document.getElementById('country-error').classList.remove('hidden'); isValid = false; }
-
-      // Zip code validation (simple example)
-      if (!zip) {
-          document.getElementById('zip-error').textContent = 'Please enter a ZIP code';
-          document.getElementById('zip-error').classList.remove('hidden');
-          isValid = false;
-      }
-
-      // Phone number validation (simple example)
-      if (!countryCode || !phone || !/^\d{7,15}$/.test(phone.replace(/[\s-]/g, ''))) {
-          document.getElementById('phone-error').classList.remove('hidden');
-          isValid = false;
-      }
-
-      if (!isValid) {
-        formStatus.textContent = 'Please fill all required fields correctly';
-        formStatus.className = 'error text-center';
-        return;
-      }
-
-      // Save address to localStorage
-      const address = {
-        name,
-        addressLine1,
-        addressLine2: document.getElementById('address-line2').value.trim(),
-        city,
-        state: stateValue,
-        zip,
-        country,
-        phone: `${countryCode} ${phone}`
-      };
-      localStorage.setItem('shippingAddress', JSON.stringify(address));
-
-      // Redirect to payment gateway
-      window.location.href = 'paymentgateway.html';
-    });
-
-    // Authentication Logic
-    function isAuthenticated() {
-      return localStorage.getItem('isAuthenticated') === 'true';
-    }
-
-    function handleLinkClick(event) {
-      const linkEl = event.currentTarget;
-      const targetUrl = linkEl.getAttribute('href');
-
-      // Allow direct access to non-protected pages and external links
-      const nonProtected = ['signin.html', 'createaccount.html', 'terms.html', 'cart.html'];
-      if (nonProtected.includes(targetUrl) || targetUrl.startsWith('http') || targetUrl.startsWith('mailto')) {
-          return;
-      }
-      
-      event.preventDefault(); // Prevent default navigation for protected links
-
-      if (isAuthenticated()) {
-        window.location.href = targetUrl;
-      } else {
-        // Redirect to create account if trying to access a protected page while not logged in
-        window.location.href = 'createaccount.html';
-      }
-    }
-
-    // Apply link handling logic to all relevant links
-    document.querySelectorAll('a').forEach(link => {
-        // Exclude footer social links from this logic if they are external
-        if(!link.closest('.flex.space-x-4')){
-             link.addEventListener('click', handleLinkClick);
-        }
-    });
-
-    // Display Username in Sidebar and Mobile Menu
-    function updateUserDisplay() {
-        const userDisplay = document.getElementById('user-display');
-        const mobileUserDisplay = document.getElementById('mobile-user-display');
-        const signInLink = document.getElementById('signin-link');
-        const createAccountLink = document.getElementById('createaccount-link');
-        const mobileSignInLink = document.getElementById('mobile-signin-link');
-        const mobileCreateAccountLink = document.getElementById('mobile-createaccount-link');
-
-        if (isAuthenticated()) {
-            const username = localStorage.getItem('currentUser');
-            if (username) {
-                userDisplay.classList.remove('hidden');
-                mobileUserDisplay.classList.remove('hidden');
-                userDisplay.querySelector('span').textContent = username;
-                mobileUserDisplay.querySelector('span').textContent = username;
-                signInLink.style.display = 'none';
-                createAccountLink.style.display = 'none';
-                mobileSignInLink.style.display = 'none';
-                mobileCreateAccountLink.style.display = 'none';
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'flex items-center gap-4';
+                    itemElement.innerHTML = `
+                        <div class="relative">
+                            <img src="${item.image || 'https://placehold.co/64x64/1E293B/E2E8F0?text=Image'}" alt="${item.name}" class="w-16 h-16 object-contain rounded-md bg-slate-700">
+                            <span class="absolute -top-2 -right-2 bg-primary-color text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">${item.quantity}</span>
+                        </div>
+                        <div class="flex-grow">
+                            <p class="font-semibold">${item.name}</p>
+                        </div>
+                        <p class="font-bold">$${itemTotal.toFixed(2)}</p>
+                    `;
+                    orderSummaryItems.appendChild(itemElement);
+                });
             }
-        } else {
-            userDisplay.classList.add('hidden');
-            mobileUserDisplay.classList.add('hidden');
-            signInLink.style.display = 'flex';
-            createAccountLink.style.display = 'flex';
-            mobileSignInLink.style.display = 'flex';
-            mobileCreateAccountLink.style.display = 'flex';
+            
+            summarySubtotal.textContent = `$${subtotal.toFixed(2)}`;
+            summaryTotal.textContent = `$${subtotal.toFixed(2)}`;
         }
-    }
-    updateUserDisplay();
 
-    // Hamburger Menu Toggle
-    const hamburger = document.getElementById('hamburger');
-    const mobileMenu = document.getElementById('mobile-menu');
-    const closeMenu = document.getElementById('close-menu');
-    hamburger.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
-      mobileMenu.classList.toggle('active');
-    });
-    closeMenu.addEventListener('click', () => {
-      mobileMenu.classList.add('hidden');
-      mobileMenu.classList.remove('active');
-    });
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const address = {
+                name: document.getElementById('name').value,
+                addressLine1: document.getElementById('address-line1').value,
+                city: document.getElementById('city').value,
+                state: document.getElementById('state').value,
+                zip: document.getElementById('zip').value,
+                country: document.getElementById('country').value,
+                phone: document.getElementById('phone').value,
+            };
 
-    // Fade-in Animation on Scroll
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.1 });
-    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+            const order = {
+                items: itemsToDisplay,
+                shippingAddress: address,
+                total: itemsToDisplay.reduce((sum, item) => sum + item.price * item.quantity, 0),
+                timestamp: new Date().toISOString()
+            };
+
+            localStorage.setItem('finalOrder', JSON.stringify(order));
+            
+            // Clear buy now item after processing
+            localStorage.removeItem('buyNowProduct');
+
+            // This is where you would redirect to the payment page.
+            // Since paymentgateway.html doesn't exist, we will show an alert.
+            alert("Address saved! Proceeding to payment gateway.");
+            // window.location.href = 'paymentgateway.html'; 
+        });
+
+        renderOrderSummary();
+    });
   </script>
 </body>
 </html>
