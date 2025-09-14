@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Gaming Odyssey - AI-Powered Store</title>
+  <title>Gaming Odyssey - Store</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -203,7 +203,7 @@
 
   <!-- Product Detail Overlay -->
   <div id="product-overlay">
-    <div class="product-detail-content">
+    <div id="product-detail-content" class="product-detail-content">
       <button id="close-product-overlay" class="absolute top-4 right-4 bg-slate-700/50 w-9 h-9 rounded-full text-white hover:bg-red-500 transition-colors"><i class="fas fa-times"></i></button>
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div>
@@ -431,10 +431,15 @@
       const comparisonTray = document.getElementById('comparison-tray');
       const modals = document.querySelectorAll('.modal-overlay');
 
-      // --- GEMINI API ---
+      // --- GEMINI API & UTILITIES ---
       const API_KEY = ""; // Keep this empty
       const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${API_KEY}`;
       
+      function sanitizeAIResponse(response) {
+        // Cleans markdown code blocks and trims whitespace
+        return response.replace(/```html/g, '').replace(/```/g, '').trim();
+      }
+
       async function callGeminiAPI(prompt) {
           try {
               const payload = { contents: [{ parts: [{ text: prompt }] }] };
@@ -464,13 +469,11 @@
         insightsBtn.disabled = true;
 
         const prompt = `You are a gaming hardware expert. Analyze the following product for a serious gamer and provide a concise summary of its key pros and cons. Product Name: ${product.name}. Description: ${product.description}. Format the output as simple HTML using <h3> for titles and <ul> for lists. Keep it brief.`;
-        const aiResponse = await callGeminiAPI(prompt);
+        const rawResponse = await callGeminiAPI(prompt);
         
-        insightsContent.innerHTML = aiResponse;
+        insightsContent.innerHTML = sanitizeAIResponse(rawResponse);
         insightsBtn.style.display = 'none';
         insightsContent.style.display = 'block';
-        insightsBtn.innerHTML = '✨ Get AI-Powered Insights';
-        insightsBtn.disabled = false;
       }
       
       // --- CORE LOGIC ---
@@ -586,12 +589,19 @@
           document.getElementById('overlay-add-to-cart').onclick = () => addToCart(product.id);
           document.getElementById('submit-review').onclick = () => submitReview(product.id);
           document.getElementById('get-ai-insights-btn').onclick = () => getAIInsights(product);
+          document.getElementById('summarize-reviews-btn').onclick = () => getAIReviewSummary(product.id);
           
           const insightsBtn = document.getElementById('get-ai-insights-btn');
           const insightsContent = document.getElementById('ai-insights-content');
           insightsBtn.style.display = 'block';
+          insightsBtn.innerHTML = '✨ Get AI-Powered Insights';
+          insightsBtn.disabled = false;
           insightsContent.style.display = 'none';
           insightsContent.innerHTML = '';
+          
+          document.getElementById('review-summary-container').classList.add('hidden');
+          document.getElementById('review-summary-container').innerHTML = '';
+
 
           loadProductReviews(product.id);
           
@@ -611,19 +621,30 @@
         document.getElementById('review-count').textContent = `(${reviews.length} reviews)`;
         
         const list = document.getElementById('reviews-list');
-        list.innerHTML = reviews.length ? reviews.map(r => `
-          <div class="bg-slate-800/50 p-3 rounded-lg">
-            <div class="flex justify-between items-center mb-1">
-              <p class="font-semibold">${'Anonymous'}</p>
-              <div class="text-yellow-400">${'★'.repeat(r.rating)}</div>
-            </div>
-            <p class="text-sm text-slate-300">${r.text}</p>
-          </div>
-        `).join('') : '<p class="text-sm text-slate-400">No reviews yet.</p>';
+        list.innerHTML = ''; // Clear previous reviews
+
+        if (reviews.length > 0) {
+             list.innerHTML = reviews.map(r => `
+              <div class="bg-slate-800/50 p-3 rounded-lg">
+                <div class="flex justify-between items-center mb-1">
+                  <p class="font-semibold">${'Anonymous'}</p>
+                  <div class="text-yellow-400">${'★'.repeat(r.rating)}</div>
+                </div>
+                <p class="text-sm text-slate-300">${r.text}</p>
+              </div>
+            `).join('');
+        } else {
+            list.innerHTML = `<div id="ai-persona-review-placeholder" class="text-center text-slate-400 p-4 border-2 border-dashed border-slate-600 rounded-lg">
+                <p class="mb-2">No reviews yet for this product.</p>
+                <button id="generate-persona-review-btn" data-product-id="${productId}" class="submit-btn !py-2 !px-4 text-sm">✨ Generate AI Persona Review</button>
+            </div>`;
+        }
         
         const summarizeBtn = document.getElementById('summarize-reviews-btn');
         if (reviews.length >= 3) {
             summarizeBtn.style.display = 'block';
+            summarizeBtn.innerHTML = '✨ Summarize Reviews';
+            summarizeBtn.disabled = false;
         } else {
             summarizeBtn.style.display = 'none';
         }
@@ -646,10 +667,7 @@
 
        async function getAIReviewSummary(productId) {
           const reviews = productReviews[productId] || [];
-          if (reviews.length < 3) {
-              alert("Not enough reviews to generate a summary.");
-              return;
-          }
+          if (reviews.length < 3) return;
 
           const summarizeBtn = document.getElementById('summarize-reviews-btn');
           const summaryContainer = document.getElementById('review-summary-container');
@@ -660,12 +678,57 @@
           const reviewTexts = reviews.map(r => `- Rating: ${r.rating}/5. Review: "${r.text}"`).join('\n');
           const prompt = `You are a helpful e-commerce assistant. Based on the following customer reviews for a product, provide a concise summary. Identify the main positive themes and the main negative themes mentioned by the customers. Do not invent new information. Format your response as simple HTML with two <h3> headings: "Common Praise" and "Common Critiques", each followed by a <ul> list of the key points.\n\nReviews:\n${reviewTexts}`;
 
-          const summaryHTML = await callGeminiAPI(prompt);
-
-          summaryContainer.innerHTML = summaryHTML;
+          const rawResponse = await callGeminiAPI(prompt);
+          
+          summaryContainer.innerHTML = sanitizeAIResponse(rawResponse);
           summaryContainer.classList.remove('hidden');
-          summarizeBtn.style.display = 'none'; // Hide button after use
+          summarizeBtn.style.display = 'none';
       }
+
+       async function getAIPersonaReview(productId) {
+          const placeholder = document.getElementById('ai-persona-review-placeholder');
+          const btn = document.getElementById('generate-persona-review-btn');
+          btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Generating...';
+          btn.disabled = true;
+
+          const product = allProducts.find(p => p.id === productId);
+          if (!product) return;
+
+          const prompt = `You are a creative writer and an expert on gaming hardware. Your task is to write a plausible, first-person product review from the perspective of a specific type of gamer.
+            Product Name: ${product.name}
+            Category: ${product.category}
+            Description: ${product.description}
+            Based on the product details, determine the most likely target audience (e.g., competitive FPS player, casual RPG fan, streamer) and write a product review from their perspective. The review should sound authentic and mention specific (plausible) experiences with the product.
+            Please respond with ONLY a valid JSON object in this exact format, with no extra text or markdown: {"rating": 5, "persona": "Competitive FPS Player", "text": "The review text goes here..."}`;
+          
+          const response = await callGeminiAPI(prompt);
+          
+          if (response.startsWith("Sorry,")) {
+              console.error("AI Persona Review failed:", response);
+              placeholder.innerHTML = `<p class="text-red-400">${response}</p>`;
+              return;
+          }
+
+          try {
+              const review = JSON.parse(response);
+              const reviewHTML = `
+                <div class="bg-indigo-900/50 p-4 rounded-lg border border-indigo-700">
+                  <div class="flex justify-between items-center mb-2">
+                    <div class="font-semibold flex items-center gap-2">
+                      <i class="fas fa-robot text-indigo-400"></i>
+                      <span>AI Persona Review (${review.persona})</span>
+                    </div>
+                    <div class="text-yellow-400">${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</div>
+                  </div>
+                  <p class="text-sm text-indigo-200">${review.text}</p>
+                </div>
+              `;
+              document.getElementById('reviews-list').innerHTML = reviewHTML;
+          } catch(e) {
+              console.error("Failed to parse AI persona review:", e);
+              placeholder.innerHTML = `<p class="text-red-400">Sorry, the AI couldn't generate a review right now. Please try again later.</p>`;
+          }
+       }
 
       
       // --- COMPARISON LOGIC ---
@@ -721,8 +784,8 @@
 
             const prompt = `You are a gaming hardware expert. Create a detailed comparison for a competitive gamer based on the following products:\n\n${productDetails}\n\nYour response must be in HTML format. Generate a <table> that compares key features (like sensor, weight for mice; switch type for keyboards; battery life, connection for headsets). After the table, add an <h4> titled "Expert Recommendation" and write a paragraph recommending which product is best for different types of gamers (e.g., "The Razer Deathadder is best for FPS players who value low weight...").`;
             
-            const comparisonHTML = await callGeminiAPI(prompt);
-            resultContainer.innerHTML = comparisonHTML;
+            const rawResponse = await callGeminiAPI(prompt);
+            resultContainer.innerHTML = sanitizeAIResponse(rawResponse);
         }
 
       // --- AI SETUP BUILDER ---
@@ -744,6 +807,12 @@
             
             const response = await callGeminiAPI(prompt);
             
+            if (response.startsWith("Sorry,")) {
+                console.error("AI Setup builder failed:", response);
+                result_content.innerHTML = `<p class="text-red-400">${response}</p>`;
+                return;
+            }
+
             try {
                 const recommendations = JSON.parse(response);
                 displaySetupResults(recommendations);
@@ -817,6 +886,13 @@
             document.querySelectorAll('#thumbnail-container img').forEach(img => img.classList.replace('border-blue-500', 'border-transparent'));
             e.target.classList.replace('border-transparent', 'border-blue-500');
         }
+      });
+      
+      // Delegated event listener for persona review button
+      document.getElementById('product-detail-content').addEventListener('click', e => {
+          if (e.target && e.target.id === 'generate-persona-review-btn') {
+              getAIPersonaReview(e.target.dataset.productId);
+          }
       });
       
       // Comparison Listeners
