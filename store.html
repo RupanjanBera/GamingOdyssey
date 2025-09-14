@@ -229,10 +229,28 @@
         background-size: 1.5em 1.5em;
         padding-right: 2.5rem;
     }
+
+    /* Notification styles */
+    .notification {
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        animation: slide-in 0.3s forwards;
+    }
+
+    @keyframes slide-in {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
   </style>
 </head>
 <body class="min-h-screen">
   <div id="loader" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex justify-center items-center z-[100]"><div class="border-4 border-slate-700 border-l-primary-color rounded-full w-12 h-12 animate-spin"></div></div>
+  <div id="notification-container" class="fixed bottom-5 right-5 z-[100] space-y-2"></div>
 
   <!-- Product Detail Overlay -->
   <div id="product-overlay">
@@ -329,7 +347,7 @@
       </header>
       <section class="hero-bg py-12 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto">
-          <h1 class="text-4xl md:text-5xl font-bold text-white text-center mb-2">Gaming Odyssey Store</h1>
+          <h1 class="text-4xl md:text-5xl font-bold text-white text-center mb-2">Our Digital Armory</h1>
           <p class="text-slate-400 text-center mb-8 max-w-2xl mx-auto">Find the perfect gear to conquer your virtual worlds. High-performance peripherals await.</p>
           <div class="bg-slate-800/50 p-4 rounded-lg flex flex-col md:flex-row items-center gap-4">
             <div class="relative w-full flex-grow">
@@ -484,8 +502,7 @@
 
       async function callGeminiAPI(prompt) {
           if (!API_KEY) {
-              alert("Gemini API key is not set in the script. AI features will not work.");
-              return "Error: API Key not set.";
+              return "Error: API Key not set in the script.";
           }
           const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${API_KEY}`;
           
@@ -525,7 +542,7 @@
         const rawResponse = await callGeminiAPI(prompt);
         
         if (rawResponse.startsWith("Error:") || rawResponse.startsWith("Sorry,")) {
-            alert(rawResponse);
+            showNotification(rawResponse, 'error');
             insightsBtn.innerHTML = '✨ Get AI-Powered Insights';
             insightsBtn.disabled = false;
             return;
@@ -581,14 +598,9 @@
         } else {
           cart.push({ id: productId, name: product.name, price: product.salePrice || product.price, quantity: quantity, image: product.images[0] });
         }
-      }
-
-      function saveAndNotify(message) {
         localStorage.setItem('cart', JSON.stringify(cart));
-        localStorage.setItem('wishlist', JSON.stringify(wishlist));
         updateCounts();
-        renderWishlistMenu();
-        alert(message);
+        showNotification(`${product.name} added to cart!`);
       }
 
       // --- PRODUCT & CATEGORY RENDERING ---
@@ -689,10 +701,7 @@
           
           updateModalImage();
 
-          document.getElementById('overlay-add-to-cart').onclick = () => {
-              addToCart(product.id);
-              saveAndNotify(`${product.name} added to cart!`);
-          };
+          document.getElementById('overlay-add-to-cart').onclick = () => addToCart(product.id);
           document.getElementById('submit-review').onclick = () => submitReview(product.id);
           document.getElementById('get-ai-insights-btn').onclick = () => getAIInsights(product);
           document.getElementById('summarize-reviews-btn').onclick = () => getAIReviewSummary(product.id);
@@ -796,7 +805,7 @@
           const rawResponse = await callGeminiAPI(prompt);
           
           if (rawResponse.startsWith("Error:") || rawResponse.startsWith("Sorry,")) {
-            alert(rawResponse);
+            showNotification(rawResponse, 'error');
             summarizeBtn.innerHTML = '✨ Summarize Reviews';
             summarizeBtn.disabled = false;
             return;
@@ -856,13 +865,18 @@
       // --- WISHLIST LOGIC ---
         function toggleWishlist(productId) {
             const index = wishlist.indexOf(productId);
+            const product = allProducts.find(p => p.id === productId);
+
             if (index > -1) {
                 wishlist.splice(index, 1);
+                showNotification(`${product.name} removed from wishlist`, 'info');
             } else {
                 wishlist.push(productId);
+                showNotification(`${product.name} added to wishlist!`);
             }
             localStorage.setItem('wishlist', JSON.stringify(wishlist));
             updateCounts();
+            // Re-render products to update the heart icon
             applyFiltersAndSort(document.querySelector('#category-nav a.bg-blue-500\/20')?.dataset.category || 'All Products');
             renderWishlistMenu();
         }
@@ -902,7 +916,7 @@
                 if (comparisonList.length < 4) {
                     comparisonList.push(productId);
                 } else {
-                    alert('You can compare a maximum of 4 products.');
+                    showNotification('You can compare a maximum of 4 products.', 'info');
                 }
             }
             updateComparisonTray();
@@ -949,7 +963,7 @@
             const rawResponse = await callGeminiAPI(prompt);
 
             if (rawResponse.startsWith("Error:") || rawResponse.startsWith("Sorry,")) {
-                alert(rawResponse);
+                showNotification(rawResponse, 'error');
                 modal.classList.remove('visible');
                 return;
             }
@@ -1076,22 +1090,34 @@
       document.getElementById('compare-now-btn').addEventListener('click', getAIComparison);
       
       // Wishlist Menu Listeners
-      document.getElementById('wishlist-btn').addEventListener('click', () => {
+      const wishlistBtn = document.getElementById('wishlist-btn');
+      const wishlistMenu = document.getElementById('wishlist-menu');
+      wishlistBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
           renderWishlistMenu();
-          document.getElementById('wishlist-menu').classList.toggle('hidden');
+          wishlistMenu.classList.toggle('hidden');
       });
-      document.getElementById('wishlist-menu').addEventListener('click', e => {
+      
+      wishlistMenu.addEventListener('click', e => {
+          e.stopPropagation();
           if (e.target.closest('.remove-wishlist-item-btn')) {
               toggleWishlist(e.target.closest('.remove-wishlist-item-btn').dataset.id);
           }
           if (e.target.id === 'wishlist-clear') {
               wishlist = [];
-              saveAndNotify("Wishlist cleared.");
+              localStorage.setItem('wishlist', JSON.stringify(wishlist));
+              updateCounts();
+              renderWishlistMenu();
+              showNotification("Wishlist cleared.", 'info');
           }
           if (e.target.id === 'wishlist-add-all-to-cart') {
               wishlist.forEach(id => addToCart(id));
               wishlist = [];
-              saveAndNotify("All wishlist items added to cart.");
+              localStorage.setItem('cart', JSON.stringify(cart));
+              localStorage.setItem('wishlist', JSON.stringify(wishlist));
+              updateCounts();
+              renderWishlistMenu();
+              showNotification("All wishlist items added to cart.");
           }
           if (e.target.id === 'wishlist-buy-all') {
               const itemsToBuy = wishlist.map(id => {
@@ -1103,8 +1129,13 @@
           }
       });
       
-      
-      // Close Modals Listeners
+      // Close Modals & Menus Listeners
+      document.addEventListener('click', (e) => {
+        if (!wishlistBtn.contains(e.target) && !wishlistMenu.contains(e.target)) {
+            wishlistMenu.classList.add('hidden');
+        }
+      });
+
       modals.forEach(modal => {
           modal.addEventListener('click', (e) => {
               if (e.target === modal) {
@@ -1129,11 +1160,31 @@
       document.getElementById('hamburger').addEventListener('click', () => document.querySelector('.sidebar').classList.toggle('-translate-x-full'));
       document.getElementById('category-toggle').addEventListener('click', () => document.getElementById('category-menu').classList.toggle('translate-x-full'));
 
+      // --- NOTIFICATION SYSTEM ---
+      function showNotification(message, type = 'success') {
+        const container = document.getElementById('notification-container');
+        const notification = document.createElement('div');
+        const icon = type === 'success' ? 'fa-check-circle' : 'fa-info-circle';
+        const bgColor = type === 'success' ? 'bg-green-500' : 'bg-blue-500';
+
+        notification.className = `notification flex items-center gap-3 ${bgColor} text-white py-2 px-4 rounded-lg shadow-lg`;
+        notification.innerHTML = `<i class="fas ${icon}"></i><span>${message}</span>`;
+
+        container.appendChild(notification);
+
+        setTimeout(() => {
+            notification.style.opacity = '0';
+            notification.style.transform = 'translateX(100%)';
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+      }
+
       initializeApp();
     });
   </script>
 </body>
 </html>
+
 
 
 
