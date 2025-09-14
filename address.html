@@ -56,14 +56,12 @@
 </head>
 <body class="min-h-screen">
 
-  <!-- Main Content -->
   <div class="container mx-auto px-4 py-8 md:py-16">
     <div class="max-w-4xl mx-auto">
       <div class="text-center mb-12">
         <h1 class="text-4xl md:text-5xl font-bold text-white">Checkout</h1>
       </div>
 
-      <!-- Progress Bar -->
       <div class="w-full max-w-xs mx-auto mb-12">
         <div class="progress-step active flex flex-col items-center">
             <div class="step-circle w-10 h-10 rounded-full border-2 border-card-border flex items-center justify-center font-bold text-lg">1</div>
@@ -73,7 +71,6 @@
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
         
-        <!-- Shipping Form -->
         <div>
           <h2 class="text-2xl font-bold mb-6">Shipping Information</h2>
           <form id="address-form" class="space-y-4">
@@ -118,12 +115,10 @@
           </form>
         </div>
 
-        <!-- Order Summary -->
         <div class="bg-card-background rounded-lg p-6 h-fit sticky top-8">
             <h2 class="text-2xl font-bold border-b border-card-border pb-4 mb-4">Your Order</h2>
             <div id="order-summary-items" class="space-y-4 max-h-60 overflow-y-auto pr-2">
-                <!-- Order items will be dynamically inserted here -->
-            </div>
+                </div>
              <div class="space-y-3 text-slate-300 border-t border-card-border pt-4 mt-4">
                 <div class="flex justify-between">
                     <span>Subtotal</span>
@@ -219,7 +214,9 @@
             if (isBuyNowFlow) {
                  localStorage.removeItem('buyNowProduct');
             } else {
-                 localStorage.removeItem('cart');
+                 // You might want to clear the cart only after successful payment
+                 // For now, following the original logic to clear it here.
+                 // localStorage.removeItem('cart'); 
             }
 
             window.location.href = 'paymentgateway.html'; 
@@ -230,6 +227,5 @@
   </script>
 </body>
 </html>
-
 
 
