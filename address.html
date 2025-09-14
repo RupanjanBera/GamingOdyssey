@@ -150,11 +150,18 @@
         const summaryTotal = document.getElementById('summary-total');
         const form = document.getElementById('address-form');
         
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
-        let buyNowItems = JSON.parse(localStorage.getItem('buyNowProduct')) || [];
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const buyNowProduct = JSON.parse(localStorage.getItem('buyNowProduct')) || null;
 
-        // If buyNowItems exists, it takes precedence. It's a single item or an array from wishlist.
-        let itemsToDisplay = buyNowItems.length > 0 ? (Array.isArray(buyNowItems) ? buyNowItems : [buyNowItems]) : cart;
+        let isBuyNowFlow = false;
+        let itemsToDisplay = [];
+
+        if (buyNowProduct) {
+            isBuyNowFlow = true;
+            itemsToDisplay = Array.isArray(buyNowProduct) ? buyNowProduct : [buyNowProduct];
+        } else {
+            itemsToDisplay = cart;
+        }
 
         function renderOrderSummary() {
             orderSummaryItems.innerHTML = '';
@@ -164,7 +171,7 @@
                 orderSummaryItems.innerHTML = '<p class="text-slate-400">No items to display.</p>';
             } else {
                 itemsToDisplay.forEach(item => {
-                    const itemTotal = item.price * item.quantity;
+                    const itemTotal = (item.price || 0) * (item.quantity || 1);
                     subtotal += itemTotal;
 
                     const itemElement = document.createElement('div');
@@ -172,10 +179,10 @@
                     itemElement.innerHTML = `
                         <div class="relative">
                             <img src="${item.image || 'https://placehold.co/64x64/1E293B/E2E8F0?text=Image'}" alt="${item.name}" class="w-16 h-16 object-contain rounded-md bg-slate-700">
-                            <span class="absolute -top-2 -right-2 bg-primary-color text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">${item.quantity}</span>
+                            <span class="absolute -top-2 -right-2 bg-primary-color text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">${item.quantity || 1}</span>
                         </div>
                         <div class="flex-grow">
-                            <p class="font-semibold">${item.name}</p>
+                            <p class="font-semibold">${item.name || 'Unknown Item'}</p>
                         </div>
                         <p class="font-bold">$${itemTotal.toFixed(2)}</p>
                     `;
@@ -203,19 +210,19 @@
             const order = {
                 items: itemsToDisplay,
                 shippingAddress: address,
-                total: itemsToDisplay.reduce((sum, item) => sum + item.price * item.quantity, 0),
+                total: itemsToDisplay.reduce((sum, item) => sum + (item.price || 0) * (item.quantity || 1), 0),
                 timestamp: new Date().toISOString()
             };
 
             localStorage.setItem('finalOrder', JSON.stringify(order));
             
-            // Clear buy now item after processing
-            localStorage.removeItem('buyNowProduct');
+            if (isBuyNowFlow) {
+                 localStorage.removeItem('buyNowProduct');
+            } else {
+                 localStorage.removeItem('cart');
+            }
 
-            // This is where you would redirect to the payment page.
-            // Since paymentgateway.html doesn't exist, we will show an alert.
-            alert("Address saved! Proceeding to payment gateway.");
-            // window.location.href = 'paymentgateway.html'; 
+            window.location.href = 'paymentgateway.html'; 
         });
 
         renderOrderSummary();
@@ -223,3 +230,5 @@
   </script>
 </body>
 </html>
+
+
