@@ -10,831 +10,320 @@
   <script src="https://www.paypal.com/sdk/js?client-id=Abj4GKhw0aoqQes156AfApLm2wN5PAF5ncEUA_M-Dtzaj22yUzczA7tzf5LrsP7ufTj2ERxhUIEscsRF&currency=USD"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
   <style>
+    :root {
+      --primary-color: #3B82F6;
+      --secondary-color: #8B5CF6;
+      --background-color: #0F172A;
+      --text-color: #E2E8F0;
+      --card-background: #1E293B;
+      --card-border: #334155;
+      --font-family: 'Poppins', sans-serif;
+    }
     body {
-      font-family: 'Poppins', sans-serif;
-      background-color: #0F172A;
-      color: #F1F5F9;
-      scroll-behavior: smooth;
-      overflow-x: hidden;
+      font-family: var(--font-family);
+      background-color: var(--background-color);
+      color: var(--text-color);
       -webkit-font-smoothing: antialiased;
     }
-    .gradient-glow {
-      box-shadow: 0 0 6px rgba(59, 130, 246, 0.2);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    .input-field {
+      background-color: #2c3a4f;
+      border: 1px solid var(--card-border);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
-    .gradient-glow:hover {
-      box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
-      transform: translateY(-3px);
-    }
-    .sidebar {
-      background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
-      box-shadow: 2px 0 6px rgba(59, 130, 246, 0.1);
-    }
-    .content-bg {
-      background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(217, 70, 239, 0.15), #0F172A);
-      position: relative;
-      overflow: hidden;
-    }
-    .content-bg::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.2), transparent 70%);
-      animation: glow 20s ease-in-out infinite;
-      opacity: 0.5;
-    }
-    @keyframes glow {
-      0%, 100% { opacity: 0.5; }
-      50% { opacity: 0.7; }
-    }
-    .fade-in {
-      opacity: 0;
-      transform: translateY(15px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .payment-card {
-      background: linear-gradient(145deg, #1E293B, #0F172A);
-      border-radius: 0.75rem;
-      padding: 1.25rem;
-      transition: transform 0.2s ease;
-    }
-    .payment-card:hover {
-      transform: translateY(-4px);
-    }
-    input, select, textarea {
-      background: #1E293B;
-      color: #F1F5F9;
-      border: 1px solid #3B82F6;
-      border-radius: 0.5rem;
-      padding: 0.75rem;
-      width: 100%;
-      transition: border-color 0.2s ease;
-      font-family: 'Poppins', sans-serif;
-      font-size: 0.9375rem;
-    }
-    input:focus, select:focus, textarea:focus {
+    .input-field:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4);
       outline: none;
-      border-color: #D946EF;
-      box-shadow: 0 0 6px rgba(217, 70, 239, 0.2);
     }
     .submit-btn {
-      background: linear-gradient(90deg, #3B82F6, #D946EF);
-      color: #0F172A;
-      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+      color: white;
       font-weight: 600;
-      padding: 1rem 1.5rem;
       border-radius: 0.5rem;
-      transition: transform 0.2s ease;
-      touch-action: manipulation;
-      font-size: 1rem;
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     }
     .submit-btn:hover {
-      transform: translateY(-2px);
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
     }
-    .nav-link, #mobile-menu a {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      transition: color 0.2s ease;
-      font-family: 'Poppins', sans-serif;
-      font-weight: 600;
-      font-size: 1.0625rem;
-      padding: 0.5rem 0;
+    .progress-step.active .step-circle {
+      background-color: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
     }
-    .nav-link::after, #mobile-menu a::after {
-      content: '';
-      position: absolute;
-      width: 0;
-      height: 2px;
-      bottom: 0;
-      left: 0;
-      background: linear-gradient(to right, #3B82F6, #D946EF);
-      transition: width 0.2s ease;
+     .progress-step.active p {
+      color: var(--primary-color);
     }
-    .nav-link:hover::after, #mobile-menu a:hover::after {
-      width: 100%;
-    }
-    .nav-link:hover, #mobile-menu a:hover {
-      color: #3B82F6;
-    }
-    .mobile-menu {
-      background: linear-gradient(180deg, #1E293B, #0F172A);
-      opacity: 0;
-      transform: translateX(-100%);
-      transition: opacity 0.3s ease, transform 0.3s ease;
-    }
-    .mobile-menu.active {
-      opacity: 1;
-      transform: translateX(0);
-    }
-    select {
-      appearance: none;
-      background: url('data:image/svg+xml;utf8,<svg fill="%233B82F6" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 0.75rem center/12px 12px;
-    }
-    option {
-      background-color: #1E293B;
-      color: #F1F5F9;
-    }
-    .cart-icon-container {
-      position: fixed;
-      top: 1rem;
-      right: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: rgba(30, 41, 59, 0.7);
-      padding: 0.5rem 1rem;
-      border-radius: 2rem;
-      transition: all 0.2s ease;
-      z-index: 30;
-    }
-    .cart-icon-container:hover {
-      background: rgba(30, 41, 59, 0.9);
-    }
-    .cart-count {
-      position: absolute;
-      top: -8px;
-      right: -8px;
-      background: linear-gradient(90deg, #3B82F6, #D946EF);
-      color: #0F172A;
-      font-size: 0.75rem;
-      font-weight: bold;
-      border-radius: 50%;
-      padding: 2px 6px;
-    }
-    
-    /* Modal Styles */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.7);
-      z-index: 50;
-      justify-content: center;
-      align-items: center;
-    }
-    .modal-content {
-      background: linear-gradient(145deg, #1E293B, #0F172A);
-      border-radius: 0.75rem;
-      padding: 2rem;
-      width: 90%;
-      max-width: 400px;
-      box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
-    }
-    .modal-buttons {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 1.5rem;
-    }
-    .modal-btn {
-      padding: 0.75rem 1.5rem;
-      border-radius: 0.5rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .modal-confirm {
-      background: linear-gradient(90deg, #EF4444, #DC2626);
+     .progress-step.completed .step-circle {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
       color: white;
     }
-    .modal-confirm:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+     .progress-line {
+        transition: width 0.4s ease;
     }
-    .modal-cancel {
-      background: #1E293B;
-      color: #F1F5F9;
-      border: 1px solid #3B82F6;
+    .payment-tab {
+        transition: all 0.2s ease-in-out;
     }
-    .modal-cancel:hover {
-      background: #3B82F6;
-      color: #0F172A;
-    }
-    
-    /* Footer Styles */
-    .footer-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 2rem;
-    }
-    .footer-heading {
-      position: relative;
-      padding-bottom: 0.75rem;
-      margin-bottom: 1rem;
-    }
-    .footer-heading::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 50px;
-      height: 3px;
-      background: linear-gradient(to right, #3B82F6, #D946EF);
-      border-radius: 3px;
-    }
-    .footer-link {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      transition: all 0.2s ease;
-    }
-    .footer-link:hover {
-      color: #3B82F6;
-      transform: translateX(5px);
-    }
-    
-    @media (max-width: 640px) {
-      .submit-btn {
-        width: 100%;
-        padding: 0.875rem;
-        font-size: 0.9375rem;
-      }
-      .nav-link, #mobile-menu a {
-        font-size: 1rem;
-      }
-      .cart-icon-container {
-        position: relative;
-        top: auto;
-        right: auto;
-      }
-      .modal-content {
-        padding: 1.5rem;
-      }
-      .modal-buttons {
-        flex-direction: column;
-        gap: 0.75rem;
-      }
-      .modal-btn {
-        width: 100%;
-      }
+    .payment-tab.active {
+        background-color: var(--primary-color);
+        color: white;
     }
   </style>
 </head>
-<body>
-  <a href="cart.html" class="cart-icon-container gradient-glow hidden md:flex">
-    <svg class="w-6 h-6 text-[#3B82F6]" fill="currentColor" viewBox="0 0 20 20"><path d="M0 1h3l2 11h10l2-9H5l-.5-2H0v1zm6 15a2 2 0 100 4 2 2 0 000-4zm9 0a2 2 0 100 4 2 2 0 000-4z"/></svg>
-    <span class="text-[#F1F5F9]">Cart</span>
-    <span id="cart-count-desktop" class="cart-count">0</span>
-  </a>
+<body class="min-h-screen">
 
-  <div class="fixed top-0 left-0 h-full w-64 sidebar gradient-glow z-20 hidden md:block">
-    <div class="p-4 sm:p-6">
-      <h1 class="text-2xl font-bold text-white leading-relaxed">Gaming Odyssey</h1>
-      <nav class="mt-8 space-y-3">
-        <a href="index.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <i class="fas fa-home w-5 h-5"></i>
-          <span>Home</span>
-        </a>
-        <a href="store.html" class="flex items-center space-x-2 text-[#3B82F6] font-semibold nav-link">
-          <i class="fas fa-store w-5 h-5"></i>
-          <span>Store</span>
-        </a>
-        <a href="tournaments.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <i class="fas fa-trophy w-5 h-5"></i>
-          <span>Tournaments</span>
-        </a>
-        <a href="trackorder.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <i class="fas fa-truck w-5 h-5"></i>
-          <span>Track Order</span>
-        </a>
-        <a href="contactus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <i class="fas fa-envelope w-5 h-5"></i>
-          <span>Contact Us</span>
-        </a>
-        <a href="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <i class="fas fa-info-circle w-5 h-5"></i>
-          <span>About Us</span>
-        </a>
-      </nav>
-    </div>
-  </div>
+  <!-- Main Content -->
+  <div class="container mx-auto px-4 py-8 md:py-16">
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center mb-12">
+        <h1 class="text-4xl md:text-5xl font-bold text-white">Checkout</h1>
+      </div>
 
-  <div class="md:hidden fixed top-0 left-0 w-full bg-[#1E293B] z-30 p-4 flex justify-between items-center gradient-glow">
-    <a href="cart.html" class="cart-icon-container flex md:hidden">
-      <svg class="w-6 h-6 text-[#3B82F6]" fill="currentColor" viewBox="0 0 20 20"><path d="M0 1h3l2 11h10l2-9H5l-.5-2H0v1zm6 15a2 2 0 100 4 2 2 0 000-4zm9 0a2 2 0 100 4 2 2 0 000-4z"/></svg>
-      <span class="text-[#F1F5F9]">Cart</span>
-      <span id="cart-count-mobile" class="cart-count">0</span>
-    </a>
-    <span class="text-[#F1F5F9] font-semibold text-xl">Gaming Odyssey</span>
-    <button id="hamburger" class="text-[#3B82F6]">
-      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-    </button>
-  </div>
-  <div id="mobile-menu" class="hidden md:hidden fixed top-0 left-0 w-full h-full bg-[#1E293B] z-20 p-4 mobile-menu">
-    <button id="close-menu" class="absolute top-4 right-4 text-[#3B82F6] gradient-glow rounded-full p-2">
-      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-    </button>
-    <nav class="space-y-3 mt-12">
-      <a href="index.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <i class="fas fa-home w-5 h-5"></i>
-        <span>Home</span>
-      </a>
-      <a href="store.html" class="flex items-center space-x-2 text-[#3B82F6] font-semibold nav-link">
-        <i class="fas fa-store w-5 h-5"></i>
-        <span>Store</span>
-      </a>
-      <a href="tournaments.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <i class="fas fa-trophy w-5 h-5"></i>
-        <span>Tournaments</span>
-      </a>
-      <a href="trackorder.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <i class="fas fa-truck w-5 h-5"></i>
-        <span>Track Order</span>
-      </a>
-      <a href="contactus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <i class="fas fa-envelope w-5 h-5"></i>
-        <span>Contact Us</span>
-      </a>
-      <a href="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <i class="fas fa-info-circle w-5 h-5"></i>
-        <span>About Us</span>
-      </a>
-    </nav>
-  </div>
+      <!-- Progress Bar -->
+      <div class="w-full max-w-2xl mx-auto mb-12">
+        <div class="flex items-center">
+            <div class="progress-step completed flex-1 flex flex-col items-center">
+                <div class="step-circle w-10 h-10 rounded-full border-2 flex items-center justify-center font-bold text-lg"><i class="fas fa-check"></i></div>
+                <p class="text-sm font-semibold mt-2">Shipping</p>
+            </div>
+            <div class="flex-1">
+                 <div class="w-full h-1 bg-primary-color"></div>
+            </div>
+            <div class="progress-step active flex-1 flex flex-col items-center">
+                <div class="step-circle w-10 h-10 rounded-full border-2 flex items-center justify-center font-bold text-lg">2</div>
+                <p class="text-sm font-semibold mt-2">Payment</p>
+            </div>
+        </div>
+      </div>
 
-  <div class="md:ml-64">
-    <section class="content-bg py-16 px-6">
-      <div class="max-w-4xl mx-auto bg-[#1E293B] p-8 rounded-lg gradient-glow fade-in">
-        <h1 class="text-4xl font-bold text-white text-center mb-8">Secure Payment 🔒</h1>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
         
-        <div class="text-center mb-8">
-          <button id="cancel-payment-btn" class="bg-[#1E293B] text-[#F1F5F9] border border-[#EF4444] px-6 py-2 rounded-lg hover:bg-[#EF4444] hover:text-white transition-all duration-300">
-            <i class="fas fa-times-circle mr-2"></i>Cancel Payment
-          </button>
-        </div>
-
-        <div id="email-section" class="mb-8 payment-card gradient-glow">
-          <h2 class="text-2xl font-bold text-white mb-4">Email Confirmation</h2>
-          <p class="text-[#CBD5E1] mb-4">Please enter your email address to receive order confirmation and tracking details.</p>
-          <div class="space-y-4">
-            <div>
-              <label for="customer-email" class="block text-[#CBD5E1] mb-2">Email Address</label>
-              <input type="email" id="customer-email" name="customer-email" placeholder="your.email@example.com" required class="w-full">
+        <!-- Payment Options -->
+        <div>
+          <h2 class="text-2xl font-bold mb-6">Payment Method</h2>
+          <div class="bg-card-background rounded-lg p-2 flex space-x-2 mb-6">
+              <button class="payment-tab active flex-1 text-center py-2 rounded-md" data-payment="card"><i class="fas fa-credit-card mr-2"></i>Card</button>
+              <button class="payment-tab flex-1 text-center py-2 rounded-md" data-payment="paypal"><i class="fab fa-paypal mr-2"></i>PayPal</button>
+              <button class="payment-tab flex-1 text-center py-2 rounded-md" data-payment="upi"><i class="fas fa-qrcode mr-2"></i>UPI</button>
+              <button class="payment-tab flex-1 text-center py-2 rounded-md" data-payment="cod"><i class="fas fa-money-bill-wave mr-2"></i>COD</button>
+          </div>
+          
+          <div id="payment-forms-container">
+            <!-- Card Form -->
+            <div id="card-form-container" class="payment-form active">
+                 <form id="card-payment-form" class="space-y-4">
+                    <div>
+                        <label for="card-number" class="block text-sm font-medium text-slate-300 mb-1">Card Number</label>
+                        <input type="text" id="card-number" placeholder="1234 5678 9012 3456" required class="input-field w-full p-3 rounded-md">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                        <label for="expiry-date" class="block text-sm font-medium text-slate-300 mb-1">Expiry Date</label>
+                        <input type="text" id="expiry-date" placeholder="MM/YY" required class="input-field w-full p-3 rounded-md">
+                        </div>
+                        <div>
+                        <label for="cvv" class="block text-sm font-medium text-slate-300 mb-1">CVV</label>
+                        <input type="text" id="cvv" placeholder="123" required class="input-field w-full p-3 rounded-md">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="card-name" class="block text-sm font-medium text-slate-300 mb-1">Name on Card</label>
+                        <input type="text" id="card-name" placeholder="John Doe" required class="input-field w-full p-3 rounded-md">
+                    </div>
+                    <button type="submit" class="submit-btn w-full py-3 mt-4">Pay Now</button>
+                </form>
             </div>
+            <!-- PayPal -->
+            <div id="paypal-form-container" class="payment-form hidden">
+                <div id="paypal-button-container" class="w-full"></div>
+            </div>
+            <!-- UPI -->
+            <div id="upi-form-container" class="payment-form hidden">
+                <div id="upi-qr-code" class="mx-auto bg-white p-2 rounded-lg w-48 h-48 mb-4"></div>
+                 <p class="text-center text-slate-400">Scan to pay with any UPI app</p>
+            </div>
+            <!-- COD -->
+             <div id="cod-form-container" class="payment-form hidden">
+                <form id="cod-payment-form">
+                    <p class="text-center text-slate-300 mb-4">You will pay on delivery. No upfront payment required.</p>
+                    <button type="submit" class="submit-btn w-full py-3">Confirm Order</button>
+                </form>
+            </div>
+
           </div>
         </div>
 
-        <div class="mb-8">
-          <p class="text-lg text-[#F1F5F9] mb-2">Order ID: <span id="orderId" class="text-[#3B82F6]"></span></p>
-          <p class="text-lg text-[#F1F5F9] mb-2">Total: <span id="totalAmount" class="text-[#3B82F6]"></span></p>
-          <p class="text-lg text-[#F1F5F9] mb-4">Currency: USD ($)</p>
-        </div>
-
-        <div class="mb-8">
-          <h2 class="text-2xl font-bold text-white mb-4">Order Summary</h2>
-          <div id="order-summary" class="space-y-4">
+        <!-- Order Summary -->
+        <div class="bg-card-background rounded-lg p-6 h-fit sticky top-8">
+            <h2 class="text-2xl font-bold border-b border-card-border pb-4 mb-4">Your Order</h2>
+            <div id="order-summary-items" class="space-y-4 max-h-60 overflow-y-auto pr-2">
+                <!-- Order items will be dynamically inserted here -->
+            </div>
+             <div class="space-y-3 text-slate-300 border-t border-card-border pt-4 mt-4">
+                <div class="flex justify-between">
+                    <span>Subtotal</span>
+                    <span id="summary-subtotal">$0.00</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Shipping</span>
+                    <span>FREE</span>
+                </div>
+                <div class="flex justify-between text-white font-bold text-lg border-t border-card-border pt-4 mt-4">
+                    <span>Total</span>
+                    <span id="summary-total">$0.00</span>
+                </div>
+            </div>
+             <div class="border-t border-card-border pt-4 mt-4">
+                <h3 class="font-semibold mb-2">Shipping To:</h3>
+                <div id="shipping-details" class="text-sm text-slate-400 leading-relaxed"></div>
+                <a href="address.html" class="text-sm text-primary-color hover:underline mt-2 inline-block">Change address</a>
             </div>
         </div>
-
-        <div class="mb-8">
-          <h2 class="text-2xl font-bold text-white mb-4">Shipping Details</h2>
-          <div id="shipping-details" class="text-[#F1F5F9] space-y-2">
-            </div>
-        </div>
-
-        <div id="payment-forms" class="space-y-8">
-            </div>
-      </div>
-    </section>
-
-    <footer class="bg-[#1E293B] py-12 px-4 sm:px-6 md:px-8">
-      <div class="max-w-6xl mx-auto footer-grid">
-        <div>
-          <h3 class="text-xl font-bold text-white mb-4 footer-heading">Gaming Odyssey</h3>
-          <p class="text-[#CBD5E1] mb-4 leading-relaxed">Your ultimate destination for premium gaming gear and accessories. Level up your gameplay with our curated collection.</p>
-          <div class="flex space-x-4">
-            <a href="https://www.instagram.com/noticedveil" target="_blank" class="text-[#CBD5E1] hover:text-[#3B82F6] transition gradient-glow p-3 rounded-full">
-              <i class="fab fa-instagram text-lg"></i>
-            </a>
-            <a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="text-[#CBD5E1] hover:text-[#3B82F6] transition gradient-glow p-3 rounded-full">
-              <i class="fab fa-youtube text-lg"></i>
-            </a>
-            <a href="https://www.facebook.com" target="_blank" class="text-[#CBD5E1] hover:text-[#3B82F6] transition gradient-glow p-3 rounded-full">
-              <i class="fab fa-facebook-f text-lg"></i>
-            </a>
-            <a href="https://www.twitter.com" target="_blank" class="text-[#CBD5E1] hover:text-[#3B82F6] transition gradient-glow p-3 rounded-full">
-              <i class="fab fa-twitter text-lg"></i>
-            </a>
-          </div>
-        </div>
-        <div>
-          <h3 class="text-xl font-bold text-white mb-4 footer-heading">Quick Links</h3>
-          <ul class="space-y-3">
-            <li><a href="index.html" class="footer-link text-[#CBD5E1] text-sm"><i class="fas fa-chevron-right text-xs"></i> Home</a></li>
-            <li><a href="store.html" class="footer-link text-[#CBD5E1] text-sm"><i class="fas fa-chevron-right text-xs"></i> Store</a></li>
-            <li><a href="tournaments.html" class="footer-link text-[#CBD5E1] text-sm"><i class="fas fa-chevron-right text-xs"></i> Tournaments</a></li>
-            <li><a href="trackorder.html" class="footer-link text-[#CBD5E1] text-sm"><i class="fas fa-chevron-right text-xs"></i> Track Order</a></li>
-            <li><a href="contactus.html" class="footer-link text-[#CBD5E1] text-sm"><i class="fas fa-chevron-right text-xs"></i> Contact Us</a></li>
-            <li><a href="aboutus.html" class="footer-link text-[#CBD5E1] text-sm"><i class="fas fa-chevron-right text-xs"></i> About Us</a></li>
-          </ul>
-        </div>
-        <div>
-          <h3 class="text-xl font-bold text-white mb-4 footer-heading">Contact Info</h3>
-          <div class="space-y-3">
-            <p class="flex items-start text-[#CBD5E1] text-sm"><i class="fas fa-envelope mt-1 mr-3 text-[#3B82F6]"></i> support@gamingodyssey.in</p>
-            <p class="flex items-start text-[#CBD5E1] text-sm"><i class="fas fa-phone-alt mt-1 mr-3 text-[#3B82F6]"></i> 6290994382</p>
-            <p class="flex items-start text-[#CBD5E1] text-sm"><i class="fas fa-map-marker-alt mt-1 mr-3 text-[#3B82F6]"></i> Kolkata, West Bengal, India</p>
-            <p class="flex items-start text-[#CBD5E1] text-sm"><i class="fas fa-clock mt-1 mr-3 text-[#3B82F6]"></i> Mon-Sat: 10AM - 7PM</p>
-          </div>
-        </div>
-      </div>
-      <div class="max-w-6xl mx-auto border-t border-[#334155] mt-8 pt-8 text-center">
-        <p class="text-[#CBD5E1] text-sm">© 2025 Gaming Odyssey. All rights reserved. Designed with <i class="fas fa-heart text-[#EF4444]"></i> for gamers</p>
-      </div>
-    </footer>
-  </div>
-
-  <div id="cancel-modal" class="modal">
-    <div class="modal-content">
-      <h3 class="text-xl font-bold text-white mb-2">Cancel Payment</h3>
-      <p class="text-[#CBD5E1]">Are you sure you want to cancel this payment? Your order will be lost.</p>
-      <div class="modal-buttons">
-        <button id="confirm-cancel" class="modal-btn modal-confirm">Confirm</button>
-        <button id="back-to-payment" class="modal-btn modal-cancel">Back to Payment</button>
       </div>
     </div>
   </div>
 
   <script>
-    // Check if in preview mode (e.g., ?preview=true in URL)
-    const urlParams = new URLSearchParams(window.location.search);
-    const isPreviewMode = urlParams.get('preview') === 'true';
+    document.addEventListener('DOMContentLoaded', () => {
+        const orderSummaryItems = document.getElementById('order-summary-items');
+        const summarySubtotal = document.getElementById('summary-subtotal');
+        const summaryTotal = document.getElementById('summary-total');
+        const shippingDetails = document.getElementById('shipping-details');
 
-    // Mock data for preview if localStorage is unavailable
-    const mockOrder = {
-      orderId: 'ORD-' + Math.floor(10000 + Math.random() * 90000),
-      total: 99.99
-    };
-    const mockCart = [
-      { name: 'Gaming Mouse', price: 49.99, quantity: 1 },
-      { name: 'Keyboard', price: 50.00, quantity: 1 }
-    ];
-    const mockShippingAddress = {
-      name: 'John Doe',
-      addressLine1: '123 Main St',
-      addressLine2: '',
-      city: 'New York',
-      state: 'NY',
-      zip: '10001',
-      country: 'United States',
-      phone: '555-123-4567'
-    };
+        const finalOrder = JSON.parse(localStorage.getItem('finalOrder'));
 
-    // Load Order, Cart, and Shipping Details
-    let order, cart, shippingAddress;
-    try {
-      order = JSON.parse(localStorage.getItem('order')) || (isPreviewMode ? mockOrder : {});
-      cart = JSON.parse(localStorage.getItem('cart')) || (isPreviewMode ? mockCart : []);
-      shippingAddress = JSON.parse(localStorage.getItem('shippingAddress')) || (isPreviewMode ? mockShippingAddress : {});
-    } catch (e) {
-      console.error('Error accessing localStorage:', e);
-      order = isPreviewMode ? mockOrder : {};
-      cart = isPreviewMode ? mockCart : [];
-      shippingAddress = isPreviewMode ? mockShippingAddress : {};
-    }
-
-    const orderIdElement = document.getElementById('orderId');
-    const totalAmountElement = document.getElementById('totalAmount');
-    const orderSummaryElement = document.getElementById('order-summary');
-    const shippingDetailsElement = document.getElementById('shipping-details');
-
-    // Display Order Details
-    orderIdElement.textContent = order.orderId || 'Not Available';
-    totalAmountElement.textContent = order.total ? `$${order.total.toFixed(2)}` : '$0.00';
-    
-    // Display Order Summary
-    if (cart.length > 0) {
-      cart.forEach(item => {
-        const itemElement = document.createElement('div');
-        itemElement.className = 'flex justify-between items-center';
-        itemElement.innerHTML = `
-          <div>
-            <p class="text-[#F1F5F9]">${item.name || 'Unknown Item'}</p>
-            <p class="text-[#F1F5F9] text-sm">Quantity: ${item.quantity || 1}</p>
-          </div>
-          <p class="text-[#3B82F6]">$${((item.price || 0) * (item.quantity || 1)).toFixed(2)}</p>
-        `;
-        orderSummaryElement.appendChild(itemElement);
-      });
-    } else {
-      orderSummaryElement.innerHTML = '<p class="text-[#F1F5F9] text-center">Order Summary is empty.</p>';
-    }
-
-    // Display Shipping Details
-    if (shippingAddress.name) {
-      shippingDetailsElement.innerHTML = `
-        <p><strong>Name:</strong> ${shippingAddress.name}</p>
-        <p><strong>Address:</strong> ${shippingAddress.addressLine1}${shippingAddress.addressLine2 ? ', ' + shippingAddress.addressLine2 : ''}</p>
-        <p><strong>City:</strong> ${shippingAddress.city || ''}</p>
-        <p><strong>State:</strong> ${shippingAddress.state || ''}</p>
-        <p><strong>ZIP Code:</strong> ${shippingAddress.zip || ''}</p>
-        <p><strong>Country:</strong> ${shippingAddress.country || ''}</p>
-        <p><strong>Phone:</strong> ${shippingAddress.phone || ''}</p>
-      `;
-    } else {
-      shippingDetailsElement.innerHTML = '<p class="text-[#F1F5F9] text-center">No shipping address provided.</p>';
-    }
-    
-    // RENDER PAYMENT FORMS
-    function renderPaymentForms() {
-        const paymentFormsContainer = document.getElementById('payment-forms');
-        paymentFormsContainer.innerHTML = `
-            <div id="upi-form" class="payment-card gradient-glow">
-                <h3 class="text-lg font-bold text-white mb-2">UPI Payment</h3>
-                <p class="text-[#F1F5F9] text-sm mb-4">Pay via Google Pay, PhonePe, Paytm, etc.</p>
-                <form id="upi-payment-form" class="space-y-4">
-                    <div>
-                        <label for="upi-id" class="block text-[#F1F5F9] mb-2">Enter UPI ID (e.g., 1234567890@upi)</label>
-                        <input type="text" id="upi-id" placeholder="yourname@upi" required class="w-full">
-                    </div>
-                    <div class="text-center">
-                        <p class="text-[#F1F5F9] mb-2">Or scan the QR code to pay:</p>
-                        <div id="upi-qr-code" class="inline-block bg-white p-2 rounded-lg mb-2"></div>
-                        <p class="text-[#F1F5F9] text-sm">Amount: <span id="upi-amount">$${order.total ? order.total.toFixed(2) : '0.00'}</span></p>
-                    </div>
-                    <button type="submit" class="submit-btn w-full">Pay via UPI</button>
-                </form>
-            </div>
-
-            <div id="card-form" class="payment-card gradient-glow">
-                <h3 class="text-lg font-bold text-white mb-2">Credit/Debit Card</h3>
-                <p class="text-[#F1F5F9] text-sm mb-4">Secure payment with your card</p>
-                <form id="card-payment-form" class="space-y-4">
-                    <div>
-                        <label for="card-number" class="block text-[#F1F5F9] mb-2">Card Number</label>
-                        <input type="text" id="card-number" placeholder="1234 5678 9012 3456" required class="w-full">
-                    </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                        <label for="expiry-date" class="block text-[#F1F5F9] mb-2">Expiry Date</label>
-                        <input type="text" id="expiry-date" placeholder="MM/YY" required class="w-full">
-                        </div>
-                        <div>
-                        <label for="cvv" class="block text-[#F1F5F9] mb-2">CVV</label>
-                        <input type="text" id="cvv" placeholder="123" required class="w-full">
-                        </div>
-                    </div>
-                    <div>
-                        <label for="card-name" class="block text-[#F1F5F9] mb-2">Name on Card</label>
-                        <input type="text" id="card-name" placeholder="John Doe" required class="w-full">
-                    </div>
-                    <button type="submit" class="submit-btn w-full">Pay $${order.total ? order.total.toFixed(2) : '0.00'}</button>
-                </form>
-            </div>
-
-            <div id="paypal-form" class="payment-card gradient-glow">
-                <h3 class="text-lg font-bold text-white mb-2">PayPal</h3>
-                <p class="text-[#F1F5F9] text-sm mb-4">Secure payment with PayPal</p>
-                <div id="paypal-button-container"></div>
-            </div>
-
-            <div id="cod-form" class="payment-card gradient-glow">
-                <h3 class="text-lg font-bold text-white mb-2">Cash on Delivery</h3>
-                <p class="text-[#F1F5F9] text-sm mb-4">Pay when you receive</p>
-                <form id="cod-payment-form" class="space-y-4">
-                    <p class="text-[#F1F5F9]">You will pay $${order.total ? order.total.toFixed(2) : '0.00'} upon delivery.</p>
-                    <button type="submit" class="submit-btn w-full">Confirm Order</button>
-                </form>
-            </div>
-        `;
-    }
-
-    renderPaymentForms();
-
-    // Generate Dynamic UPI QR Code
-    function generateUPIQRCode(upiId = '') {
-      const upiQRCodeElement = document.getElementById('upi-qr-code');
-      const defaultUpiId = '43629445686@sbi'; // Your UPI ID
-      const amount = order.total ? order.total.toFixed(2) : '0.00';
-      const transactionNote = `Order Payment ${order.orderId || 'Unknown'}`;
-      const upiLink = `upi://pay?pa=${encodeURIComponent(upiId || defaultUpiId)}&pn=${encodeURIComponent('Gaming Odyssey')}&am=${amount}&cu=USD&tn=${encodeURIComponent(transactionNote)}`;
-
-      upiQRCodeElement.innerHTML = '';
-      if (typeof QRCode === 'undefined') return;
-
-      QRCode.toCanvas(upiLink, { width: 200, margin: 1, color: { dark: '#000000', light: '#FFFFFF' } }, (error, canvas) => {
-        if (error) console.error(error);
-        else upiQRCodeElement.appendChild(canvas);
-      });
-    }
-
-    if (!isPreviewMode) {
-      generateUPIQRCode();
-    }
-    
-    // Add event listeners after rendering
-    document.getElementById('upi-id').addEventListener('input', (e) => {
-        if (e.target.value.includes('@')) generateUPIQRCode(e.target.value);
-    });
-
-    // UPI Payment Form Submission
-    document.getElementById('upi-payment-form').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const upiId = document.getElementById('upi-id').value;
-      if (!upiId || !upiId.includes('@')) {
-        alert('Please enter a valid UPI ID (e.g., yourname@upi)');
-        return;
-      }
-      alert(`Processing UPI payment to ${upiId}. You will be redirected upon confirmation.`);
-      storeOrder('UPI', { upiId });
-    });
-
-    // Card Payment Form Submission
-    document.getElementById('card-payment-form').addEventListener('submit', (e) => {
-      e.preventDefault();
-      alert('Processing card payment...');
-      storeOrder('Card', { last4: document.getElementById('card-number').value.slice(-4) });
-    });
-
-    // Cash on Delivery Form Submission
-    document.getElementById('cod-payment-form').addEventListener('submit', (e) => {
-      e.preventDefault();
-      storeOrder('Cash on Delivery');
-    });
-
-    // PayPal Integration
-    const paypalContainer = document.getElementById('paypal-button-container');
-    if (order.total && !isPreviewMode && typeof paypal !== 'undefined' && paypal.Buttons) {
-        paypal.Buttons({
-          createOrder: (data, actions) => actions.order.create({
-            purchase_units: [{ amount: { value: order.total.toFixed(2), currency_code: 'USD' } }]
-          }),
-          onApprove: (data, actions) => actions.order.capture().then(details => {
-            storeOrder('PayPal', { transactionId: details.id, payerEmail: details.payer.email_address });
-          }),
-          onError: (err) => console.error('PayPal Error:', err)
-        }).render('#paypal-button-container');
-    } else {
-        paypalContainer.innerHTML = '<p class="text-[#F1F5F9] text-center">PayPal Button Placeholder</p>';
-    }
-
-    // NEW FUNCTION to send two separate, customized emails.
-    function sendConfirmationEmails(finalOrder, customerEmail) {
-      const { orderId, total, paymentMethod, timestamp, items, shippingAddress } = finalOrder;
-
-      const itemsSummary = items.map(item => `${item.name} (Qty: ${item.quantity || 1}) - $${((item.price || 0) * (item.quantity || 1)).toFixed(2)}`).join('\n');
-      const shippingSummary = `${shippingAddress.name}\n${shippingAddress.addressLine1}\n${shippingAddress.city}, ${shippingAddress.state} ${shippingAddress.zip}\n${shippingAddress.country}`;
-
-      // Helper to create form fields
-      const createHiddenField = (name, value) => {
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = name;
-        input.value = value;
-        return input;
-      };
-
-      // --- 1. CUSTOMER FORM (Submitted silently) ---
-      const customerForm = document.createElement('form');
-      customerForm.action = `https://formsubmit.co/${customerEmail}`;
-      customerForm.method = 'POST';
-      customerForm.style.display = 'none';
-
-      customerForm.appendChild(createHiddenField('_subject', `Thank you for your order! - Gaming Odyssey #${orderId}`));
-      customerForm.appendChild(createHiddenField('Greeting', `Hi ${shippingAddress.name}, thank you for your purchase!`));
-      customerForm.appendChild(createHiddenField('---', 'Here are your order details:'));
-      customerForm.appendChild(createHiddenField('Order_ID', orderId));
-      customerForm.appendChild(createHiddenField('Order_Date', new Date(timestamp).toLocaleString()));
-      customerForm.appendChild(createHiddenField('Total_Amount', `$${total.toFixed(2)}`));
-      customerForm.appendChild(createHiddenField('Items_Ordered', itemsSummary));
-      customerForm.appendChild(createHiddenField('Shipping_To', shippingSummary));
-      customerForm.appendChild(createHiddenField('--- ', 'We will notify you again once your order has shipped.'));
-
-      document.body.appendChild(customerForm);
-      customerForm.submit();
-      setTimeout(() => document.body.removeChild(customerForm), 2000); // Clean up the form after a delay
-
-      // --- 2. SELLER FORM (Handles the redirect) ---
-      const sellerForm = document.createElement('form');
-      sellerForm.action = 'https://formsubmit.co/support@gamingodyssey.in';
-      sellerForm.method = 'POST';
-      sellerForm.style.display = 'none';
-      
-      const thankYouUrl = `${window.location.origin}${window.location.pathname.replace('paymentgateway.html', '')}thankyou.html?orderId=${orderId}&amount=${total}&method=${paymentMethod}`;
-      sellerForm.appendChild(createHiddenField('_next', thankYouUrl));
-      sellerForm.appendChild(createHiddenField('_subject', `New Order Received - Gaming Odyssey #${orderId}`));
-      sellerForm.appendChild(createHiddenField('Customer_Email', customerEmail));
-      sellerForm.appendChild(createHiddenField('Order_ID', orderId));
-      sellerForm.appendChild(createHiddenField('Total_Amount', `$${total.toFixed(2)}`));
-      sellerForm.appendChild(createHiddenField('Payment_Method', paymentMethod));
-      sellerForm.appendChild(createHiddenField('Items', itemsSummary));
-      sellerForm.appendChild(createHiddenField('Shipping_Address', shippingSummary));
-      
-      document.body.appendChild(sellerForm);
-      sellerForm.submit(); // This submission will trigger the redirect
-    }
-
-    // MODIFIED storeOrder function to call the new email function
-    function storeOrder(method, details = {}) {
-      if (isPreviewMode) {
-        alert('Order confirmation disabled in preview mode.');
-        return;
-      }
-
-      const customerEmail = document.getElementById('customer-email').value;
-      if (!customerEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail)) {
-        alert('Please enter a valid email address to proceed.');
-        return;
-      }
-      
-      const finalOrder = {
-        ...order,
-        customerEmail: customerEmail,
-        paymentMethod: method,
-        paymentDetails: details,
-        shippingAddress: shippingAddress,
-        items: cart,
-        status: (method === 'PayPal' || method === 'Card') ? 'completed' : 'pending',
-        timestamp: new Date().toISOString()
-      };
-
-      try {
-        const allOrders = JSON.parse(localStorage.getItem('orders')) || [];
-        allOrders.push(finalOrder);
-        localStorage.setItem('orders', JSON.stringify(allOrders));
-        localStorage.removeItem('order');
-        localStorage.removeItem('shippingAddress');
-        localStorage.removeItem('cart');
-      } catch (e) {
-        console.error('Error saving to localStorage:', e);
-      }
-
-      // Call the new function to send both emails
-      sendConfirmationEmails(finalOrder, customerEmail);
-    }
-
-    // Cancel Payment Functionality
-    const cancelPaymentBtn = document.getElementById('cancel-payment-btn');
-    const cancelModal = document.getElementById('cancel-modal');
-    const confirmCancelBtn = document.getElementById('confirm-cancel');
-    const backToPaymentBtn = document.getElementById('back-to-payment');
-
-    cancelPaymentBtn.addEventListener('click', () => {
-      cancelModal.style.display = 'flex';
-    });
-
-    backToPaymentBtn.addEventListener('click', () => {
-      cancelModal.style.display = 'none';
-    });
-
-    confirmCancelBtn.addEventListener('click', () => {
-      try {
-        localStorage.removeItem('order');
-        localStorage.removeItem('shippingAddress');
-        localStorage.removeItem('cart');
-      } catch (e) {
-        console.error('Error clearing localStorage:', e);
-      }
-      window.location.href = 'store.html';
-    });
-
-    window.addEventListener('click', (e) => {
-      if (e.target === cancelModal) {
-        cancelModal.style.display = 'none';
-      }
-    });
-
-    // Hamburger Menu Toggle
-    const hamburger = document.getElementById('hamburger');
-    const mobileMenu = document.getElementById('mobile-menu');
-    const closeMenu = document.getElementById('close-menu');
-    hamburger.addEventListener('click', () => {
-      mobileMenu.classList.remove('hidden');
-      mobileMenu.classList.add('active');
-    });
-    closeMenu.addEventListener('click', () => {
-      mobileMenu.classList.add('hidden');
-      mobileMenu.classList.remove('active');
-    });
-
-    // Update cart count
-    function updateCartCount() {
-      const count = cart.reduce((total, item) => total + (item.quantity || 1), 0);
-      document.getElementById('cart-count-desktop').textContent = count;
-      document.getElementById('cart-count-mobile').textContent = count;
-    }
-    updateCartCount();
-
-    // Fade-in Animation on Scroll
-    const fadeIns = document.querySelectorAll('.fade-in');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
+        if (!finalOrder) {
+            document.body.innerHTML = `<div class="h-screen w-full flex flex-col items-center justify-center">
+                <h1 class="text-2xl font-bold">No order found!</h1>
+                <p class="text-slate-400">Please go back to your cart to start a new checkout.</p>
+                <a href="cart.html" class="submit-btn mt-4 py-2 px-6">Back to Cart</a>
+            </div>`;
+            return;
         }
-      });
-    }, { threshold: 0.1 });
-    fadeIns.forEach(element => observer.observe(element));
+
+        function renderOrderSummary() {
+            orderSummaryItems.innerHTML = '';
+            let subtotal = finalOrder.total;
+            
+            finalOrder.items.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'flex items-center gap-4';
+                itemElement.innerHTML = `
+                    <div class="relative">
+                        <img src="${item.image || 'https://placehold.co/64x64/1E293B/E2E8F0?text=Image'}" alt="${item.name}" class="w-16 h-16 object-contain rounded-md bg-slate-700">
+                        <span class="absolute -top-2 -right-2 bg-primary-color text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">${item.quantity}</span>
+                    </div>
+                    <div class="flex-grow">
+                        <p class="font-semibold">${item.name}</p>
+                    </div>
+                    <p class="font-bold">$${(item.price * item.quantity).toFixed(2)}</p>
+                `;
+                orderSummaryItems.appendChild(itemElement);
+            });
+            
+            summarySubtotal.textContent = `$${subtotal.toFixed(2)}`;
+            summaryTotal.textContent = `$${subtotal.toFixed(2)}`;
+        }
+
+        function renderShippingDetails() {
+            const addr = finalOrder.shippingAddress;
+            shippingDetails.innerHTML = `
+                <p class="font-bold">${addr.name}</p>
+                <p>${addr.addressLine1}</p>
+                <p>${addr.city}, ${addr.state} ${addr.zip}</p>
+                <p>${addr.country}</p>
+                <p>${addr.phone}</p>
+            `;
+        }
+        
+        // Payment Tabs Logic
+        const paymentTabs = document.querySelectorAll('.payment-tab');
+        const paymentForms = document.querySelectorAll('.payment-form');
+
+        paymentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                paymentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                const paymentMethod = tab.dataset.payment;
+                paymentForms.forEach(form => {
+                    form.style.display = form.id === `${paymentMethod}-form-container` ? 'block' : 'none';
+                });
+            });
+        });
+
+        // --- PAYMENT FORM SUBMISSIONS ---
+        function handleOrderCompletion(paymentMethod) {
+            finalOrder.paymentMethod = paymentMethod;
+            finalOrder.orderId = 'ORD-' + Math.floor(10000 + Math.random() * 90000);
+            
+            let allOrders = JSON.parse(localStorage.getItem('orders')) || [];
+            allOrders.push(finalOrder);
+            localStorage.setItem('orders', JSON.stringify(allOrders));
+
+            localStorage.setItem('lastOrder', JSON.stringify(finalOrder));
+
+            const { orderId, total, items, shippingAddress } = finalOrder;
+            const customerEmail = "customer@example.com"; // Placeholder
+
+            const itemsSummary = items.map(item => `${item.name} (Qty: ${item.quantity})`).join(', ');
+            const shippingSummary = `${shippingAddress.name}, ${shippingAddress.addressLine1}, ${shippingAddress.city}`;
+            
+            const thankYouUrl = `${window.location.href.replace('paymentgateway.html', 'thankyou.html')}?orderId=${orderId}`;
+
+            const sellerForm = document.createElement('form');
+            sellerForm.action = 'https://formsubmit.co/support@gamingodyssey.in';
+            sellerForm.method = 'POST';
+            sellerForm.innerHTML = `
+                <input type="hidden" name="_next" value="${thankYouUrl}">
+                <input type="hidden" name="_subject" value="New Order Received - ${orderId}">
+                <input type="hidden" name="Order_ID" value="${orderId}">
+                <input type="hidden" name="Total" value="$${total.toFixed(2)}">
+                <input type="hidden" name="Items" value="${itemsSummary}">
+                <input type="hidden" name="Shipping_To" value="${shippingSummary}">
+            `;
+            document.body.appendChild(sellerForm);
+            sellerForm.submit();
+        }
+
+        document.getElementById('card-payment-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            handleOrderCompletion('Credit Card');
+        });
+        document.getElementById('cod-payment-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            handleOrderCompletion('Cash on Delivery');
+        });
+
+        // PayPal Buttons
+        paypal.Buttons({
+          createOrder: (data, actions) => {
+            return actions.order.create({
+              purchase_units: [{
+                amount: { value: finalOrder.total.toFixed(2) }
+              }]
+            });
+          },
+          onApprove: (data, actions) => {
+            return actions.order.capture().then(details => {
+              handleOrderCompletion('PayPal');
+            });
+          }
+        }).render('#paypal-button-container');
+
+        // UPI QR Code
+        const upiQRCodeElement = document.getElementById('upi-qr-code');
+        const upiLink = `upi://pay?pa=your-upi-id@oksbi&pn=GamingOdyssey&am=${finalOrder.total.toFixed(2)}&cu=USD&tn=Order${finalOrder.orderId}`;
+        QRCode.toCanvas(upiLink, { width: 180 }, (error, canvas) => {
+            if (error) console.error(error);
+            upiQRCodeElement.appendChild(canvas);
+        });
+
+        renderOrderSummary();
+        renderShippingDetails();
+    });
   </script>
 </body>
 </html>
