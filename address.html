@@ -92,6 +92,10 @@
       transition: transform 0.2s ease;
       touch-action: manipulation;
       font-size: 1rem;
+      border: none;
+      cursor: pointer;
+      text-align: center;
+      display: inline-block;
     }
     .submit-btn:hover {
       transform: translateY(-2px);
@@ -108,7 +112,7 @@
       margin-top: 0.25rem;
       font-family: 'Poppins', sans-serif;
     }
-    .nav-link, #mobile-menu a {
+    .nav-link {
       position: relative;
       display: inline-flex;
       align-items: center;
@@ -118,7 +122,7 @@
       font-size: 1.0625rem;
       padding: 0.5rem 0;
     }
-    .nav-link::after, #mobile-menu a::after {
+    .nav-link::after {
       content: '';
       position: absolute;
       width: 0;
@@ -128,10 +132,10 @@
       background: linear-gradient(to right, #3B82F6, #D946EF);
       transition: width 0.2s ease;
     }
-    .nav-link:hover::after, #mobile-menu a:hover::after {
+    .nav-link:hover::after {
       width: 100%;
     }
-    .nav-link:hover, #mobile-menu a:hover {
+    .nav-link:hover {
       color: #3B82F6;
     }
     .mobile-menu {
@@ -165,7 +169,7 @@
       .hero-bg p {
         font-size: 1rem;
       }
-      .nav-link, #mobile-menu a {
+      .nav-link {
         font-size: 1rem;
       }
     }
@@ -180,44 +184,50 @@
   </style>
 </head>
 <body>
-  <!-- Sidebar -->
   <div class="fixed top-0 left-0 h-full w-64 sidebar gradient-glow z-20 hidden md:block">
     <div class="p-4 sm:p-6">
       <h1 class="text-xl sm:text-2xl font-bold text-white leading-relaxed">Gaming Odyssey</h1>
       <nav class="mt-8 space-y-3">
         <a href="index.html" class="flex items-center space-x-2 text-[#3B82F6] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Home</span>
         </a>
         <a href="store.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-1 1v10a2 2 0 002 2h10a2 2 0 002-2V8a1 1 0 00-1-1h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4z" clip-rule="evenodd"></path></svg>
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Store</span>
         </a>
         <a href="tournaments.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 00-1.414 1.414L12 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-1.5z"></path><path d="M4 5a1 1 0 011-1h2.586l1 1H4a1 1 0 01-1-1zM4 9a1 1 0 011-1h2.586l1 1H4a1 1 0 01-1-1zM4 13a1 1 0 011-1h2.586l1 1H4a1 1 0 01-1-1z"></path></svg>
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Tournaments</span>
         </a>
         <a href="trackorder.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5 3a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2V5a2 2 0 00-2-2H5zm1 2a1 1 0 00-1 1v1h12V6a1 1 0 00-1-1H6zM5 9h10v6H5V9z" clip-rule="evenodd"></path></svg>
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Track Order</span>
         </a>
         <a href="contactus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M2.75 7.75a3 3 0 013-3h8.5a3 3 0 013 3v4.5a3 3 0 01-3 3h-8.5a3 3 0 01-3-3v-4.5zM6 4.75a1.25 1.25 0 00-1.25 1.25v.172l5.44 3.108a.75.75 0 00.62 0l5.44-3.108V6A1.25 1.25 0 0015 4.75h-9zM4.75 12.25h9.5a1.25 1.25 0 001.25-1.25V7.818l-5.06 2.892a2.25 2.25 0 01-1.88 0L3.5 7.818V11A1.25 1.25 0 004.75 12.25z" clip-rule="evenodd"></path></svg>
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>Contact Us</span>
         </a>
         <a href="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>About Us</span>
         </a>
-        <div id="user-display" class="hidden flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link pt-4">
-          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+        <a href="signin.html" id="signin-link" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Sign In</span>
+        </a>
+        <a href="createaccount.html" id="createaccount-link" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <span>Create Account</span>
+        </a>
+        <div id="user-display" class="hidden flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
           <span>User</span>
         </div>
       </nav>
     </div>
   </div>
 
-  <!-- Mobile Hamburger Menu -->
   <div class="md:hidden fixed top-0 left-0 w-full bg-[#1E293B] z-30 p-4 flex justify-between items-center gradient-glow">
     <h1 class="text-lg font-bold text-white leading-relaxed">Gaming Odyssey</h1>
     <button id="hamburger" class="text-[#3B82F6]">
@@ -230,39 +240,45 @@
     </button>
     <nav class="space-y-3 mt-12">
       <a href="index.html" class="flex items-center space-x-2 text-[#3B82F6] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
         <span>Home</span>
       </a>
       <a href="store.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-1 1v10a2 2 0 002 2h10a2 2 0 002-2V8a1 1 0 00-1-1h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4z" clip-rule="evenodd"></path></svg>
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
         <span>Store</span>
       </a>
       <a href="tournaments.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 00-1.414 1.414L12 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-1.5z"></path><path d="M4 5a1 1 0 011-1h2.586l1 1H4a1 1 0 01-1-1zM4 9a1 1 0 011-1h2.586l1 1H4a1 1 0 01-1-1zM4 13a1 1 0 011-1h2.586l1 1H4a1 1 0 01-1-1z"></path></svg>
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
         <span>Tournaments</span>
       </a>
       <a href="trackorder.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5 3a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2V5a2 2 0 00-2-2H5zm1 2a1 1 0 00-1 1v1h12V6a1 1 0 00-1-1H6zM5 9h10v6H5V9z" clip-rule="evenodd"></path></svg>
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
         <span>Track Order</span>
       </a>
       <a href="contactus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M2.75 7.75a3 3 0 013-3h8.5a3 3 0 013 3v4.5a3 3 0 01-3 3h-8.5a3 3 0 01-3-3v-4.5zM6 4.75a1.25 1.25 0 00-1.25 1.25v.172l5.44 3.108a.75.75 0 00.62 0l5.44-3.108V6A1.25 1.25 0 0015 4.75h-9zM4.75 12.25h9.5a1.25 1.25 0 001.25-1.25V7.818l-5.06 2.892a2.25 2.25 0 01-1.88 0L3.5 7.818V11A1.25 1.25 0 004.75 12.25z" clip-rule="evenodd"></path></svg>
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
         <span>Contact Us</span>
       </a>
       <a href="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
         <span>About Us</span>
       </a>
-      <div id="mobile-user-display" class="hidden flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link pt-4">
-        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+      <a href="signin.html" id="mobile-signin-link" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <span>Sign In</span>
+      </a>
+      <a href="createaccount.html" id="mobile-createaccount-link" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <span>Create Account</span>
+      </a>
+      <div id="mobile-user-display" class="hidden flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
         <span>User</span>
       </div>
     </nav>
   </div>
 
-  <!-- Main Content -->
   <div class="md:ml-64">
-    <!-- Address Form Section -->
     <section class="hero-bg py-12 sm:py-16 px-4 sm:px-6 md:px-8">
       <div class="max-w-lg mx-auto card gradient-glow fade-in">
         <h1 class="text-3xl sm:text-4xl font-bold text-white text-center mb-10">Shipping Address 📍</h1>
@@ -615,7 +631,7 @@
                 <option value="+265">🇲🇼 +265 (Malawi)</option>
                 <option value="+60">🇲🇾 +60 (Malaysia)</option>
                 <option value="+960">🇲🇻 +960 (Maldives)</option>
-                <option value="+223">🇲🇱 +223 (Mali)</option>
+                <option value="+223">🇲🇱 +223 (Mli)</option>
                 <option value="+356">🇲🇹 +356 (Malta)</option>
                 <option value="+692">🇲🇭 +692 (Marshall Islands)</option>
                 <option value="+222">🇲🇷 +222 (Mauritania)</option>
@@ -707,53 +723,66 @@
                 <option value="+263">🇿🇼 +263 (Zimbabwe)</option>
               </select>
               <input type="tel" id="phone" name="phone" class="w-2/3" placeholder="123-456-7890" required>
-              <p id="phone-error" class="error hidden">Please enter a valid phone number</p>
             </div>
+            <p id="phone-error" class="error hidden">Please enter a valid phone number</p>
           </div>
-          <div class="flex flex-col sm:flex-row justify-between mt-6 gap-4">
+          <div class="flex flex-col sm:flex-row sm:justify-between space-y-3 sm:space-y-0 sm:space-x-4 pt-6">
             <a href="cart.html" class="submit-btn text-center">Back to Cart</a>
-            <button type="submit" id="continue-btn" class="submit-btn">Continue</button>
+            <button type="submit" id="continue-btn" class="submit-btn">Continue to Payment</button>
           </div>
-          <p id="form-status" class="text-center mt-3 text-sm"></p>
+          <p id="form-status" class="text-center pt-3 text-sm"></p>
         </form>
       </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-[#0F172A] border-t border-slate-700">
-        <div class="max-w-6xl mx-auto py-10 px-4 sm:px-6 md:px-8">
-            <div class="flex flex-col md:flex-row justify-between items-center space-y-8 md:space-y-0">
-                <div class="text-center md:text-left">
-                    <h2 class="text-2xl font-bold text-white">Gaming Odyssey</h2>
-                    <p class="text-slate-400 mt-2 text-sm">Your ultimate gaming destination.</p>
-                </div>
-                <div class="flex flex-col items-center">
-                    <h3 class="text-lg font-semibold text-white mb-3">Useful Links</h3>
-                    <ul class="flex space-x-4">
-                        <li><a href="index.html" class="text-slate-300 hover:text-[#3B82F6] transition text-sm">Home</a></li>
-                        <li><a href="store.html" class="text-slate-300 hover:text-[#3B82F6] transition text-sm">Store</a></li>
-                        <li><a href="aboutus.html" class="text-slate-300 hover:text-[#3B82F6] transition text-sm">About</a></li>
-                        <li><a href="terms.html" class="text-slate-300 hover:text-[#3B82F6] transition text-sm">Terms</a></li>
-                    </ul>
-                </div>
-                <div class="flex flex-col items-center">
-                    <h3 class="text-lg font-semibold text-white mb-3">Follow Us</h3>
-                    <div class="flex space-x-4">
-                        <a href="https://www.instagram.com/noticedveil" target="_blank" class="text-slate-300 hover:text-pink-500 transition">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2c-4.09.004-5.554.168-7.5.94C2.93 3.682 1.91 4.752.97 6.642 0.17 8.588 0 10.05 0 12.14c0 4.09.168 5.554.94 7.5 0.74 1.884 1.81 2.906 3.7 3.844 1.946.772 3.41.936 7.5.936s5.554-.168 7.5-.94c1.884-.74 2.906-1.81 3.844-3.7 0.772-1.946.936-3.41.936-7.5s-.168-5.554-.94-7.5C21.07 4.752 20.09 3.682 18.2.972 16.25 0.17 14.79 0 12.69 0h-.375zm0 2.25c4.02.004 5.39.16 7.215.894 1.48.588 2.37 1.478 2.96 3.056.73 1.826.88 3.196.88 7.215s-.16 5.39-.894 7.215c-.588 1.48-1.478 2.37-3.056 2.96-1.826.73-3.196.88-7.215.88s-5.39-.16-7.215-.894c-1.48-.588-2.37-1.478-2.96-3.056-.73-1.826-.88-3.196-.88-7.215s.16-5.39.894-7.215c.588-1.48 1.478-2.37 3.056-2.96C6.76 2.41 8.13 2.26 12.15 2.26zm0 3.19a6.7 6.7 0 100 13.4 6.7 6.7 0 000-13.4zM12 16a4 4 0 110-8 4 4 0 010 8zm5-9.375a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" clip-rule="evenodd" /></svg>
-                        </a>
-                        <a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="text-slate-300 hover:text-red-600 transition">
-                           <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M19.812 5.418c.861.23 1.538.907 1.768 1.768C21.998 8.78 22 12 22 12s0 3.22-.418 4.814a2.506 2.506 0 0 1-1.768 1.768c-1.594.418-7.814.418-7.814.418s-6.22 0-7.814-.418a2.506 2.506 0 0 1-1.768-1.768C2 15.22 2 12 2 12s0-3.22.418-4.814a2.506 2.506 0 0 1 1.768-1.768C5.78 5 12 5 12 5s6.22 0 7.814.418zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" clip-rule="evenodd" /></svg>
-                        </a>
-                        <a href="https://www.facebook.com" target="_blank" class="text-slate-300 hover:text-blue-600 transition">
-                           <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" /></svg>
-                        </a>
-                    </div>
+    <footer class="bg-[#1E293B] py-12 px-4 sm:px-6 md:px-8 border-t border-slate-700">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+            <div class="sm:col-span-2 md:col-span-1">
+                <h3 class="text-xl font-bold text-white mb-4 leading-relaxed">Gaming Odyssey</h3>
+                <p class="text-slate-400 text-sm leading-relaxed">Powering your gaming journey with custom PCs, tournaments, and a dedicated community.</p>
+            </div>
+
+            <div>
+                <h3 class="text-lg font-semibold text-white mb-4 leading-relaxed">Quick Links</h3>
+                <ul class="space-y-2">
+                    <li><a href="index.html" class="text-slate-400 hover:text-[#3B82F6] transition text-sm">Home</a></li>
+                    <li><a href="store.html" class="text-slate-400 hover:text-[#3B82F6] transition text-sm">Store</a></li>
+                    <li><a href="tournaments.html" class="text-slate-400 hover:text-[#3B82F6] transition text-sm">Tournaments</a></li>
+                    <li><a href="aboutus.html" class="text-slate-400 hover:text-[#3B82F6] transition text-sm">About Us</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h3 class="text-lg font-semibold text-white mb-4 leading-relaxed">Customer Support</h3>
+                <ul class="space-y-2">
+                    <li><a href="contactus.html" class="text-slate-400 hover:text-[#3B82F6] transition text-sm">Contact Us</a></li>
+                    <li><a href="trackorder.html" class="text-slate-400 hover:text-[#3B82F6] transition text-sm">Track Order</a></li>
+                    <li><a href="terms.html" class="text-slate-400 hover:text-[#3B82F6] transition text-sm">Terms & Conditions</a></li>
+                    <li class="pt-2 text-slate-400 text-sm">📧 <a href="mailto:support@gamingodyssey.in" class="hover:text-[#3B82F6] transition">support@gamingodyssey.in</a></li>
+                    <li class="text-slate-400 text-sm">📞 +91 6289119156</li>
+                </ul>
+            </div>
+
+            <div>
+                <h3 class="text-lg font-semibold text-white mb-4 leading-relaxed">Follow Us</h3>
+                <div class="flex space-x-4">
+                    <a href="https://www.instagram.com/noticedveil" target="_blank" class="text-slate-400 hover:text-[#D946EF] transition">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2c-4.068 0-4.59.017-6.2.09c-1.61.073-2.705.358-3.66.79c-.955.433-1.72.99-2.5 1.765c-.78.775-1.332 1.545-1.766 2.5c-.432.955-.717 2.05-.79 3.66C2.017 7.72 2 8.242 2 12.315c0 4.068.017 4.59.09 6.2c.073 1.61.358 2.705.79 3.66c.433.955.99 1.72 1.765 2.5c.775.78 1.545 1.332 2.5 1.766c.955.432 2.05.717 3.66.79c1.61.073 2.132.09 6.2.09c4.068 0 4.59-.017 6.2-.09c1.61-.073 2.705-.358 3.66-.79c.955-.433 1.72-.99 2.5-1.765c.78-.775 1.332-1.545 1.766-2.5c.432-.955.717-2.05.79-3.66c.073-1.61.09-2.132.09-6.2c0-4.068-.017-4.59-.09-6.2c-.073-1.61-.358-2.705-.79-3.66c-.433-.955-.99-1.72-1.765-2.5c-.775-.78-1.545-1.332-2.5-1.766c-.955-.432-2.05-.717-3.66-.79C16.905 2.017 16.383 2 12.315 2zm0 1.8c4.015 0 4.48.015 6.074.088c1.47.066 2.324.33 2.95.578c.69.273 1.254.64 1.812 1.198c.558.558.925 1.122 1.198 1.812c.248.626.512 1.48.578 2.95c.073 1.594.088 2.06.088 6.074s-.015 4.48-.088 6.074c-.066 1.47-.33 2.324-.578 2.95c-.273.69-.64 1.254-1.198 1.812c-.558.558-1.122.925-1.812 1.198c-.626.248-1.48.512-2.95.578c-1.594.073-2.06.088-6.074.088s-4.48-.015-6.074-.088c-1.47-.066-2.324-.33-2.95-.578c-.69-.273-1.254-.64-1.812-1.198c-.558-.558-.925-1.122-1.198-1.812c-.248-.626-.512-1.48-.578-2.95C4.095 16.795 4.08 16.33 4.08 12.315s.015-4.48.088-6.074c.066-1.47.33-2.324.578-2.95c.273-.69.64-1.254 1.198-1.812c.558-.558 1.122-.925 1.812-1.198c.626-.248 1.48-.512 2.95-.578C7.835 3.815 8.3 3.8 12.315 3.8zm0 3.96c-2.4 0-4.35 1.95-4.35 4.35s1.95 4.35 4.35 4.35s4.35-1.95 4.35-4.35s-1.95-4.35-4.35-4.35zm0 7.2c-1.575 0-2.85-1.275-2.85-2.85s1.275-2.85 2.85-2.85s2.85 1.275 2.85 2.85s-1.275 2.85-2.85 2.85zm4.845-7.56a1.05 1.05 0 11-2.1 0 1.05 1.05 0 012.1 0z" clip-rule="evenodd" /></svg>
+                        <span class="sr-only">Instagram</span>
+                    </a>
+                    <a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="text-slate-400 hover:text-[#D946EF] transition">
+                       <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0C.488 3.411 0 5.822 0 12s.488 8.589 4.385 8.816c3.6.245 11.626.246 15.23 0C23.512 20.589 24 18.178 24 12s-.488-8.589-4.385-8.816zM9.545 15.568V8.432L15.818 12 9.545 15.568z"/></svg>
+                        <span class="sr-only">YouTube</span>
+                    </a>
+                    <a href="https://www.facebook.com" target="_blank" class="text-slate-400 hover:text-[#D946EF] transition">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" /></svg>
+                        <span class="sr-only">Facebook</span>
+                    </a>
                 </div>
             </div>
-            <div class="mt-8 border-t border-slate-700 pt-6 text-center">
-                <p class="text-slate-400 text-sm">© 2025 Gaming Odyssey. All rights reserved.</p>
-            </div>
+        </div>
+        <div class="mt-8 border-t border-slate-700 pt-6 text-center">
+            <p class="text-slate-400 text-sm leading-relaxed">© 2025 Gaming Odyssey. All rights reserved.</p>
         </div>
     </footer>
   </div>
@@ -834,38 +863,28 @@
       let isValid = true;
 
       // Basic validation
-      if (!name) {
-        document.getElementById('name-error').classList.remove('hidden');
-        isValid = false;
+      if (!name) { document.getElementById('name-error').classList.remove('hidden'); isValid = false; }
+      if (!addressLine1) { document.getElementById('address-line1-error').classList.remove('hidden'); isValid = false; }
+      if (!city) { document.getElementById('city-error').classList.remove('hidden'); isValid = false; }
+      if (!stateValue) { document.getElementById('state-error').classList.remove('hidden'); isValid = false; }
+      if (!country) { document.getElementById('country-error').classList.remove('hidden'); isValid = false; }
+
+      // Zip code validation (simple example)
+      if (!zip) {
+          document.getElementById('zip-error').textContent = 'Please enter a ZIP code';
+          document.getElementById('zip-error').classList.remove('hidden');
+          isValid = false;
       }
-      if (!addressLine1) {
-        document.getElementById('address-line1-error').classList.remove('hidden');
-        isValid = false;
-      }
-      if (!city) {
-        document.getElementById('city-error').classList.remove('hidden');
-        isValid = false;
-      }
-      if (!stateValue) {
-        document.getElementById('state-error').classList.remove('hidden');
-        isValid = false;
-      }
-      if (!zip || !/^\d{5}(-\d{4})?$/.test(zip) && country === 'United States') {
-        document.getElementById('zip-error').classList.remove('hidden');
-        isValid = false;
-      }
-      if (!country) {
-        document.getElementById('country-error').classList.remove('hidden');
-        isValid = false;
-      }
+
+      // Phone number validation (simple example)
       if (!countryCode || !phone || !/^\d{7,15}$/.test(phone.replace(/[\s-]/g, ''))) {
-        document.getElementById('phone-error').classList.remove('hidden');
-        isValid = false;
+          document.getElementById('phone-error').classList.remove('hidden');
+          isValid = false;
       }
 
       if (!isValid) {
         formStatus.textContent = 'Please fill all required fields correctly';
-        formStatus.className = 'error';
+        formStatus.className = 'error text-center';
         return;
       }
 
@@ -886,32 +905,78 @@
       window.location.href = 'paymentgateway.html';
     });
 
-    // Authentication check
+    // Authentication Logic
     function isAuthenticated() {
       return localStorage.getItem('isAuthenticated') === 'true';
     }
 
-    // Display Username in Sidebar and Mobile Menu
-    const userDisplay = document.getElementById('user-display');
-    const mobileUserDisplay = document.getElementById('mobile-user-display');
+    function handleLinkClick(event) {
+      const linkEl = event.currentTarget;
+      const targetUrl = linkEl.getAttribute('href');
 
-    if (isAuthenticated()) {
-      const username = localStorage.getItem('currentUser');
-      if (username) {
-        userDisplay.classList.remove('hidden');
-        mobileUserDisplay.classList.remove('hidden');
-        userDisplay.querySelector('span').textContent = username;
-        mobileUserDisplay.querySelector('span').textContent = username;
+      // Allow direct access to non-protected pages and external links
+      const nonProtected = ['signin.html', 'createaccount.html', 'terms.html', 'cart.html'];
+      if (nonProtected.includes(targetUrl) || targetUrl.startsWith('http') || targetUrl.startsWith('mailto')) {
+          return;
+      }
+      
+      event.preventDefault(); // Prevent default navigation for protected links
+
+      if (isAuthenticated()) {
+        window.location.href = targetUrl;
+      } else {
+        // Redirect to create account if trying to access a protected page while not logged in
+        window.location.href = 'createaccount.html';
       }
     }
+
+    // Apply link handling logic to all relevant links
+    document.querySelectorAll('a').forEach(link => {
+        // Exclude footer social links from this logic if they are external
+        if(!link.closest('.flex.space-x-4')){
+             link.addEventListener('click', handleLinkClick);
+        }
+    });
+
+    // Display Username in Sidebar and Mobile Menu
+    function updateUserDisplay() {
+        const userDisplay = document.getElementById('user-display');
+        const mobileUserDisplay = document.getElementById('mobile-user-display');
+        const signInLink = document.getElementById('signin-link');
+        const createAccountLink = document.getElementById('createaccount-link');
+        const mobileSignInLink = document.getElementById('mobile-signin-link');
+        const mobileCreateAccountLink = document.getElementById('mobile-createaccount-link');
+
+        if (isAuthenticated()) {
+            const username = localStorage.getItem('currentUser');
+            if (username) {
+                userDisplay.classList.remove('hidden');
+                mobileUserDisplay.classList.remove('hidden');
+                userDisplay.querySelector('span').textContent = username;
+                mobileUserDisplay.querySelector('span').textContent = username;
+                signInLink.style.display = 'none';
+                createAccountLink.style.display = 'none';
+                mobileSignInLink.style.display = 'none';
+                mobileCreateAccountLink.style.display = 'none';
+            }
+        } else {
+            userDisplay.classList.add('hidden');
+            mobileUserDisplay.classList.add('hidden');
+            signInLink.style.display = 'flex';
+            createAccountLink.style.display = 'flex';
+            mobileSignInLink.style.display = 'flex';
+            mobileCreateAccountLink.style.display = 'flex';
+        }
+    }
+    updateUserDisplay();
 
     // Hamburger Menu Toggle
     const hamburger = document.getElementById('hamburger');
     const mobileMenu = document.getElementById('mobile-menu');
     const closeMenu = document.getElementById('close-menu');
     hamburger.addEventListener('click', () => {
-      mobileMenu.classList.remove('hidden');
-      mobileMenu.classList.add('active');
+      mobileMenu.classList.toggle('hidden');
+      mobileMenu.classList.toggle('active');
     });
     closeMenu.addEventListener('click', () => {
       mobileMenu.classList.add('hidden');
@@ -919,7 +984,6 @@
     });
 
     // Fade-in Animation on Scroll
-    const fadeIns = document.querySelectorAll('.fade-in');
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -927,7 +991,7 @@
         }
       });
     }, { threshold: 0.1 });
-    fadeIns.forEach(element => observer.observe(element));
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
   </script>
 </body>
 </html>
