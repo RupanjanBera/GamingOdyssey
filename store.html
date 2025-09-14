@@ -329,7 +329,7 @@
       </header>
       <section class="hero-bg py-12 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto">
-          <h1 class="text-4xl md:text-5xl font-bold text-white text-center mb-2">Gaming Odyssey Store</h1>
+          <h1 class="text-4xl md:text-5xl font-bold text-white text-center mb-2">Our Digital Armory</h1>
           <p class="text-slate-400 text-center mb-8 max-w-2xl mx-auto">Find the perfect gear to conquer your virtual worlds. High-performance peripherals await.</p>
           <div class="bg-slate-800/50 p-4 rounded-lg flex flex-col md:flex-row items-center gap-4">
             <div class="relative w-full flex-grow">
@@ -450,11 +450,14 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
 
+      // --- PRODUCT DATA ---
+      // When adding a new product, ensure it has this structure.
+      // The 'dateAdded' property is a string in ISO 8601 format (YYYY-MM-DDTHH:mm:ssZ)
       const defaultProducts = [
-        { id: "prod_1", name: "Razer DeathAdder V3 Pro", price: 149.99, category: "Mouse", description: "An ultra-lightweight, ergonomic esports mouse that offers a level of speed and control favored by top pros.", images: ["https://assets2.razerzone.com/images/pnx.assets/618c0b652d83f88d7c177c3851586a1f/razer-deathadder-v3-pro-white.png", "https://assets2.razerzone.com/images/pnx.assets/0a29243eae24a49c4a45053fd28003f0/500x500-deathadder-v3-pro-black.png"], dateAdded: "2025-08-30T10:00:00Z", rating: 4.8, reviews: 120 },
+        { id: "prod_1", name: "Razer DeathAdder V3 Pro", price: 149.99, category: "Mouse", description: "An ultra-lightweight, ergonomic esports mouse.", images: ["https://assets2.razerzone.com/images/pnx.assets/618c0b652d83f88d7c177c3851586a1f/razer-deathadder-v3-pro-white.png", "https://assets2.razerzone.com/images/pnx.assets/0a29243eae24a49c4a45053fd28003f0/500x500-deathadder-v3-pro-black.png"], dateAdded: "2025-08-30T10:00:00Z", rating: 4.8, reviews: 120 },
         { id: "prod_2", name: "Logitech G Pro X Superlight", price: 159.99, salePrice: 139.99, category: "Mouse", description: "Meticulously designed in collaboration with the world’s leading esports pros.", images: ["https://resource.logitechg.com/w_692,c_lpad,ar_4:3,q_auto,f_auto,dpr_1.0/d_transparent.gif/content/dam/gaming/en/products/pro-x-superlight/pro-x-superlight-gallery-1.png"], dateAdded: "2025-07-15T10:00:00Z", rating: 4.9, reviews: 250 },
-        { id: "prod_3", name: "SteelSeries Apex Pro TKL", price: 179.99, category: "Keyboard", description: "The world's fastest and most advanced keyboard performs effortlessly for all undertakings.", images: ["https://media.steelseriescdn.com/thumbs/filer_public/30/c5/30c5a7fc-4209-4359-99a3-2287e2f20530/buy_apex_pro_tkl_wireless_gallery_1.png__1850x800_q100_crop-scale_optimize_subsampling-2.png"], dateAdded: "2025-09-05T10:00:00Z", rating: 4.7, reviews: 95 },
-        { id: "prod_4", name: "HyperX Cloud Alpha Wireless", price: 199.99, category: "Headset", description: "Get a massive 300 hours of battery life and play for over a week without the battery getting low.", images: ["https://media.kingston.com/hyperx/product/hx-product-headset-cloud-alpha-wireless-1-zm-lg.png"], dateAdded: "2025-06-20T10:00:00Z", rating: 4.6, reviews: 88 },
+        { id: "prod_3", name: "SteelSeries Apex Pro TKL", price: 179.99, category: "Keyboard", description: "The world's fastest and most advanced keyboard.", images: ["https://media.steelseriescdn.com/thumbs/filer_public/30/c5/30c5a7fc-4209-4359-99a3-2287e2f20530/buy_apex_pro_tkl_wireless_gallery_1.png__1850x800_q100_crop-scale_optimize_subsampling-2.png"], dateAdded: "2025-09-05T10:00:00Z", rating: 4.7, reviews: 95 },
+        { id: "prod_4", name: "HyperX Cloud Alpha Wireless", price: 199.99, category: "Headset", description: "Get a massive 300 hours of battery life.", images: ["https://media.kingston.com/hyperx/product/hx-product-headset-cloud-alpha-wireless-1-zm-lg.png"], dateAdded: "2025-06-20T10:00:00Z", rating: 4.6, reviews: 88 },
       ];
       
       let allProducts = [];
@@ -586,24 +589,24 @@
           card.style.transitionDelay = `${i * 50}ms`;
           card.dataset.productId = p.id;
           
-          const priceHTML = p.salePrice ? `<p class="text-xl font-bold text-blue-400">$${p.salePrice.toFixed(2)}</p><p class="text-sm line-through text-slate-400">$${p.price.toFixed(2)}</p>` : `<p class="text-xl font-bold text-blue-400">$${p.price.toFixed(2)}</p>`;
+          const priceHTML = p.salePrice ? `<p class="text-xl font-bold text-blue-400">$${p.salePrice.toFixed(2)}</p><p class="text-sm line-through text-slate-400">$${p.price.toFixed(2)}</p>` : `<p class="text-xl font-bold text-blue-400">$${(p.price || 0).toFixed(2)}</p>`;
           
           let badgeHTML = '';
           if (p.dateAdded) {
               const addedDate = new Date(p.dateAdded);
-              // Using a fixed date for consistent testing behavior
-              const today = new Date("2025-09-14T21:35:00Z"); 
+              const today = new Date();
               const diffTime = Math.abs(today - addedDate);
               const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
               if (diffDays <= 30) {
                   badgeHTML = `<div class="product-badge">FEATURED</div>`;
               }
           }
+          const imageUrl = (p.images && p.images.length > 0) ? p.images[0] : 'https://placehold.co/600x400/1E293B/E2E8F0?text=No+Image';
 
           card.innerHTML = `
             <div class="product-image-container relative p-4 bg-slate-900/50 cursor-pointer">
               ${badgeHTML}
-              <img src="${p.images[0]}" alt="${p.name}" loading="lazy">
+              <img src="${imageUrl}" alt="${p.name || 'Product'}" loading="lazy">
               <div class="product-card-overlay">
                   <button class="overlay-btn view-details-btn" title="View Details"><i class="fas fa-eye"></i></button>
                   <button class="overlay-btn wishlist-btn ${wishlist.includes(p.id) ? 'selected' : ''}" title="Add to Wishlist"><i class="fas fa-heart"></i></button>
@@ -611,10 +614,10 @@
               </div>
             </div>
             <div class="p-4 flex flex-col flex-grow">
-              <h3 class="font-semibold flex-grow">${p.name}</h3>
+              <h3 class="font-semibold flex-grow">${p.name || 'Unnamed Product'}</h3>
               <div class="flex justify-between items-center mt-2">
                 <div class="flex items-baseline gap-2">${priceHTML}</div>
-                <div class="flex items-center text-sm gap-1 text-yellow-400"><i class="fas fa-star"></i><span>${p.rating}</span></div>
+                <div class="flex items-center text-sm gap-1 text-yellow-400"><i class="fas fa-star"></i><span>${p.rating || 0}</span></div>
               </div>
             </div>`;
           productsGrid.appendChild(card);
@@ -656,14 +659,18 @@
       // --- PRODUCT DETAIL MODAL ---
       function openProductOverlay(productId) {
           const product = allProducts.find(p => p.id === productId);
-          if (!product) return;
+          if (!product) {
+              console.error("Product not found for ID:", productId);
+              return;
+          }
 
-          currentModalImages = product.images;
+          currentModalImages = (product.images && product.images.length > 0) ? product.images : ['https://placehold.co/600x400/1E293B/E2E8F0?text=No+Image'];
           currentModalImageIndex = 0;
           
-          document.getElementById('product-name').textContent = product.name;
-          document.getElementById('product-price').textContent = product.salePrice ? `$${product.salePrice.toFixed(2)}` : `$${product.price.toFixed(2)}`;
-          document.getElementById('product-description').innerHTML = product.description; 
+          document.getElementById('product-name').textContent = product.name || "Unnamed Product";
+          const price = product.salePrice || product.price;
+          document.getElementById('product-price').textContent = price ? `$${price.toFixed(2)}` : "Price not available";
+          document.getElementById('product-description').innerHTML = product.description || "No description available.";
           
           updateModalImage();
 
@@ -1112,3 +1119,4 @@
   </script>
 </body>
 </html>
+
