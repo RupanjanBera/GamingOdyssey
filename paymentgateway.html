@@ -678,7 +678,63 @@
         paypalContainer.innerHTML = '<p class="text-[#F1F5F9] text-center">PayPal Button Placeholder</p>';
     }
 
-    // MODIFIED storeOrder function: Saves data and submits a single form for email and redirection.
+    // NEW FUNCTION to send two separate, customized emails.
+    function sendConfirmationEmails(finalOrder, customerEmail) {
+      const { orderId, total, paymentMethod, timestamp, items, shippingAddress } = finalOrder;
+
+      const itemsSummary = items.map(item => `${item.name} (Qty: ${item.quantity || 1}) - $${((item.price || 0) * (item.quantity || 1)).toFixed(2)}`).join('\n');
+      const shippingSummary = `${shippingAddress.name}\n${shippingAddress.addressLine1}\n${shippingAddress.city}, ${shippingAddress.state} ${shippingAddress.zip}\n${shippingAddress.country}`;
+
+      // Helper to create form fields
+      const createHiddenField = (name, value) => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = name;
+        input.value = value;
+        return input;
+      };
+
+      // --- 1. CUSTOMER FORM (Submitted silently) ---
+      const customerForm = document.createElement('form');
+      customerForm.action = `https://formsubmit.co/${customerEmail}`;
+      customerForm.method = 'POST';
+      customerForm.style.display = 'none';
+
+      customerForm.appendChild(createHiddenField('_subject', `Thank you for your order! - Gaming Odyssey #${orderId}`));
+      customerForm.appendChild(createHiddenField('Greeting', `Hi ${shippingAddress.name}, thank you for your purchase!`));
+      customerForm.appendChild(createHiddenField('---', 'Here are your order details:'));
+      customerForm.appendChild(createHiddenField('Order_ID', orderId));
+      customerForm.appendChild(createHiddenField('Order_Date', new Date(timestamp).toLocaleString()));
+      customerForm.appendChild(createHiddenField('Total_Amount', `$${total.toFixed(2)}`));
+      customerForm.appendChild(createHiddenField('Items_Ordered', itemsSummary));
+      customerForm.appendChild(createHiddenField('Shipping_To', shippingSummary));
+      customerForm.appendChild(createHiddenField('--- ', 'We will notify you again once your order has shipped.'));
+
+      document.body.appendChild(customerForm);
+      customerForm.submit();
+      setTimeout(() => document.body.removeChild(customerForm), 2000); // Clean up the form after a delay
+
+      // --- 2. SELLER FORM (Handles the redirect) ---
+      const sellerForm = document.createElement('form');
+      sellerForm.action = 'https://formsubmit.co/support@gamingodyssey.in';
+      sellerForm.method = 'POST';
+      sellerForm.style.display = 'none';
+      
+      const thankYouUrl = `${window.location.origin}${window.location.pathname.replace('paymentgateway.html', '')}thankyou.html?orderId=${orderId}&amount=${total}&method=${paymentMethod}`;
+      sellerForm.appendChild(createHiddenField('_next', thankYouUrl));
+      sellerForm.appendChild(createHiddenField('_subject', `New Order Received - Gaming Odyssey #${orderId}`));
+      sellerForm.appendChild(createHiddenField('Customer_Email', customerEmail));
+      sellerForm.appendChild(createHiddenField('Order_ID', orderId));
+      sellerForm.appendChild(createHiddenField('Total_Amount', `$${total.toFixed(2)}`));
+      sellerForm.appendChild(createHiddenField('Payment_Method', paymentMethod));
+      sellerForm.appendChild(createHiddenField('Items', itemsSummary));
+      sellerForm.appendChild(createHiddenField('Shipping_Address', shippingSummary));
+      
+      document.body.appendChild(sellerForm);
+      sellerForm.submit(); // This submission will trigger the redirect
+    }
+
+    // MODIFIED storeOrder function to call the new email function
     function storeOrder(method, details = {}) {
       if (isPreviewMode) {
         alert('Order confirmation disabled in preview mode.');
@@ -711,45 +767,10 @@
         localStorage.removeItem('cart');
       } catch (e) {
         console.error('Error saving to localStorage:', e);
-        // Don't stop execution, still try to send email and redirect
       }
 
-      // --- NEW FORMSUBMIT LOGIC ---
-      const form = document.createElement('form');
-      form.action = 'https://formsubmit.co/support@gamingodyssey.in'; // Your seller email
-      form.method = 'POST';
-      form.style.display = 'none';
-
-      const addHiddenField = (name, value) => {
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = name;
-        input.value = value;
-        form.appendChild(input);
-      };
-
-      // FormSubmit special fields
-      const thankYouUrl = `${window.location.origin}${window.location.pathname.replace('paymentgateway.html', '')}thankyou.html?orderId=${finalOrder.orderId}&amount=${finalOrder.total}&method=${method}`;
-      addHiddenField('_next', thankYouUrl);
-      addHiddenField('_cc', customerEmail);
-      addHiddenField('_subject', `New Order Received - Gaming Odyssey #${finalOrder.orderId}`);
-      addHiddenField('_autoresponse', 'Thank you for your order from Gaming Odyssey! We have received it and will begin processing it shortly. You will receive another email once your order has shipped.');
-
-      // Order data fields for the email body
-      addHiddenField('Order_ID', finalOrder.orderId);
-      addHiddenField('Customer_Email', customerEmail);
-      addHiddenField('Total_Amount', `$${finalOrder.total.toFixed(2)}`);
-      addHiddenField('Payment_Method', method);
-      addHiddenField('Order_Date', new Date(finalOrder.timestamp).toLocaleString());
-      
-      const itemsSummary = cart.map(item => `${item.name} (Qty: ${item.quantity || 1})`).join(', ');
-      addHiddenField('Items', itemsSummary);
-      
-      const shippingSummary = `${shippingAddress.name}, ${shippingAddress.addressLine1}, ${shippingAddress.city}, ${shippingAddress.state} ${shippingAddress.zip}, ${shippingAddress.country}`;
-      addHiddenField('Shipping_Address', shippingSummary);
-
-      document.body.appendChild(form);
-      form.submit();
+      // Call the new function to send both emails
+      sendConfirmationEmails(finalOrder, customerEmail);
     }
 
     // Cancel Payment Functionality
@@ -817,4 +838,5 @@
   </script>
 </body>
 </html>
+
 
