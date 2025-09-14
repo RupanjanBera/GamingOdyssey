@@ -21,7 +21,7 @@
       color: var(--light);
       -webkit-font-smoothing: antialiased;
       background-image: 
-        radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.1) 0%, transparent S25%),
+        radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.1) 0%, transparent 25%),
         radial-gradient(circle at 80% 70%, rgba(217, 70, 239, 0.1) 0%, transparent 25%);
     }
     .tech-font {
@@ -115,7 +115,7 @@
     }
     .gradient-border {
       position: relative;
-      background: linear-gradient(145deg, var(--mid), var(--dark));
+      background: linear-gradient(145deg, var(--primary), var(--secondary));
       padding: 2px;
       border-radius: 0.75rem;
     }
@@ -127,6 +127,7 @@
   </style>
 </head>
 <body>
+  <!-- Sidebar -->
   <div class="fixed top-0 left-0 h-full w-64 sidebar z-20 hidden md:block">
     <div class="p-6">
       <div class="flex items-center space-x-3">
@@ -158,6 +159,10 @@
           <i class="fas fa-info-circle w-5 h-5"></i>
           <span>About Us</span>
         </a>
+        <a href="login.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+           <i class="fas fa-sign-in-alt w-5 h-5"></i>
+          <span>Login</span>
+        </a>
         <a href="signup.html" class="flex items-center space-x-3 text-[var(--primary)] font-semibold nav-link">
           <i class="fas fa-user-plus w-5 h-5"></i>
           <span>Sign Up</span>
@@ -166,6 +171,7 @@
     </div>
   </div>
 
+  <!-- Mobile Hamburger Menu -->
   <div class="md:hidden fixed top-0 left-0 w-full bg-[#1E293B] z-30 p-4 flex justify-between items-center shadow-lg">
     <div class="flex items-center space-x-2">
       <img src="https://cdn-icons-png.flaticon.com/512/3612/3612569.png" alt="Logo" class="w-8 h-8">
@@ -184,6 +190,11 @@
         <i class="fas fa-home w-5 h-5"></i>
         <span>Home</span>
       </a>
+      <!-- other links -->
+      <a href="login.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+        <i class="fas fa-sign-in-alt w-5 h-5"></i>
+        <span>Login</span>
+      </a>
       <a href="signup.html" class="flex items-center space-x-3 text-[var(--primary)] font-semibold nav-link">
         <i class="fas fa-user-plus w-5 h-5"></i>
         <span>Sign Up</span>
@@ -191,7 +202,9 @@
     </nav>
   </div>
 
+  <!-- Main Content -->
   <div class="md:ml-64">
+    <!-- Hero Section -->
     <section class="hero-bg min-h-[40vh] flex items-center justify-center text-center p-6">
       <div>
         <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4 leading-tight tech-font">Join The Odyssey</h1>
@@ -199,6 +212,7 @@
       </div>
     </section>
 
+    <!-- Signup Form Section -->
     <section class="py-16 px-6">
       <div class="max-w-3xl mx-auto">
         <div class="gradient-border">
@@ -300,6 +314,7 @@
       </div>
     </section>
 
+    <!-- Footer -->
     <footer class="bg-transparent py-12 px-6 border-t border-[#1E293B]">
         <div class="text-center">
           <p class="text-[#94A3B8] text-sm">© 2025 Gaming Odyssey. All rights reserved.</p>
@@ -352,7 +367,6 @@
       document.querySelectorAll('.error').forEach(el => el.classList.add('hidden'));
       let isValid = true;
       
-      // Validation checks
       if (!formElements.firstName.value.trim()) {
         document.getElementById('first-name-error').classList.remove('hidden'); isValid = false;
       }
@@ -393,6 +407,7 @@
         lastName: formElements.lastName.value.trim(),
         email: formElements.email.value.trim(),
         username: formElements.username.value.trim(),
+        password: formElements.password.value, // Storing password for login functionality
         dob: formElements.dob.value,
         country: formElements.country.value,
       };
@@ -420,7 +435,6 @@
       users.push(userData);
       localStorage.setItem('users', JSON.stringify(users));
       
-      // Store current user data for the avatar and session
       localStorage.setItem('userData', JSON.stringify({
         name: userData.name,
         username: userData.username,
