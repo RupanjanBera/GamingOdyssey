@@ -539,11 +539,26 @@
       // --- CORE LOGIC ---
       function initializeApp() {
         loader.style.display = 'flex';
-        if (!localStorage.getItem('products')) {
-          localStorage.setItem('products', JSON.stringify(defaultProducts));
+        // This will load products from localStorage, which is populated by database.html
+        let storedProducts = JSON.parse(localStorage.getItem('products')) || [];
+
+        // If localStorage is empty, use the default products as a fallback
+        if(storedProducts.length === 0) {
+            storedProducts = defaultProducts;
         }
-        allProducts = JSON.parse(localStorage.getItem('products'));
         
+        // Ensure all products have a unique ID
+        allProducts = storedProducts.map((product, index) => {
+            if (!product.id) {
+                // Create a more robust unique ID
+                product.id = `prod_${Date.now()}_${index}`;
+            }
+            return product;
+        });
+
+        // Save back to localStorage in case new IDs were generated
+        localStorage.setItem('products', JSON.stringify(allProducts));
+
         updateCounts();
         renderCategories();
         applyFiltersAndSort();
@@ -592,8 +607,8 @@
           const priceHTML = p.salePrice ? `<p class="text-xl font-bold text-blue-400">$${p.salePrice.toFixed(2)}</p><p class="text-sm line-through text-slate-400">$${p.price.toFixed(2)}</p>` : `<p class="text-xl font-bold text-blue-400">$${(p.price || 0).toFixed(2)}</p>`;
           
           let badgeHTML = '';
-          if (p.dateAdded) {
-              const addedDate = new Date(p.dateAdded);
+          if (p.dateAdded || p.createdAt) { // Check for both dateAdded and createdAt from database.html
+              const addedDate = new Date(p.dateAdded || p.createdAt);
               const today = new Date();
               const diffTime = Math.abs(today - addedDate);
               const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -862,7 +877,7 @@
             const itemsHTML = wishlist.map(id => {
                 const product = allProducts.find(p => p.id === id);
                 return `<div class="flex items-center gap-2 p-2 hover:bg-slate-700/50">
-                    <img src="${product.images[0]}" class="w-10 h-10 object-contain rounded">
+                    <img src="${(product.images && product.images.length > 0) ? product.images[0] : ''}" class="w-10 h-10 object-contain rounded">
                     <div class="flex-grow"><p class="text-sm truncate">${product.name}</p></div>
                     <button class="remove-wishlist-item-btn text-red-400 hover:text-red-600" data-id="${id}">&times;</button>
                 </div>`;
@@ -903,7 +918,7 @@
             const itemsContainer = document.getElementById('comparison-items');
             itemsContainer.innerHTML = comparisonList.map(id => {
                 const product = allProducts.find(p => p.id === id);
-                return `<img src="${product.images[0]}" title="${product.name}" class="w-12 h-12 object-contain rounded-md bg-slate-700">`;
+                return `<img src="${(product.images && product.images.length > 0) ? product.images[0] : ''}" title="${product.name}" class="w-12 h-12 object-contain rounded-md bg-slate-700">`;
             }).join('');
 
             const compareBtn = document.getElementById('compare-now-btn');
@@ -988,7 +1003,7 @@
                             <div class="bg-slate-800/50 p-4 rounded-lg">
                                 <h3 class="font-bold text-lg text-secondary-color">${category.charAt(0).toUpperCase() + category.slice(1)} Recommendation</h3>
                                 <div class="flex gap-4 mt-2">
-                                    <img src="${product.images[0]}" class="w-24 h-24 object-contain bg-slate-900 rounded-md">
+                                    <img src="${(product.images && product.images.length > 0) ? product.images[0] : ''}" class="w-24 h-24 object-contain bg-slate-900 rounded-md">
                                     <div>
                                         <h4 class="font-semibold">${product.name}</h4>
                                         <p class="text-sm text-slate-300 mt-1">${recs[category].reason}</p>
@@ -1119,4 +1134,5 @@
   </script>
 </body>
 </html>
+
 
