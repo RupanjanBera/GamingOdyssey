@@ -7,9 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- PayPal SDK with Provided Client ID -->
   <script src="https://www.paypal.com/sdk/js?client-id=Abj4GKhw0aoqQes156AfApLm2wN5PAF5ncEUA_M-Dtzaj22yUzczA7tzf5LrsP7ufTj2ERxhUIEscsRF&currency=USD"></script>
-  <!-- QR Code Generator Library -->
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
   <style>
     body {
@@ -283,14 +281,12 @@
   </style>
 </head>
 <body>
-  <!-- Desktop Cart Icon -->
   <a href="cart.html" class="cart-icon-container gradient-glow hidden md:flex">
     <svg class="w-6 h-6 text-[#3B82F6]" fill="currentColor" viewBox="0 0 20 20"><path d="M0 1h3l2 11h10l2-9H5l-.5-2H0v1zm6 15a2 2 0 100 4 2 2 0 000-4zm9 0a2 2 0 100 4 2 2 0 000-4z"/></svg>
     <span class="text-[#F1F5F9]">Cart</span>
     <span id="cart-count-desktop" class="cart-count">0</span>
   </a>
 
-  <!-- Sidebar -->
   <div class="fixed top-0 left-0 h-full w-64 sidebar gradient-glow z-20 hidden md:block">
     <div class="p-4 sm:p-6">
       <h1 class="text-2xl font-bold text-white leading-relaxed">Gaming Odyssey</h1>
@@ -323,7 +319,6 @@
     </div>
   </div>
 
-  <!-- Mobile Hamburger Menu -->
   <div class="md:hidden fixed top-0 left-0 w-full bg-[#1E293B] z-30 p-4 flex justify-between items-center gradient-glow">
     <a href="cart.html" class="cart-icon-container flex md:hidden">
       <svg class="w-6 h-6 text-[#3B82F6]" fill="currentColor" viewBox="0 0 20 20"><path d="M0 1h3l2 11h10l2-9H5l-.5-2H0v1zm6 15a2 2 0 100 4 2 2 0 000-4zm9 0a2 2 0 100 4 2 2 0 000-4z"/></svg>
@@ -367,20 +362,17 @@
     </nav>
   </div>
 
-  <!-- Main Content -->
   <div class="md:ml-64">
     <section class="content-bg py-16 px-6">
       <div class="max-w-4xl mx-auto bg-[#1E293B] p-8 rounded-lg gradient-glow fade-in">
         <h1 class="text-4xl font-bold text-white text-center mb-8">Secure Payment 🔒</h1>
         
-        <!-- Cancel Payment Button -->
         <div class="text-center mb-8">
           <button id="cancel-payment-btn" class="bg-[#1E293B] text-[#F1F5F9] border border-[#EF4444] px-6 py-2 rounded-lg hover:bg-[#EF4444] hover:text-white transition-all duration-300">
             <i class="fas fa-times-circle mr-2"></i>Cancel Payment
           </button>
         </div>
 
-        <!-- Email Confirmation Section -->
         <div id="email-section" class="mb-8 payment-card gradient-glow">
           <h2 class="text-2xl font-bold text-white mb-4">Email Confirmation</h2>
           <p class="text-[#CBD5E1] mb-4">Please enter your email address to receive order confirmation and tracking details.</p>
@@ -392,32 +384,25 @@
           </div>
         </div>
 
-        <!-- Order Details -->
         <div class="mb-8">
           <p class="text-lg text-[#F1F5F9] mb-2">Order ID: <span id="orderId" class="text-[#3B82F6]"></span></p>
           <p class="text-lg text-[#F1F5F9] mb-2">Total: <span id="totalAmount" class="text-[#3B82F6]"></span></p>
           <p class="text-lg text-[#F1F5F9] mb-4">Currency: USD ($)</p>
         </div>
 
-        <!-- Order Summary -->
         <div class="mb-8">
           <h2 class="text-2xl font-bold text-white mb-4">Order Summary</h2>
           <div id="order-summary" class="space-y-4">
-            <!-- Cart items will be dynamically inserted here -->
-          </div>
+            </div>
         </div>
 
-        <!-- Shipping Details -->
         <div class="mb-8">
           <h2 class="text-2xl font-bold text-white mb-4">Shipping Details</h2>
           <div id="shipping-details" class="text-[#F1F5F9] space-y-2">
-            <!-- Shipping address will be dynamically inserted here -->
-          </div>
+            </div>
         </div>
 
-        <!-- Payment Options -->
         <div id="payment-forms" class="space-y-8">
-          <!-- UPI Form -->
           <div id="upi-form" class="payment-card gradient-glow">
             <h3 class="text-lg font-bold text-white mb-2">UPI Payment</h3>
             <p class="text-[#F1F5F9] text-sm mb-4">Pay via Google Pay, PhonePe, Paytm, etc.</p>
@@ -435,7 +420,6 @@
             </form>
           </div>
 
-          <!-- Card Payment Form -->
           <div id="card-form" class="payment-card gradient-glow">
             <h3 class="text-lg font-bold text-white mb-2">Credit/Debit Card</h3>
             <p class="text-[#F1F5F9] text-sm mb-4">Secure payment with your card</p>
@@ -462,14 +446,12 @@
             </form>
           </div>
 
-          <!-- PayPal Form -->
           <div id="paypal-form" class="payment-card gradient-glow">
             <h3 class="text-lg font-bold text-white mb-2">PayPal</h3>
             <p class="text-[#F1F5F9] text-sm mb-4">Secure payment with PayPal</p>
             <div id="paypal-button-container"></div>
           </div>
 
-          <!-- Cash on Delivery Form -->
           <div id="cod-form" class="payment-card gradient-glow">
             <h3 class="text-lg font-bold text-white mb-2">Cash on Delivery</h3>
             <p class="text-[#F1F5F9] text-sm mb-4">Pay when you receive</p>
@@ -482,7 +464,6 @@
       </div>
     </section>
 
-    <!-- Footer -->
     <footer class="bg-[#1E293B] py-12 px-4 sm:px-6 md:px-8">
       <div class="max-w-6xl mx-auto footer-grid">
         <div>
@@ -530,7 +511,6 @@
     </footer>
   </div>
 
-  <!-- Cancel Payment Modal -->
   <div id="cancel-modal" class="modal">
     <div class="modal-content">
       <h3 class="text-xl font-bold text-white mb-2">Cancel Payment</h3>
@@ -677,137 +657,113 @@
         generateUPIQRCode(e.target.value);
       }
     });
+    
+    // FIX: Modified function to send email to both seller and customer using a single form submission.
+    function sendEmails(method, customerEmail, details = {}) {
+        const emailForm = document.createElement('form');
+        emailForm.action = 'https://formsubmit.co/support@gamingodyssey.in'; // Your seller email
+        emailForm.method = 'POST';
+        emailForm.style.display = 'none';
 
-    // Send emails using FormSubmit
-    function sendEmails(method, details = {}) {
-      const customerEmail = document.getElementById('customer-email').value;
-      
-      if (!customerEmail) {
-        alert('Please enter your email address to receive order confirmation.');
-        return false;
-      }
-      
-      // Validate email format
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(customerEmail)) {
-        alert('Please enter a valid email address.');
-        return false;
-      }
-      
-      // Prepare order details for email
-      const orderId = order.orderId || 'ORD-' + Math.floor(10000 + Math.random() * 90000);
-      const orderTotal = order.total ? order.total.toFixed(2) : '0.00';
-      const orderDate = new Date().toLocaleDateString();
-      
-      // Format order items for email
-      let orderItemsText = '';
-      cart.forEach(item => {
-        orderItemsText += `${item.name} x ${item.quantity} - $${(item.price * item.quantity).toFixed(2)}\n`;
-      });
-      
-      // Format shipping address for email
-      let shippingAddressText = '';
-      if (shippingAddress.name) {
-        shippingAddressText = `
-Name: ${shippingAddress.name}
-Address: ${shippingAddress.addressLine1}${shippingAddress.addressLine2 ? ', ' + shippingAddress.addressLine2 : ''}
-City: ${shippingAddress.city || ''}
-State: ${shippingAddress.state || ''}
-ZIP: ${shippingAddress.zip || ''}
-Country: ${shippingAddress.country || ''}
-Phone: ${shippingAddress.phone || ''}
-        `;
-      }
-      
-      // Create a form for customer email
-      const customerForm = document.createElement('form');
-      customerForm.action = 'https://formsubmit.co/' + customerEmail;
-      customerForm.method = 'POST';
-      customerForm.style.display = 'none';
-      
-      // Create a form for seller email
-      const sellerForm = document.createElement('form');
-      sellerForm.action = 'https://formsubmit.co/support@gamingodyssey.in';
-      sellerForm.method = 'POST';
-      sellerForm.style.display = 'none';
-      
-      // Add common hidden fields to both forms
-      const addHiddenField = (form, name, value) => {
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = name;
-        input.value = value;
-        form.appendChild(input);
-      };
-      
-      // Customer email fields
-      addHiddenField(customerForm, '_subject', 'Order Confirmation - Gaming Odyssey');
-      addHiddenField(customerForm, 'order_id', orderId);
-      addHiddenField(customerForm, 'order_total', `$${orderTotal}`);
-      addHiddenField(customerForm, 'payment_method', method);
-      addHiddenField(customerForm, 'order_date', orderDate);
-      addHiddenField(customerForm, 'order_items', orderItemsText);
-      addHiddenField(customerForm, 'shipping_address', shippingAddressText);
-      
-      // Seller email fields
-      addHiddenField(sellerForm, '_subject', 'New Order Received - Gaming Odyssey');
-      addHiddenField(sellerForm, 'order_id', orderId);
-      addHiddenField(sellerForm, 'customer_email', customerEmail);
-      addHiddenField(sellerForm, 'order_total', `$${orderTotal}`);
-      addHiddenField(sellerForm, 'payment_method', method);
-      addHiddenField(sellerForm, 'order_date', orderDate);
-      addHiddenField(sellerForm, 'order_items', orderItemsText);
-      addHiddenField(sellerForm, 'shipping_address', shippingAddressText);
-      
-      // Add forms to document and submit them
-      document.body.appendChild(customerForm);
-      document.body.appendChild(sellerForm);
-      
-      // Use setTimeout to ensure forms are properly added to DOM before submission
-      setTimeout(() => {
-        customerForm.submit();
-        sellerForm.submit();
+        // Prepare order details for email
+        const orderId = order.orderId || 'N/A';
+        const orderTotal = order.total ? order.total.toFixed(2) : '0.00';
+        const orderDate = new Date().toLocaleString();
+
+        let orderItemsText = cart.map(item => 
+            `${item.name} x ${item.quantity || 1} - $${((item.price || 0) * (item.quantity || 1)).toFixed(2)}`
+        ).join('\n');
+
+        let shippingAddressText = shippingAddress.name ? `
+            Name: ${shippingAddress.name}
+            Address: ${shippingAddress.addressLine1}${shippingAddress.addressLine2 ? ', ' + shippingAddress.addressLine2 : ''}
+            City: ${shippingAddress.city || ''}, ${shippingAddress.state || ''} ${shippingAddress.zip || ''}
+            Country: ${shippingAddress.country || ''}
+            Phone: ${shippingAddress.phone || ''}
+        ` : 'No shipping address provided.';
         
-        // Remove forms after submission
-        setTimeout(() => {
-          document.body.removeChild(customerForm);
-          document.body.removeChild(sellerForm);
-        }, 1000);
-      }, 100);
-      
-      return true;
+        const emailContent = `
+            A new order has been placed on Gaming Odyssey.
+            
+            --- Order Details ---
+            Order ID: ${orderId}
+            Customer Email: ${customerEmail}
+            Order Total: $${orderTotal}
+            Payment Method: ${method}
+            Order Date: ${orderDate}
+
+            --- Items ---
+            ${orderItemsText}
+
+            --- Shipping Address ---
+            ${shippingAddressText}
+        `;
+
+        const addHiddenField = (name, value) => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = name;
+            input.value = value;
+            emailForm.appendChild(input);
+        };
+        
+        // FormSubmit fields
+        addHiddenField('_cc', customerEmail); // CC the email to the customer
+        addHiddenField('_subject', `New Order Confirmation from Gaming Odyssey - #${orderId}`);
+        addHiddenField('Order Details', emailContent);
+
+        document.body.appendChild(emailForm);
+        emailForm.submit();
+        
+        setTimeout(() => document.body.removeChild(emailForm), 1000);
+        
+        return true;
     }
 
-    // Store Order and Redirect
+
+    // FIX: Modified function to save the order to the main 'orders' array for the database page.
     function storeOrder(method, details = {}) {
       if (isPreviewMode) {
         alert('Order confirmation disabled in preview mode.');
         return;
       }
-      
-      // Send emails first
-      if (!sendEmails(method, details)) {
-        return; // Don't proceed if email validation fails
+
+      const customerEmail = document.getElementById('customer-email').value;
+      if (!customerEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail)) {
+        alert('Please enter a valid email address to proceed.');
+        return;
       }
+      
+      // Send emails
+      sendEmails(method, customerEmail, details);
       
       const finalOrder = {
         ...order,
+        customerEmail: customerEmail, // Add customer email to the order object
         paymentMethod: method,
         paymentDetails: details,
         shippingAddress: shippingAddress,
         items: cart,
-        status: method === 'PayPal' || method === 'Card' ? 'Completed' : 'Pending',
+        status: (method === 'PayPal' || method === 'Card') ? 'completed' : 'pending',
         timestamp: new Date().toISOString()
       };
+
       try {
-        localStorage.setItem('finalOrder', JSON.stringify(finalOrder));
-        localStorage.setItem('finalShippingAddress', JSON.stringify(shippingAddress));
+        // Retrieve existing orders, add the new one, and save back
+        const allOrders = JSON.parse(localStorage.getItem('orders')) || [];
+        allOrders.push(finalOrder);
+        localStorage.setItem('orders', JSON.stringify(allOrders));
+
+        // Clean up cart and temporary order data
         localStorage.removeItem('order');
         localStorage.removeItem('shippingAddress');
         localStorage.removeItem('cart');
+
       } catch (e) {
         console.error('Error saving to localStorage:', e);
       }
+      
+      // Redirect to thank you page
       window.location.href = `thankyou.html?orderId=${finalOrder.orderId}&amount=${finalOrder.total}&method=${method}`;
     }
 
@@ -820,11 +776,8 @@ Phone: ${shippingAddress.phone || ''}
         return;
       }
       
-      // Simulate UPI payment processing
       alert(`UPI payment request sent to ${upiId}. Please complete the payment in your UPI app.`);
       
-      // In a real implementation, you would integrate with a UPI payment gateway here
-      // For demo purposes, we'll simulate a successful payment after 3 seconds
       setTimeout(() => {
         storeOrder('UPI', { upiId });
       }, 3000);
@@ -843,11 +796,8 @@ Phone: ${shippingAddress.phone || ''}
         return;
       }
       
-      // Simulate card payment processing
-      alert('Redirecting to bank payment gateway...');
+      alert('Processing card payment...');
       
-      // In a real implementation, you would integrate with a payment processor
-      // For demo purposes, we'll simulate a successful payment after 3 seconds
       setTimeout(() => {
         storeOrder('Card', { 
           last4: cardNumber.slice(-4),
@@ -986,5 +936,3 @@ Phone: ${shippingAddress.phone || ''}
   </script>
 </body>
 </html>
-
-
