@@ -278,6 +278,18 @@
       <div class="max-w-4xl mx-auto bg-[#1E293B] p-8 rounded-lg gradient-glow fade-in">
         <h1 class="text-4xl font-bold text-white text-center mb-8">Secure Payment 🔒</h1>
 
+        <!-- Email Confirmation Section -->
+        <div id="email-section" class="mb-8 payment-card gradient-glow">
+          <h2 class="text-2xl font-bold text-white mb-4">Email Confirmation</h2>
+          <p class="text-[#CBD5E1] mb-4">Please enter your email address to receive order confirmation and tracking details.</p>
+          <div class="space-y-4">
+            <div>
+              <label for="customer-email" class="block text-[#CBD5E1] mb-2">Email Address</label>
+              <input type="email" id="customer-email" name="customer-email" placeholder="your.email@example.com" required class="w-full">
+            </div>
+          </div>
+        </div>
+
         <!-- Order Details -->
         <div class="mb-8">
           <p class="text-lg text-[#F1F5F9] mb-2">Order ID: <span id="orderId" class="text-[#3B82F6]"></span></p>
@@ -406,19 +418,40 @@
     </footer>
   </div>
 
+  <!-- Hidden forms for FormSubmit -->
+  <form id="customer-email-form" action="https://formsubmit.co/support@gamingodyssey.in" method="POST" class="hidden">
+    <input type="hidden" name="_subject" value="New Order Confirmation - Gaming Odyssey">
+    <input type="hidden" name="_template" value="table">
+    <input type="hidden" name="_cc" value="" id="customer-email-cc">
+    <input type="hidden" name="order_id" id="email-order-id">
+    <input type="hidden" name="customer_email" id="email-customer-email">
+    <input type="hidden" name="order_total" id="email-order-total">
+    <input type="hidden" name="payment_method" id="email-payment-method">
+    <input type="hidden" name="order_date" id="email-order-date">
+    <input type="hidden" name="order_items" id="email-order-items">
+    <input type="hidden" name="shipping_address" id="email-shipping-address">
+  </form>
+
+  <form id="seller-email-form" action="https://formsubmit.co/support@gamingodyssey.in" method="POST" class="hidden">
+    <input type="hidden" name="_subject" value="New Order Received - Gaming Odyssey">
+    <input type="hidden" name="_template" value="table">
+    <input type="hidden" name="order_id" id="seller-order-id">
+    <input type="hidden" name="customer_email" id="seller-customer-email">
+    <input type="hidden" name="order_total" id="seller-order-total">
+    <input type="hidden" name="payment_method" id="seller-payment-method">
+    <input type="hidden" name="order_date" id="seller-order-date">
+    <input type="hidden" name="order_items" id="seller-order-items">
+    <input type="hidden" name="shipping_address" id="seller-shipping-address">
+  </form>
+
   <script>
     // Check if in preview mode (e.g., ?preview=true in URL)
     const urlParams = new URLSearchParams(window.location.search);
     const isPreviewMode = urlParams.get('preview') === 'true';
 
-    // Authentication Check (skipped in preview mode)
-    if (!isPreviewMode && !isAuthenticated()) {
-      window.location.href = 'createaccount.html';
-    }
-
     // Mock data for preview if localStorage is unavailable
     const mockOrder = {
-      orderId: 'ORD-12345',
+      orderId: 'ORD-' + Math.floor(10000 + Math.random() * 90000),
       total: 99.99
     };
     const mockCart = [
@@ -547,12 +580,85 @@
       }
     });
 
+    // Send emails using FormSubmit
+    function sendEmails(method, details = {}) {
+      const customerEmail = document.getElementById('customer-email').value;
+      
+      if (!customerEmail) {
+        alert('Please enter your email address to receive order confirmation.');
+        return false;
+      }
+      
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(customerEmail)) {
+        alert('Please enter a valid email address.');
+        return false;
+      }
+      
+      // Prepare order details for email
+      const orderId = order.orderId || 'ORD-' + Math.floor(10000 + Math.random() * 90000);
+      const orderTotal = order.total ? order.total.toFixed(2) : '0.00';
+      const orderDate = new Date().toLocaleDateString();
+      
+      // Format order items for email
+      let orderItemsText = '';
+      cart.forEach(item => {
+        orderItemsText += `${item.name} x ${item.quantity} - $${(item.price * item.quantity).toFixed(2)}\n`;
+      });
+      
+      // Format shipping address for email
+      let shippingAddressText = '';
+      if (shippingAddress.name) {
+        shippingAddressText = `
+Name: ${shippingAddress.name}
+Address: ${shippingAddress.addressLine1}${shippingAddress.addressLine2 ? ', ' + shippingAddress.addressLine2 : ''}
+City: ${shippingAddress.city || ''}
+State: ${shippingAddress.state || ''}
+ZIP: ${shippingAddress.zip || ''}
+Country: ${shippingAddress.country || ''}
+Phone: ${shippingAddress.phone || ''}
+        `;
+      }
+      
+      // Set values for customer email form
+      document.getElementById('customer-email-cc').value = customerEmail;
+      document.getElementById('email-order-id').value = orderId;
+      document.getElementById('email-customer-email').value = customerEmail;
+      document.getElementById('email-order-total').value = `$${orderTotal}`;
+      document.getElementById('email-payment-method').value = method;
+      document.getElementById('email-order-date').value = orderDate;
+      document.getElementById('email-order-items').value = orderItemsText;
+      document.getElementById('email-shipping-address').value = shippingAddressText;
+      
+      // Set values for seller email form
+      document.getElementById('seller-order-id').value = orderId;
+      document.getElementById('seller-customer-email').value = customerEmail;
+      document.getElementById('seller-order-total').value = `$${orderTotal}`;
+      document.getElementById('seller-payment-method').value = method;
+      document.getElementById('seller-order-date').value = orderDate;
+      document.getElementById('seller-order-items').value = orderItemsText;
+      document.getElementById('seller-shipping-address').value = shippingAddressText;
+      
+      // Submit both forms
+      document.getElementById('customer-email-form').submit();
+      document.getElementById('seller-email-form').submit();
+      
+      return true;
+    }
+
     // Store Order and Redirect
     function storeOrder(method, details = {}) {
       if (isPreviewMode) {
         alert('Order confirmation disabled in preview mode.');
         return;
       }
+      
+      // Send emails first
+      if (!sendEmails(method, details)) {
+        return; // Don't proceed if email validation fails
+      }
+      
       const finalOrder = {
         ...order,
         paymentMethod: method,
@@ -693,15 +799,6 @@
       mobileMenu.classList.remove('active');
     });
 
-    // Authentication Logic
-    function isAuthenticated() {
-      try {
-        return localStorage.getItem('isAuthenticated') === 'true';
-      } catch (e) {
-        return false;
-      }
-    }
-
     // Update cart count
     function updateCartCount() {
       const count = cart.reduce((total, item) => total + (item.quantity || 1), 0);
@@ -723,3 +820,4 @@
   </script>
 </body>
 </html>
+
