@@ -3,1619 +3,860 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Gaming Odyssey - Store</title>
+  <title>Gaming Odyssey - AI-Powered Store</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     :root {
-      /* Customizable theme variables */
       --primary-color: #3B82F6;
-      --secondary-color: #D946EF;
+      --secondary-color: #8B5CF6;
       --background-color: #0F172A;
-      --text-color: #F1F5F9;
-      --card-background: linear-gradient(145deg, #1E293B, #0F172A);
+      --text-color: #E2E8F0;
+      --card-background: #1E293B;
+      --card-border: #334155;
       --font-family: 'Poppins', sans-serif;
-      --shadow-glow: 0 0 6px rgba(59, 130, 246, 0.2);
-      --shadow-glow-hover: 0 0 10px rgba(59, 130, 246, 0.4);
-      --font-size-base: clamp(14px, 2.5vw, 16px);
-      --padding-base: clamp(0.75rem, 2vw, 1rem);
+      --shadow-glow: 0 0 10px rgba(59, 130, 246, 0.2);
+      --shadow-glow-hover: 0 0 15px rgba(59, 130, 246, 0.4);
     }
+    html { scroll-behavior: smooth; }
     body {
       font-family: var(--font-family);
       background-color: var(--background-color);
+      background-image: radial-gradient(circle at 1% 1%, #1e293b 0.5px, transparent 0);
+      background-size: 20px 20px;
       color: var(--text-color);
-      scroll-behavior: smooth;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
-      font-size: var(--font-size-base);
     }
-    .gradient-glow {
-      box-shadow: var(--shadow-glow);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      will-change: transform, box-shadow;
-    }
-    .gradient-glow:hover {
-      box-shadow: var(--shadow-glow-hover);
-      transform: translateY(-3px);
-    }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0F172A; }
+    ::-webkit-scrollbar-thumb { background-color: var(--primary-color); border-radius: 10px; border: 2px solid #0F172A; }
+
     .sidebar, .category-menu {
       background: linear-gradient(180deg, #1E293B 0%, var(--background-color) 100%);
-      box-shadow: 2px 0 6px rgba(59, 130, 246, 0.1);
-    }
-    .sidebar {
-      width: 80vw;
-      max-width: 16rem;
-    }
-    .category-menu {
-      transition: transform 0.3s ease;
-      width: 80vw;
-      max-width: 16rem;
-    }
-    .category-menu.hidden {
-      transform: translateX(100%);
+      box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease-in-out;
     }
     .hero-bg {
-      background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(217, 70, 239, 0.15), var(--background-color));
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1)), var(--background-color);
       position: relative;
       overflow: hidden;
-      padding: var(--padding-base);
-    }
-    .hero-bg::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.2), transparent 70%);
-      animation: glow 20s ease-in-out infinite;
-      opacity: 0.5;
-    }
-    @keyframes glow {
-      0%, 100% { opacity: 0.5; }
-      50% { opacity: 0.7; }
+      border-bottom: 1px solid var(--card-border);
     }
     .fade-in {
       opacity: 0;
-      transform: translateY(15px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-      will-change: opacity, transform;
+      transform: translateY(20px);
+      transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
-    .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    input, select {
-      background: #1E293B;
-      color: var(--text-color);
-      border: 1px solid var(--primary-color);
-      border-radius: 0.5rem;
-      padding: var(--padding-base);
-      width: 100%;
-      transition: border-color 0.2s ease;
-      font-family: var(--font-family);
-      font-size: var(--font-size-base);
-    }
-    input:focus, select:focus {
-      outline: none;
-      border-color: var(--secondary-color);
-      box-shadow: 0 0 6px rgba(217, 70, 239, 0.2);
-    }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+    
     .submit-btn {
       background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-      color: #0F172A;
-      font-family: var(--font-family);
+      color: white;
       font-weight: 600;
-      padding: var(--padding-base) clamp(1rem, 3vw, 1.5rem);
       border-radius: 0.5rem;
-      transition: transform 0.2s ease;
-      font-size: var(--font-size-base);
-      min-width: 120px;
-      text-align: center;
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     }
     .submit-btn:hover {
-      transform: translateY(-2px);
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
     }
-    .nav-link, #mobile-menu a {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      transition: color 0.2s ease;
-      font-family: var(--font-family);
-      font-weight: 600;
-      font-size: clamp(15px, 2.5vw, 17px);
-      padding: 0.5rem 0;
-    }
-    .nav-link::after, #mobile-menu a::after {
-      content: '';
-      position: absolute;
-      width: 0;
-      height: 2px;
-      bottom: 0;
-      left: 0;
-      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-      transition: width 0.2s ease;
-    }
-    .nav-link:hover::after, #mobile-menu a:hover::after {
-      width: 100%;
-    }
-    .nav-link:hover, #mobile-menu a:hover {
-      color: var(--primary-color);
-    }
-    .mobile-menu {
-      background: linear-gradient(180deg, #1E293B, var(--background-color));
-      opacity: 0;
-      transform: translateX(-100%);
-      transition: opacity 0.3s ease, transform 0.3s ease;
-      width: 80vw;
-    }
-    .mobile-menu.active {
-      opacity: 1;
-      transform: translateX(0);
-    }
-    .card, .product-card {
-      background: var(--card-background);
-      border-radius: 0.75rem;
-      padding: var(--padding-base);
-      transition: transform 0.2s ease;
-      width: 100%;
-    }
-    .card:hover, .product-card:hover {
-      transform: translateY(-4px);
-    }
-    .cart-icon-container {
-      position: relative;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: rgba(30, 41, 59, 0.7);
-      padding: 0.5rem 1rem;
-      border-radius: 2rem;
-      transition: all 0.2s ease;
-    }
-    .cart-icon-container:hover {
-      background: rgba(30, 41, 59, 0.9);
-    }
-    .cart-count {
-      position: absolute;
-      top: -8px;
-      right: -8px;
-      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-      color: #0F172A;
-      font-size: clamp(10px, 1.5vw, 12px);
-      font-weight: bold;
-      border-radius: 50%;
-      padding: 2px 6px;
-    }
-    #product-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(15, 23, 42, 0.95);
-      z-index: 40;
-      display: none;
-      opacity: 0;
-      transition: opacity 0.5s ease;
-    }
-    #product-overlay.visible {
-      display: block;
-      opacity: 1;
-    }
-    .close-btn {
-      position: fixed;
-      top: 1rem;
-      right: 1rem;
-      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-      color: #0F172A;
-      padding: var(--padding-base);
-      border-radius: 0.5rem;
-      cursor: pointer;
-      transition: transform 0.2s ease;
-      z-index: 45;
-      font-family: var(--font-family);
-      font-weight: 600;
-      font-size: var(--font-size-base);
-    }
-    .close-btn:hover {
-      transform: translateY(-2px);
-    }
-    .product-detail {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: var(--card-background);
-      border-radius: 0.75rem;
-      width: 95%;
-      max-width: 1000px;
-      max-height: 90vh;
-      overflow-y: auto;
-      padding: var(--padding-base);
-      box-shadow: var(--shadow-glow);
-    }
-    .image-container {
-      position: relative;
-      width: 100%;
-      max-height: 400px;
-      margin-bottom: 1rem;
-    }
-    .product-detail img {
-      width: 100%;
-      max-height: 400px;
-      object-fit: contain;
-      border-radius: 0.5rem;
-      box-shadow: var(--shadow-glow);
-    }
-    .arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-      color: #0F172A;
-      padding: 0.5rem;
-      border-radius: 50%;
-      cursor: pointer;
-      transition: background 0.2s ease;
-      font-size: clamp(16px, 2vw, 18px);
-    }
-    .arrow:hover {
-      background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
-    }
-    .left-arrow {
-      left: 0.5rem;
-    }
-    .right-arrow {
-      right: 0.5rem;
-    }
-    .product-detail h3 {
-      font-family: var(--font-family);
-      font-size: clamp(1.5rem, 4vw, 2rem);
-      font-weight: 700;
-      color: var(--text-color);
-      margin-bottom: 0.75rem;
-    }
-    .product-detail .price {
-      font-size: clamp(1.25rem, 3vw, 1.5rem);
-      color: var(--primary-color);
-      margin-bottom: 1rem;
-      font-weight: 600;
-    }
-    .product-detail .description {
-      background: #1E293B;
-      padding: var(--padding-base);
-      border-radius: 0.5rem;
-      margin-bottom: 1rem;
-      border: 1px solid var(--primary-color);
-    }
-    .product-detail .description h4 {
-      font-family: var(--font-family);
-      font-size: clamp(1rem, 2.5vw, 1.25rem);
-      color: var(--text-color);
-      margin-bottom: 0.5rem;
-      font-weight: 600;
-    }
-    .product-detail .description div {
-      font-size: var(--font-size-base);
-      color: var(--text-color);
-      line-height: 1.6;
-    }
-    .product-detail .buttons {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-    }
-    .product-detail .buttons button,
-    .product-detail .buttons a {
-      flex: 1;
-      text-align: center;
-      font-family: var(--font-family);
-      font-weight: 600;
-      padding: var(--padding-base);
-      border-radius: 0.5rem;
-      transition: transform 0.2s ease;
-      min-width: 120px;
-    }
-    .product-detail .buttons .add-to-cart {
-      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-      color: #0F172A;
-    }
-    .product-detail .buttons .buy-now {
-      background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
-      color: #0F172A;
-    }
-    .product-detail .buttons .add-to-cart:hover,
-    .product-detail .buttons .buy-now:hover {
-      transform: translateY(-2px);
-    }
-    .category-toggle svg {
-      transition: transform 0.3s ease;
-    }
-    .category-toggle svg.rotate-180 {
-      transform: rotate(180deg);
-    }
-    .filter-dropdown {
-      background: #1E293B;
-      color: var(--text-color);
-      border: 1px solid var(--primary-color);
-      border-radius: 0.5rem;
-      padding: var(--padding-base);
-      font-family: var(--font-family);
-      font-size: var(--font-size-base);
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .filter-dropdown:hover {
-      border-color: var(--secondary-color);
-    }
-    .filter-dropdown:focus {
-      outline: none;
-      box-shadow: 0 0 6px rgba(217, 70, 239, 0.2);
-    }
-
-    /* Star Rating Styles */
-    .rating {
-      display: flex;
-      flex-direction: row-reverse;
-      justify-content: flex-end;
-      margin: 0.5rem 0;
-    }
-    .rating input {
-      display: none;
-    }
-    .rating label {
-      color: #94A3B8;
-      font-size: 1.25rem;
-      padding: 0 0.1rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .rating input:not(:checked) ~ label:hover,
-    .rating input:not(:checked) ~ label:hover ~ label {
-      color: #FBBF24;
-    }
-    .rating input:checked ~ label {
-      color: #FBBF24;
-    }
-    .average-rating {
-      display: flex;
-      align-items: center;
-      margin: 0.5rem 0;
-    }
-    .average-rating-stars {
-      color: #FBBF24;
-      margin-right: 0.5rem;
-    }
-    .average-rating-count {
-      color: #94A3B8;
-      font-size: 0.875rem;
+    .submit-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     }
     
-    /* Review Section Styles */
-    .reviews-container {
-      margin-top: 1rem;
-      border-top: 1px solid #1E293B;
-      padding-top: 1rem;
-    }
-    .review {
-      background: #1E293B;
-      padding: 0.75rem;
-      border-radius: 0.5rem;
-      margin-bottom: 0.75rem;
-    }
-    .review-header {
+    .product-card {
+      background: var(--card-background);
+      border: 1px solid var(--card-border);
+      border-radius: 0.75rem;
+      overflow: hidden;
       display: flex;
-      justify-content: space-between;
-      margin-bottom: 0.5rem;
+      flex-direction: column;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     }
-    .review-user {
-      font-weight: 600;
-      color: var(--primary-color);
+    .product-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.4), var(--shadow-glow-hover);
     }
-    .review-date {
-      color: #94A3B8;
-      font-size: 0.875rem;
-    }
-    .review-rating {
-      color: #FBBF24;
-      margin-bottom: 0.5rem;
-    }
-    .review-text {
-      color: var(--text-color);
-      line-height: 1.5;
-    }
-    .write-review {
-      margin-top: 1rem;
-      background: #1E293B;
-      padding: 1rem;
-      border-radius: 0.5rem;
-    }
-    .write-review h4 {
-      font-weight: 600;
-      margin-bottom: 0.75rem;
-      color: var(--primary-color);
-    }
-    .write-review textarea {
+    .product-card img {
       width: 100%;
-      min-height: 100px;
-      background: #0F172A;
-      border: 1px solid var(--primary-color);
-      border-radius: 0.5rem;
-      padding: 0.75rem;
-      margin-bottom: 0.75rem;
-      color: var(--text-color);
-      font-family: var(--font-family);
+      height: 220px;
+      object-fit: contain;
+      transition: transform 0.3s ease;
     }
-    .write-review button {
-      background: var(--primary-color);
-      color: #0F172A;
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      font-weight: 600;
-    }
-    .write-review button:hover {
-      background: #2563EB;
-    }
+    .product-card:hover .product-image-container img { transform: scale(1.05); }
 
-    /* Mobile-specific styles */
-    @media (max-width: 767px) {
-      /* Layout adjustments */
-      .md\:ml-64, .md\:mr-64 {
-        margin-left: 0 !important;
-        margin-right: 0 !important;
-      }
-      
-      /* Sidebar and category menu */
-      .sidebar {
-        display: none;
-        width: 85vw;
-        z-index: 50;
-      }
-      .sidebar.active {
-        display: block;
-        position: fixed;
-        height: 100vh;
+    .product-card-overlay {
+        position: absolute;
         top: 0;
-      }
-      
-      .category-menu {
-        display: none;
-        width: 85vw;
-        z-index: 50;
-        transform: translateX(100%);
-      }
-      .category-menu.active {
-        display: block;
-        position: fixed;
-        height: 100vh;
-        top: 0;
-        transform: translateX(0);
-      }
-      
-      /* Mobile menu */
-      #mobile-menu {
-        width: 85vw;
-      }
-      
-      /* Hero section */
-      .hero-bg {
-        padding: 0.75rem;
-      }
-      .hero-bg .flex {
-        flex-direction: column;
-        gap: 0.75rem;
-      }
-      
-      /* Input and buttons */
-      input, select {
-        font-size: 14px;
-        padding: 0.75rem;
-      }
-      .submit-btn {
-        width: 100%;
-        padding: 0.875rem;
-        font-size: 14px;
-      }
-      
-      /* Products grid */
-      #products-grid {
-        grid-template-columns: 1fr;
-        padding: 0 0.75rem;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
         gap: 1rem;
-      }
-      .product-card {
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+    }
+    .product-card:hover .product-card-overlay {
+        opacity: 1;
+        pointer-events: auto;
+    }
+    .overlay-btn {
+        background: rgba(30, 41, 59, 0.8);
+        border: 1px solid var(--card-border);
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.2s ease;
+    }
+    .overlay-btn:hover {
+        background: var(--primary-color);
+        transform: scale(1.1);
+    }
+    .overlay-btn.selected {
+        background: var(--secondary-color);
+        color: white;
+    }
+
+
+    /* Product Detail Modal */
+    #product-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(8px);
+      z-index: 50; display: flex; justify-content: center; align-items: center;
+      opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
+    }
+    #product-overlay.visible { opacity: 1; pointer-events: auto; }
+    .product-detail-content {
+      background: var(--card-background); border: 1px solid var(--card-border);
+      border-radius: 0.75rem; padding: 2rem; width: 90%; max-width: 1000px;
+      max-height: 90vh; overflow-y: auto; position: relative;
+      transform: scale(0.95); transition: transform 0.3s ease;
+    }
+    #product-overlay.visible .product-detail-content { transform: scale(1); }
+
+    /* Star Rating Styles */
+    .rating { display: flex; flex-direction: row-reverse; justify-content: flex-end; }
+    .rating input { display: none; }
+    .rating label { color: #94A3B8; font-size: 1.5rem; padding: 0 0.1rem; cursor: pointer; transition: all 0.2s ease; }
+    .rating input:not(:checked) ~ label:hover, .rating input:not(:checked) ~ label:hover ~ label { color: #FBBF24; }
+    .rating input:checked ~ label { color: #FBBF24; }
+    
+    .ai-content h3 { font-size: 1.25rem; font-weight: 600; color: var(--primary-color); margin-bottom: 0.5rem;}
+    .ai-content ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1rem; }
+    .ai-content li { margin-bottom: 0.5rem; }
+    .ai-content p { color: #cbd5e1; }
+    .ai-content table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    .ai-content th, .ai-content td { border: 1px solid var(--card-border); padding: 0.75rem; text-align: left; }
+    .ai-content th { background-color: #2c3a4f; }
+    .ai-content h4 { font-size: 1.1rem; font-weight: 600; color: var(--secondary-color); margin-top: 1.5rem; }
+
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.8);
+        backdrop-filter: blur(8px);
+        z-index: 50;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         padding: 1rem;
-      }
-      .product-card img {
-        height: 180px;
-        object-fit: contain;
-      }
-      .product-card h3 {
-        font-size: 1.1rem;
-        margin: 0.5rem 0;
-      }
-      .product-card p {
-        font-size: 0.95rem;
-        margin-bottom: 0.75rem;
-      }
-      .product-card .buttons {
-        flex-direction: column;
-        gap: 0.5rem;
-      }
-      .product-card .buttons button, 
-      .product-card .buttons a {
-        width: 100%;
-      }
-      
-      /* Product detail overlay */
-      .product-detail {
-        padding: 0.75rem;
-        width: 95%;
-        top: 55%;
-      }
-      .product-detail img {
-        max-height: 220px;
-      }
-      .product-detail h3 {
-        font-size: 1.3rem;
-      }
-      .product-detail .price {
-        font-size: 1.1rem;
-      }
-      .product-detail .buttons {
-        flex-direction: column;
-      }
-      .close-btn {
-        padding: 0.5rem;
-        font-size: 0.875rem;
-      }
-      .arrow {
-        padding: 0.3rem;
-        font-size: 1rem;
-      }
-      
-      /* Navigation */
-      .nav-link, #mobile-menu a {
-        font-size: 0.95rem;
-      }
-      
-      /* Footer */
-      footer {
-        padding: 1.5rem 0.75rem;
-      }
-      footer .grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-      }
-      footer h3 {
-        font-size: 1.1rem;
-        margin-bottom: 0.75rem;
-      }
-      footer p, footer a {
-        font-size: 0.9rem;
-      }
-      footer .social-icons {
-        justify-content: flex-start;
-        margin-top: 0.5rem;
-      }
-      .cart-count {
-        font-size: 0.7rem;
-        padding: 1px 5px;
-      }
-      .cart-icon-container {
-        padding: 0.4rem 0.9rem;
-      }
-      
-      /* Rating adjustments */
-      .rating label {
-        font-size: 1rem;
-      }
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+    }
+    .modal-overlay.visible {
+        opacity: 1;
+        pointer-events: auto;
     }
 
-    /* Tablet and desktop styles */
-    @media (min-width: 768px) {
-      .category-menu {
-        transform: translateX(0);
-        display: block;
-      }
-      .sidebar {
-        display: block;
-      }
-      #products-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    /* Large desktop styles */
-    @media (min-width: 1024px) {
-      #products-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-
-    /* Footer improvements */
-    footer {
-      background: #1E293B;
-      padding: 2rem 1rem;
-    }
-    footer h3 {
-      color: var(--primary-color);
-      font-weight: 600;
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    footer a {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      transition: color 0.2s ease;
-    }
-    footer a:hover {
-      color: var(--primary-color);
-    }
-    .social-icons {
-      display: flex;
-      gap: 0.75rem;
-      margin-top: 1rem;
-    }
-    .social-icons a {
-      background: rgba(30, 41, 59, 0.7);
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s ease;
-    }
-    .social-icons a:hover {
-      background: var(--primary-color);
-      transform: translateY(-2px);
-    }
-    .copyright {
-      text-align: center;
-      margin-top: 2rem;
-      padding-top: 1rem;
-      border-top: 1px solid rgba(255,255,255,0.1);
-    }
-
-    /* Additional icons */
-    .icon-text {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .filter-icon {
-      margin-right: 0.5rem;
+    /* Custom select style */
+    select {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='%2394a3b8' class='w-6 h-6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m19.5 8.25-7.5 7.5-7.5-7.5' /%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 1.5em 1.5em;
+        padding-right: 2.5rem;
     }
   </style>
 </head>
-<body>
+<body class="min-h-screen">
+  <div id="loader" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex justify-center items-center z-[100]"><div class="border-4 border-slate-700 border-l-primary-color rounded-full w-12 h-12 animate-spin"></div></div>
+
   <!-- Product Detail Overlay -->
   <div id="product-overlay">
-    <button class="close-btn">Close</button>
-    <div class="product-detail">
-      <div class="image-container">
-        <button class="arrow left-arrow" onclick="changeImage(-1)">❮</button>
-        <img id="product-image" src="" alt="Product Image">
-        <button class="arrow right-arrow" onclick="changeImage(1)">❯</button>
-      </div>
-      <h3 id="product-name"></h3>
-      <div class="price" id="product-price"></div>
-      <div class="average-rating" id="product-rating">
-        <div class="average-rating-stars" id="average-stars"></div>
-        <div class="average-rating-count" id="review-count"></div>
-      </div>
-      <div class="description">
-        <h4>Product Description</h4>
-        <div id="product-description"></div>
-      </div>
-      
-      <!-- Reviews Section -->
-      <div class="reviews-container">
-        <h4>Customer Reviews</h4>
-        <div id="reviews-list"></div>
-        
-        <!-- Write Review Form -->
-        <div class="write-review">
-          <h4>Write a Review</h4>
-          <div class="rating">
-            <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="5 stars">★</label>
-            <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="4 stars">★</label>
-            <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="3 stars">★</label>
-            <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="2 stars">★</label>
-            <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="1 star">★</label>
+    <div class="product-detail-content">
+      <button id="close-product-overlay" class="absolute top-4 right-4 bg-slate-700/50 w-9 h-9 rounded-full text-white hover:bg-red-500 transition-colors"><i class="fas fa-times"></i></button>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div>
+          <div class="relative mb-4">
+            <img id="product-image" src="" alt="Product Image" class="w-full h-96 object-contain rounded-lg bg-slate-900/50 p-4">
           </div>
-          <textarea id="review-text" placeholder="Share your thoughts about this product..."></textarea>
-          <button id="submit-review">Submit Review</button>
+          <div id="thumbnail-container" class="flex gap-2 justify-center"></div>
+        </div>
+        <div>
+          <h2 id="product-name" class="text-3xl font-bold mb-2"></h2>
+          <div id="product-price" class="text-3xl font-bold text-blue-400 mb-4"></div>
+          <div id="product-rating" class="flex items-center gap-2 mb-4">
+            <div id="average-stars" class="text-yellow-400"></div>
+            <div id="review-count" class="text-sm text-slate-400"></div>
+          </div>
+          <div class="bg-slate-800/50 p-4 rounded-lg mb-4">
+            <h4 class="font-semibold mb-2">Description</h4>
+            <div id="product-description" class="text-slate-300 text-sm leading-relaxed"></div>
+          </div>
+          <div class="flex gap-4 mb-6">
+            <button id="overlay-add-to-cart" class="submit-btn flex-1 py-3"><i class="fas fa-cart-plus mr-2"></i> Add to Cart</button>
+            <a href="address.html" id="overlay-buy-now" class="submit-btn flex-1 py-3 text-center"><i class="fas fa-bolt mr-2"></i> Buy Now</a>
+          </div>
+          <div id="ai-insights-container" class="mt-4 pt-4 border-t border-slate-700">
+            <button id="get-ai-insights-btn" class="submit-btn w-full py-3">✨ Get AI-Powered Insights</button>
+            <div id="ai-insights-content" class="mt-4 hidden ai-content"></div>
+          </div>
         </div>
       </div>
-      
-      <div class="buttons">
-        <button class="add-to-cart" id="overlay-add-to-cart">
-          <i class="fas fa-cart-plus mr-2"></i> Add to Cart
-        </button>
-        <a href="address.html" class="buy-now" id="overlay-buy-now">
-          <i class="fas fa-bolt mr-2"></i> Buy Now
-        </a>
+      <div class="mt-8 pt-6 border-t border-slate-700">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-bold">Customer Reviews</h3>
+            <button id="summarize-reviews-btn" class="submit-btn !py-2 !px-4 text-sm" style="display: none;">✨ Summarize Reviews</button>
+        </div>
+        <div id="review-summary-container" class="ai-content mb-6 hidden bg-slate-800/50 p-4 rounded-lg"></div>
+        <div id="reviews-list" class="space-y-4 mb-6"></div>
+        <div class="bg-slate-800/50 p-4 rounded-lg">
+          <h4 class="font-semibold mb-2">Write a Review</h4>
+          <div class="rating mb-2">
+            <input type="radio" id="star5" name="rating" value="5"><label for="star5" title="5 stars">★</label>
+            <input type="radio" id="star4" name="rating" value="4"><label for="star4" title="4 stars">★</label>
+            <input type="radio" id="star3" name="rating" value="3"><label for="star3" title="3 stars">★</label>
+            <input type="radio" id="star2" name="rating" value="2"><label for="star2" title="2 stars">★</label>
+            <input type="radio" id="star1" name="rating" value="1"><label for="star1" title="1 star">★</label>
+          </div>
+          <textarea id="review-text" placeholder="Share your thoughts..." class="w-full bg-slate-900 border border-slate-600 rounded-md p-2 mb-2 text-white"></textarea>
+          <button id="submit-review" class="submit-btn px-6 py-2">Submit Review</button>
+        </div>
       </div>
     </div>
   </div>
+  
+  <div class="flex">
+    <!-- Sidebar (Left Nav) -->
+    <aside class="sidebar fixed top-0 left-0 h-full z-20 w-64 -translate-x-full md:translate-x-0">
+      <div class="p-6">
+        <h1 class="text-2xl font-bold text-white leading-relaxed">Gaming Odyssey</h1>
+        <nav class="mt-10 space-y-2">
+            <a href="index.html" class="flex items-center space-x-3 text-slate-300 font-semibold p-3 rounded-md hover:bg-slate-700/50"><i class="fas fa-home w-5"></i><span>Home</span></a>
+            <a href="store.html" class="flex items-center space-x-3 p-3 rounded-md bg-blue-500/20 text-blue-400 font-semibold"><i class="fas fa-store w-5"></i><span>Store</span></a>
+            <a href="tournaments.html" class="flex items-center space-x-3 text-slate-300 font-semibold p-3 rounded-md hover:bg-slate-700/50"><i class="fas fa-trophy w-5"></i><span>Tournaments</span></a>
+        </nav>
+      </div>
+    </aside>
 
-  <!-- Sidebar (Navigation Menu) -->
-  <div class="fixed top-0 left-0 h-full sidebar gradient-glow z-20 hidden md:block">
-    <div class="p-6">
-      <h1 class="text-2xl font-bold text-white leading-relaxed">Gaming Odyssey</h1>
-      <nav class="mt-10 space-y-3">
-        <a href="index.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <i class="fas fa-home w-5 h-5"></i>
-          <span>Home</span>
-        </a>
-        <a href="store.html" class="flex items-center space-x-2 text-[#3B82F6] font-semibold nav-link">
-          <i class="fas fa-store w-5 h-5"></i>
-          <span>Store</span>
-        </a>
-        <a href="tournaments.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <i class="fas fa-trophy w-5 h-5"></i>
-          <span>Tournaments</span>
-        </a>
-        <a href="trackorder.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <i class="fas fa-truck-fast w-5 h-5"></i>
-          <span>Track Order</span>
-        </a>
-        <a href="contactus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <i class="fas fa-envelope w-5 h-5"></i>
-          <span>Contact Us</span>
-        </a>
-        <a href="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <i class="fas fa-info-circle w-5 h-5"></i>
-          <span>About Us</span>
-        </a>
-      </nav>
-    </div>
-  </div>
+    <!-- Category Menu (Right Side) -->
+    <aside id="category-menu" class="category-menu fixed top-0 right-0 h-full z-30 w-64 translate-x-full md:translate-x-0">
+        <div class="p-6">
+            <h2 class="text-xl font-bold text-white mb-6 flex items-center"><i class="fas fa-list-alt mr-2"></i> Categories</h2>
+            <nav id="category-nav" class="space-y-2"></nav>
+        </div>
+    </aside>
 
-  <!-- Mobile Hamburger Menu -->
-  <div class="md:hidden fixed top-0 left-0 w-full bg-[#1E293B] z-30 p-4 flex justify-between items-center gradient-glow">
-    <h1 class="text-lg font-bold text-white leading-relaxed">Gaming Odyssey</h1>
-    <div class="flex items-center space-x-4">
-      <a href="cart.html" class="cart-icon-container">
-        <i class="fas fa-shopping-cart text-[#3B82F6]"></i>
-        <span class="text-[#F1F5F9]">Cart</span>
-        <span id="cart-count-mobile" class="cart-count">0</span>
-      </a>
-      <button id="hamburger" class="text-[#3B82F6]">
-        <i class="fas fa-bars text-2xl"></i>
-      </button>
-    </div>
-  </div>
-  <div id="mobile-menu" class="hidden md:hidden fixed top-0 left-0 w-full h-full mobile-menu z-20 p-4">
-    <button id="close-menu" class="absolute top-4 right-4 text-[#3B82F6] gradient-glow rounded-full p-2">
-      <i class="fas fa-times"></i>
-    </button>
-    <nav class="space-y-3 mt-12">
-      <a href="index.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <i class="fas fa-home w-5 h-5"></i>
-        <span>Home</span>
-      </a>
-      <a href="store.html" class="flex items-center space-x-2 text-[#3B82F6] font-semibold nav-link">
-        <i class="fas fa-store w-5 h-5"></i>
-        <span>Store</span>
-      </a>
-      <a href="tournaments.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <i class="fas fa-trophy w-5 h-5"></i>
-        <span>Tournaments</span>
-      </a>
-      <a href="trackorder.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <i class="fas fa-truck-fast w-5 h-5"></i>
-        <span>Track Order</span>
-      </a>
-      <a href="contactus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <i class="fas fa-envelope w-5 h-5"></i>
-        <span>Contact Us</span>
-      </a>
-      <a href="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <i class="fas fa-info-circle w-5 h-5"></i>
-        <span>About Us</span>
-      </a>
-    </nav>
-  </div>
-
-  <!-- Category Sliding Menu (Right Side) -->
-  <div id="category-menu" class="fixed top-0 right-0 h-full category-menu gradient-glow z-30">
-    <div class="p-6">
-      <h2 class="text-xl font-bold text-white mb-6 flex items-center">
-        <i class="fas fa-list mr-2"></i> Categories
-      </h2>
-      <nav class="space-y-4">
-        <div>
-          <button class="category-toggle flex items-center justify-between w-full text-lg text-[#F1F5F9] font-semibold nav-link">
-            <span class="flex items-center">
-              <i class="fas fa-mouse mr-2"></i> Mouse
-            </span>
-            <i class="fas fa-chevron-down text-sm transition-transform"></i>
-          </button>
-          <div class="subcategory ml-4 mt-2 space-y-2 hidden">
-            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link flex items-center">
-              <i class="fas fa-chevron-right mr-2 text-xs"></i> Razer
-            </a>
-            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link flex items-center">
-              <i class="fas fa-chevron-right mr-2 text-xs"></i> Logitech
-            </a>
-            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link flex items-center">
-              <i class="fas fa-chevron-right mr-2 text-xs"></i> Roccat
-            </a>
-          </div>
+    <!-- Main Content -->
+    <main class="flex-1 md:ml-64 md:mr-64 transition-all duration-300 ease-in-out pb-24"> <!-- Added padding-bottom -->
+      <header class="sticky top-0 bg-slate-900/80 backdrop-blur-md z-10 p-4 flex justify-between items-center md:justify-end border-b border-slate-700">
+        <button id="hamburger" class="md:hidden text-blue-400 text-2xl"><i class="fas fa-bars"></i></button>
+        <div class="flex items-center gap-4">
+          <button id="category-toggle" class="md:hidden submit-btn !p-3"><i class="fas fa-filter"></i></button>
+          <a href="#" class="header-icon-group hidden md:flex items-center gap-2"><i class="fas fa-heart text-red-400 text-lg"></i><span class="text-sm">Wishlist</span><span id="wishlist-count-desktop" class="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span></a>
+          <a href="cart.html" class="header-icon-group flex items-center gap-2"><i class="fas fa-shopping-cart text-blue-400 text-lg"></i><span class="text-sm">Cart</span><span id="cart-count" class="bg-blue-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span></a>
         </div>
-        <div>
-          <button class="category-toggle flex items-center justify-between w-full text-lg text-[#F1F5F9] font-semibold nav-link">
-            <span class="flex items-center">
-              <i class="fas fa-keyboard mr-2"></i> Keyboard
-            </span>
-            <i class="fas fa-chevron-down text-sm transition-transform"></i>
-          </button>
-          <div class="subcategory ml-4 mt-2 space-y-2 hidden">
-            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link flex items-center">
-              <i class="fas fa-chevron-right mr-2 text-xs"></i> Razer
-            </a>
-            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link flex items-center">
-              <i class="fas fa-chevron-right mr-2 text-xs"></i> Logitech
-            </a>
-            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link flex items-center">
-              <i class="fas fa-chevron-right mr-2 text-xs"></i> Roccat
-            </a>
-          </div>
-        </div>
-        <div>
-          <button class="category-toggle flex items-center justify-between w-full text-lg text-[#F1F5F9] font-semibold nav-link">
-            <span class="flex items-center">
-              <i class="fas fa-desktop mr-2"></i> Monitor
-            </span>
-            <i class="fas fa-chevron-down text-sm transition-transform"></i>
-          </button>
-          <div class="subcategory ml-4 mt-2 space-y-2 hidden">
-            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link flex items-center">
-              <i class="fas fa-chevron-right mr-2 text-xs"></i> ASUS
-            </a>
-            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link flex items-center">
-              <i class="fas fa-chevron-right mr-2 text-xs"></i> Acer
-            </a>
-            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link flex items-center">
-              <i class="fas fa-chevron-right mr-2 text-xs"></i> LG
-            </a>
-          </div>
-        </div>
-        <div>
-          <button class="category-toggle flex items-center justify-between w-full text-lg text-[#F1F5F9] font-semibold nav-link">
-            <span class="flex items-center">
-              <i class="fas fa-volume-up mr-2"></i> Speakers
-            </span>
-            <i class="fas fa-chevron-down text-sm transition-transform"></i>
-          </button>
-          <div class="subcategory ml-4 mt-2 space-y-2 hidden">
-            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link flex items-center">
-              <i class="fas fa-chevron-right mr-2 text-xs"></i> Bose
-            </a>
-            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link flex items-center">
-              <i class="fas fa-chevron-right mr-2 text-xs"></i> Logitech
-            </a>
-            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link flex items-center">
-              <i class="fas fa-chevron-right mr-2 text-xs"></i> JBL
-            </a>
-          </div>
-        </div>
-        <div>
-          <button class="category-toggle flex items-center justify-between w-full text-lg text-[#F1F5F9] font-semibold nav-link">
-            <span class="flex items-center">
-              <i class="fas fa-video mr-2"></i> Webcam
-            </span>
-            <i class="fas fa-chevron-down text-sm transition-transform"></i>
-          </button>
-          <div class="subcategory ml-4 mt-2 space-y-2 hidden">
-            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link flex items-center">
-              <i class="fas fa-chevron-right mr-2 text-xs"></i> Logitech
-            </a>
-            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link flex items-center">
-              <i class="fas fa-chevron-right mr-2 text-xs"></i> Razer
-            </a>
-            <a href="#" class="block text-sm text-[#F1F5F9] hover:text-[#3B82F6] nav-link flex items-center">
-              <i class="fas fa-chevron-right mr-2 text-xs"></i> Elgato
-            </a>
-          </div>
-        </div>
-      </nav>
-    </div>
-  </div>
-
-  <!-- Main Content -->
-  <div class="md:ml-64 md:mr-64">
-    <!-- Search and Filters Section -->
-    <section class="hero-bg py-8 px-4 sm:px-6 md:px-8">
-      <div class="max-w-6xl mx-auto">
-        <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-          <div class="w-full flex flex-col sm:flex-row items-center space-x-0 sm:space-x-4 space-y-2 sm:space-y-0">
-            <div class="relative w-full">
-              <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-              <input type="text" id="search-input" placeholder="Search products..." class="w-full pl-10">
+      </header>
+      <section class="hero-bg py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+          <h1 class="text-4xl md:text-5xl font-bold text-white text-center mb-2">Our Digital Armory</h1>
+          <p class="text-slate-400 text-center mb-8 max-w-2xl mx-auto">Find the perfect gear to conquer your virtual worlds. High-performance peripherals await.</p>
+          <div class="bg-slate-800/50 p-4 rounded-lg flex flex-col md:flex-row items-center gap-4">
+            <div class="relative w-full flex-grow">
+              <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+              <input type="text" id="search-input" placeholder="Search for mice, keyboards, etc..." class="w-full pl-12 py-3 rounded-md bg-slate-900 border border-slate-700 focus:border-blue-500 focus:ring-blue-500/50 focus:ring-2 outline-none">
             </div>
-            <button id="search-btn" class="submit-btn w-full sm:w-auto">
-              <i class="fas fa-search mr-2"></i> Search
-            </button>
+            <button id="open-setup-builder-btn" class="submit-btn flex-shrink-0 !py-3 !px-5 w-full md:w-auto">✨ AI Setup Builder</button>
           </div>
-          <div class="flex flex-col sm:flex-row items-center space-x-0 sm:space-x-4 space-y-2 sm:space-y-0 w-full">
-            <button id="category-toggle" class="md:hidden submit-btn w-full sm:w-auto">
-              <i class="fas fa-filter mr-2"></i> Categories
-            </button>
-            <div class="relative w-full sm:w-auto">
-              <i class="fas fa-sort-amount-down absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-              <select id="sort-filter" class="filter-dropdown w-full pl-10">
-                <option value="">Sort By</option>
+        </div>
+      </section>
+      <section class="py-16 px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-end mb-4 max-w-7xl mx-auto">
+            <select id="sort-filter" class="bg-slate-800 border border-slate-700 rounded-md p-2">
+                <option value="default">Sort By</option>
                 <option value="price-low">Price: Low to High</option>
                 <option value="price-high">Price: High to Low</option>
-                <option value="name-asc">Alphabetical: A-Z</option>
-                <option value="name-desc">Alphabetical: Z-A</option>
                 <option value="rating-high">Rating: High to Low</option>
-                <option value="rating-low">Rating: Low to High</option>
-              </select>
+                <option value="name-asc">Alphabetical: A-Z</option>
+            </select>
+        </div>
+        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8 max-w-7xl mx-auto"></div>
+      </section>
+      
+      <!-- Footer -->
+      <footer class="bg-slate-900 border-t border-slate-700 py-10 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+                <h3 class="font-bold text-lg mb-4">Gaming Odyssey</h3>
+                <p class="text-slate-400 text-sm">Your one-stop shop for the best gaming peripherals to elevate your play.</p>
+                <div class="flex gap-4 mt-4">
+                    <a href="#" class="text-slate-400 hover:text-white"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-slate-400 hover:text-white"><i class="fab fa-youtube"></i></a>
+                    <a href="#" class="text-slate-400 hover:text-white"><i class="fab fa-twitter"></i></a>
+                </div>
             </div>
-            <a href="cart.html" class="cart-icon-container gradient-glow hidden md:flex">
-              <i class="fas fa-shopping-cart text-[#3B82F6]"></i>
-              <span class="text-[#F1F5F9]">Cart</span>
-              <span id="cart-count-desktop" class="cart-count">0</span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Products Section -->
-    <section class="py-16 px-4 sm:px-6 md:px-8">
-      <h2 class="text-4xl font-bold text-white text-center mb-12 flex items-center justify-center">
-        <i class="fas fa-store mr-4"></i> Store
-      </h2>
-      <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-        <!-- Products will be loaded dynamically from database.html -->
-      </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-[#1E293B] py-10 px-4 sm:px-6 md:px-8">
-      <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-        <div>
-          <h3 class="text-lg font-bold text-white mb-3 leading-relaxed flex items-center">
-            <i class="fas fa-headset mr-2"></i> Contact & Support
-          </h3>
-          <p class="text-[#F1F5F9] mb-2 text-sm leading-relaxed flex items-center">
-            <i class="fas fa-envelope mr-2"></i>
-            <a href="mailto:support@gamingodyssey.in" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link">
-              support@gamingodyssey.in
-            </a>
-          </p>
-          <p class="text-[#F1F5F9] text-sm leading-relaxed flex items-center">
-            <i class="fas fa-phone-alt mr-2"></i> 6290994382
-          </p>
-          <p class="text-[#F1F5F9] text-sm leading-relaxed flex items-center mt-2">
-            <i class="fas fa-map-marker-alt mr-2"></i> Kolkata, West Bengal, India
-          </p>
-        </div>
-        <div>
-          <h3 class="text-lg font-bold text-white mb-3 leading-relaxed flex items-center">
-            <i class="fas fa-link mr-2"></i> Quick Links
-          </h3>
-          <ul class="space-y-2">
-            <li>
-              <a href="index.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed flex items-center">
-                <i class="fas fa-home mr-2"></i> Home
-              </a>
-            </li>
-            <li>
-              <a href="store.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed flex items-center">
-                <i class="fas fa-store mr-2"></i> Store
-              </a>
-            </li>
-            <li>
-              <a href="tournaments.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed flex items-center">
-                <i class="fas fa-trophy mr-2"></i> Tournaments
-              </a>
-            </li>
-            <li>
-              <a href="trackorder.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed flex items-center">
-                <i class="fas fa-truck-fast mr-2"></i> Track Order
-              </a>
-            </li>
-            <li>
-              <a href="contactus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed flex items-center">
-                <i class="fas fa-envelope mr-2"></i> Contact Us
-              </a>
-            </li>
-            <li>
-              <a href="aboutus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed flex items-center">
-                <i class="fas fa-info-circle mr-2"></i> About Us
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div>
-          <h3 class="text-lg font-bold text-white mb-3 leading-relaxed flex items-center">
-            <i class="fas fa-share-alt mr-2"></i> Connect With Us
-          </h3>
-          <div class="social-icons">
-            <a href="https://www.instagram.com/noticedveil" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow">
-              <i class="fab fa-instagram"></i>
-            </a>
-            <a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow">
-              <i class="fab fa-youtube"></i>
-            </a>
-            <a href="https://www.facebook.com" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow">
-              <i class="fab fa-facebook-f"></i>
-            </a>
-            <a href="https://www.twitter.com" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow">
-              <i class="fab fa-twitter"></i>
-            </a>
-            <a href="https://www.discord.com" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow">
-              <i class="fab fa-discord"></i>
-            </a>
-          </div>
-          <div class="mt-4">
-            <h4 class="text-sm font-semibold text-[#F1F5F9] mb-2 flex items-center">
-              <i class="fas fa-newspaper mr-2"></i> Newsletter
-            </h4>
-            <div class="flex">
-              <input type="email" placeholder="Your email" class="bg-[#1E293B] text-[#F1F5F9] px-3 py-2 rounded-l-md focus:outline-none focus:ring-1 focus:ring-[#3B82F6] w-full">
-              <button class="bg-[#3B82F6] text-[#0F172A] px-3 py-2 rounded-r-md font-semibold hover:bg-[#2563EB] transition">
-                <i class="fas fa-paper-plane"></i>
-              </button>
+            <div>
+                <h3 class="font-bold text-lg mb-4">Quick Links</h3>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#" class="text-slate-400 hover:text-white">Home</a></li>
+                    <li><a href="#" class="text-slate-400 hover:text-white">About Us</a></li>
+                    <li><a href="#" class="text-slate-400 hover:text-white">Contact</a></li>
+                </ul>
             </div>
-          </div>
+            <div>
+                <h3 class="font-bold text-lg mb-4">Newsletter</h3>
+                <p class="text-slate-400 text-sm mb-2">Get exclusive deals and updates.</p>
+                <div class="flex"><input type="email" placeholder="Enter your email" class="w-full p-2 rounded-l-md bg-slate-800 border border-slate-700"><button class="bg-blue-600 px-4 rounded-r-md">Go</button></div>
+            </div>
         </div>
-      </div>
-      <div class="copyright">
-        <p class="text-center text-[#F1F5F9] mt-6 text-sm leading-relaxed">
-          <i class="fas fa-copyright mr-1"></i> 2025 Gaming Odyssey. All rights reserved.
-        </p>
-        <div class="flex justify-center space-x-4 mt-2">
-          <a href="#" class="text-[#F1F5F9] hover:text-[#3B82F6] text-xs">Privacy Policy</a>
-          <a href="#" class="text-[#F1F5F9] hover:text-[#3B82F6] text-xs">Terms of Service</a>
-          <a href="#" class="text-[#F1F5F9] hover:text-[#3B82F6] text-xs">Shipping Policy</a>
-          <a href="#" class="text-[#F1F5F9] hover:text-[#3B82F6] text-xs">Returns & Refunds</a>
+        <div class="text-center text-slate-500 text-xs mt-8 pt-8 border-t border-slate-800">
+            &copy; 2025 Gaming Odyssey. All Rights Reserved.
         </div>
-      </div>
-    </footer>
+      </footer>
+    </main>
+  </div>
+  
+  <!-- Comparison Tray -->
+  <div id="comparison-tray" class="fixed bottom-[-100%] left-0 right-0 z-40 bg-slate-800/80 backdrop-blur-md shadow-lg transition-all duration-500 ease-in-out">
+    <div class="max-w-7xl mx-auto p-4 flex justify-between items-center">
+        <div class="flex items-center gap-4">
+            <h4 class="text-lg font-semibold hidden md:block">Compare Products</h4>
+            <div id="comparison-items" class="flex gap-2"></div>
+        </div>
+        <div class="flex gap-4">
+            <button id="clear-comparison-btn" class="text-slate-400 hover:text-white">Clear</button>
+            <button id="compare-now-btn" class="submit-btn px-6 py-2" disabled>Compare (0/4)</button>
+        </div>
+    </div>
   </div>
 
+  <!-- Comparison Modal -->
+  <div id="comparison-modal-overlay" class="modal-overlay">
+      <div class="bg-card-background border border-card-border rounded-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto relative">
+          <button id="close-comparison-modal" class="absolute top-4 right-4 text-2xl w-8 h-8 rounded-full bg-slate-700/50 hover:bg-red-500">&times;</button>
+          <h2 class="text-2xl font-bold mb-4">✨ AI Product Comparison</h2>
+          <div id="comparison-result" class="ai-content"></div>
+      </div>
+  </div>
+  
+  <!-- AI Setup Builder Modal -->
+  <div id="setup-builder-overlay" class="modal-overlay">
+      <div class="bg-card-background border border-card-border rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto relative">
+          <button id="close-setup-builder-modal" class="absolute top-4 right-4 text-2xl w-8 h-8 rounded-full bg-slate-700/50 hover:bg-red-500">&times;</button>
+          <div id="setup-builder-form-container">
+              <h2 class="text-2xl font-bold mb-2">✨ AI Setup Builder</h2>
+              <p class="text-slate-400 mb-6">Answer a few questions and our AI will build the perfect setup for you.</p>
+              <form id="setup-builder-form" class="space-y-4">
+                  <div>
+                      <label for="game-type" class="block mb-2 font-semibold">What type of games do you primarily play?</label>
+                      <select id="game-type" class="w-full bg-slate-800 border border-slate-700 rounded-md p-2">
+                          <option>Competitive FPS (CS:GO, Valorant)</option>
+                          <option>Battle Royale (Fortnite, Apex Legends)</option>
+                          <option>MOBA/Strategy (League of Legends, Dota 2)</option>
+                          <option>RPG/MMORPG (World of Warcraft, Elden Ring)</option>
+                          <option>A bit of everything</option>
+                      </select>
+                  </div>
+                  <div>
+                      <label for="priority" class="block mb-2 font-semibold">What's your main priority?</label>
+                      <select id="priority" class="w-full bg-slate-800 border border-slate-700 rounded-md p-2">
+                          <option>Raw Performance & Speed</option>
+                          <option>Wireless Freedom</option>
+                          <option>Aesthetics & RGB Lighting</option>
+                          <option>Comfort for Long Sessions</option>
+                      </select>
+                  </div>
+                  <button type="submit" class="submit-btn w-full !py-3">Build My Setup</button>
+              </form>
+          </div>
+          <div id="setup-builder-result" class="hidden">
+            <h2 class="text-2xl font-bold mb-4">✨ Your AI-Curated Setup</h2>
+            <div id="setup-result-content" class="space-y-4"></div>
+            <button id="restart-setup-builder-btn" class="submit-btn w-full !py-3 mt-6">Start Over</button>
+          </div>
+      </div>
+  </div>
+
+
   <script>
-    // Default products data in case localStorage is empty
-    const defaultProducts = [
-      {
-        id: "prod_1",
-        name: "Razer DeathAdder V2",
-        price: 69.99,
-        category: "Mouse",
-        description: "The Razer DeathAdder V2 is an ergonomic gaming mouse with Razer Optical Mouse Switches and Focus+ 20K DPI Optical Sensor for ultimate speed and accuracy.",
-        images: ["https://m.media-amazon.com/images/I/61IkmqVBRZL._AC_SL1500_.jpg"]
-      },
-      {
-        id: "prod_2",
-        name: "Logitech G Pro X Keyboard",
-        price: 149.99,
-        category: "Keyboard",
-        description: "Logitech G PRO X Mechanical Gaming Keyboard with swappable GX mechanical switches and LIGHTSYNC RGB.",
-        images: ["https://m.media-amazon.com/images/I/71hH+Qy4i+L._AC_SL1500_.jpg"]
-      },
-      {
-        id: "prod_3",
-        name: "ASUS TUF Gaming Monitor",
-        price: 249.99,
-        category: "Monitor",
-        description: "ASUS TUF Gaming 27\" 1440P HDR Monitor (VG27AQ) - QHD (2560 x 1440), 165Hz, 1ms, Extreme Low Motion Blur, G-SYNC Compatible.",
-        images: ["https://m.media-amazon.com/images/I/81WrBJdJNIL._AC_SL1500_.jpg"]
-      },
-      {
-        id: "prod_4",
-        name: "HyperX Cloud II Headset",
-        price: 99.99,
-        category: "Headset",
-        description: "HyperX Cloud II Gaming Headset with 7.1 Surround Sound, Memory Foam Ear Pads, Durable Aluminum Frame, Detachable Microphone.",
-        images: ["https://m.media-amazon.com/images/I/71Lq+9g5udL._AC_SL1500_.jpg"]
-      },
-      {
-        id: "prod_5",
-        name: "SteelSeries QcK Gaming Mousepad",
-        price: 14.99,
-        category: "Accessories",
-        description: "SteelSeries QcK Gaming Surface - Optimized for Gaming Sensors and Tracking - Non-Slip Rubber Base.",
-        images: ["https://m.media-amazon.com/images/I/71QYwX+7X+L._AC_SL1500_.jpg"]
-      },
-      {
-        id: "prod_6",
-        name: "Elgato Stream Deck",
-        price: 149.99,
-        category: "Streaming",
-        description: "Elgato Stream Deck - Live Content Creation Controller with 15 customizable LCD keys, adjustable stand, for Windows 10 and macOS.",
-        images: ["https://m.media-amazon.com/images/I/61W9m6k5uRL._AC_SL1500_.jpg"]
+    document.addEventListener('DOMContentLoaded', () => {
+
+      const defaultProducts = [
+        { id: "prod_1", name: "Razer DeathAdder V3 Pro", price: 149.99, category: "Mouse", description: "An ultra-lightweight, ergonomic esports mouse that offers a level of speed and control favored by top pros. Features Razer's Focus Pro 30K Optical Sensor for flawless tracking performance.", images: ["https://assets2.razerzone.com/images/pnx.assets/618c0b652d83f88d7c177c3851586a1f/razer-deathadder-v3-pro-white.png", "https://assets2.razerzone.com/images/pnx.assets/0a29243eae24a49c4a45053fd28003f0/500x500-deathadder-v3-pro-black.png"], isNew: true, rating: 4.8, reviews: 120 },
+        { id: "prod_2", name: "Logitech G Pro X Superlight", price: 159.99, salePrice: 139.99, category: "Mouse", description: "Meticulously designed in collaboration with the world’s leading esports pros. Engineered to win, it's the pinnacle of our continued pursuit for the highest levels of performance.", images: ["https://resource.logitechg.com/w_692,c_lpad,ar_4:3,q_auto,f_auto,dpr_1.0/d_transparent.gif/content/dam/gaming/en/products/pro-x-superlight/pro-x-superlight-gallery-1.png"], rating: 4.9, reviews: 250 },
+        { id: "prod_3", name: "SteelSeries Apex Pro TKL", price: 179.99, category: "Keyboard", description: "The world's fastest and most advanced keyboard performs effortlessly for all undertakings, whether you need the fastest keystrokes in gaming to destroy the competition, or deliberate presses for typing accuracy.", images: ["https://media.steelseriescdn.com/thumbs/filer_public/30/c5/30c5a7fc-4209-4359-99a3-2287e2f20530/buy_apex_pro_tkl_wireless_gallery_1.png__1850x800_q100_crop-scale_optimize_subsampling-2.png"], rating: 4.7, reviews: 95 },
+        { id: "prod_4", name: "HyperX Cloud Alpha Wireless", price: 199.99, category: "Headset", description: "Get a massive 300 hours of battery life and play for over a week without the battery getting low. DTS Headphone:X Spatial Audio helps you pinpoint opponent locations.", images: ["https://media.kingston.com/hyperx/product/hx-product-headset-cloud-alpha-wireless-1-zm-lg.png"], isNew: true, rating: 4.6, reviews: 88 },
+      ];
+      
+      let allProducts = [];
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+      let productReviews = JSON.parse(localStorage.getItem('productReviews')) || {};
+      let comparisonList = [];
+      
+      const loader = document.getElementById('loader');
+      const productsGrid = document.getElementById('products-grid');
+      const searchInput = document.getElementById('search-input');
+      const sortFilter = document.getElementById('sort-filter');
+      const comparisonTray = document.getElementById('comparison-tray');
+      const modals = document.querySelectorAll('.modal-overlay');
+
+      // --- GEMINI API ---
+      const API_KEY = ""; // Keep this empty
+      const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${API_KEY}`;
+      
+      async function callGeminiAPI(prompt) {
+          try {
+              const payload = { contents: [{ parts: [{ text: prompt }] }] };
+              const response = await fetch(API_URL, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(payload)
+              });
+              if (!response.ok) throw new Error(`API Error: ${response.statusText}`);
+              const result = await response.json();
+              if (result.candidates?.[0]?.content?.parts?.[0]?.text) {
+                 return result.candidates[0].content.parts[0].text;
+              } else {
+                 console.error("Invalid response structure from API:", result);
+                 return "Sorry, the AI response was not in the expected format.";
+              }
+          } catch (error) {
+              console.error("Gemini API call failed:", error);
+              return "Sorry, the AI is taking a break. Please try again later.";
+          }
       }
-    ];
 
-    // Initialize products in localStorage if empty
-    function initializeProducts() {
-      const storedProducts = JSON.parse(localStorage.getItem('products'));
-      if (!storedProducts || storedProducts.length === 0) {
-        localStorage.setItem('products', JSON.stringify(defaultProducts));
-      }
-    }
+      async function getAIInsights(product) {
+        const insightsBtn = document.getElementById('get-ai-insights-btn');
+        const insightsContent = document.getElementById('ai-insights-content');
+        insightsBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Analyzing...';
+        insightsBtn.disabled = true;
 
-    // Currency Conversion Rates (relative to USD)
-    const conversionRates = {
-      USD: 1
-    };
-    const currencySymbols = {
-      USD: '$'
-    };
-    let selectedCurrency = 'USD';
-
-    // Hamburger Menu Toggle
-    const hamburger = document.getElementById('hamburger');
-    const mobileMenu = document.getElementById('mobile-menu');
-    const closeMenu = document.getElementById('close-menu');
-    hamburger.addEventListener('click', () => {
-      mobileMenu.classList.remove('hidden');
-      mobileMenu.classList.add('active');
-      document.querySelector('.sidebar').classList.remove('active');
-      document.getElementById('category-menu').classList.add('hidden');
-    });
-    closeMenu.addEventListener('click', () => {
-      mobileMenu.classList.add('hidden');
-      mobileMenu.classList.remove('active');
-    });
-
-    // Category Menu Toggle (Mobile)
-    const categoryToggle = document.getElementById('category-toggle');
-    const categoryMenu = document.getElementById('category-menu');
-    
-    // Initialize category menu state based on screen size
-    function initCategoryMenu() {
-      if (window.innerWidth < 768) {
-        categoryMenu.classList.add('hidden');
-      } else {
-        categoryMenu.classList.remove('hidden');
-      }
-    }
-
-    categoryToggle.addEventListener('click', () => {
-      categoryMenu.classList.toggle('hidden');
-      mobileMenu.classList.remove('active');
-      mobileMenu.classList.add('hidden');
-      document.querySelector('.sidebar').classList.remove('active');
-    });
-
-    // Close category menu when clicking outside
-    document.addEventListener('click', (e) => {
-      if (!categoryMenu.contains(e.target) && e.target !== categoryToggle && window.innerWidth < 768) {
-        categoryMenu.classList.add('hidden');
-      }
-    });
-
-    // Subcategory Dropdown Toggle
-    const categoryButtons = document.querySelectorAll('.category-toggle');
-    categoryButtons.forEach(button => {
-      button.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const subcategory = button.nextElementSibling;
-        subcategory.classList.toggle('hidden');
-        const icon = button.querySelector('.fa-chevron-down');
-        icon.classList.toggle('rotate-180');
-      });
-    });
-
-    // Fade-in Animation on Scroll
-    const fadeIns = document.querySelectorAll('.fade-in');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.1 });
-    fadeIns.forEach(element => observer.observe(element));
-
-    // Ensure category menu is visible on desktop load
-    window.addEventListener('DOMContentLoaded', () => {
-      initializeProducts(); // Initialize products if empty
-      initCategoryMenu(); // Initialize category menu state
-    });
-
-    // Update menu state when window is resized
-    window.addEventListener('resize', initCategoryMenu);
-
-    // Cart Functionality
-    const cartCountElements = {
-      desktop: document.getElementById('cart-count-desktop'),
-      mobile: document.getElementById('cart-count-mobile')
-    };
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    function updateCartCount() {
-      const count = cart.reduce((total, item) => total + item.quantity, 0);
-      cartCountElements.desktop.textContent = count;
-      cartCountElements.mobile.textContent = count;
-    }
-    function addToCart(name, price) {
-      const existingItem = cart.find(item => item.name === name);
-      if (existingItem) {
-        existingItem.quantity += 1;
-      } else {
-        cart.push({ name, price: price / conversionRates[selectedCurrency], quantity: 1 });
-      }
-      localStorage.setItem('cart', JSON.stringify(cart));
-      updateCartCount();
-      
-      // Show notification
-      const notification = document.createElement('div');
-      notification.className = 'fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-md shadow-lg flex items-center z-50';
-      notification.innerHTML = `
-        <i class="fas fa-check-circle mr-2"></i>
-        <span>${name} added to cart!</span>
-      `;
-      document.body.appendChild(notification);
-      setTimeout(() => {
-        notification.remove();
-      }, 3000);
-    }
-
-    // Product Overlay Functionality
-    const productOverlay = document.getElementById('product-overlay');
-    const productImage = document.getElementById('product-image');
-    const productName = document.getElementById('product-name');
-    const productPrice = document.getElementById('product-price');
-    const productDescription = document.getElementById('product-description');
-    const overlayAddToCart = document.getElementById('overlay-add-to-cart');
-    const overlayBuyNow = document.getElementById('overlay-buy-now');
-    const closeBtn = document.querySelector('.close-btn');
-    const averageStars = document.getElementById('average-stars');
-    const reviewCount = document.getElementById('review-count');
-    const reviewsList = document.getElementById('reviews-list');
-    const submitReviewBtn = document.getElementById('submit-review');
-    let currentImages = [];
-    let currentImageIndex = 0;
-    let currentProductId = null;
-
-    function openProductOverlay(product) {
-      currentImages = product.images;
-      currentImageIndex = 0;
-      currentProductId = product.id;
-      productImage.src = product.images[0];
-      productName.textContent = product.name;
-      const convertedPrice = (product.price * conversionRates[selectedCurrency]).toFixed(2);
-      productPrice.textContent = `${currencySymbols[selectedCurrency]}${convertedPrice}`;
-      productDescription.innerHTML = product.description;
-      overlayAddToCart.setAttribute('data-name', product.name);
-      overlayAddToCart.setAttribute('data-price', product.price * conversionRates[selectedCurrency]);
-      
-      // Load reviews for this product
-      loadProductReviews(product.id);
-      
-      productOverlay.classList.add('visible');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function changeImage(direction) {
-      if (currentImages.length <= 1) return;
-      currentImageIndex = (currentImageIndex + direction + currentImages.length) % currentImages.length;
-      productImage.src = currentImages[currentImageIndex];
-    }
-
-    closeBtn.addEventListener('click', () => {
-      productOverlay.classList.remove('visible');
-      document.body.style.overflow = '';
-    });
-
-    overlayAddToCart.addEventListener('click', () => {
-      const name = overlayAddToCart.getAttribute('data-name');
-      const price = parseFloat(overlayAddToCart.getAttribute('data-price'));
-      addToCart(name, price);
-    });
-
-    // Load product reviews
-    function loadProductReviews(productId) {
-      const allReviews = JSON.parse(localStorage.getItem('productReviews')) || {};
-      const productReviews = allReviews[productId] || [];
-      
-      // Calculate average rating
-      let averageRating = 0;
-      if (productReviews.length > 0) {
-        const total = productReviews.reduce((sum, review) => sum + review.rating, 0);
-        averageRating = total / productReviews.length;
-      }
-      
-      // Display average rating
-      averageStars.innerHTML = '';
-      for (let i = 1; i <= 5; i++) {
-        const star = document.createElement('span');
-        star.innerHTML = i <= averageRating ? '★' : '☆';
-        averageStars.appendChild(star);
-      }
-      
-      // Add review count
-      reviewCount.textContent = `(${productReviews.length} reviews)`;
-      
-      // Display reviews
-      reviewsList.innerHTML = '';
-      if (productReviews.length === 0) {
-        reviewsList.innerHTML = '<p class="text-[#94A3B8]">No reviews yet. Be the first to review!</p>';
-      } else {
-        productReviews.forEach(review => {
-          const reviewElement = document.createElement('div');
-          reviewElement.className = 'review';
-          reviewElement.innerHTML = `
-            <div class="review-header">
-              <div class="review-user">${review.user || 'Anonymous'}</div>
-              <div class="review-date">${new Date(review.date).toLocaleDateString()}</div>
-            </div>
-            <div class="review-rating">${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</div>
-            <div class="review-text">${review.text}</div>
-          `;
-          reviewsList.appendChild(reviewElement);
-        });
-      }
-    }
-
-    // Submit review
-    submitReviewBtn.addEventListener('click', () => {
-      const ratingInput = document.querySelector('input[name="rating"]:checked');
-      const reviewText = document.getElementById('review-text').value.trim();
-      
-      if (!ratingInput) {
-        alert('Please select a rating');
-        return;
-      }
-      
-      if (!reviewText) {
-        alert('Please write your review');
-        return;
-      }
-      
-      const rating = parseInt(ratingInput.value);
-      const review = {
-        rating,
-        text: reviewText,
-        date: new Date().toISOString(),
-        user: localStorage.getItem('currentUser') || 'Anonymous'
-      };
-      
-      // Save review
-      const allReviews = JSON.parse(localStorage.getItem('productReviews')) || {};
-      if (!allReviews[currentProductId]) {
-        allReviews[currentProductId] = [];
-      }
-      allReviews[currentProductId].push(review);
-      localStorage.setItem('productReviews', JSON.stringify(allReviews));
-      
-      // Reload reviews
-      loadProductReviews(currentProductId);
-      
-      // Reset form
-      document.querySelectorAll('input[name="rating"]').forEach(input => input.checked = false);
-      document.getElementById('review-text').value = '';
-      
-      // Show success message
-      alert('Thank you for your review!');
-    });
-
-    // Load products from localStorage and render them
-    const productsGrid = document.getElementById('products-grid');
-    let allProducts = [];
-    
-    function renderProducts(products) {
-      productsGrid.innerHTML = '';
-      products.forEach(product => {
-        const convertedPrice = (product.price * conversionRates[selectedCurrency]).toFixed(2);
+        const prompt = `You are a gaming hardware expert. Analyze the following product for a serious gamer and provide a concise summary of its key pros and cons. Product Name: ${product.name}. Description: ${product.description}. Format the output as simple HTML using <h3> for titles and <ul> for lists. Keep it brief.`;
+        const aiResponse = await callGeminiAPI(prompt);
         
-        // Get product reviews for rating
-        const allReviews = JSON.parse(localStorage.getItem('productReviews')) || {};
-        const productReviews = allReviews[product.id] || [];
-        let averageRating = 0;
-        if (productReviews.length > 0) {
-          const total = productReviews.reduce((sum, review) => sum + review.rating, 0);
-          averageRating = total / productReviews.length;
+        insightsContent.innerHTML = aiResponse;
+        insightsBtn.style.display = 'none';
+        insightsContent.style.display = 'block';
+        insightsBtn.innerHTML = '✨ Get AI-Powered Insights';
+        insightsBtn.disabled = false;
+      }
+      
+      // --- CORE LOGIC ---
+      function initializeApp() {
+        loader.style.display = 'flex';
+        if (!localStorage.getItem('products')) {
+          localStorage.setItem('products', JSON.stringify(defaultProducts));
         }
+        allProducts = JSON.parse(localStorage.getItem('products'));
         
-        const card = document.createElement('div');
-        card.className = 'product-card gradient-glow fade-in cursor-pointer';
-        card.setAttribute('data-id', product.id);
-        card.innerHTML = `
-          <img src="${product.images[0]}" alt="Product" class="w-full h-48 object-contain rounded-lg mb-4">
-          <h3 class="text-xl font-bold text-white">${product.name}</h3>
-          <div class="flex justify-between items-center">
-            <p class="text-[#F1F5F9] mb-4">${currencySymbols[selectedCurrency]}${convertedPrice}</p>
-            <div class="average-rating">
-              <div class="average-rating-stars">
-                ${'★'.repeat(Math.round(averageRating))}${'☆'.repeat(5 - Math.round(averageRating))}
-              </div>
-              <div class="average-rating-count">
-                (${productReviews.length})
+        updateCounts();
+        renderCategories();
+        applyFiltersAndSort();
+        
+        setTimeout(() => loader.style.display = 'none', 500);
+      }
+
+      function updateCounts() {
+        document.getElementById('cart-count').textContent = cart.reduce((s, i) => s + i.quantity, 0);
+        document.getElementById('wishlist-count-desktop').textContent = wishlist.length;
+      }
+
+      function addToCart(productId) {
+        const product = allProducts.find(p => p.id === productId);
+        if (!product) return;
+
+        const existingItem = cart.find(item => item.id === productId);
+        if (existingItem) {
+          existingItem.quantity++;
+        } else {
+          cart.push({ id: productId, name: product.name, price: product.salePrice || product.price, quantity: 1, image: product.images[0] });
+        }
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCounts();
+        alert(`${product.name} has been added to your cart!`);
+      }
+
+      // --- PRODUCT & CATEGORY RENDERING ---
+      function renderProducts(productsToRender) {
+        productsGrid.innerHTML = '';
+        if (productsToRender.length === 0) {
+          productsGrid.innerHTML = `<p class="col-span-full text-center text-slate-400">No products found.</p>`;
+          return;
+        }
+        productsToRender.forEach((p, i) => {
+          const card = document.createElement('div');
+          card.className = 'product-card fade-in';
+          card.style.transitionDelay = `${i * 50}ms`;
+          card.dataset.productId = p.id;
+          
+          const priceHTML = p.salePrice ? `<p class="text-xl font-bold text-blue-400">$${p.salePrice.toFixed(2)}</p><p class="text-sm line-through text-slate-400">$${p.price.toFixed(2)}</p>` : `<p class="text-xl font-bold text-blue-400">$${p.price.toFixed(2)}</p>`;
+          card.innerHTML = `
+            <div class="product-image-container relative p-4 bg-slate-900/50 cursor-pointer">
+              <img src="${p.images[0]}" alt="${p.name}" loading="lazy">
+              <div class="product-card-overlay">
+                  <button class="overlay-btn view-details-btn" title="View Details"><i class="fas fa-eye"></i></button>
+                  <button class="overlay-btn compare-btn ${comparisonList.includes(p.id) ? 'selected' : ''}" title="Compare"><i class="fas fa-balance-scale"></i></button>
               </div>
             </div>
-          </div>
-          <div class="flex space-x-2">
-            <a href="#" class="submit-btn flex-1 text-center buy-now-btn">
-              <i class="fas fa-bolt mr-2"></i> Buy Now
-            </a>
-            <button class="submit-btn flex-1 text-center add-to-cart" data-name="${product.name}" data-price="${product.price * conversionRates[selectedCurrency]}">
-              <i class="fas fa-cart-plus mr-2"></i> Add to Cart
-            </button>
-          </div>
-        `;
-        productsGrid.appendChild(card);
-
-        // Auto-scroll images on hover
-        let imageIndex = 0;
-        let intervalId = null;
-        const cardImage = card.querySelector('img');
-        card.addEventListener('mouseenter', () => {
-          if (product.images.length > 1) {
-            intervalId = setInterval(() => {
-              imageIndex = (imageIndex + 1) % product.images.length;
-              cardImage.src = product.images[imageIndex];
-            }, 2000);
-          }
+            <div class="p-4 flex flex-col flex-grow">
+              <h3 class="font-semibold flex-grow">${p.name}</h3>
+              <div class="flex justify-between items-center mt-2">
+                <div class="flex items-baseline gap-2">${priceHTML}</div>
+                <div class="flex items-center text-sm gap-1 text-yellow-400"><i class="fas fa-star"></i><span>${p.rating}</span></div>
+              </div>
+            </div>`;
+          productsGrid.appendChild(card);
         });
-        card.addEventListener('mouseleave', () => {
-          if (intervalId) {
-            clearInterval(intervalId);
-            intervalId = null;
-            imageIndex = 0;
-            cardImage.src = product.images[0];
-          }
-        });
-      });
-
-      // Re-attach event listeners for product cards
-      const productCards = document.querySelectorAll('.product-card');
-      productCards.forEach(card => {
-        card.addEventListener('click', (e) => {
-          if (e.target.classList.contains('add-to-cart') || e.target.classList.contains('buy-now-btn')) return;
-          const productId = card.getAttribute('data-id');
-          const product = allProducts.find(p => p.id === productId);
-          if (product) {
-            openProductOverlay(product);
-          }
-        });
-      });
-
-      const addToCartButtons = document.querySelectorAll('.add-to-cart');
-      addToCartButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          const name = button.getAttribute('data-name');
-          const price = parseFloat(button.getAttribute('data-price'));
-          addToCart(name, price);
-        });
-      });
-
-      const buyNowButtons = document.querySelectorAll('.buy-now-btn');
-      buyNowButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          const card = button.closest('.product-card');
-          const productId = card.getAttribute('data-id');
-          const product = allProducts.find(p => p.id === productId);
-          if (product) {
-            const item = { 
-              name: product.name, 
-              price: product.price * conversionRates[selectedCurrency], 
-              quantity: 1 
-            };
-            localStorage.setItem('buyNowProduct', JSON.stringify(item));
-            window.location.href = 'address.html';
-          }
-        });
-      });
-
-      productCards.forEach(card => observer.observe(card));
-    }
-
-    // Search and Filter Functionality
-    const searchInput = document.getElementById('search-input');
-    const searchBtn = document.getElementById('search-btn');
-    const sortFilter = document.getElementById('sort-filter');
-
-    function applyFilters() {
-      const searchTerm = searchInput.value.toLowerCase();
-      const sortValue = sortFilter.value;
-
-      let filteredProducts = allProducts;
-      
-      // Apply search filter
-      if (searchTerm) {
-        filteredProducts = filteredProducts.filter(product => 
-          product.name.toLowerCase().includes(searchTerm) ||
-          product.description.toLowerCase().includes(searchTerm) ||
-          product.category.toLowerCase().includes(searchTerm)
-        );
+        
+        const observer = new IntersectionObserver((entries) => entries.forEach(e => {
+            if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+        }), { threshold: 0.1 });
+        document.querySelectorAll('.product-card.fade-in').forEach(c => observer.observe(c));
       }
-      
-      // Apply sorting
-      switch(sortValue) {
-        case 'price-low':
-          filteredProducts.sort((a, b) => a.price - b.price);
-          break;
-        case 'price-high':
-          filteredProducts.sort((a, b) => b.price - a.price);
-          break;
-        case 'name-asc':
-          filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
-          break;
-        case 'name-desc':
-          filteredProducts.sort((a, b) => b.name.localeCompare(a.name));
-          break;
-        case 'rating-high':
-          filteredProducts.sort((a, b) => {
-            const aReviews = JSON.parse(localStorage.getItem('productReviews'))?.[a.id] || [];
-            const bReviews = JSON.parse(localStorage.getItem('productReviews'))?.[b.id] || [];
-            const aRating = aReviews.length > 0 ? aReviews.reduce((sum, review) => sum + review.rating, 0) / aReviews.length : 0;
-            const bRating = bReviews.length > 0 ? bReviews.reduce((sum, review) => sum + review.rating, 0) / bReviews.length : 0;
-            return bRating - aRating;
-          });
-          break;
-        case 'rating-low':
-          filteredProducts.sort((a, b) => {
-            const aReviews = JSON.parse(localStorage.getItem('productReviews'))?.[a.id] || [];
-            const bReviews = JSON.parse(localStorage.getItem('productReviews'))?.[b.id] || [];
-            const aRating = aReviews.length > 0 ? aReviews.reduce((sum, review) => sum + review.rating, 0) / aReviews.length : 0;
-            const bRating = bReviews.length > 0 ? bReviews.reduce((sum, review) => sum + review.rating, 0) / bReviews.length : 0;
-            return aRating - bRating;
-          });
-          break;
-        default:
-          // No sorting
-          break;
+
+      function renderCategories() {
+          const categories = ['All Products', ...new Set(allProducts.map(p => p.category))];
+          const nav = document.getElementById('category-nav');
+          nav.innerHTML = categories.map(c => `<a href="#" class="block p-2 rounded-md ${c === 'All Products' ? 'bg-blue-500/20 text-blue-400' : 'text-slate-300'} hover:bg-slate-700/50" data-category="${c}">${c}</a>`).join('');
       }
-      
-      renderProducts(filteredProducts);
-    }
 
-    searchInput.addEventListener('input', applyFilters);
-    searchBtn.addEventListener('click', applyFilters);
-    sortFilter.addEventListener('change', applyFilters);
-
-    // Load products from database
-    function loadProducts() {
-      const storedProducts = JSON.parse(localStorage.getItem('products')) || [];
-      // Add unique IDs to products if they don't have them
-      allProducts = storedProducts.map(product => {
-        if (!product.id) {
-          product.id = 'prod_' + Math.random().toString(36).substr(2, 9);
+      function applyFiltersAndSort(category = 'All Products') {
+        const searchTerm = searchInput.value.toLowerCase();
+        let filtered = allProducts;
+        
+        if (category !== 'All Products') {
+            filtered = filtered.filter(p => p.category === category);
         }
-        return product;
-      });
-      localStorage.setItem('products', JSON.stringify(allProducts));
-      renderProducts(allProducts);
-    }
-
-    // Initial load of products
-    initializeProducts();
-    loadProducts();
-
-    // Update cart count on page load
-    updateCartCount();
-
-    // Close menus when clicking outside
-    document.addEventListener('click', (e) => {
-      if (!mobileMenu.contains(e.target) && e.target !== hamburger) {
-        mobileMenu.classList.add('hidden');
-        mobileMenu.classList.remove('active');
+        if (searchTerm) {
+            filtered = filtered.filter(p => p.name.toLowerCase().includes(searchTerm));
+        }
+        
+        const sortValue = sortFilter.value;
+        switch(sortValue) {
+          case 'price-low': filtered.sort((a,b) => (a.salePrice||a.price) - (b.salePrice||b.price)); break;
+          case 'price-high': filtered.sort((a,b) => (b.salePrice||b.price) - (a.salePrice||a.price)); break;
+          case 'rating-high': filtered.sort((a, b) => b.rating - a.rating); break;
+          case 'name-asc': filtered.sort((a, b) => a.name.localeCompare(b.name)); break;
+        }
+        renderProducts(filtered);
       }
+
+      // --- PRODUCT DETAIL MODAL ---
+      function openProductOverlay(productId) {
+          const product = allProducts.find(p => p.id === productId);
+          if (!product) return;
+          
+          document.getElementById('product-name').textContent = product.name;
+          document.getElementById('product-price').textContent = product.salePrice ? `$${product.salePrice.toFixed(2)}` : `$${product.price.toFixed(2)}`;
+          document.getElementById('product-description').textContent = product.description;
+          document.getElementById('product-image').src = product.images[0];
+          
+          document.getElementById('overlay-add-to-cart').onclick = () => addToCart(product.id);
+          document.getElementById('submit-review').onclick = () => submitReview(product.id);
+          document.getElementById('get-ai-insights-btn').onclick = () => getAIInsights(product);
+          
+          const insightsBtn = document.getElementById('get-ai-insights-btn');
+          const insightsContent = document.getElementById('ai-insights-content');
+          insightsBtn.style.display = 'block';
+          insightsContent.style.display = 'none';
+          insightsContent.innerHTML = '';
+
+          loadProductReviews(product.id);
+          
+          const thumbnailContainer = document.getElementById('thumbnail-container');
+          thumbnailContainer.innerHTML = product.images.map((img, index) => 
+            `<img src="${img}" class="w-16 h-16 object-contain rounded-md cursor-pointer border-2 ${index === 0 ? 'border-blue-500' : 'border-transparent'}" data-index="${index}">`
+          ).join('');
+          
+          document.getElementById('product-overlay').classList.add('visible');
+      }
+      
+      function loadProductReviews(productId) {
+        const reviews = productReviews[productId] || [];
+        const averageRating = reviews.length ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length) : 0;
+        
+        document.getElementById('average-stars').innerHTML = '★'.repeat(Math.round(averageRating)) + '☆'.repeat(5 - Math.round(averageRating));
+        document.getElementById('review-count').textContent = `(${reviews.length} reviews)`;
+        
+        const list = document.getElementById('reviews-list');
+        list.innerHTML = reviews.length ? reviews.map(r => `
+          <div class="bg-slate-800/50 p-3 rounded-lg">
+            <div class="flex justify-between items-center mb-1">
+              <p class="font-semibold">${'Anonymous'}</p>
+              <div class="text-yellow-400">${'★'.repeat(r.rating)}</div>
+            </div>
+            <p class="text-sm text-slate-300">${r.text}</p>
+          </div>
+        `).join('') : '<p class="text-sm text-slate-400">No reviews yet.</p>';
+        
+        const summarizeBtn = document.getElementById('summarize-reviews-btn');
+        if (reviews.length >= 3) {
+            summarizeBtn.style.display = 'block';
+        } else {
+            summarizeBtn.style.display = 'none';
+        }
+      }
+      
+      function submitReview(productId) {
+          const ratingInput = document.querySelector('input[name="rating"]:checked');
+          const reviewText = document.getElementById('review-text').value.trim();
+          if (!ratingInput || !reviewText) {
+              alert('Please provide a rating and a review.');
+              return;
+          }
+          if (!productReviews[productId]) productReviews[productId] = [];
+          productReviews[productId].unshift({ rating: parseInt(ratingInput.value), text: reviewText });
+          localStorage.setItem('productReviews', JSON.stringify(productReviews));
+          loadProductReviews(productId);
+          ratingInput.checked = false;
+          document.getElementById('review-text').value = '';
+      }
+
+       async function getAIReviewSummary(productId) {
+          const reviews = productReviews[productId] || [];
+          if (reviews.length < 3) {
+              alert("Not enough reviews to generate a summary.");
+              return;
+          }
+
+          const summarizeBtn = document.getElementById('summarize-reviews-btn');
+          const summaryContainer = document.getElementById('review-summary-container');
+
+          summarizeBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Summarizing...';
+          summarizeBtn.disabled = true;
+
+          const reviewTexts = reviews.map(r => `- Rating: ${r.rating}/5. Review: "${r.text}"`).join('\n');
+          const prompt = `You are a helpful e-commerce assistant. Based on the following customer reviews for a product, provide a concise summary. Identify the main positive themes and the main negative themes mentioned by the customers. Do not invent new information. Format your response as simple HTML with two <h3> headings: "Common Praise" and "Common Critiques", each followed by a <ul> list of the key points.\n\nReviews:\n${reviewTexts}`;
+
+          const summaryHTML = await callGeminiAPI(prompt);
+
+          summaryContainer.innerHTML = summaryHTML;
+          summaryContainer.classList.remove('hidden');
+          summarizeBtn.style.display = 'none'; // Hide button after use
+      }
+
+      
+      // --- COMPARISON LOGIC ---
+        function toggleCompare(productId) {
+            const index = comparisonList.indexOf(productId);
+            if (index > -1) {
+                comparisonList.splice(index, 1);
+            } else {
+                if (comparisonList.length < 4) {
+                    comparisonList.push(productId);
+                } else {
+                    alert('You can compare a maximum of 4 products.');
+                }
+            }
+            updateComparisonTray();
+        }
+
+        function updateComparisonTray() {
+            if (comparisonList.length > 0) {
+                comparisonTray.style.bottom = '0';
+            } else {
+                comparisonTray.style.bottom = '-100%';
+            }
+
+            const itemsContainer = document.getElementById('comparison-items');
+            itemsContainer.innerHTML = comparisonList.map(id => {
+                const product = allProducts.find(p => p.id === id);
+                return `<img src="${product.images[0]}" title="${product.name}" class="w-12 h-12 object-contain rounded-md bg-slate-700">`;
+            }).join('');
+
+            const compareBtn = document.getElementById('compare-now-btn');
+            compareBtn.textContent = `Compare (${comparisonList.length}/4)`;
+            compareBtn.disabled = comparisonList.length < 2;
+            
+            document.querySelectorAll('.compare-btn').forEach(btn => {
+                const card = btn.closest('.product-card');
+                if (comparisonList.includes(card.dataset.productId)) {
+                    btn.classList.add('selected');
+                } else {
+                    btn.classList.remove('selected');
+                }
+            });
+        }
+        
+        async function getAIComparison() {
+            const modal = document.getElementById('comparison-modal-overlay');
+            const resultContainer = document.getElementById('comparison-result');
+            modal.classList.add('visible');
+            resultContainer.innerHTML = '<div class="flex justify-center items-center gap-2"><i class="fas fa-spinner fa-spin"></i>Generating comparison...</div>';
+
+            const productsToCompare = comparisonList.map(id => allProducts.find(p => p.id === id));
+            const productDetails = productsToCompare.map(p => `Name: ${p.name}, Price: $${p.salePrice || p.price}, Description: ${p.description}`).join('\n\n');
+
+            const prompt = `You are a gaming hardware expert. Create a detailed comparison for a competitive gamer based on the following products:\n\n${productDetails}\n\nYour response must be in HTML format. Generate a <table> that compares key features (like sensor, weight for mice; switch type for keyboards; battery life, connection for headsets). After the table, add an <h4> titled "Expert Recommendation" and write a paragraph recommending which product is best for different types of gamers (e.g., "The Razer Deathadder is best for FPS players who value low weight...").`;
+            
+            const comparisonHTML = await callGeminiAPI(prompt);
+            resultContainer.innerHTML = comparisonHTML;
+        }
+
+      // --- AI SETUP BUILDER ---
+        async function handleSetupBuilderSubmit(e) {
+            e.preventDefault();
+            const formContainer = document.getElementById('setup-builder-form-container');
+            const resultContainer = document.getElementById('setup-builder-result');
+            const result_content = document.getElementById('setup-result-content');
+            
+            formContainer.style.display = 'none';
+            resultContainer.style.display = 'block';
+            result_content.innerHTML = '<div class="flex justify-center items-center gap-2"><i class="fas fa-spinner fa-spin"></i>Building your perfect setup...</div>';
+            
+            const gameType = document.getElementById('game-type').value;
+            const priority = document.getElementById('priority').value;
+
+            const availableProducts = JSON.stringify(allProducts.map(p => ({id: p.id, name: p.name, category: p.category, description: p.description})));
+            const prompt = `You are an expert gaming setup curator. A user needs a complete setup (one mouse, one keyboard, one headset). Their preferences are: \n- Primary Games: ${gameType}\n- Main Priority: ${priority}\n\nFrom the following JSON list of available products, select the single best mouse, keyboard, and headset for this user. \n\nProducts: ${availableProducts}\n\nPlease respond with ONLY a valid JSON object in this exact format, with no extra text or markdown: {"mouse": {"id": "product_id", "reason": "brief explanation"}, "keyboard": {"id": "product_id", "reason": "brief explanation"}, "headset": {"id": "product_id", "reason": "brief explanation"}, "summary": "A brief overall summary of why this setup is a great match."}`;
+            
+            const response = await callGeminiAPI(prompt);
+            
+            try {
+                const recommendations = JSON.parse(response);
+                displaySetupResults(recommendations);
+            } catch (error) {
+                console.error("Failed to parse AI setup response:", error);
+                result_content.innerHTML = `<p class="text-red-400">Sorry, there was an error generating your setup. The AI's response was not in the correct format. Please try again.</p>`;
+            }
+        }
+        
+        function displaySetupResults(recs) {
+            const content = document.getElementById('setup-result-content');
+            content.innerHTML = ''; // Clear spinner
+            
+            ['mouse', 'keyboard', 'headset'].forEach(category => {
+                if (recs[category] && recs[category].id) {
+                    const product = allProducts.find(p => p.id === recs[category].id);
+                    if (product) {
+                        content.innerHTML += `
+                            <div class="bg-slate-800/50 p-4 rounded-lg">
+                                <h3 class="font-bold text-lg text-secondary-color">${category.charAt(0).toUpperCase() + category.slice(1)} Recommendation</h3>
+                                <div class="flex gap-4 mt-2">
+                                    <img src="${product.images[0]}" class="w-24 h-24 object-contain bg-slate-900 rounded-md">
+                                    <div>
+                                        <h4 class="font-semibold">${product.name}</h4>
+                                        <p class="text-sm text-slate-300 mt-1">${recs[category].reason}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+            });
+            content.innerHTML += `<div class="mt-4 p-4 bg-slate-800 rounded-lg"><h3 class="font-bold text-primary-color">Overall Summary</h3><p class="text-sm text-slate-300 mt-1">${recs.summary}</p></div>`;
+        }
+
+      // --- EVENT LISTENERS ---
+      document.getElementById('category-nav').addEventListener('click', e => {
+          e.preventDefault();
+          const target = e.target.closest('a');
+          if (target && target.dataset.category) {
+              applyFiltersAndSort(target.dataset.category);
+              document.querySelectorAll('#category-nav a').forEach(a => a.classList.remove('bg-blue-500/20', 'text-blue-400'));
+              target.classList.add('bg-blue-500/20', 'text-blue-400');
+          }
+      });
+      productsGrid.addEventListener('click', e => {
+          const card = e.target.closest('.product-card');
+          if (!card) return;
+
+          if (e.target.closest('.compare-btn')) {
+              toggleCompare(card.dataset.productId);
+          } else {
+              openProductOverlay(card.dataset.productId);
+          }
+      });
+      searchInput.addEventListener('input', () => applyFiltersAndSort(document.querySelector('#category-nav a.bg-blue-500\/20')?.dataset.category || 'All Products'));
+      sortFilter.addEventListener('change', () => applyFiltersAndSort(document.querySelector('#category-nav a.bg-blue-500\/20')?.dataset.category || 'All Products'));
+      
+      document.getElementById('product-overlay').addEventListener('click', (e) => {
+        if(e.target === document.getElementById('product-overlay')) {
+            document.getElementById('product-overlay').classList.remove('visible');
+        }
+      });
+      document.getElementById('close-product-overlay').addEventListener('click', () => document.getElementById('product-overlay').classList.remove('visible'));
+
+
+      document.getElementById('thumbnail-container').addEventListener('click', e => {
+        if (e.target.tagName === 'IMG') {
+            const mainImage = document.getElementById('product-image');
+            mainImage.src = e.target.src;
+            document.querySelectorAll('#thumbnail-container img').forEach(img => img.classList.replace('border-blue-500', 'border-transparent'));
+            e.target.classList.replace('border-transparent', 'border-blue-500');
+        }
+      });
+      
+      // Comparison Listeners
+      document.getElementById('clear-comparison-btn').addEventListener('click', () => {
+          comparisonList = [];
+          updateComparisonTray();
+      });
+      document.getElementById('compare-now-btn').addEventListener('click', getAIComparison);
+      
+      modals.forEach(modal => {
+          modal.addEventListener('click', (e) => {
+              if (e.target === modal) {
+                  modal.classList.remove('visible');
+              }
+          })
+      });
+      document.getElementById('close-comparison-modal').addEventListener('click', () => document.getElementById('comparison-modal-overlay').classList.remove('visible'));
+
+      // AI Setup Builder Listeners
+      document.getElementById('open-setup-builder-btn').addEventListener('click', () => {
+          document.getElementById('setup-builder-overlay').classList.add('visible');
+      });
+      document.getElementById('close-setup-builder-modal').addEventListener('click', () => {
+          document.getElementById('setup-builder-overlay').classList.remove('visible');
+      });
+      document.getElementById('setup-builder-form').addEventListener('submit', handleSetupBuilderSubmit);
+      document.getElementById('restart-setup-builder-btn').addEventListener('click', () => {
+          document.getElementById('setup-builder-form-container').style.display = 'block';
+          document.getElementById('setup-builder-result').style.display = 'none';
+      });
+
+
+      document.getElementById('hamburger').addEventListener('click', () => document.querySelector('.sidebar').classList.toggle('-translate-x-full'));
+      document.getElementById('category-toggle').addEventListener('click', () => document.getElementById('category-menu').classList.toggle('translate-x-full'));
+
+      initializeApp();
     });
   </script>
 </body>
 </html>
+
 
 
