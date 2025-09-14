@@ -609,7 +609,6 @@
   </style>
 </head>
 <body>
-  <!-- Sidebar -->
   <div class="fixed top-0 left-0 h-full w-64 sidebar z-20 hidden md:block">
     <div class="p-6">
       <div class="flex items-center space-x-3">
@@ -641,7 +640,7 @@
           <i class="fas fa-info-circle w-5 h-5"></i>
           <span>About Us</span>
         </a>
-        <a href="signup.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+        <a href="signup.html" id="signup-link-desktop" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
           <i class="fas fa-user-plus w-5 h-5"></i>
           <span>Sign Up</span>
         </a>
@@ -649,10 +648,24 @@
     </div>
   </div>
 
-  <!-- User Avatar -->
   <div id="user-avatar" class="user-avatar hidden"></div>
+  <div id="user-menu" class="hidden fixed top-20 right-5 bg-[#1E293B] rounded-lg shadow-2xl z-50 w-64 border border-[#3B82F6] transform transition-all duration-300">
+    <div class="p-4 border-b border-[#3B82F6] text-center">
+        <p class="font-bold text-white text-lg" id="menu-username">User Name</p>
+        <p class="text-sm text-[#94A3B8]" id="menu-user-email">user@email.com</p>
+    </div>
+    <div class="p-2">
+        <button id="change-pic-btn" class="w-full text-left px-4 py-2 text-sm text-[#F1F5F9] hover:bg-[#3B82F6] rounded-md transition-colors flex items-center gap-3">
+            <i class="fas fa-camera w-4"></i> Change Picture
+        </button>
+        <input type="file" id="pic-input" class="hidden" accept="image/*">
+        <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-[#F1F5F9] hover:bg-[#3B82F6] rounded-md transition-colors flex items-center gap-3">
+            <i class="fas fa-sign-out-alt w-4"></i> Logout
+        </button>
+    </div>
+  </div>
 
-  <!-- Mobile Menu -->
+
   <div class="md:hidden fixed top-0 left-0 w-full bg-[#1E293B] z-30 p-4 flex justify-between items-center shadow-lg">
     <div class="flex items-center space-x-2">
       <img src="https://cdn-icons-png.flaticon.com/512/3612/3612569.png" alt="Logo" class="w-8 h-8">
@@ -692,16 +705,14 @@
         <i class="fas fa-info-circle w-5 h-5"></i>
         <span>About Us</span>
       </a>
-      <a href="signup.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+      <a href="signup.html" id="signup-link-mobile" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
         <i class="fas fa-user-plus w-5 h-5"></i>
         <span>Sign Up</span>
       </a>
     </nav>
   </div>
 
-  <!-- Main Content -->
   <div class="md:ml-64">
-    <!-- Hero Section -->
     <section class="hero-bg min-h-screen flex items-center justify-center text-center p-6 relative overflow-hidden">
       <div class="pixel-grid"></div>
       <div class="hero-content max-w-4xl mx-auto fade-in">
@@ -723,13 +734,11 @@
       </div>
     </section>
 
-    <!-- Featured Products Section -->
     <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B] relative overflow-hidden">
       <div class="max-w-7xl mx-auto">
         <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Featured Gaming Gear</h2>
         
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          <!-- Product 1 -->
           <div class="holographic-product rounded-xl p-6 fade-in">
             <div class="price-tag">$149.99</div>
             <div class="h-48 flex items-center justify-center mb-6">
@@ -752,7 +761,6 @@
             </div>
           </div>
           
-          <!-- Product 2 -->
           <div class="holographic-product rounded-xl p-6 fade-in">
             <div class="price-tag">$199.99</div>
             <div class="h-48 flex items-center justify-center mb-6">
@@ -775,7 +783,6 @@
             </div>
           </div>
           
-          <!-- Product 3 -->
           <div class="holographic-product rounded-xl p-6 fade-in">
             <div class="price-tag">$299.99</div>
             <div class="h-48 flex items-center justify-center mb-6">
@@ -798,7 +805,6 @@
             </div>
           </div>
           
-          <!-- Product 4 -->
           <div class="holographic-product rounded-xl p-6 fade-in">
             <div class="price-tag">$249.99</div>
             <div class="h-48 flex items-center justify-center mb-6">
@@ -830,13 +836,11 @@
       </div>
     </section>
 
-    <!-- Upcoming Tournaments Section -->
     <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A] relative overflow-hidden">
       <div class="max-w-7xl mx-auto">
         <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Upcoming Tournaments</h2>
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <!-- Tournament 1 -->
           <div class="tournament-card rounded-xl overflow-hidden fade-in">
             <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Cyber Clash 2025" class="w-full h-64 object-cover">
             <div class="tournament-card-content p-6 absolute bottom-0 left-0 right-0">
@@ -858,7 +862,6 @@
             </div>
           </div>
           
-          <!-- Tournament 2 -->
           <div class="tournament-card rounded-xl overflow-hidden fade-in">
             <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80" alt="Neon Strike" class="w-full h-64 object-cover">
             <div class="tournament-card-content p-6 absolute bottom-0 left-0 right-0">
@@ -880,7 +883,6 @@
             </div>
           </div>
           
-          <!-- Tournament 3 -->
           <div class="tournament-card rounded-xl overflow-hidden fade-in">
             <img src="https://images.unsplash.com/photo-1633613286848-e6f43bbafb8d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Odyssey League" class="w-full h-64 object-cover">
             <div class="tournament-card-content p-6 absolute bottom-0 left-0 right-0">
@@ -911,7 +913,6 @@
       </div>
     </section>
 
-    <!-- Minecraft Server Section -->
     <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B] relative overflow-hidden">
       <div class="max-w-7xl mx-auto">
         <div class="flex flex-col md:flex-row items-center gap-8">
@@ -947,7 +948,6 @@
       </div>
     </section>
 
-    <!-- Stats Section -->
     <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A]">
       <div class="max-w-7xl mx-auto">
         <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Why Choose Gaming Odyssey?</h2>
@@ -996,7 +996,6 @@
       </div>
     </section>
 
-    <!-- Contact Us Section -->
     <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B]">
       <div class="max-w-4xl mx-auto">
         <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Contact Us</h2>
@@ -1090,7 +1089,6 @@
       </div>
     </section>
 
-    <!-- Footer -->
     <footer class="bg-[#020617] py-12 px-6 border-t border-[#1E293B]">
       <div class="max-w-7xl mx-auto">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -1195,13 +1193,12 @@
         </div>
         
         <div class="border-t border-[#1E293B] mt-10 pt-6 text-center">
-          <p class="text-[#94A3B8] text-sm">&copy; 2025 Gaming Odyssey. All rights reserved.</p>
+          <p class="text-[#94A3B8] text-sm">© 2025 Gaming Odyssey. All rights reserved.</p>
         </div>
       </div>
     </footer>
   </div>
 
-  <!-- WhatsApp Chat Widget -->
   <div class="whatsapp-widget">
     <div class="whatsapp-bubble" id="whatsapp-bubble">
       <i class="fab fa-whatsapp"></i>
@@ -1225,7 +1222,6 @@
     </div>
   </div>
 
-  <!-- Chatbot UI -->
   <div id="chatbot-container" class="fixed bottom-6 right-6 z-50 w-80 sm:w-96 transition-all duration-300 ease-in-out">
     <div id="chatbot-header" class="bg-gradient-to-r from-[#3B82F6] to-[#D946EF] text-white p-3 rounded-t-lg flex justify-between items-center cursor-pointer">
       <h3 class="font-bold">Gaming Odyssey Assistant</h3>
@@ -1277,24 +1273,90 @@
     </div>
   </div>
 
-  <!-- EmailJS SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <script>
+    // --- Authentication and UI Control ---
+    document.addEventListener('DOMContentLoaded', () => {
+        const userData = JSON.parse(localStorage.getItem('userData'));
+        const userAvatar = document.getElementById('user-avatar');
+
+        if (userData) {
+            // User is logged in
+            document.getElementById('signup-link-desktop').style.display = 'none';
+            document.getElementById('signup-link-mobile').style.display = 'none';
+
+            userAvatar.classList.remove('hidden');
+            const profilePic = localStorage.getItem('profilePic');
+            if (profilePic) {
+                userAvatar.innerHTML = `<img src="${profilePic}" class="w-full h-full rounded-full object-cover">`;
+            } else {
+                userAvatar.textContent = userData.name.charAt(0).toUpperCase();
+            }
+            userAvatar.title = `Welcome, ${userData.name}`;
+
+            // Populate and set up user menu
+            const userMenu = document.getElementById('user-menu');
+            document.getElementById('menu-username').textContent = userData.name;
+            document.getElementById('menu-user-email').textContent = userData.email;
+
+            const changePicBtn = document.getElementById('change-pic-btn');
+            const picInput = document.getElementById('pic-input');
+            const logoutBtn = document.getElementById('logout-btn');
+
+            userAvatar.addEventListener('click', () => {
+                userMenu.classList.toggle('hidden');
+            });
+
+            changePicBtn.addEventListener('click', () => picInput.click());
+
+            picInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const base64Image = event.target.result;
+                    localStorage.setItem('profilePic', base64Image);
+                    userAvatar.innerHTML = `<img src="${base64Image}" class="w-full h-full rounded-full object-cover">`;
+                    userMenu.classList.add('hidden');
+                };
+                reader.readAsDataURL(file);
+            });
+
+            logoutBtn.addEventListener('click', () => {
+                localStorage.removeItem('userData');
+                localStorage.removeItem('profilePic');
+                window.location.reload();
+            });
+            
+            // Close menu if clicking outside
+            document.addEventListener('click', (e) => {
+                if (!userAvatar.contains(e.target) && !userMenu.contains(e.target)) {
+                    userMenu.classList.add('hidden');
+                }
+            });
+
+        } else {
+            // User is not logged in, set up redirector
+            document.addEventListener('click', (e) => {
+                const link = e.target.closest('a');
+                if (link && link.href) {
+                    const targetUrl = new URL(link.href);
+                    const targetPage = targetUrl.pathname.split('/').pop();
+                    const isInternalNav = link.hostname === window.location.hostname;
+                    
+                    const allowedWhenLoggedOut = ['signup.html', 'index.html', ''];
+                    
+                    if (isInternalNav && !allowedWhenLoggedOut.includes(targetPage)) {
+                        e.preventDefault();
+                        window.location.href = 'signup.html';
+                    }
+                }
+            }, true); // Use capture phase to intercept click early
+        }
+    });
+
     // Initialize EmailJS
     emailjs.init('__S5AyIeoL526kGwQ');
-
-    // Check for user data in localStorage and show avatar if exists
-    const userAvatar = document.getElementById('user-avatar');
-    const userData = localStorage.getItem('userData');
-    
-    if (userData) {
-      const user = JSON.parse(userData);
-      userAvatar.textContent = user.name.charAt(0).toUpperCase();
-      userAvatar.classList.remove('hidden');
-      
-      // Add tooltip with username
-      userAvatar.title = `Welcome, ${user.name}`;
-    }
 
     // Mobile Menu Toggle
     const hamburger = document.getElementById('hamburger');
@@ -1380,25 +1442,22 @@
     const whatsappChatBox = document.getElementById('whatsapp-chat-box');
     const whatsappClose = document.getElementById('whatsapp-close');
     
-    // Toggle WhatsApp chat box
     whatsappBubble.addEventListener('click', () => {
       whatsappChatBox.classList.toggle('active');
     });
     
-    // Close WhatsApp chat box
     whatsappClose.addEventListener('click', (e) => {
       e.stopPropagation();
       whatsappChatBox.classList.remove('active');
     });
     
-    // Close WhatsApp chat box when clicking outside
     document.addEventListener('click', (e) => {
       if (!whatsappChatBox.contains(e.target) && !whatsappBubble.contains(e.target)) {
         whatsappChatBox.classList.remove('active');
       }
     });
 
-    // Chatbot Functionality
+    // --- Chatbot Functionality ---
     const chatbotContainer = document.getElementById('chatbot-container');
     const chatbotHeader = document.getElementById('chatbot-header');
     const chatbotBody = document.getElementById('chatbot-body');
@@ -1412,17 +1471,14 @@
     const fileUploadInput = document.getElementById('file-upload');
     const filePreview = document.getElementById('file-preview');
 
-    // Together AI API Key
     const TOGETHER_API_KEY = 'tgp_v1_qQeqHwW67jDbBrgxYS2SPbA6Had-zvMeWeZRFdKG4TU';
     const TOGETHER_API_URL = 'https://api.together.xyz/v1/chat/completions';
     const TOGETHER_IMAGE_API_URL = 'https://api.together.xyz/v1/images/generate';
 
-    // Chatbot state
     let isChatbotOpen = false;
     let conversationHistory = [];
     let attachedFiles = [];
 
-    // Initialize conversation
     function initializeConversation() {
       conversationHistory = [
         {
@@ -1436,11 +1492,9 @@
         }
       ];
       
-      // Clear file attachments
       attachedFiles = [];
       filePreview.innerHTML = '';
       
-      // Add welcome message
       addMessage('bot', `Hello! I'm your Gaming Odyssey assistant. How can I help you today? 😊
       You can ask me about:
       <ul class="list-disc pl-5 mt-1">
@@ -1453,7 +1507,6 @@
       </ul>`);
     }
 
-    // Toggle chatbot visibility
     function toggleChatbot() {
       isChatbotOpen = !isChatbotOpen;
       if (isChatbotOpen) {
@@ -1467,12 +1520,10 @@
       }
     }
 
-    // Add message to chat
     function addMessage(role, content, files = []) {
       const messageDiv = document.createElement('div');
       messageDiv.className = `${role}-message p-3 text-sm rounded-lg ${role === 'user' ? 'bg-[#1E40AF] text-white ml-auto' : 'bg-[#1E293B]'}`;
       
-      // Check if content contains markdown-like formatting for lists
       if (content.includes('\n- ') || content.includes('\n* ') || content.includes('<ul>')) {
         const parts = content.split('\n');
         let htmlContent = '';
@@ -1491,7 +1542,6 @@
           }
         }
         
-        // Close any open ul tag
         if (htmlContent.includes('<ul>') && !htmlContent.includes('</ul>')) {
           htmlContent += '</ul>';
         }
@@ -1501,7 +1551,6 @@
         messageDiv.innerHTML = `<p>${content}</p>`;
       }
       
-      // Add file previews if any
       if (files.length > 0) {
         const filesContainer = document.createElement('div');
         filesContainer.className = 'file-preview mt-2 flex flex-wrap gap-2';
@@ -1536,7 +1585,6 @@
       chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
     }
 
-    // Show typing indicator
     function showTypingIndicator() {
       const typingDiv = document.createElement('div');
       typingDiv.className = 'bot-message p-3 text-sm rounded-lg bg-[#1E293B]';
@@ -1552,7 +1600,6 @@
       chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
     }
 
-    // Hide typing indicator
     function hideTypingIndicator() {
       const typingIndicator = document.getElementById('typing-indicator');
       if (typingIndicator) {
@@ -1560,7 +1607,6 @@
       }
     }
 
-    // Handle file uploads
     fileUploadInput.addEventListener('change', (e) => {
       const files = Array.from(e.target.files);
       if (files.length > 0) {
@@ -1569,7 +1615,6 @@
       }
     });
 
-    // Update file preview display
     function updateFilePreview() {
       filePreview.innerHTML = '';
       attachedFiles.forEach((file, index) => {
@@ -1594,7 +1639,7 @@
         
         const removeBtn = document.createElement('span');
         removeBtn.className = 'absolute top-0 right-0 bg-red-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full transform translate-x-1 -translate-y-1 cursor-pointer';
-        removeBtn.innerHTML = '&times;';
+        removeBtn.innerHTML = '×';
         removeBtn.addEventListener('click', (e) => {
           e.stopPropagation();
           attachedFiles.splice(index, 1);
@@ -1606,13 +1651,10 @@
       });
     }
 
-    // Send message to Together AI
     async function sendMessageToAI(message, files = []) {
       try {
-        // Add user message to conversation history
         conversationHistory.push({ role: "user", content: message });
         
-        // If there are files, add them to the context
         if (files.length > 0) {
           conversationHistory.push({
             role: "user",
@@ -1643,13 +1685,11 @@
         const data = await response.json();
         const aiResponse = data.choices[0].message.content;
         
-        // Add AI response to conversation history
         conversationHistory.push({ role: "assistant", content: aiResponse });
         
         hideTypingIndicator();
         addMessage('bot', aiResponse);
         
-        // Clear attached files after sending
         attachedFiles = [];
         filePreview.innerHTML = '';
         fileUploadInput.value = '';
@@ -1660,7 +1700,6 @@
       }
     }
 
-    // Generate image from text prompt
     async function generateImage(prompt) {
       if (!prompt.trim()) {
         addMessage('bot', "Please provide a description for the image you'd like me to generate.");
@@ -1693,13 +1732,11 @@
         const data = await response.json();
         const imageUrl = data.output.choices[0].image_base64;
         
-        // Create image element
         const img = document.createElement('img');
         img.src = `data:image/png;base64,${imageUrl}`;
         img.className = 'generated-image max-w-full rounded-lg mt-2';
         img.alt = 'Generated image based on: ' + prompt;
         
-        // Create message container
         const messageDiv = document.createElement('div');
         messageDiv.className = 'bot-message p-3 text-sm rounded-lg bg-[#1E293B]';
         messageDiv.innerHTML = `<p>Here's the image generated based on your description:</p>`;
@@ -1708,7 +1745,6 @@
         chatbotMessages.appendChild(messageDiv);
         chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
         
-        // Add to conversation history
         conversationHistory.push({
           role: "assistant",
           content: `[Generated image based on: ${prompt}]`
@@ -1722,13 +1758,11 @@
       }
     }
 
-    // Clear chat history
     function clearChat() {
       chatbotMessages.innerHTML = '';
       initializeConversation();
     }
 
-    // Handle send button click
     chatbotSend.addEventListener('click', () => {
       const message = chatbotInput.value.trim();
       if (message || attachedFiles.length > 0) {
@@ -1738,19 +1772,12 @@
       }
     });
 
-    // Handle Enter key in input
     chatbotInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') {
-        const message = chatbotInput.value.trim();
-        if (message || attachedFiles.length > 0) {
-          addMessage('user', message, attachedFiles);
-          chatbotInput.value = '';
-          sendMessageToAI(message, attachedFiles);
-        }
+        chatbotSend.click();
       }
     });
 
-    // Handle image generation button
     generateImageBtn.addEventListener('click', () => {
       const prompt = chatbotInput.value.trim();
       if (prompt) {
@@ -1762,10 +1789,7 @@
       }
     });
 
-    // Handle clear chat button
     clearChatBtn.addEventListener('click', clearChat);
-
-    // Toggle chatbot with header click
     chatbotHeader.addEventListener('click', toggleChatbot);
     chatbotToggle.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -1778,5 +1802,6 @@
   </script>
 </body>
 </html>
+
 
 
