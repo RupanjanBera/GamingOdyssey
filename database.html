@@ -265,6 +265,16 @@
     .out-of-stock {
       color: #F87171;
     }
+    /* Order status styles */
+    .order-pending {
+      color: #FBBF24;
+    }
+    .order-completed {
+      color: #4ADE80;
+    }
+    .order-cancelled {
+      color: #F87171;
+    }
     /* Color picker styles */
     .color-option {
       width: 30px;
@@ -410,7 +420,7 @@
     <section class="hero-bg min-h-[50vh] flex items-center justify-center text-center p-4 sm:p-6 md:p-8">
       <div class="fade-in max-w-2xl mx-auto">
         <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">Admin Dashboard</h1>
-        <p class="text-base sm:text-lg md:text-xl text-[#F1F5F9] mb-8 leading-relaxed">Manage users and products</p>
+        <p class="text-base sm:text-lg md:text-xl text-[#F1F5F9] mb-8 leading-relaxed">Manage users, products, and orders</p>
       </div>
     </section>
 
@@ -439,6 +449,7 @@
             <div class="tab-container">
               <div class="tab active" data-tab="users">Users</div>
               <div class="tab" data-tab="products">Products</div>
+              <div class="tab" data-tab="orders">Orders</div>
             </div>
             
             <!-- Users Tab Content -->
@@ -640,6 +651,106 @@
                 </div>
               </div>
             </div>
+            
+            <!-- Orders Tab Content -->
+            <div id="orders-tab" class="tab-content">
+              <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-white">Order Management</h2>
+                <div class="text-[#94A3B8] text-sm">
+                  Total Orders: <span id="order-count" class="font-bold text-[#3B82F6]">0</span>
+                </div>
+              </div>
+              
+              <div class="flex flex-wrap gap-4 mb-6">
+                <div class="flex items-center">
+                  <label for="order-filter" class="text-[#F1F5F9] mr-2 text-sm">Filter by:</label>
+                  <select id="order-filter" class="w-auto">
+                    <option value="all">All Orders</option>
+                    <option value="pending">Pending</option>
+                    <option value="completed">Completed</option>
+                    <option value="cancelled">Cancelled</option>
+                  </select>
+                </div>
+                <button id="export-orders-btn" class="submit-btn flex items-center justify-center gap-2 bg-gradient-to-r from-[#10B981] to-[#3B82F6]">
+                  <i class="fas fa-file-export"></i> Export as CSV
+                </button>
+              </div>
+              
+              <div class="table-container">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Order ID</th>
+                      <th>Customer Email</th>
+                      <th>Items</th>
+                      <th>Total Amount</th>
+                      <th>Payment Method</th>
+                      <th>Order Date</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="order-table">
+                    <!-- Orders will be populated here -->
+                  </tbody>
+                </table>
+              </div>
+              
+              <!-- Order Details Modal -->
+              <div id="order-modal" class="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center p-4 hidden">
+                <div class="bg-[#1E293B] rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+                  <div class="p-6">
+                    <div class="flex justify-between items-center mb-6">
+                      <h3 class="text-xl font-bold text-white">Order Details</h3>
+                      <button id="close-order-modal" class="text-[#94A3B8] hover:text-[#F1F5F9]">
+                        <i class="fas fa-times text-xl"></i>
+                      </button>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                      <div>
+                        <h4 class="text-lg font-semibold text-white mb-3">Order Information</h4>
+                        <div class="space-y-2">
+                          <p><span class="text-[#94A3B8]">Order ID:</span> <span id="modal-order-id" class="text-white"></span></p>
+                          <p><span class="text-[#94A3B8]">Order Date:</span> <span id="modal-order-date" class="text-white"></span></p>
+                          <p><span class="text-[#94A3B8]">Status:</span> <span id="modal-order-status" class="text-white"></span></p>
+                          <p><span class="text-[#94A3B8]">Payment Method:</span> <span id="modal-payment-method" class="text-white"></span></p>
+                          <p><span class="text-[#94A3B8]">Total Amount:</span> <span id="modal-total-amount" class="text-white"></span></p>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <h4 class="text-lg font-semibold text-white mb-3">Customer Information</h4>
+                        <div class="space-y-2">
+                          <p><span class="text-[#94A3B8]">Email:</span> <span id="modal-customer-email" class="text-white"></span></p>
+                          <p><span class="text-[#94A3B8]">Name:</span> <span id="modal-customer-name" class="text-white"></span></p>
+                          <p><span class="text-[#94A3B8]">Phone:</span> <span id="modal-customer-phone" class="text-white"></span></p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="mb-6">
+                      <h4 class="text-lg font-semibold text-white mb-3">Shipping Address</h4>
+                      <div id="modal-shipping-address" class="text-[#F1F5F9] bg-[#1E293B] p-4 rounded-lg"></div>
+                    </div>
+                    
+                    <div class="mb-6">
+                      <h4 class="text-lg font-semibold text-white mb-3">Order Items</h4>
+                      <div id="modal-order-items" class="space-y-3"></div>
+                    </div>
+                    
+                    <div class="flex justify-end space-x-4">
+                      <button type="button" id="close-order-details" class="px-6 py-2 border border-[#3B82F6] text-[#3B82F6] rounded-md hover:bg-[#3B82F6] hover:text-[#0F172A] transition">
+                        Close
+                      </button>
+                      <div id="order-status-buttons" class="flex space-x-2">
+                        <!-- Status buttons will be added dynamically -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -696,7 +807,7 @@
             </li>
             <li class="text-[#94A3B8] text-sm leading-relaxed flex items-center gap-3">
               <i class="fas fa-envelope text-[#3B82F6]"></i>
-              <a href="mailto:support@gamingodyssey.in" class="hover:text-[#3B82F6] transition">support@gamingodyssey.in</a>
+              <a href="mailto:support@gamingodyssey.in" class="hover:text-[#3B82F9] transition">support@gamingodyssey.in</a>
             </li>
             <li class="text-[#94A3B8] text-sm leading-relaxed flex items-center gap-3">
               <i class="fas fa-phone text-[#3B82F6]"></i>
@@ -782,9 +893,10 @@
         // Show dashboard content
         document.getElementById('dashboard-content').classList.remove('hidden');
         
-        // Load and display user data
+        // Load and display data
         loadUserData();
         loadProductData();
+        loadOrderData();
       } else {
         passwordError.classList.remove('hidden');
         formStatus.textContent = 'Access denied. Incorrect password.';
@@ -919,6 +1031,214 @@
       });
     }
 
+    // Load order data from localStorage
+    function loadOrderData() {
+      const orders = JSON.parse(localStorage.getItem('orders')) || [];
+      const orderTable = document.getElementById('order-table');
+      const orderCount = document.getElementById('order-count');
+      const orderFilter = document.getElementById('order-filter');
+      
+      // Clear existing rows
+      orderTable.innerHTML = '';
+      
+      // Filter orders if needed
+      let filteredOrders = orders;
+      if (orderFilter.value !== 'all') {
+        filteredOrders = orders.filter(order => order.status === orderFilter.value);
+      }
+      
+      // Add order rows
+      filteredOrders.forEach((order, index) => {
+        const row = document.createElement('tr');
+        row.className = 'hover:bg-[#1E293B] transition';
+        
+        // Format date
+        const orderDate = new Date(order.timestamp);
+        const formattedDate = orderDate.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+        
+        // Determine status class
+        let statusClass = '';
+        if (order.status === 'pending') {
+          statusClass = 'order-pending';
+        } else if (order.status === 'completed') {
+          statusClass = 'order-completed';
+        } else if (order.status === 'cancelled') {
+          statusClass = 'order-cancelled';
+        }
+        
+        // Get items count
+        const itemsCount = order.items ? order.items.length : 0;
+        
+        row.innerHTML = `
+          <td class="py-3">${order.orderId}</td>
+          <td class="py-3">${order.customerEmail || 'N/A'}</td>
+          <td class="py-3">${itemsCount} item(s)</td>
+          <td class="py-3">$${order.total ? order.total.toFixed(2) : '0.00'}</td>
+          <td class="py-3">${order.paymentMethod || 'N/A'}</td>
+          <td class="py-3">${formattedDate}</td>
+          <td class="py-3 ${statusClass}">${order.status ? order.status.charAt(0).toUpperCase() + order.status.slice(1) : 'Pending'}</td>
+          <td class="py-3">
+            <div class="flex space-x-2">
+              <button class="view-order p-2 text-[#3B82F6] hover:text-[#D946EF]" data-id="${index}">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button class="delete-order p-2 text-[#F87171] hover:text-[#EF4444]" data-id="${index}">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        `;
+        
+        orderTable.appendChild(row);
+      });
+      
+      // Update order count
+      orderCount.textContent = orders.length;
+      
+      // Add event listeners to view and delete buttons
+      document.querySelectorAll('.view-order').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const orderId = e.currentTarget.getAttribute('data-id');
+          viewOrder(orderId);
+        });
+      });
+      
+      document.querySelectorAll('.delete-order').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const orderId = e.currentTarget.getAttribute('data-id');
+          deleteOrder(orderId);
+        });
+      });
+    }
+
+    // View order details
+    function viewOrder(id) {
+      const orders = JSON.parse(localStorage.getItem('orders')) || [];
+      const order = orders[id];
+      
+      if (!order) return;
+      
+      // Populate modal with order details
+      document.getElementById('modal-order-id').textContent = order.orderId;
+      document.getElementById('modal-order-date').textContent = new Date(order.timestamp).toLocaleString();
+      document.getElementById('modal-order-status').textContent = order.status ? order.status.charAt(0).toUpperCase() + order.status.slice(1) : 'Pending';
+      document.getElementById('modal-payment-method').textContent = order.paymentMethod || 'N/A';
+      document.getElementById('modal-total-amount').textContent = `$${order.total ? order.total.toFixed(2) : '0.00'}`;
+      document.getElementById('modal-customer-email').textContent = order.customerEmail || 'N/A';
+      
+      // Customer name and phone
+      const customerName = order.shippingAddress ? order.shippingAddress.name : 'N/A';
+      const customerPhone = order.shippingAddress ? order.shippingAddress.phone : 'N/A';
+      document.getElementById('modal-customer-name').textContent = customerName;
+      document.getElementById('modal-customer-phone').textContent = customerPhone;
+      
+      // Shipping address
+      const shippingAddress = order.shippingAddress ? `
+        ${order.shippingAddress.name}<br>
+        ${order.shippingAddress.addressLine1}${order.shippingAddress.addressLine2 ? ', ' + order.shippingAddress.addressLine2 : ''}<br>
+        ${order.shippingAddress.city}, ${order.shippingAddress.state} ${order.shippingAddress.zip}<br>
+        ${order.shippingAddress.country}
+      ` : 'No shipping address provided';
+      document.getElementById('modal-shipping-address').innerHTML = shippingAddress;
+      
+      // Order items
+      const orderItemsContainer = document.getElementById('modal-order-items');
+      orderItemsContainer.innerHTML = '';
+      
+      if (order.items && order.items.length > 0) {
+        order.items.forEach(item => {
+          const itemElement = document.createElement('div');
+          itemElement.className = 'flex justify-between items-center p-3 bg-[#1E293B] rounded-lg';
+          itemElement.innerHTML = `
+            <div>
+              <p class="font-semibold">${item.name}</p>
+              <p class="text-sm text-[#94A3B8]">Quantity: ${item.quantity || 1}</p>
+            </div>
+            <div class="text-right">
+              <p>$${((item.price || 0) * (item.quantity || 1)).toFixed(2)}</p>
+              <p class="text-sm text-[#94A3B8]">$${item.price || 0} each</p>
+            </div>
+          `;
+          orderItemsContainer.appendChild(itemElement);
+        });
+      } else {
+        orderItemsContainer.innerHTML = '<p class="text-[#94A3B8]">No items in this order</p>';
+      }
+      
+      // Status buttons
+      const statusButtonsContainer = document.getElementById('order-status-buttons');
+      statusButtonsContainer.innerHTML = '';
+      
+      if (order.status !== 'completed') {
+        const completeButton = document.createElement('button');
+        completeButton.className = 'px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition';
+        completeButton.innerHTML = '<i class="fas fa-check mr-1"></i> Mark Complete';
+        completeButton.addEventListener('click', () => {
+          updateOrderStatus(id, 'completed');
+        });
+        statusButtonsContainer.appendChild(completeButton);
+      }
+      
+      if (order.status !== 'cancelled') {
+        const cancelButton = document.createElement('button');
+        cancelButton.className = 'px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition';
+        cancelButton.innerHTML = '<i class="fas fa-times mr-1"></i> Cancel Order';
+        cancelButton.addEventListener('click', () => {
+          updateOrderStatus(id, 'cancelled');
+        });
+        statusButtonsContainer.appendChild(cancelButton);
+      }
+      
+      // Show modal
+      document.getElementById('order-modal').classList.remove('hidden');
+    }
+
+    // Update order status
+    function updateOrderStatus(id, status) {
+      const orders = JSON.parse(localStorage.getItem('orders')) || [];
+      if (orders[id]) {
+        orders[id].status = status;
+        localStorage.setItem('orders', JSON.stringify(orders));
+        loadOrderData();
+        document.getElementById('order-modal').classList.add('hidden');
+        
+        // Show success notification
+        showNotification(`Order status updated to ${status}`);
+      }
+    }
+
+    // Delete order
+    function deleteOrder(id) {
+      if (!confirm('Are you sure you want to delete this order?')) return;
+      
+      const orders = JSON.parse(localStorage.getItem('orders')) || [];
+      orders.splice(id, 1);
+      localStorage.setItem('orders', JSON.stringify(orders));
+      
+      loadOrderData();
+      showNotification('Order deleted successfully');
+    }
+
+    // Show notification
+    function showNotification(message) {
+      const notification = document.createElement('div');
+      notification.className = 'fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-md shadow-lg flex items-center z-50';
+      notification.innerHTML = `
+        <i class="fas fa-check-circle mr-2"></i>
+        <span>${message}</span>
+      `;
+      document.body.appendChild(notification);
+      setTimeout(() => {
+        notification.remove();
+      }, 3000);
+    }
+
     // Export Users to CSV
     document.getElementById('export-users-btn').addEventListener('click', () => {
       const users = JSON.parse(localStorage.getItem('users')) || [];
@@ -947,25 +1267,36 @@
       downloadCSV(csv, 'gaming_odyssey_users.csv');
     });
 
-    // Export Products to CSV
-    document.getElementById('export-products-btn')?.addEventListener('click', () => {
-      const products = JSON.parse(localStorage.getItem('products')) || [];
+    // Export Orders to CSV
+    document.getElementById('export-orders-btn').addEventListener('click', () => {
+      const orders = JSON.parse(localStorage.getItem('orders')) || [];
       
-      if (products.length === 0) {
-        alert('No product data to export');
+      if (orders.length === 0) {
+        alert('No order data to export');
         return;
       }
       
       // Create CSV header
-      let csv = 'Name,Category,Brand,MRP,Price,Stock,Status,Featured\n';
+      let csv = 'Order ID,Customer Email,Items,Total Amount,Payment Method,Order Date,Status\n';
       
-      // Add product data
-      products.forEach(product => {
-        csv += `"${product.name}",${product.category},${product.brand},${product.mrp},${product.price},${product.stock},${product.stockStatus},${product.featured}\n`;
+      // Add order data
+      orders.forEach(order => {
+        const orderDate = new Date(order.timestamp);
+        const formattedDate = orderDate.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+        
+        const itemsCount = order.items ? order.items.length : 0;
+        
+        csv += `${order.orderId},${order.customerEmail || 'N/A'},${itemsCount},$${order.total ? order.total.toFixed(2) : '0.00'},${order.paymentMethod || 'N/A'},${formattedDate},${order.status || 'pending'}\n`;
       });
       
       // Create download link
-      downloadCSV(csv, 'gaming_odyssey_products.csv');
+      downloadCSV(csv, 'gaming_odyssey_orders.csv');
     });
 
     function downloadCSV(csv, filename) {
@@ -979,6 +1310,20 @@
       link.click();
       document.body.removeChild(link);
     }
+
+    // Order filter
+    document.getElementById('order-filter').addEventListener('change', () => {
+      loadOrderData();
+    });
+
+    // Close order modal
+    document.getElementById('close-order-modal').addEventListener('click', () => {
+      document.getElementById('order-modal').classList.add('hidden');
+    });
+
+    document.getElementById('close-order-details').addEventListener('click', () => {
+      document.getElementById('order-modal').classList.add('hidden');
+    });
 
     // Product Management
     const productModal = document.getElementById('product-modal');
@@ -1296,21 +1641,13 @@
         loadProductData();
         
         // Show success notification
-        const notification = document.createElement('div');
-        notification.className = 'fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-md shadow-lg flex items-center z-50';
-        notification.innerHTML = `
-          <i class="fas fa-check-circle mr-2"></i>
-          <span>Product ${productId === '' ? 'added' : 'updated'} successfully!</span>
-        `;
-        document.body.appendChild(notification);
-        setTimeout(() => {
-          notification.remove();
-        }, 3000);
+        showNotification(`Product ${productId === '' ? 'added' : 'updated'} successfully!`);
       }
     });
 
-    // Initialize the page with sample products if none exist
+    // Initialize the page with sample data if none exists
     document.addEventListener('DOMContentLoaded', () => {
+      // Sample products
       if (!localStorage.getItem('products')) {
         const sampleProducts = [
           {
@@ -1346,8 +1683,57 @@
         ];
         localStorage.setItem('products', JSON.stringify(sampleProducts));
       }
+      
+      // Sample orders
+      if (!localStorage.getItem('orders')) {
+        const sampleOrders = [
+          {
+            orderId: "ORD-12345",
+            customerEmail: "customer@example.com",
+            total: 149.99,
+            paymentMethod: "PayPal",
+            status: "completed",
+            timestamp: new Date().toISOString(),
+            items: [
+              { name: "Logitech G Pro X Keyboard", price: 149.99, quantity: 1 }
+            ],
+            shippingAddress: {
+              name: "John Doe",
+              addressLine1: "123 Main St",
+              city: "New York",
+              state: "NY",
+              zip: "10001",
+              country: "United States",
+              phone: "555-123-4567"
+            }
+          },
+          {
+            orderId: "ORD-67890",
+            customerEmail: "gamer@example.com",
+            total: 69.99,
+            paymentMethod: "Credit Card",
+            status: "pending",
+            timestamp: new Date().toISOString(),
+            items: [
+              { name: "Razer DeathAdder V2", price: 69.99, quantity: 1 }
+            ],
+            shippingAddress: {
+              name: "Jane Smith",
+              addressLine1: "456 Oak Ave",
+              addressLine2: "Apt 2B",
+              city: "Los Angeles",
+              state: "CA",
+              zip: "90001",
+              country: "United States",
+              phone: "555-987-6543"
+            }
+          }
+        ];
+        localStorage.setItem('orders', JSON.stringify(sampleOrders));
+      }
     });
   </script>
 </body>
 </html>
+
 
