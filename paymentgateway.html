@@ -403,64 +403,7 @@
         </div>
 
         <div id="payment-forms" class="space-y-8">
-          <div id="upi-form" class="payment-card gradient-glow">
-            <h3 class="text-lg font-bold text-white mb-2">UPI Payment</h3>
-            <p class="text-[#F1F5F9] text-sm mb-4">Pay via Google Pay, PhonePe, Paytm, etc.</p>
-            <form id="upi-payment-form" class="space-y-4">
-              <div>
-                <label for="upi-id" class="block text-[#F1F5F9] mb-2">Enter UPI ID (e.g., 1234567890@upi)</label>
-                <input type="text" id="upi-id" placeholder="yourname@upi" required class="w-full">
-              </div>
-              <div class="text-center">
-                <p class="text-[#F1F5F9] mb-2">Or scan the QR code to pay:</p>
-                <div id="upi-qr-code" class="inline-block bg-white p-2 rounded-lg mb-2"></div>
-                <p class="text-[#F1F5F9] text-sm">Amount: <span id="upi-amount"></span></p>
-              </div>
-              <button type="submit" class="submit-btn w-full">Pay via UPI</button>
-            </form>
-          </div>
-
-          <div id="card-form" class="payment-card gradient-glow">
-            <h3 class="text-lg font-bold text-white mb-2">Credit/Debit Card</h3>
-            <p class="text-[#F1F5F9] text-sm mb-4">Secure payment with your card</p>
-            <form id="card-payment-form" class="space-y-4">
-              <div>
-                <label for="card-number" class="block text-[#F1F5F9] mb-2">Card Number</label>
-                <input type="text" id="card-number" placeholder="1234 5678 9012 3456" required class="w-full">
-              </div>
-              <div class="grid grid-cols-2 gap-4">
-                <div>
-                  <label for="expiry-date" class="block text-[#F1F5F9] mb-2">Expiry Date</label>
-                  <input type="text" id="expiry-date" placeholder="MM/YY" required class="w-full">
-                </div>
-                <div>
-                  <label for="cvv" class="block text-[#F1F5F9] mb-2">CVV</label>
-                  <input type="text" id="cvv" placeholder="123" required class="w-full">
-                </div>
-              </div>
-              <div>
-                <label for="card-name" class="block text-[#F1F5F9] mb-2">Name on Card</label>
-                <input type="text" id="card-name" placeholder="John Doe" required class="w-full">
-              </div>
-              <button type="submit" class="submit-btn w-full">Pay $<span id="card-amount"></span></button>
-            </form>
-          </div>
-
-          <div id="paypal-form" class="payment-card gradient-glow">
-            <h3 class="text-lg font-bold text-white mb-2">PayPal</h3>
-            <p class="text-[#F1F5F9] text-sm mb-4">Secure payment with PayPal</p>
-            <div id="paypal-button-container"></div>
-          </div>
-
-          <div id="cod-form" class="payment-card gradient-glow">
-            <h3 class="text-lg font-bold text-white mb-2">Cash on Delivery</h3>
-            <p class="text-[#F1F5F9] text-sm mb-4">Pay when you receive</p>
-            <form id="cod-payment-form" class="space-y-4">
-              <p class="text-[#F1F5F9]">You will pay <span id="cod-amount"></span> upon delivery.</p>
-              <button type="submit" class="submit-btn w-full">Confirm Order</button>
-            </form>
-          </div>
-        </div>
+            </div>
       </div>
     </section>
 
@@ -562,19 +505,13 @@
 
     const orderIdElement = document.getElementById('orderId');
     const totalAmountElement = document.getElementById('totalAmount');
-    const codAmountElement = document.getElementById('cod-amount');
-    const upiAmountElement = document.getElementById('upi-amount');
-    const cardAmountElement = document.getElementById('card-amount');
     const orderSummaryElement = document.getElementById('order-summary');
     const shippingDetailsElement = document.getElementById('shipping-details');
 
     // Display Order Details
     orderIdElement.textContent = order.orderId || 'Not Available';
     totalAmountElement.textContent = order.total ? `$${order.total.toFixed(2)}` : '$0.00';
-    codAmountElement.textContent = order.total ? `$${order.total.toFixed(2)}` : '$0.00';
-    upiAmountElement.textContent = order.total ? `$${order.total.toFixed(2)}` : '$0.00';
-    cardAmountElement.textContent = order.total ? order.total.toFixed(2) : '0.00';
-
+    
     // Display Order Summary
     if (cart.length > 0) {
       cart.forEach(item => {
@@ -607,121 +544,141 @@
     } else {
       shippingDetailsElement.innerHTML = '<p class="text-[#F1F5F9] text-center">No shipping address provided.</p>';
     }
+    
+    // RENDER PAYMENT FORMS
+    function renderPaymentForms() {
+        const paymentFormsContainer = document.getElementById('payment-forms');
+        paymentFormsContainer.innerHTML = `
+            <div id="upi-form" class="payment-card gradient-glow">
+                <h3 class="text-lg font-bold text-white mb-2">UPI Payment</h3>
+                <p class="text-[#F1F5F9] text-sm mb-4">Pay via Google Pay, PhonePe, Paytm, etc.</p>
+                <form id="upi-payment-form" class="space-y-4">
+                    <div>
+                        <label for="upi-id" class="block text-[#F1F5F9] mb-2">Enter UPI ID (e.g., 1234567890@upi)</label>
+                        <input type="text" id="upi-id" placeholder="yourname@upi" required class="w-full">
+                    </div>
+                    <div class="text-center">
+                        <p class="text-[#F1F5F9] mb-2">Or scan the QR code to pay:</p>
+                        <div id="upi-qr-code" class="inline-block bg-white p-2 rounded-lg mb-2"></div>
+                        <p class="text-[#F1F5F9] text-sm">Amount: <span id="upi-amount">$${order.total ? order.total.toFixed(2) : '0.00'}</span></p>
+                    </div>
+                    <button type="submit" class="submit-btn w-full">Pay via UPI</button>
+                </form>
+            </div>
+
+            <div id="card-form" class="payment-card gradient-glow">
+                <h3 class="text-lg font-bold text-white mb-2">Credit/Debit Card</h3>
+                <p class="text-[#F1F5F9] text-sm mb-4">Secure payment with your card</p>
+                <form id="card-payment-form" class="space-y-4">
+                    <div>
+                        <label for="card-number" class="block text-[#F1F5F9] mb-2">Card Number</label>
+                        <input type="text" id="card-number" placeholder="1234 5678 9012 3456" required class="w-full">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                        <label for="expiry-date" class="block text-[#F1F5F9] mb-2">Expiry Date</label>
+                        <input type="text" id="expiry-date" placeholder="MM/YY" required class="w-full">
+                        </div>
+                        <div>
+                        <label for="cvv" class="block text-[#F1F5F9] mb-2">CVV</label>
+                        <input type="text" id="cvv" placeholder="123" required class="w-full">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="card-name" class="block text-[#F1F5F9] mb-2">Name on Card</label>
+                        <input type="text" id="card-name" placeholder="John Doe" required class="w-full">
+                    </div>
+                    <button type="submit" class="submit-btn w-full">Pay $${order.total ? order.total.toFixed(2) : '0.00'}</button>
+                </form>
+            </div>
+
+            <div id="paypal-form" class="payment-card gradient-glow">
+                <h3 class="text-lg font-bold text-white mb-2">PayPal</h3>
+                <p class="text-[#F1F5F9] text-sm mb-4">Secure payment with PayPal</p>
+                <div id="paypal-button-container"></div>
+            </div>
+
+            <div id="cod-form" class="payment-card gradient-glow">
+                <h3 class="text-lg font-bold text-white mb-2">Cash on Delivery</h3>
+                <p class="text-[#F1F5F9] text-sm mb-4">Pay when you receive</p>
+                <form id="cod-payment-form" class="space-y-4">
+                    <p class="text-[#F1F5F9]">You will pay $${order.total ? order.total.toFixed(2) : '0.00'} upon delivery.</p>
+                    <button type="submit" class="submit-btn w-full">Confirm Order</button>
+                </form>
+            </div>
+        `;
+    }
+
+    renderPaymentForms();
 
     // Generate Dynamic UPI QR Code
-    const upiQRCodeElement = document.getElementById('upi-qr-code');
-
     function generateUPIQRCode(upiId = '') {
+      const upiQRCodeElement = document.getElementById('upi-qr-code');
       const defaultUpiId = '43629445686@sbi'; // Your UPI ID
       const amount = order.total ? order.total.toFixed(2) : '0.00';
       const transactionNote = `Order Payment ${order.orderId || 'Unknown'}`;
       const upiLink = `upi://pay?pa=${encodeURIComponent(upiId || defaultUpiId)}&pn=${encodeURIComponent('Gaming Odyssey')}&am=${amount}&cu=USD&tn=${encodeURIComponent(transactionNote)}`;
 
       upiQRCodeElement.innerHTML = '';
+      if (typeof QRCode === 'undefined') return;
 
-      if (typeof QRCode === 'undefined') {
-        console.error('QRCode library not loaded');
-        upiQRCodeElement.innerHTML = '<p class="text-[#F1F5F9] text-center">QR code library not loaded. Please try again.</p>';
-        return;
-      }
-
-      try {
-        QRCode.toCanvas(upiLink, {
-          width: 200,
-          margin: 1,
-          color: { dark: '#000000', light: '#FFFFFF' }
-        }, (error, canvas) => {
-          if (error) {
-            console.error('QR Code generation error:', error);
-            upiQRCodeElement.innerHTML = '<p class="text-[#F1F5F9] text-center">Failed to generate QR code. Please try again.</p>';
-          } else {
-            upiQRCodeElement.appendChild(canvas);
-          }
-        });
-      } catch (e) {
-        console.error('QR Code rendering error:', e);
-        upiQRCodeElement.innerHTML = '<p class="text-[#F1F5F9] text-center">Error rendering QR code. Please try again.</p>';
-      }
+      QRCode.toCanvas(upiLink, { width: 200, margin: 1, color: { dark: '#000000', light: '#FFFFFF' } }, (error, canvas) => {
+        if (error) console.error(error);
+        else upiQRCodeElement.appendChild(canvas);
+      });
     }
 
-    // Initial QR code generation
     if (!isPreviewMode) {
       generateUPIQRCode();
-    } else {
-      upiQRCodeElement.innerHTML = '<p class="text-[#F1F5F9] text-center">UPI QR Code Placeholder</p>';
     }
-
-    // Update UPI QR Code when user enters their UPI ID
-    document.getElementById('upi-id').addEventListener('input', (e) => {
-      if (e.target.value.includes('@')) {
-        generateUPIQRCode(e.target.value);
-      }
-    });
     
-    // FIX: Modified function to send email to both seller and customer using a single form submission.
-    function sendEmails(method, customerEmail, details = {}) {
-        const emailForm = document.createElement('form');
-        emailForm.action = 'https://formsubmit.co/support@gamingodyssey.in'; // Your seller email
-        emailForm.method = 'POST';
-        emailForm.style.display = 'none';
+    // Add event listeners after rendering
+    document.getElementById('upi-id').addEventListener('input', (e) => {
+        if (e.target.value.includes('@')) generateUPIQRCode(e.target.value);
+    });
 
-        // Prepare order details for email
-        const orderId = order.orderId || 'N/A';
-        const orderTotal = order.total ? order.total.toFixed(2) : '0.00';
-        const orderDate = new Date().toLocaleString();
+    // UPI Payment Form Submission
+    document.getElementById('upi-payment-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const upiId = document.getElementById('upi-id').value;
+      if (!upiId || !upiId.includes('@')) {
+        alert('Please enter a valid UPI ID (e.g., yourname@upi)');
+        return;
+      }
+      alert(`Processing UPI payment to ${upiId}. You will be redirected upon confirmation.`);
+      storeOrder('UPI', { upiId });
+    });
 
-        let orderItemsText = cart.map(item => 
-            `${item.name} x ${item.quantity || 1} - $${((item.price || 0) * (item.quantity || 1)).toFixed(2)}`
-        ).join('\n');
+    // Card Payment Form Submission
+    document.getElementById('card-payment-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Processing card payment...');
+      storeOrder('Card', { last4: document.getElementById('card-number').value.slice(-4) });
+    });
 
-        let shippingAddressText = shippingAddress.name ? `
-            Name: ${shippingAddress.name}
-            Address: ${shippingAddress.addressLine1}${shippingAddress.addressLine2 ? ', ' + shippingAddress.addressLine2 : ''}
-            City: ${shippingAddress.city || ''}, ${shippingAddress.state || ''} ${shippingAddress.zip || ''}
-            Country: ${shippingAddress.country || ''}
-            Phone: ${shippingAddress.phone || ''}
-        ` : 'No shipping address provided.';
-        
-        const emailContent = `
-            A new order has been placed on Gaming Odyssey.
-            
-            --- Order Details ---
-            Order ID: ${orderId}
-            Customer Email: ${customerEmail}
-            Order Total: $${orderTotal}
-            Payment Method: ${method}
-            Order Date: ${orderDate}
+    // Cash on Delivery Form Submission
+    document.getElementById('cod-payment-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      storeOrder('Cash on Delivery');
+    });
 
-            --- Items ---
-            ${orderItemsText}
-
-            --- Shipping Address ---
-            ${shippingAddressText}
-        `;
-
-        const addHiddenField = (name, value) => {
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = name;
-            input.value = value;
-            emailForm.appendChild(input);
-        };
-        
-        // FormSubmit fields
-        addHiddenField('_cc', customerEmail); // CC the email to the customer
-        addHiddenField('_subject', `New Order Confirmation from Gaming Odyssey - #${orderId}`);
-        addHiddenField('Order Details', emailContent);
-
-        document.body.appendChild(emailForm);
-        emailForm.submit();
-        
-        setTimeout(() => document.body.removeChild(emailForm), 1000);
-        
-        return true;
+    // PayPal Integration
+    const paypalContainer = document.getElementById('paypal-button-container');
+    if (order.total && !isPreviewMode && typeof paypal !== 'undefined' && paypal.Buttons) {
+        paypal.Buttons({
+          createOrder: (data, actions) => actions.order.create({
+            purchase_units: [{ amount: { value: order.total.toFixed(2), currency_code: 'USD' } }]
+          }),
+          onApprove: (data, actions) => actions.order.capture().then(details => {
+            storeOrder('PayPal', { transactionId: details.id, payerEmail: details.payer.email_address });
+          }),
+          onError: (err) => console.error('PayPal Error:', err)
+        }).render('#paypal-button-container');
+    } else {
+        paypalContainer.innerHTML = '<p class="text-[#F1F5F9] text-center">PayPal Button Placeholder</p>';
     }
 
-
-    // FIX: Modified function to save the order to the main 'orders' array for the database page.
+    // MODIFIED storeOrder function: Saves data and submits a single form for email and redirection.
     function storeOrder(method, details = {}) {
       if (isPreviewMode) {
         alert('Order confirmation disabled in preview mode.');
@@ -734,12 +691,9 @@
         return;
       }
       
-      // Send emails
-      sendEmails(method, customerEmail, details);
-      
       const finalOrder = {
         ...order,
-        customerEmail: customerEmail, // Add customer email to the order object
+        customerEmail: customerEmail,
         paymentMethod: method,
         paymentDetails: details,
         shippingAddress: shippingAddress,
@@ -749,110 +703,53 @@
       };
 
       try {
-        // Retrieve existing orders, add the new one, and save back
         const allOrders = JSON.parse(localStorage.getItem('orders')) || [];
         allOrders.push(finalOrder);
         localStorage.setItem('orders', JSON.stringify(allOrders));
-
-        // Clean up cart and temporary order data
         localStorage.removeItem('order');
         localStorage.removeItem('shippingAddress');
         localStorage.removeItem('cart');
-
       } catch (e) {
         console.error('Error saving to localStorage:', e);
+        // Don't stop execution, still try to send email and redirect
       }
-      
-      // Redirect to thank you page
-      window.location.href = `thankyou.html?orderId=${finalOrder.orderId}&amount=${finalOrder.total}&method=${method}`;
-    }
 
-    // UPI Payment Form Submission
-    document.getElementById('upi-payment-form').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const upiId = document.getElementById('upi-id').value;
-      if (!upiId || !upiId.includes('@')) {
-        alert('Please enter a valid UPI ID (e.g., yourname@upi)');
-        return;
-      }
-      
-      alert(`UPI payment request sent to ${upiId}. Please complete the payment in your UPI app.`);
-      
-      setTimeout(() => {
-        storeOrder('UPI', { upiId });
-      }, 3000);
-    });
+      // --- NEW FORMSUBMIT LOGIC ---
+      const form = document.createElement('form');
+      form.action = 'https://formsubmit.co/support@gamingodyssey.in'; // Your seller email
+      form.method = 'POST';
+      form.style.display = 'none';
 
-    // Card Payment Form Submission
-    document.getElementById('card-payment-form').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const cardNumber = document.getElementById('card-number').value;
-      const expiryDate = document.getElementById('expiry-date').value;
-      const cvv = document.getElementById('cvv').value;
-      const cardName = document.getElementById('card-name').value;
-      
-      if (!cardNumber || !expiryDate || !cvv || !cardName) {
-        alert('Please fill in all card details');
-        return;
-      }
-      
-      alert('Processing card payment...');
-      
-      setTimeout(() => {
-        storeOrder('Card', { 
-          last4: cardNumber.slice(-4),
-          bank: 'SBI',
-          accountNo: '43629445686',
-          ifsc: 'SBIN0016641'
-        });
-      }, 3000);
-    });
+      const addHiddenField = (name, value) => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = name;
+        input.value = value;
+        form.appendChild(input);
+      };
 
-    // Cash on Delivery Form Submission
-    document.getElementById('cod-payment-form').addEventListener('submit', (e) => {
-      e.preventDefault();
-      storeOrder('Cash on Delivery');
-    });
+      // FormSubmit special fields
+      const thankYouUrl = `${window.location.origin}${window.location.pathname.replace('paymentgateway.html', '')}thankyou.html?orderId=${finalOrder.orderId}&amount=${finalOrder.total}&method=${method}`;
+      addHiddenField('_next', thankYouUrl);
+      addHiddenField('_cc', customerEmail);
+      addHiddenField('_subject', `New Order Received - Gaming Odyssey #${finalOrder.orderId}`);
+      addHiddenField('_autoresponse', 'Thank you for your order from Gaming Odyssey! We have received it and will begin processing it shortly. You will receive another email once your order has shipped.');
 
-    // PayPal Integration
-    const paypalContainer = document.getElementById('paypal-button-container');
-    if (order.total && !isPreviewMode && typeof paypal !== 'undefined' && paypal.Buttons) {
-      try {
-        paypal.Buttons({
-          createOrder: function(data, actions) {
-            return actions.order.create({
-              purchase_units: [{
-                amount: {
-                  value: order.total.toFixed(2),
-                  currency_code: 'USD'
-                },
-                description: `Order #${order.orderId || 'Unknown'}`
-              }]
-            });
-          },
-          onApprove: function(data, actions) {
-            return actions.order.capture().then(function(details) {
-              storeOrder('PayPal', {
-                transactionId: details.id,
-                payerEmail: details.payer.email_address
-              });
-            });
-          },
-          onError: function(err) {
-            console.error('PayPal Error:', err);
-            alert('An error occurred with PayPal. Please try again or choose another payment method.');
-          }
-        }).render('#paypal-button-container').catch(err => {
-          console.error('PayPal SDK render error:', err);
-          paypalContainer.innerHTML = '<p class="text-[#F1F5F9] text-center">Failed to load PayPal buttons. Please try again.</p>';
-        });
-      } catch (e) {
-        console.error('PayPal initialization error:', e);
-        paypalContainer.innerHTML = '<p class="text-[#F1F5F9] text-center">PayPal not available. Please try another payment method.</p>';
-      }
-    } else {
-      console.warn('PayPal not loaded or in preview mode');
-      paypalContainer.innerHTML = '<p class="text-[#F1F5F9] text-center">PayPal Button Placeholder</p>';
+      // Order data fields for the email body
+      addHiddenField('Order_ID', finalOrder.orderId);
+      addHiddenField('Customer_Email', customerEmail);
+      addHiddenField('Total_Amount', `$${finalOrder.total.toFixed(2)}`);
+      addHiddenField('Payment_Method', method);
+      addHiddenField('Order_Date', new Date(finalOrder.timestamp).toLocaleString());
+      
+      const itemsSummary = cart.map(item => `${item.name} (Qty: ${item.quantity || 1})`).join(', ');
+      addHiddenField('Items', itemsSummary);
+      
+      const shippingSummary = `${shippingAddress.name}, ${shippingAddress.addressLine1}, ${shippingAddress.city}, ${shippingAddress.state} ${shippingAddress.zip}, ${shippingAddress.country}`;
+      addHiddenField('Shipping_Address', shippingSummary);
+
+      document.body.appendChild(form);
+      form.submit();
     }
 
     // Cancel Payment Functionality
@@ -870,7 +767,6 @@
     });
 
     confirmCancelBtn.addEventListener('click', () => {
-      // Clear order data from localStorage
       try {
         localStorage.removeItem('order');
         localStorage.removeItem('shippingAddress');
@@ -878,29 +774,14 @@
       } catch (e) {
         console.error('Error clearing localStorage:', e);
       }
-      
-      // Redirect to store page
       window.location.href = 'store.html';
     });
 
-    // Close modal if clicked outside
     window.addEventListener('click', (e) => {
       if (e.target === cancelModal) {
         cancelModal.style.display = 'none';
       }
     });
-
-    // Helper function to get country code
-    function getCountryCode(countryName) {
-      const countryCodes = {
-        'United States': 'US',
-        'India': 'IN',
-        'Canada': 'CA',
-        'United Kingdom': 'GB',
-        'Australia': 'AU'
-      };
-      return countryCodes[countryName] || 'US';
-    }
 
     // Hamburger Menu Toggle
     const hamburger = document.getElementById('hamburger');
@@ -936,3 +817,4 @@
   </script>
 </body>
 </html>
+
