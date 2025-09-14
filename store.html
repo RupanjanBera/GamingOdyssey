@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Gaming Odyssey - Store</title>
+  <title>Gaming Odyssey - AI-Powered Store</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -132,6 +132,9 @@
         background: var(--secondary-color);
         color: white;
     }
+    .overlay-btn.wishlist-btn.selected {
+        background: #ef4444; /* red-500 */
+    }
 
 
     /* Product Detail Modal */
@@ -221,7 +224,7 @@
           </div>
           <div class="bg-slate-800/50 p-4 rounded-lg mb-4">
             <h4 class="font-semibold mb-2">Description</h4>
-            <div id="product-description" class="text-slate-300 text-sm leading-relaxed"></div>
+            <div id="product-description" class="text-slate-300 text-sm leading-relaxed prose"></div>
           </div>
           <div class="flex gap-4 mb-6">
             <button id="overlay-add-to-cart" class="submit-btn flex-1 py-3"><i class="fas fa-cart-plus mr-2"></i> Add to Cart</button>
@@ -283,13 +286,18 @@
         <button id="hamburger" class="md:hidden text-blue-400 text-2xl"><i class="fas fa-bars"></i></button>
         <div class="flex items-center gap-4">
           <button id="category-toggle" class="md:hidden submit-btn !p-3"><i class="fas fa-filter"></i></button>
-          <a href="#" class="header-icon-group hidden md:flex items-center gap-2"><i class="fas fa-heart text-red-400 text-lg"></i><span class="text-sm">Wishlist</span><span id="wishlist-count-desktop" class="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span></a>
-          <a href="cart.html" class="header-icon-group flex items-center gap-2"><i class="fas fa-shopping-cart text-blue-400 text-lg"></i><span class="text-sm">Cart</span><span id="cart-count" class="bg-blue-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span></a>
+          <div class="relative">
+            <button id="wishlist-btn" class="header-icon-group flex items-center gap-2"><i class="fas fa-heart text-red-400 text-lg"></i><span class="text-sm hidden md:inline">Wishlist</span><span id="wishlist-count-desktop" class="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span></button>
+            <div id="wishlist-menu" class="hidden absolute top-full right-0 mt-2 w-72 bg-card-background border border-card-border rounded-lg shadow-lg z-50">
+                <!-- Wishlist content goes here -->
+            </div>
+          </div>
+          <a href="cart.html" class="header-icon-group flex items-center gap-2"><i class="fas fa-shopping-cart text-blue-400 text-lg"></i><span class="text-sm hidden md:inline">Cart</span><span id="cart-count" class="bg-blue-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span></a>
         </div>
       </header>
       <section class="hero-bg py-12 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto">
-          <h1 class="text-4xl md:text-5xl font-bold text-white text-center mb-2">Gaming Odyssey Store</h1>
+          <h1 class="text-4xl md:text-5xl font-bold text-white text-center mb-2">Our Digital Armory</h1>
           <p class="text-slate-400 text-center mb-8 max-w-2xl mx-auto">Find the perfect gear to conquer your virtual worlds. High-performance peripherals await.</p>
           <div class="bg-slate-800/50 p-4 rounded-lg flex flex-col md:flex-row items-center gap-4">
             <div class="relative w-full flex-grow">
@@ -407,7 +415,6 @@
       </div>
   </div>
 
-
   <script>
     document.addEventListener('DOMContentLoaded', () => {
 
@@ -432,15 +439,19 @@
       const modals = document.querySelectorAll('.modal-overlay');
 
       // --- GEMINI API & UTILITIES ---
-      const API_KEY = ""; // Keep this empty
-      const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${API_KEY}`;
-      
+      const API_KEY = "AIzaSyCnjp4BRaQYNHLOQl9CUjz_re33RZg_5ok"; 
+
       function sanitizeAIResponse(response) {
-        // Cleans markdown code blocks and trims whitespace
         return response.replace(/```html/g, '').replace(/```/g, '').trim();
       }
 
       async function callGeminiAPI(prompt) {
+          if (!API_KEY) {
+              alert("Gemini API key is not set in the script. AI features will not work.");
+              return "Error: API Key not set.";
+          }
+          const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${API_KEY}`;
+          
           try {
               const payload = { contents: [{ parts: [{ text: prompt }] }] };
               const response = await fetch(API_URL, {
@@ -448,7 +459,12 @@
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify(payload)
               });
-              if (!response.ok) throw new Error(`API Error: ${response.statusText}`);
+              if (!response.ok) {
+                  const errorData = await response.json().catch(() => null); 
+                  const errorMessage = errorData?.error?.message || `API request failed with status ${response.status}.`;
+                  console.error("API Error Response:", errorData || await response.text());
+                  throw new Error(errorMessage);
+              }
               const result = await response.json();
               if (result.candidates?.[0]?.content?.parts?.[0]?.text) {
                  return result.candidates[0].content.parts[0].text;
@@ -458,7 +474,7 @@
               }
           } catch (error) {
               console.error("Gemini API call failed:", error);
-              return "Sorry, the AI is taking a break. Please try again later.";
+              return `Sorry, the AI feature failed. Reason: ${error.message}`;
           }
       }
 
@@ -470,6 +486,13 @@
 
         const prompt = `You are a gaming hardware expert. Analyze the following product for a serious gamer and provide a concise summary of its key pros and cons. Product Name: ${product.name}. Description: ${product.description}. Format the output as simple HTML using <h3> for titles and <ul> for lists. Keep it brief.`;
         const rawResponse = await callGeminiAPI(prompt);
+        
+        if (rawResponse.startsWith("Error:") || rawResponse.startsWith("Sorry,")) {
+            alert(rawResponse);
+            insightsBtn.innerHTML = '✨ Get AI-Powered Insights';
+            insightsBtn.disabled = false;
+            return;
+        }
         
         insightsContent.innerHTML = sanitizeAIResponse(rawResponse);
         insightsBtn.style.display = 'none';
@@ -496,19 +519,24 @@
         document.getElementById('wishlist-count-desktop').textContent = wishlist.length;
       }
 
-      function addToCart(productId) {
+      function addToCart(productId, quantity = 1) {
         const product = allProducts.find(p => p.id === productId);
         if (!product) return;
 
         const existingItem = cart.find(item => item.id === productId);
         if (existingItem) {
-          existingItem.quantity++;
+          existingItem.quantity += quantity;
         } else {
-          cart.push({ id: productId, name: product.name, price: product.salePrice || product.price, quantity: 1, image: product.images[0] });
+          cart.push({ id: productId, name: product.name, price: product.salePrice || product.price, quantity: quantity, image: product.images[0] });
         }
+      }
+
+      function saveAndNotify(message) {
         localStorage.setItem('cart', JSON.stringify(cart));
+        localStorage.setItem('wishlist', JSON.stringify(wishlist));
         updateCounts();
-        alert(`${product.name} has been added to your cart!`);
+        renderWishlistMenu();
+        alert(message);
       }
 
       // --- PRODUCT & CATEGORY RENDERING ---
@@ -530,6 +558,7 @@
               <img src="${p.images[0]}" alt="${p.name}" loading="lazy">
               <div class="product-card-overlay">
                   <button class="overlay-btn view-details-btn" title="View Details"><i class="fas fa-eye"></i></button>
+                  <button class="overlay-btn wishlist-btn ${wishlist.includes(p.id) ? 'selected' : ''}" title="Add to Wishlist"><i class="fas fa-heart"></i></button>
                   <button class="overlay-btn compare-btn ${comparisonList.includes(p.id) ? 'selected' : ''}" title="Compare"><i class="fas fa-balance-scale"></i></button>
               </div>
             </div>
@@ -583,10 +612,13 @@
           
           document.getElementById('product-name').textContent = product.name;
           document.getElementById('product-price').textContent = product.salePrice ? `$${product.salePrice.toFixed(2)}` : `$${product.price.toFixed(2)}`;
-          document.getElementById('product-description').textContent = product.description;
+          document.getElementById('product-description').innerHTML = product.description; // Changed to innerHTML
           document.getElementById('product-image').src = product.images[0];
           
-          document.getElementById('overlay-add-to-cart').onclick = () => addToCart(product.id);
+          document.getElementById('overlay-add-to-cart').onclick = () => {
+              addToCart(product.id);
+              saveAndNotify(`${product.name} added to cart!`);
+          };
           document.getElementById('submit-review').onclick = () => submitReview(product.id);
           document.getElementById('get-ai-insights-btn').onclick = () => getAIInsights(product);
           document.getElementById('summarize-reviews-btn').onclick = () => getAIReviewSummary(product.id);
@@ -680,6 +712,13 @@
 
           const rawResponse = await callGeminiAPI(prompt);
           
+          if (rawResponse.startsWith("Error:") || rawResponse.startsWith("Sorry,")) {
+            alert(rawResponse);
+            summarizeBtn.innerHTML = '✨ Summarize Reviews';
+            summarizeBtn.disabled = false;
+            return;
+           }
+          
           summaryContainer.innerHTML = sanitizeAIResponse(rawResponse);
           summaryContainer.classList.remove('hidden');
           summarizeBtn.style.display = 'none';
@@ -703,7 +742,7 @@
           
           const response = await callGeminiAPI(prompt);
           
-          if (response.startsWith("Sorry,")) {
+          if (response.startsWith("Error:") || response.startsWith("Sorry,")) {
               console.error("AI Persona Review failed:", response);
               placeholder.innerHTML = `<p class="text-red-400">${response}</p>`;
               return;
@@ -731,6 +770,46 @@
        }
 
       
+      // --- WISHLIST LOGIC ---
+        function toggleWishlist(productId) {
+            const index = wishlist.indexOf(productId);
+            if (index > -1) {
+                wishlist.splice(index, 1);
+            } else {
+                wishlist.push(productId);
+            }
+            localStorage.setItem('wishlist', JSON.stringify(wishlist));
+            updateCounts();
+            applyFiltersAndSort(document.querySelector('#category-nav a.bg-blue-500\/20')?.dataset.category || 'All Products');
+            renderWishlistMenu();
+        }
+
+        function renderWishlistMenu() {
+            const menu = document.getElementById('wishlist-menu');
+            if (wishlist.length === 0) {
+                menu.innerHTML = `<div class="p-4 text-center text-slate-400">Your wishlist is empty.</div>`;
+                return;
+            }
+
+            const itemsHTML = wishlist.map(id => {
+                const product = allProducts.find(p => p.id === id);
+                return `<div class="flex items-center gap-2 p-2 hover:bg-slate-700/50">
+                    <img src="${product.images[0]}" class="w-10 h-10 object-contain rounded">
+                    <div class="flex-grow"><p class="text-sm truncate">${product.name}</p></div>
+                    <button class="remove-wishlist-item-btn text-red-400 hover:text-red-600" data-id="${id}">&times;</button>
+                </div>`;
+            }).join('');
+            
+            menu.innerHTML = `
+                <div id="wishlist-menu-items" class="max-h-60 overflow-y-auto">${itemsHTML}</div>
+                <div class="p-2 border-t border-slate-700 space-y-2">
+                    <button id="wishlist-add-all-to-cart" class="w-full text-center bg-blue-600 hover:bg-blue-700 text-white text-sm py-2 rounded">Add All to Cart</button>
+                    <button id="wishlist-buy-all" class="w-full text-center bg-green-600 hover:bg-green-700 text-white text-sm py-2 rounded">Buy All Items</button>
+                    <button id="wishlist-clear" class="w-full text-center bg-red-600 hover:bg-red-700 text-white text-sm py-2 rounded">Clear Wishlist</button>
+                </div>
+            `;
+        }
+
       // --- COMPARISON LOGIC ---
         function toggleCompare(productId) {
             const index = comparisonList.indexOf(productId);
@@ -785,6 +864,12 @@
             const prompt = `You are a gaming hardware expert. Create a detailed comparison for a competitive gamer based on the following products:\n\n${productDetails}\n\nYour response must be in HTML format. Generate a <table> that compares key features (like sensor, weight for mice; switch type for keyboards; battery life, connection for headsets). After the table, add an <h4> titled "Expert Recommendation" and write a paragraph recommending which product is best for different types of gamers (e.g., "The Razer Deathadder is best for FPS players who value low weight...").`;
             
             const rawResponse = await callGeminiAPI(prompt);
+
+            if (rawResponse.startsWith("Error:") || rawResponse.startsWith("Sorry,")) {
+                modal.classList.remove('visible');
+                return;
+            }
+
             resultContainer.innerHTML = sanitizeAIResponse(rawResponse);
         }
 
@@ -807,7 +892,7 @@
             
             const response = await callGeminiAPI(prompt);
             
-            if (response.startsWith("Sorry,")) {
+            if (response.startsWith("Error:") || response.startsWith("Sorry,")) {
                 console.error("AI Setup builder failed:", response);
                 result_content.innerHTML = `<p class="text-red-400">${response}</p>`;
                 return;
@@ -861,11 +946,14 @@
       productsGrid.addEventListener('click', e => {
           const card = e.target.closest('.product-card');
           if (!card) return;
+          const productId = card.dataset.productId;
 
           if (e.target.closest('.compare-btn')) {
-              toggleCompare(card.dataset.productId);
+              toggleCompare(productId);
+          } else if (e.target.closest('.wishlist-btn')) {
+              toggleWishlist(productId);
           } else {
-              openProductOverlay(card.dataset.productId);
+              openProductOverlay(productId);
           }
       });
       searchInput.addEventListener('input', () => applyFiltersAndSort(document.querySelector('#category-nav a.bg-blue-500\/20')?.dataset.category || 'All Products'));
@@ -888,7 +976,6 @@
         }
       });
       
-      // Delegated event listener for persona review button
       document.getElementById('product-detail-content').addEventListener('click', e => {
           if (e.target && e.target.id === 'generate-persona-review-btn') {
               getAIPersonaReview(e.target.dataset.productId);
@@ -902,6 +989,36 @@
       });
       document.getElementById('compare-now-btn').addEventListener('click', getAIComparison);
       
+      // Wishlist Menu Listeners
+      document.getElementById('wishlist-btn').addEventListener('click', () => {
+          renderWishlistMenu();
+          document.getElementById('wishlist-menu').classList.toggle('hidden');
+      });
+      document.getElementById('wishlist-menu').addEventListener('click', e => {
+          if (e.target.closest('.remove-wishlist-item-btn')) {
+              toggleWishlist(e.target.closest('.remove-wishlist-item-btn').dataset.id);
+          }
+          if (e.target.id === 'wishlist-clear') {
+              wishlist = [];
+              saveAndNotify("Wishlist cleared.");
+          }
+          if (e.target.id === 'wishlist-add-all-to-cart') {
+              wishlist.forEach(id => addToCart(id));
+              wishlist = [];
+              saveAndNotify("All wishlist items added to cart.");
+          }
+          if (e.target.id === 'wishlist-buy-all') {
+              const itemsToBuy = wishlist.map(id => {
+                  const product = allProducts.find(p=>p.id === id);
+                  return { name: product.name, price: product.salePrice || product.price, quantity: 1 };
+              });
+              localStorage.setItem('buyNowProduct', JSON.stringify(itemsToBuy));
+              window.location.href = 'address.html';
+          }
+      });
+      
+      
+      // Close Modals Listeners
       modals.forEach(modal => {
           modal.addEventListener('click', (e) => {
               if (e.target === modal) {
@@ -910,13 +1027,11 @@
           })
       });
       document.getElementById('close-comparison-modal').addEventListener('click', () => document.getElementById('comparison-modal-overlay').classList.remove('visible'));
+      document.getElementById('close-setup-builder-modal').addEventListener('click', () => document.getElementById('setup-builder-overlay').classList.remove('visible'));
 
       // AI Setup Builder Listeners
       document.getElementById('open-setup-builder-btn').addEventListener('click', () => {
           document.getElementById('setup-builder-overlay').classList.add('visible');
-      });
-      document.getElementById('close-setup-builder-modal').addEventListener('click', () => {
-          document.getElementById('setup-builder-overlay').classList.remove('visible');
       });
       document.getElementById('setup-builder-form').addEventListener('submit', handleSetupBuilderSubmit);
       document.getElementById('restart-setup-builder-btn').addEventListener('click', () => {
@@ -933,7 +1048,3 @@
   </script>
 </body>
 </html>
-
-
-
-
