@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gaming Odyssey - Secure Payment</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- PayPal SDK with Provided Client ID -->
   <script src="https://www.paypal.com/sdk/js?client-id=Abj4GKhw0aoqQes156AfApLm2wN5PAF5ncEUA_M-Dtzaj22yUzczA7tzf5LrsP7ufTj2ERxhUIEscsRF&currency=USD"></script>
@@ -170,6 +171,90 @@
       border-radius: 50%;
       padding: 2px 6px;
     }
+    
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      z-index: 50;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background: linear-gradient(145deg, #1E293B, #0F172A);
+      border-radius: 0.75rem;
+      padding: 2rem;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+    }
+    .modal-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1.5rem;
+    }
+    .modal-btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .modal-confirm {
+      background: linear-gradient(90deg, #EF4444, #DC2626);
+      color: white;
+    }
+    .modal-confirm:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+    }
+    .modal-cancel {
+      background: #1E293B;
+      color: #F1F5F9;
+      border: 1px solid #3B82F6;
+    }
+    .modal-cancel:hover {
+      background: #3B82F6;
+      color: #0F172A;
+    }
+    
+    /* Footer Styles */
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+    .footer-heading {
+      position: relative;
+      padding-bottom: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .footer-heading::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 50px;
+      height: 3px;
+      background: linear-gradient(to right, #3B82F6, #D946EF);
+      border-radius: 3px;
+    }
+    .footer-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+    }
+    .footer-link:hover {
+      color: #3B82F6;
+      transform: translateX(5px);
+    }
+    
     @media (max-width: 640px) {
       .submit-btn {
         width: 100%;
@@ -183,6 +268,16 @@
         position: relative;
         top: auto;
         right: auto;
+      }
+      .modal-content {
+        padding: 1.5rem;
+      }
+      .modal-buttons {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+      .modal-btn {
+        width: 100%;
       }
     }
   </style>
@@ -201,27 +296,27 @@
       <h1 class="text-2xl font-bold text-white leading-relaxed">Gaming Odyssey</h1>
       <nav class="mt-8 space-y-3">
         <a href="index.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <i class="fas fa-home w-5 h-5"></i>
           <span>Home</span>
         </a>
         <a href="store.html" class="flex items-center space-x-2 text-[#3B82F6] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <i class="fas fa-store w-5 h-5"></i>
           <span>Store</span>
         </a>
         <a href="tournaments.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <i class="fas fa-trophy w-5 h-5"></i>
           <span>Tournaments</span>
         </a>
         <a href="trackorder.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <i class="fas fa-truck w-5 h-5"></i>
           <span>Track Order</span>
         </a>
         <a href="contactus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <i class="fas fa-envelope w-5 h-5"></i>
           <span>Contact Us</span>
         </a>
         <a href="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+          <i class="fas fa-info-circle w-5 h-5"></i>
           <span>About Us</span>
         </a>
       </nav>
@@ -246,27 +341,27 @@
     </button>
     <nav class="space-y-3 mt-12">
       <a href="index.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <i class="fas fa-home w-5 h-5"></i>
         <span>Home</span>
       </a>
       <a href="store.html" class="flex items-center space-x-2 text-[#3B82F6] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <i class="fas fa-store w-5 h-5"></i>
         <span>Store</span>
       </a>
       <a href="tournaments.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <i class="fas fa-trophy w-5 h-5"></i>
         <span>Tournaments</span>
       </a>
       <a href="trackorder.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <i class="fas fa-truck w-5 h-5"></i>
         <span>Track Order</span>
       </a>
       <a href="contactus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <i class="fas fa-envelope w-5 h-5"></i>
         <span>Contact Us</span>
       </a>
       <a href="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+        <i class="fas fa-info-circle w-5 h-5"></i>
         <span>About Us</span>
       </a>
     </nav>
@@ -277,6 +372,13 @@
     <section class="content-bg py-16 px-6">
       <div class="max-w-4xl mx-auto bg-[#1E293B] p-8 rounded-lg gradient-glow fade-in">
         <h1 class="text-4xl font-bold text-white text-center mb-8">Secure Payment 🔒</h1>
+        
+        <!-- Cancel Payment Button -->
+        <div class="text-center mb-8">
+          <button id="cancel-payment-btn" class="bg-[#1E293B] text-[#F1F5F9] border border-[#EF4444] px-6 py-2 rounded-lg hover:bg-[#EF4444] hover:text-white transition-all duration-300">
+            <i class="fas fa-times-circle mr-2"></i>Cancel Payment
+          </button>
+        </div>
 
         <!-- Email Confirmation Section -->
         <div id="email-section" class="mb-8 payment-card gradient-glow">
@@ -381,68 +483,64 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-[#1E293B] py-10 px-4 sm:px-6 md:px-8">
-      <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    <footer class="bg-[#1E293B] py-12 px-4 sm:px-6 md:px-8">
+      <div class="max-w-6xl mx-auto footer-grid">
         <div>
-          <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Contact</h3>
-          <p class="text-[#F1F5F9] mb-2 text-sm leading-relaxed">📧 <a href="mailto:support@gamingodyssey.in" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link">support@gamingodyssey.in</a></p>
-          <p class="text-[#F1F5F9] text-sm leading-relaxed">📞 6290994382</p>
-        </div>
-        <div>
-          <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Useful Links</h3>
-          <ul class="space-y-2">
-            <li><a href="index.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Home</a></li>
-            <li><a href="store.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Store</a></li>
-            <li><a href="tournaments.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Tournaments</a></li>
-            <li><a href="trackorder.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Track Order</a></li>
-            <li><a href="contactus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Contact Us</a></li>
-            <li><a href="aboutus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">About Us</a></li>
-          </ul>
-        </div>
-        <div>
-          <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Follow Us</h3>
-          <div class="flex space-x-3">
-            <a href="https://www.instagram.com/noticedveil" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full">
-              <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" class="w-5 h-5">
+          <h3 class="text-xl font-bold text-white mb-4 footer-heading">Gaming Odyssey</h3>
+          <p class="text-[#CBD5E1] mb-4 leading-relaxed">Your ultimate destination for premium gaming gear and accessories. Level up your gameplay with our curated collection.</p>
+          <div class="flex space-x-4">
+            <a href="https://www.instagram.com/noticedveil" target="_blank" class="text-[#CBD5E1] hover:text-[#3B82F6] transition gradient-glow p-3 rounded-full">
+              <i class="fab fa-instagram text-lg"></i>
             </a>
-            <a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full">
-              <img src="https://cdn-icons-png.flaticon.com/512/3938/3938026.png" alt="YouTube" class="w-5 h-5">
+            <a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="text-[#CBD5E1] hover:text-[#3B82F6] transition gradient-glow p-3 rounded-full">
+              <i class="fab fa-youtube text-lg"></i>
             </a>
-            <a href="https://www.facebook.com" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full">
-              <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" class="w-5 h-5">
+            <a href="https://www.facebook.com" target="_blank" class="text-[#CBD5E1] hover:text-[#3B82F6] transition gradient-glow p-3 rounded-full">
+              <i class="fab fa-facebook-f text-lg"></i>
+            </a>
+            <a href="https://www.twitter.com" target="_blank" class="text-[#CBD5E1] hover:text-[#3B82F6] transition gradient-glow p-3 rounded-full">
+              <i class="fab fa-twitter text-lg"></i>
             </a>
           </div>
         </div>
+        <div>
+          <h3 class="text-xl font-bold text-white mb-4 footer-heading">Quick Links</h3>
+          <ul class="space-y-3">
+            <li><a href="index.html" class="footer-link text-[#CBD5E1] text-sm"><i class="fas fa-chevron-right text-xs"></i> Home</a></li>
+            <li><a href="store.html" class="footer-link text-[#CBD5E1] text-sm"><i class="fas fa-chevron-right text-xs"></i> Store</a></li>
+            <li><a href="tournaments.html" class="footer-link text-[#CBD5E1] text-sm"><i class="fas fa-chevron-right text-xs"></i> Tournaments</a></li>
+            <li><a href="trackorder.html" class="footer-link text-[#CBD5E1] text-sm"><i class="fas fa-chevron-right text-xs"></i> Track Order</a></li>
+            <li><a href="contactus.html" class="footer-link text-[#CBD5E1] text-sm"><i class="fas fa-chevron-right text-xs"></i> Contact Us</a></li>
+            <li><a href="aboutus.html" class="footer-link text-[#CBD5E1] text-sm"><i class="fas fa-chevron-right text-xs"></i> About Us</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold text-white mb-4 footer-heading">Contact Info</h3>
+          <div class="space-y-3">
+            <p class="flex items-start text-[#CBD5E1] text-sm"><i class="fas fa-envelope mt-1 mr-3 text-[#3B82F6]"></i> support@gamingodyssey.in</p>
+            <p class="flex items-start text-[#CBD5E1] text-sm"><i class="fas fa-phone-alt mt-1 mr-3 text-[#3B82F6]"></i> 6290994382</p>
+            <p class="flex items-start text-[#CBD5E1] text-sm"><i class="fas fa-map-marker-alt mt-1 mr-3 text-[#3B82F6]"></i> Kolkata, West Bengal, India</p>
+            <p class="flex items-start text-[#CBD5E1] text-sm"><i class="fas fa-clock mt-1 mr-3 text-[#3B82F6]"></i> Mon-Sat: 10AM - 7PM</p>
+          </div>
+        </div>
       </div>
-      <p class="text-center text-[#F1F5F9] mt-6 text-sm leading-relaxed">© 2025 Gaming Odyssey. All rights reserved.</p>
+      <div class="max-w-6xl mx-auto border-t border-[#334155] mt-8 pt-8 text-center">
+        <p class="text-[#CBD5E1] text-sm">© 2025 Gaming Odyssey. All rights reserved. Designed with <i class="fas fa-heart text-[#EF4444]"></i> for gamers</p>
+      </div>
     </footer>
   </div>
 
-  <!-- Hidden forms for FormSubmit -->
-  <form id="customer-email-form" action="https://formsubmit.co/support@gamingodyssey.in" method="POST" class="hidden">
-    <input type="hidden" name="_subject" value="New Order Confirmation - Gaming Odyssey">
-    <input type="hidden" name="_template" value="table">
-    <input type="hidden" name="_cc" value="" id="customer-email-cc">
-    <input type="hidden" name="order_id" id="email-order-id">
-    <input type="hidden" name="customer_email" id="email-customer-email">
-    <input type="hidden" name="order_total" id="email-order-total">
-    <input type="hidden" name="payment_method" id="email-payment-method">
-    <input type="hidden" name="order_date" id="email-order-date">
-    <input type="hidden" name="order_items" id="email-order-items">
-    <input type="hidden" name="shipping_address" id="email-shipping-address">
-  </form>
-
-  <form id="seller-email-form" action="https://formsubmit.co/support@gamingodyssey.in" method="POST" class="hidden">
-    <input type="hidden" name="_subject" value="New Order Received - Gaming Odyssey">
-    <input type="hidden" name="_template" value="table">
-    <input type="hidden" name="order_id" id="seller-order-id">
-    <input type="hidden" name="customer_email" id="seller-customer-email">
-    <input type="hidden" name="order_total" id="seller-order-total">
-    <input type="hidden" name="payment_method" id="seller-payment-method">
-    <input type="hidden" name="order_date" id="seller-order-date">
-    <input type="hidden" name="order_items" id="seller-order-items">
-    <input type="hidden" name="shipping_address" id="seller-shipping-address">
-  </form>
+  <!-- Cancel Payment Modal -->
+  <div id="cancel-modal" class="modal">
+    <div class="modal-content">
+      <h3 class="text-xl font-bold text-white mb-2">Cancel Payment</h3>
+      <p class="text-[#CBD5E1]">Are you sure you want to cancel this payment? Your order will be lost.</p>
+      <div class="modal-buttons">
+        <button id="confirm-cancel" class="modal-btn modal-confirm">Confirm</button>
+        <button id="back-to-payment" class="modal-btn modal-cancel">Back to Payment</button>
+      </div>
+    </div>
+  </div>
 
   <script>
     // Check if in preview mode (e.g., ?preview=true in URL)
@@ -621,28 +719,61 @@ Phone: ${shippingAddress.phone || ''}
         `;
       }
       
-      // Set values for customer email form
-      document.getElementById('customer-email-cc').value = customerEmail;
-      document.getElementById('email-order-id').value = orderId;
-      document.getElementById('email-customer-email').value = customerEmail;
-      document.getElementById('email-order-total').value = `$${orderTotal}`;
-      document.getElementById('email-payment-method').value = method;
-      document.getElementById('email-order-date').value = orderDate;
-      document.getElementById('email-order-items').value = orderItemsText;
-      document.getElementById('email-shipping-address').value = shippingAddressText;
+      // Create a form for customer email
+      const customerForm = document.createElement('form');
+      customerForm.action = 'https://formsubmit.co/' + customerEmail;
+      customerForm.method = 'POST';
+      customerForm.style.display = 'none';
       
-      // Set values for seller email form
-      document.getElementById('seller-order-id').value = orderId;
-      document.getElementById('seller-customer-email').value = customerEmail;
-      document.getElementById('seller-order-total').value = `$${orderTotal}`;
-      document.getElementById('seller-payment-method').value = method;
-      document.getElementById('seller-order-date').value = orderDate;
-      document.getElementById('seller-order-items').value = orderItemsText;
-      document.getElementById('seller-shipping-address').value = shippingAddressText;
+      // Create a form for seller email
+      const sellerForm = document.createElement('form');
+      sellerForm.action = 'https://formsubmit.co/support@gamingodyssey.in';
+      sellerForm.method = 'POST';
+      sellerForm.style.display = 'none';
       
-      // Submit both forms
-      document.getElementById('customer-email-form').submit();
-      document.getElementById('seller-email-form').submit();
+      // Add common hidden fields to both forms
+      const addHiddenField = (form, name, value) => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = name;
+        input.value = value;
+        form.appendChild(input);
+      };
+      
+      // Customer email fields
+      addHiddenField(customerForm, '_subject', 'Order Confirmation - Gaming Odyssey');
+      addHiddenField(customerForm, 'order_id', orderId);
+      addHiddenField(customerForm, 'order_total', `$${orderTotal}`);
+      addHiddenField(customerForm, 'payment_method', method);
+      addHiddenField(customerForm, 'order_date', orderDate);
+      addHiddenField(customerForm, 'order_items', orderItemsText);
+      addHiddenField(customerForm, 'shipping_address', shippingAddressText);
+      
+      // Seller email fields
+      addHiddenField(sellerForm, '_subject', 'New Order Received - Gaming Odyssey');
+      addHiddenField(sellerForm, 'order_id', orderId);
+      addHiddenField(sellerForm, 'customer_email', customerEmail);
+      addHiddenField(sellerForm, 'order_total', `$${orderTotal}`);
+      addHiddenField(sellerForm, 'payment_method', method);
+      addHiddenField(sellerForm, 'order_date', orderDate);
+      addHiddenField(sellerForm, 'order_items', orderItemsText);
+      addHiddenField(sellerForm, 'shipping_address', shippingAddressText);
+      
+      // Add forms to document and submit them
+      document.body.appendChild(customerForm);
+      document.body.appendChild(sellerForm);
+      
+      // Use setTimeout to ensure forms are properly added to DOM before submission
+      setTimeout(() => {
+        customerForm.submit();
+        sellerForm.submit();
+        
+        // Remove forms after submission
+        setTimeout(() => {
+          document.body.removeChild(customerForm);
+          document.body.removeChild(sellerForm);
+        }, 1000);
+      }, 100);
       
       return true;
     }
@@ -774,6 +905,41 @@ Phone: ${shippingAddress.phone || ''}
       paypalContainer.innerHTML = '<p class="text-[#F1F5F9] text-center">PayPal Button Placeholder</p>';
     }
 
+    // Cancel Payment Functionality
+    const cancelPaymentBtn = document.getElementById('cancel-payment-btn');
+    const cancelModal = document.getElementById('cancel-modal');
+    const confirmCancelBtn = document.getElementById('confirm-cancel');
+    const backToPaymentBtn = document.getElementById('back-to-payment');
+
+    cancelPaymentBtn.addEventListener('click', () => {
+      cancelModal.style.display = 'flex';
+    });
+
+    backToPaymentBtn.addEventListener('click', () => {
+      cancelModal.style.display = 'none';
+    });
+
+    confirmCancelBtn.addEventListener('click', () => {
+      // Clear order data from localStorage
+      try {
+        localStorage.removeItem('order');
+        localStorage.removeItem('shippingAddress');
+        localStorage.removeItem('cart');
+      } catch (e) {
+        console.error('Error clearing localStorage:', e);
+      }
+      
+      // Redirect to store page
+      window.location.href = 'store.html';
+    });
+
+    // Close modal if clicked outside
+    window.addEventListener('click', (e) => {
+      if (e.target === cancelModal) {
+        cancelModal.style.display = 'none';
+      }
+    });
+
     // Helper function to get country code
     function getCountryCode(countryName) {
       const countryCodes = {
@@ -820,4 +986,5 @@ Phone: ${shippingAddress.phone || ''}
   </script>
 </body>
 </html>
+
 
