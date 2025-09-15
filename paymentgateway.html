@@ -28,6 +28,36 @@
     .payment-tab { background-color: transparent; border: 1px solid var(--card-border); transition: all 0.2s ease-in-out; }
     .payment-tab:hover { border-color: var(--primary-color); }
     .payment-tab.active { background-color: var(--primary-color); color: white; border-color: var(--primary-color); }
+    .order-item { display: flex; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid var(--card-border); }
+    .order-item:last-child { border-bottom: none; }
+    .order-summary { max-height: 300px; overflow-y: auto; }
+    .confirmation-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .confirmation-modal.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .modal-content {
+      background-color: var(--card-background);
+      border-radius: 0.5rem;
+      padding: 2rem;
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+    }
   </style>
 </head>
 <body class="min-h-screen">
@@ -40,202 +70,270 @@
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
         
-        <div class="bg-card-background rounded-lg p-6 shadow-xl space-y-6">
-            <form id="payment-form" action="https://formsubmit.co/support@gamingodyssey.in" method="POST">
-                <input type="hidden" name="_next" id="formsubmit-next-url">
-                <input type="hidden" name="_subject" id="formsubmit-subject">
-                <input type="hidden" name="_template" value="table">
-                <input type="hidden" name="Order ID" id="formsubmit-order-id">
-                <input type="hidden" name="Total Amount" id="formsubmit-total">
-                <input type="hidden" name="Payment Method" id="formsubmit-method">
-                <input type="hidden" name="Order Date" id="formsubmit-date">
-                <textarea name="Items Ordered" id="formsubmit-items" class="hidden"></textarea>
-                <textarea name="Shipping Address" id="formsubmit-shipping" class="hidden"></textarea>
-                
-                <div>
-                    <h2 class="text-2xl font-bold mb-4">1. Contact Information</h2>
-                    <label for="customer-email" class="block text-sm font-medium text-slate-300 mb-1">Email Address</label>
-                    <input type="email" id="customer-email" name="Customer Email" placeholder="you@example.com" required class="input-field w-full p-3 rounded-md">
+        <form id="payment-form">
+          <div class="bg-card-background rounded-lg p-6 shadow-xl space-y-6">
+            <div>
+              <h2 class="text-2xl font-bold mb-4">1. Contact Information</h2>
+              <label for="customer-email" class="block text-sm font-medium text-slate-300 mb-1">Email Address</label>
+              <input type="email" id="customer-email" name="customer-email" placeholder="you@example.com" required class="input-field w-full p-3 rounded-md">
+            </div>
+            
+            <div>
+              <h2 class="text-2xl font-bold mb-4">2. Payment Method</h2>
+              <div id="payment-method-selector" class="grid grid-cols-2 gap-3">
+                <div class="payment-tab active flex flex-col items-center justify-center py-4 rounded-md cursor-pointer" data-payment="Card"><i class="fas fa-credit-card text-xl"></i><span> Card</span></div>
+                <div class="payment-tab flex flex-col items-center justify-center py-4 rounded-md cursor-pointer" data-payment="PayPal"><i class="fab fa-paypal text-xl"></i><span> PayPal</span></div>
+                <div class="payment-tab flex flex-col items-center justify-center py-4 rounded-md cursor-pointer" data-payment="UPI"><i class="fas fa-qrcode text-xl"></i><span> UPI</span></div>
+                <div class="payment-tab flex flex-col items-center justify-center py-4 rounded-md cursor-pointer" data-payment="Cash on Delivery"><i class="fas fa-money-bill-wave text-xl"></i><span> COD</span></div>
+              </div>
+            </div>
+            
+            <div id="payment-details-container">
+              <div id="Card-container" class="space-y-4">
+                <h3 class="font-semibold text-lg">Enter Card Details</h3>
+                <input type="text" placeholder="Card Number" class="input-field w-full p-3 rounded-md" id="card-number">
+                <div class="grid grid-cols-2 gap-4">
+                  <input type="text" placeholder="MM / YY" class="input-field w-full p-3 rounded-md" id="card-expiry">
+                  <input type="text" placeholder="CVV" class="input-field w-full p-3 rounded-md" id="card-cvv">
                 </div>
-                
-                <div>
-                    <h2 class="text-2xl font-bold mb-4">2. Payment Method</h2>
-                    <div id="payment-method-selector" class="grid grid-cols-2 gap-3">
-                        <div class="payment-tab active" data-payment="Card"><i class="fas fa-credit-card text-xl"></i><span> Card</span></div>
-                        <div class="payment-tab" data-payment="PayPal"><i class="fab fa-paypal text-xl"></i><span> PayPal</span></div>
-                        <div class="payment-tab" data-payment="UPI"><i class="fas fa-qrcode text-xl"></i><span> UPI</span></div>
-                        <div class="payment-tab" data-payment="Cash on Delivery"><i class="fas fa-money-bill-wave text-xl"></i><span> COD</span></div>
-                    </div>
-                </div>
-                
-                <div id="payment-details-container">
-                    <div id="Card-container" class="space-y-4">
-                        <h3 class="font-semibold text-lg">Enter Card Details</h3>
-                        <input type="text" placeholder="Card Number" class="input-field w-full p-3 rounded-md">
-                        <div class="grid grid-cols-2 gap-4">
-                            <input type="text" placeholder="MM / YY" class="input-field w-full p-3 rounded-md">
-                            <input type="text" placeholder="CVV" class="input-field w-full p-3 rounded-md">
-                        </div>
-                    </div>
-                    <div id="PayPal-container" class="hidden text-center"><div id="paypal-button-container"></div></div>
-                    <div id="UPI-container" class="hidden text-center"><div id="upi-qr-code" class="mx-auto bg-white p-2 rounded-lg w-48 h-48 mb-4"></div><p>Scan to pay with any UPI app.</p></div>
-                    <div id="Cash_on_Delivery-container" class="hidden text-center"><p class="text-slate-300 p-4 bg-slate-900/50 rounded-md">You will pay with cash upon delivery.</p></div>
-                </div>
+              </div>
+              <div id="PayPal-container" class="hidden text-center"><div id="paypal-button-container"></div></div>
+              <div id="UPI-container" class="hidden text-center"><div id="upi-qr-code" class="mx-auto bg-white p-2 rounded-lg w-48 h-48 mb-4"></div><p>Scan to pay with any UPI app.</p></div>
+              <div id="Cash_on_Delivery-container" class="hidden text-center"><p class="text-slate-300 p-4 bg-slate-900/50 rounded-md">You will pay with cash upon delivery.</p></div>
+            </div>
 
-                <div class="pt-4">
-                    <button type="button" id="confirm-payment-btn" class="submit-btn w-full py-3 text-lg">
-                        <span id="btn-text">Confirm & Pay</span>
-                        <span id="btn-loader" class="hidden"><i class="fas fa-spinner fa-spin mr-2"></i>Processing...</span>
-                    </button>
-                </div>
-            </form>
-        </div>
+            <div class="pt-4">
+              <button type="button" id="confirm-payment-btn" class="submit-btn w-full py-3 text-lg">
+                <span id="btn-text">Confirm & Pay</span>
+                <span id="btn-loader" class="hidden"><i class="fas fa-spinner fa-spin mr-2"></i>Processing...</span>
+              </button>
+            </div>
+          </div>
+        </form>
 
         <div class="bg-card-background rounded-lg p-6 h-fit sticky top-8 shadow-xl">
-            <h2 class="text-2xl font-bold border-b border-card-border pb-4 mb-4">Order Summary</h2>
-            <div id="order-summary-items"></div>
-            <div class="space-y-3 text-slate-300 border-t border-card-border pt-4 mt-4">
-                <div class="flex justify-between"><span>Subtotal</span><span id="summary-subtotal">$0.00</span></div>
-                <div class="flex justify-between"><span>Shipping</span><span>FREE</span></div>
-                <div class="flex justify-between text-white font-bold text-lg border-t border-card-border pt-4 mt-4"><span>Total</span><span id="summary-total">$0.00</span></div>
-            </div>
-            <div class="border-t border-card-border pt-4 mt-4">
-                <h3 class="font-semibold mb-2">Shipping To:</h3>
-                <div id="shipping-details" class="text-sm text-slate-400 leading-relaxed"></div>
-                <a href="address.html" class="text-sm text-primary-color hover:underline mt-2 inline-block">Change</a>
-            </div>
+          <h2 class="text-2xl font-bold border-b border-card-border pb-4 mb-4">Order Summary</h2>
+          <div id="order-summary-items" class="order-summary"></div>
+          <div class="space-y-3 text-slate-300 border-t border-card-border pt-4 mt-4">
+            <div class="flex justify-between"><span>Subtotal</span><span id="summary-subtotal">$0.00</span></div>
+            <div class="flex justify-between"><span>Shipping</span><span>FREE</span></div>
+            <div class="flex justify-between text-white font-bold text-lg border-t border-card-border pt-4 mt-4"><span>Total</span><span id="summary-total">$0.00</span></div>
+          </div>
+          <div class="border-t border-card-border pt-4 mt-4">
+            <h3 class="font-semibold mb-2">Shipping To:</h3>
+            <div id="shipping-details" class="text-sm text-slate-400 leading-relaxed"></div>
+            <a href="address.html" class="text-sm text-primary-color hover:underline mt-2 inline-block">Change</a>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const finalOrder = JSON.parse(localStorage.getItem('finalOrder'));
-    const paymentForm = document.getElementById('payment-form');
-    const confirmBtn = document.getElementById('confirm-payment-btn');
-    let selectedPaymentMethod = 'Card';
+  <!-- Confirmation Modal -->
+  <div class="confirmation-modal" id="confirmation-modal">
+    <div class="modal-content">
+      <div class="w-16 h-16 mx-auto bg-green-500/10 rounded-full flex items-center justify-center mb-4">
+        <i class="fas fa-check-circle text-3xl text-green-400"></i>
+      </div>
+      <h2 class="text-2xl font-bold text-white mb-2">Order Confirmed!</h2>
+      <p class="text-slate-300 mb-4">Your order has been successfully placed.</p>
+      <p class="text-slate-400 text-sm mb-6">Order ID: <span id="modal-order-id" class="text-slate-300 font-medium"></span></p>
+      <a href="thankyou.html" id="continue-to-thankyou" class="submit-btn w-full py-3 text-center block">View Order Details</a>
+    </div>
+  </div>
 
-    if (!finalOrder) {
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // --- ELEMENT REFERENCES & STATE ---
+      const finalOrder = JSON.parse(localStorage.getItem('finalOrder'));
+      const confirmBtn = document.getElementById('confirm-payment-btn');
+      const confirmationModal = document.getElementById('confirmation-modal');
+      let selectedPaymentMethod = 'Card';
+
+      // --- INITIAL CHECK ---
+      if (!finalOrder) {
         document.body.innerHTML = `<div class="h-screen w-full flex flex-col items-center justify-center text-center p-4"><h1 class="text-2xl font-bold">No order found!</h1><p class="text-slate-400">Your checkout session is empty.</p><a href="cart.html" class="submit-btn mt-4 py-2 px-6">Back to Cart</a></div>`;
         return;
-    }
+      }
 
-    function renderOrderSummary() {
+      // --- RENDER FUNCTIONS ---
+      function renderOrderSummary() {
         const container = document.getElementById('order-summary-items');
-        container.innerHTML = finalOrder.items.map(item => `<div class="flex items-center gap-4 py-2"><div class="relative"><img src="${item.image || 'https://placehold.co/64x64/1E293B/E2E8F0?text=I'}" alt="${item.name}" class="w-16 h-16 object-contain rounded-md bg-slate-700"><span class="absolute -top-2 -right-2 bg-primary-color text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">${item.quantity}</span></div><div class="flex-grow"><p class="font-semibold">${item.name}</p></div><p class="font-bold">$${(item.price * item.quantity).toFixed(2)}</p></div>`).join('');
+        container.innerHTML = finalOrder.items.map(item => `
+          <div class="order-item">
+            <div class="relative mr-4">
+              <img src="${item.image || 'https://placehold.co/64x64/1E293B/E2E8F0?text=I'}" alt="${item.name}" class="w-16 h-16 object-contain rounded-md bg-slate-700">
+              <span class="absolute -top-2 -right-2 bg-primary-color text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">${item.quantity}</span>
+            </div>
+            <div class="flex-grow">
+              <p class="font-semibold">${item.name}</p>
+              <p class="text-sm text-slate-400">$${item.price.toFixed(2)} × ${item.quantity}</p>
+            </div>
+            <p class="font-bold">$${(item.price * item.quantity).toFixed(2)}</p>
+          </div>
+        `).join('');
         document.getElementById('summary-subtotal').textContent = `$${finalOrder.total.toFixed(2)}`;
         document.getElementById('summary-total').textContent = `$${finalOrder.total.toFixed(2)}`;
-    }
-
-    function renderShippingDetails() {
+      }
+      
+      function renderShippingDetails() {
         const addr = finalOrder.shippingAddress;
-        document.getElementById('shipping-details').innerHTML = `<p class="font-bold">${addr.name}</p><p>${addr.addressLine1}</p><p>${addr.city}, ${addr.state} ${addr.zip}</p>`;
-    }
+        document.getElementById('shipping-details').innerHTML = `
+          <p class="font-bold text-slate-300">${addr.name}</p>
+          <p>${addr.addressLine1}</p>
+          <p>${addr.city}, ${addr.state} ${addr.zip}</p>
+          <p>${addr.country}</p>
+          <p>Phone: ${addr.phone}</p>
+        `;
+      }
 
-    // Function to update payment method states
-    function updatePaymentMethodUI() {
-        const allDetailContainers = document.querySelectorAll('#payment-details-container > div');
-        const activeContainerId = `${selectedPaymentMethod.replace(/\s/g, '_')}-container`;
-
-        allDetailContainers.forEach(container => {
-            const isSelected = container.id === activeContainerId;
-            container.style.display = isSelected ? 'block' : 'none';
-
-            // NEW: Disable inputs in inactive tabs to prevent validation issues
-            container.querySelectorAll('input').forEach(input => {
-                input.disabled = !isSelected;
-                // Also toggle 'required' specifically for the card inputs
-                if (container.id === 'Card-container') {
-                    input.required = isSelected;
-                }
-            });
-        });
-
-        confirmBtn.style.display = (selectedPaymentMethod === 'PayPal') ? 'none' : 'block';
-    }
-
-    document.querySelectorAll('.payment-tab').forEach(tab => {
-        tab.classList.add('flex', 'flex-col', 'items-center', 'justify-center', 'py-4', 'rounded-md', 'cursor-pointer');
+      // --- EVENT LISTENERS ---
+      document.querySelectorAll('.payment-tab').forEach(tab => {
         tab.addEventListener('click', () => {
-            document.querySelectorAll('.payment-tab').forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            selectedPaymentMethod = tab.dataset.payment;
-            updatePaymentMethodUI();
+          document.querySelectorAll('.payment-tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          selectedPaymentMethod = tab.dataset.payment;
+
+          document.querySelectorAll('#payment-details-container > div').forEach(div => div.style.display = 'none');
+          const containerId = selectedPaymentMethod.replace(/\s/g, '_');
+          document.getElementById(`${containerId}-container`).style.display = 'block';
+          confirmBtn.style.display = (selectedPaymentMethod === 'PayPal') ? 'none' : 'block';
         });
-    });
-
-    confirmBtn.addEventListener('click', () => {
-        if (!paymentForm.checkValidity()) {
-            paymentForm.reportValidity();
-            return;
+      });
+      
+      confirmBtn.addEventListener('click', (e) => {
+        if (selectedPaymentMethod === 'PayPal') {
+          e.preventDefault(); 
+          alert('Please use the PayPal button to complete your purchase.');
+          return;
         }
-
+        
+        const emailInput = document.getElementById('customer-email');
+        if (!emailInput.value || !emailInput.checkValidity()) {
+          alert('Please enter a valid email address.');
+          emailInput.focus();
+          return;
+        }
+        
+        // Validate card details if paying by card
+        if (selectedPaymentMethod === 'Card') {
+          const cardNumber = document.getElementById('card-number').value;
+          const cardExpiry = document.getElementById('card-expiry').value;
+          const cardCvv = document.getElementById('card-cvv').value;
+          
+          if (!cardNumber || !cardExpiry || !cardCvv) {
+            alert('Please fill in all card details.');
+            return;
+          }
+        }
+        
         confirmBtn.disabled = true;
         document.getElementById('btn-text').classList.add('hidden');
         document.getElementById('btn-loader').classList.remove('hidden');
         
-        prepareAndSaveData();
-        paymentForm.submit();
-    });
-
-    function prepareAndSaveData() {
+        // Process the payment
+        setTimeout(() => {
+          processPayment();
+        }, 1500);
+      });
+      
+      // --- CORE LOGIC ---
+      function processPayment() {
+        // Prepare order data
         finalOrder.paymentMethod = selectedPaymentMethod;
         finalOrder.customerEmail = document.getElementById('customer-email').value;
         finalOrder.orderId = 'ORD-' + Math.floor(10000 + Math.random() * 90000);
         finalOrder.status = 'pending';
+        finalOrder.timestamp = new Date().toISOString();
         
+        // Save to orders in localStorage (for database.html)
         let allOrders = JSON.parse(localStorage.getItem('orders')) || [];
         allOrders.push(finalOrder);
         localStorage.setItem('orders', JSON.stringify(allOrders));
         localStorage.setItem('lastOrder', JSON.stringify(finalOrder));
-
-        document.getElementById('formsubmit-next-url').value = `${window.location.origin}${window.location.pathname.replace('paymentgateway.html', '')}thankyou.html`;
-        document.getElementById('formsubmit-subject').value = `New Order Received! - ${finalOrder.orderId}`;
-        document.getElementById('formsubmit-order-id').value = finalOrder.orderId;
-        document.getElementById('formsubmit-total').value = `$${finalOrder.total.toFixed(2)}`;
-        document.getElementById('formsubmit-method').value = selectedPaymentMethod;
-        document.getElementById('formsubmit-date').value = new Date(finalOrder.timestamp).toLocaleString();
         
-        const itemsSummary = finalOrder.items.map(item => `- ${item.name} (Qty: ${item.quantity}) @ $${item.price.toFixed(2)} each`).join('\n');
-        document.getElementById('formsubmit-items').value = itemsSummary;
+        // Send email via FormSubmit
+        sendEmail(finalOrder);
         
-        const addr = finalOrder.shippingAddress;
-        const shippingSummary = `${addr.name}\n${addr.addressLine1}${addr.addressLine2 ? '\n' + addr.addressLine2 : ''}\n${addr.city}, ${addr.state} ${addr.zip}\n${addr.country}\nPhone: ${addr.phone}`;
-        document.getElementById('formsubmit-shipping').value = shippingSummary;
-    }
+        // Show confirmation modal
+        document.getElementById('modal-order-id').textContent = finalOrder.orderId;
+        confirmationModal.classList.add('active');
+        
+        // Clean up
+        localStorage.removeItem('finalOrder');
+        localStorage.removeItem('cart');
+        localStorage.removeItem('buyNowProduct');
+      }
+      
+      function sendEmail(orderData) {
+        const formData = new FormData();
+        
+        // Add all order details to form data
+        formData.append('_subject', `New Order Received! - ${orderData.orderId}`);
+        formData.append('Order ID', orderData.orderId);
+        formData.append('Customer Email', orderData.customerEmail);
+        formData.append('Total Amount', `$${orderData.total.toFixed(2)}`);
+        formData.append('Payment Method', orderData.paymentMethod);
+        formData.append('Order Date', new Date(orderData.timestamp).toLocaleString());
+        
+        // Format items
+        const itemsSummary = orderData.items.map(item => 
+          `${item.name} (Qty: ${item.quantity}) - $${(item.price * item.quantity).toFixed(2)}`
+        ).join('\n');
+        formData.append('Items Ordered', itemsSummary);
+        
+        // Format shipping address
+        const addr = orderData.shippingAddress;
+        const shippingSummary = `
+          ${addr.name}
+          ${addr.addressLine1}
+          ${addr.city}, ${addr.state} ${addr.zip}
+          ${addr.country}
+          Phone: ${addr.phone}
+        `;
+        formData.append('Shipping Address', shippingSummary);
+        
+        // Send to FormSubmit
+        fetch('https://formsubmit.co/ajax/support@gamingodyssey.in', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => response.json())
+        .then(data => console.log('Email sent successfully'))
+        .catch(error => console.error('Error sending email:', error));
+      }
 
-    renderOrderSummary();
-    renderShippingDetails();
-    updatePaymentMethodUI(); // Set initial state correctly
-
-    const upiCanvas = document.createElement('canvas');
-    QRCode.toCanvas(upiCanvas, `upi://pay?pa=support@gamingodyssey.in&pn=GamingOdyssey&am=${finalOrder.total.toFixed(2)}&cu=USD`, { width: 180 }, (error) => {
+      // --- INITIALIZATIONS ---
+      renderOrderSummary();
+      renderShippingDetails();
+      
+      // Initialize UPI QR Code
+      const upiCanvas = document.createElement('canvas');
+      QRCode.toCanvas(upiCanvas, `upi://pay?pa=your-upi-id@oksbi&pn=GamingOdyssey&am=${finalOrder.total.toFixed(2)}`, { width: 180 }, (error) => {
         if (error) console.error(error);
         const qrContainer = document.getElementById('upi-qr-code');
         qrContainer.innerHTML = ''; 
         qrContainer.appendChild(upiCanvas);
-    });
+      });
 
-    paypal.Buttons({
+      // Initialize PayPal
+      paypal.Buttons({
         onClick: (data, actions) => {
-            const emailInput = document.getElementById('customer-email');
-            if (!emailInput.value || !emailInput.checkValidity()) {
-                alert('Please enter a valid email address before proceeding with PayPal.');
-                emailInput.focus();
-                return actions.reject();
-            }
-            return actions.resolve();
+          const emailInput = document.getElementById('customer-email');
+          if (!emailInput.value || !emailInput.checkValidity()) {
+            alert('Please enter a valid email address before proceeding with PayPal.');
+            return actions.reject();
+          }
+          return actions.resolve();
         },
         createOrder: (data, actions) => actions.order.create({ purchase_units: [{ amount: { value: finalOrder.total.toFixed(2) } }] }),
         onApprove: (data, actions) => actions.order.capture().then(details => {
-            selectedPaymentMethod = 'PayPal';
-            prepareAndSaveData();
-            paymentForm.submit();
+          selectedPaymentMethod = 'PayPal';
+          processPayment();
         })
-    }).render('#paypal-button-container');
-});
-</script>
+      }).render('#paypal-button-container');
+    });
+  </script>
 
 </body>
 </html>
