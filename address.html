@@ -118,7 +118,7 @@
         <div class="bg-card-background rounded-lg p-6 h-fit sticky top-8">
             <h2 class="text-2xl font-bold border-b border-card-border pb-4 mb-4">Your Order</h2>
             <div id="order-summary-items" class="space-y-4 max-h-60 overflow-y-auto pr-2">
-            </div>
+                </div>
              <div class="space-y-3 text-slate-300 border-t border-card-border pt-4 mt-4">
                 <div class="flex justify-between">
                     <span>Subtotal</span>
@@ -146,35 +146,44 @@
         const form = document.getElementById('address-form');
         
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const buyNowProduct = JSON.parse(localStorage.getItem('buyNowProduct')) || null;
 
-        // Safety Check: If the cart is empty, the user cannot proceed.
-        if (cart.length === 0) {
-            alert("Your cart is empty. You will be redirected.");
-            window.location.href = 'cart.html';
-            return; // Stop the script
+        let isBuyNowFlow = false;
+        let itemsToDisplay = [];
+
+        if (buyNowProduct) {
+            isBuyNowFlow = true;
+            itemsToDisplay = Array.isArray(buyNowProduct) ? buyNowProduct : [buyNowProduct];
+        } else {
+            itemsToDisplay = cart;
         }
 
         function renderOrderSummary() {
             orderSummaryItems.innerHTML = '';
             let subtotal = 0;
 
-            cart.forEach(item => {
-                const itemTotal = (item.price || 0) * (item.quantity || 1);
-                subtotal += itemTotal;
-                const itemElement = document.createElement('div');
-                itemElement.className = 'flex items-center gap-4';
-                itemElement.innerHTML = `
-                    <div class="relative">
-                        <img src="${item.image || 'https://placehold.co/64x64/1E293B/E2E8F0?text=Image'}" alt="${item.name}" class="w-16 h-16 object-contain rounded-md bg-slate-700">
-                        <span class="absolute -top-2 -right-2 bg-primary-color text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">${item.quantity || 1}</span>
-                    </div>
-                    <div class="flex-grow">
-                        <p class="font-semibold">${item.name || 'Unknown Item'}</p>
-                    </div>
-                    <p class="font-bold">$${itemTotal.toFixed(2)}</p>
-                `;
-                orderSummaryItems.appendChild(itemElement);
-            });
+            if (itemsToDisplay.length === 0) {
+                orderSummaryItems.innerHTML = '<p class="text-slate-400">No items to display.</p>';
+            } else {
+                itemsToDisplay.forEach(item => {
+                    const itemTotal = (item.price || 0) * (item.quantity || 1);
+                    subtotal += itemTotal;
+
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'flex items-center gap-4';
+                    itemElement.innerHTML = `
+                        <div class="relative">
+                            <img src="${item.image || 'https://placehold.co/64x64/1E293B/E2E8F0?text=Image'}" alt="${item.name}" class="w-16 h-16 object-contain rounded-md bg-slate-700">
+                            <span class="absolute -top-2 -right-2 bg-primary-color text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">${item.quantity || 1}</span>
+                        </div>
+                        <div class="flex-grow">
+                            <p class="font-semibold">${item.name || 'Unknown Item'}</p>
+                        </div>
+                        <p class="font-bold">$${itemTotal.toFixed(2)}</p>
+                    `;
+                    orderSummaryItems.appendChild(itemElement);
+                });
+            }
             
             summarySubtotal.textContent = `$${subtotal.toFixed(2)}`;
             summaryTotal.textContent = `$${subtotal.toFixed(2)}`;
@@ -183,21 +192,6 @@
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             
-            // --- FIX: MANUAL VALIDATION CHECK ---
-            // This loop ensures every required field has a value.
-            const requiredFields = ['name', 'address-line1', 'city', 'state', 'zip', 'country', 'phone'];
-            for (const id of requiredFields) {
-                const input = document.getElementById(id);
-                // .trim() removes whitespace from the start and end of the value
-                if (!input.value.trim()) {
-                    // Get the label text for a user-friendly message
-                    const label = input.previousElementSibling.textContent;
-                    alert(`Please fill out the "${label}" field.`);
-                    input.focus(); // Focus on the empty field
-                    return; // Stop the function here
-                }
-            }
-
             const address = {
                 name: document.getElementById('name').value,
                 addressLine1: document.getElementById('address-line1').value,
@@ -209,15 +203,20 @@
             };
 
             const order = {
-                items: cart,
+                items: itemsToDisplay,
                 shippingAddress: address,
-                total: cart.reduce((sum, item) => sum + (item.price || 0) * (item.quantity || 1), 0),
+                total: itemsToDisplay.reduce((sum, item) => sum + (item.price || 0) * (item.quantity || 1), 0),
                 timestamp: new Date().toISOString()
             };
 
-            // Save the prepared order and redirect
             localStorage.setItem('finalOrder', JSON.stringify(order));
-            window.location.href = 'paymentgateway.html'; 
+            
+            if (isBuyNowFlow) {
+                 localStorage.removeItem('buyNowProduct');
+            }
+
+            // Explicitly redirect to payment gateway page
+            window.location.href = 'paymentgateway.html';
         });
 
         renderOrderSummary();
