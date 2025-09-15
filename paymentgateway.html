@@ -19,18 +19,73 @@
       --card-border: #334155;
       --font-family: 'Poppins', sans-serif;
     }
-    body { font-family: var(--font-family); background-color: var(--background-color); color: var(--text-color); }
-    .input-field { background-color: #2c3a4f; border: 1px solid var(--card-border); transition: all 0.3s ease; }
-    .input-field:focus { border-color: var(--primary-color); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4); outline: none; }
-    .submit-btn { background: linear-gradient(90deg, var(--primary-color), var(--secondary-color)); color: white; font-weight: 600; border-radius: 0.5rem; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); }
-    .submit-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); }
-    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-    .payment-tab { background-color: transparent; border: 1px solid var(--card-border); transition: all 0.2s ease-in-out; }
-    .payment-tab:hover { border-color: var(--primary-color); }
-    .payment-tab.active { background-color: var(--primary-color); color: white; border-color: var(--primary-color); }
-    .order-item { display: flex; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid var(--card-border); }
-    .order-item:last-child { border-bottom: none; }
-    .order-summary { max-height: 300px; overflow-y: auto; }
+    body { 
+      font-family: var(--font-family); 
+      background-color: var(--background-color); 
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .input-field { 
+      background-color: #2c3a4f; 
+      border: 1px solid var(--card-border); 
+      transition: all 0.3s ease; 
+    }
+    .input-field:focus { 
+      border-color: var(--primary-color); 
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4); 
+      outline: none; 
+    }
+    .submit-btn { 
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color)); 
+      color: white; 
+      font-weight: 600; 
+      border-radius: 0.5rem; 
+      transition: all 0.3s ease; 
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); 
+    }
+    .submit-btn:hover:not(:disabled) { 
+      transform: translateY(-2px); 
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); 
+    }
+    .submit-btn:disabled { 
+      opacity: 0.5; 
+      cursor: not-allowed; 
+    }
+    .payment-tab { 
+      background-color: transparent; 
+      border: 1px solid var(--card-border); 
+      transition: all 0.2s ease-in-out; 
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+    }
+    .payment-tab:hover { 
+      border-color: var(--primary-color); 
+    }
+    .payment-tab.active { 
+      background-color: var(--primary-color); 
+      color: white; 
+      border-color: var(--primary-color); 
+    }
+    .order-item { 
+      display: flex; 
+      align-items: center; 
+      padding: 0.75rem 0; 
+      border-bottom: 1px solid var(--card-border); 
+    }
+    .order-item:last-child { 
+      border-bottom: none; 
+    }
+    .order-summary { 
+      max-height: 300px; 
+      overflow-y: auto; 
+    }
     .confirmation-modal {
       position: fixed;
       top: 0;
@@ -58,33 +113,57 @@
       width: 90%;
       text-align: center;
     }
+    #payment-method-selector {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+    }
+    @media (min-width: 1024px) {
+      #payment-method-selector {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
   </style>
 </head>
-<body class="min-h-screen">
+<body>
+  <!-- Header -->
+  <header class="bg-card-background py-4 px-6 shadow-lg">
+    <div class="container mx-auto flex justify-between items-center">
+      <div class="flex items-center">
+        <img src="https://cdn-icons-png.flaticon.com/512/3612/3612569.png" alt="Logo" class="w-10 h-10 mr-3">
+        <h1 class="text-xl font-bold">Gaming Odyssey</h1>
+      </div>
+      <nav>
+        <a href="store.html" class="text-slate-300 hover:text-white transition">← Back to Store</a>
+      </nav>
+    </div>
+  </header>
 
-  <div class="container mx-auto px-4 py-8 md:py-16">
-    <div class="max-w-4xl mx-auto">
-      <div class="text-center mb-12">
-        <h1 class="text-4xl md:text-5xl font-bold text-white">Secure Checkout</h1>
+  <!-- Main Content -->
+  <main class="flex-grow container mx-auto px-4 py-8 md:py-12">
+    <div class="max-w-5xl mx-auto">
+      <div class="text-center mb-8 md:mb-12">
+        <h1 class="text-3xl md:text-4xl font-bold text-white">Secure Checkout</h1>
+        <p class="text-slate-400 mt-2">Complete your purchase with confidence</p>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        
-        <form id="payment-form">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
+        <!-- Payment Form -->
+        <div>
           <div class="bg-card-background rounded-lg p-6 shadow-xl space-y-6">
             <div>
-              <h2 class="text-2xl font-bold mb-4">1. Contact Information</h2>
+              <h2 class="text-xl font-bold mb-4">1. Contact Information</h2>
               <label for="customer-email" class="block text-sm font-medium text-slate-300 mb-1">Email Address</label>
               <input type="email" id="customer-email" name="customer-email" placeholder="you@example.com" required class="input-field w-full p-3 rounded-md">
             </div>
             
             <div>
-              <h2 class="text-2xl font-bold mb-4">2. Payment Method</h2>
-              <div id="payment-method-selector" class="grid grid-cols-2 gap-3">
-                <div class="payment-tab active flex flex-col items-center justify-center py-4 rounded-md cursor-pointer" data-payment="Card"><i class="fas fa-credit-card text-xl"></i><span> Card</span></div>
-                <div class="payment-tab flex flex-col items-center justify-center py-4 rounded-md cursor-pointer" data-payment="PayPal"><i class="fab fa-paypal text-xl"></i><span> PayPal</span></div>
-                <div class="payment-tab flex flex-col items-center justify-center py-4 rounded-md cursor-pointer" data-payment="UPI"><i class="fas fa-qrcode text-xl"></i><span> UPI</span></div>
-                <div class="payment-tab flex flex-col items-center justify-center py-4 rounded-md cursor-pointer" data-payment="Cash on Delivery"><i class="fas fa-money-bill-wave text-xl"></i><span> COD</span></div>
+              <h2 class="text-xl font-bold mb-4">2. Payment Method</h2>
+              <div id="payment-method-selector" class="mb-4">
+                <div class="payment-tab active" data-payment="Card"><i class="fas fa-credit-card text-xl mb-2"></i><span> Card</span></div>
+                <div class="payment-tab" data-payment="PayPal"><i class="fab fa-paypal text-xl mb-2"></i><span> PayPal</span></div>
+                <div class="payment-tab" data-payment="UPI"><i class="fas fa-qrcode text-xl mb-2"></i><span> UPI</span></div>
+                <div class="payment-tab" data-payment="Cash on Delivery"><i class="fas fa-money-bill-wave text-xl mb-2"></i><span> COD</span></div>
               </div>
             </div>
             
@@ -109,25 +188,28 @@
               </button>
             </div>
           </div>
-        </form>
+        </div>
 
-        <div class="bg-card-background rounded-lg p-6 h-fit sticky top-8 shadow-xl">
-          <h2 class="text-2xl font-bold border-b border-card-border pb-4 mb-4">Order Summary</h2>
-          <div id="order-summary-items" class="order-summary"></div>
-          <div class="space-y-3 text-slate-300 border-t border-card-border pt-4 mt-4">
-            <div class="flex justify-between"><span>Subtotal</span><span id="summary-subtotal">$0.00</span></div>
-            <div class="flex justify-between"><span>Shipping</span><span>FREE</span></div>
-            <div class="flex justify-between text-white font-bold text-lg border-t border-card-border pt-4 mt-4"><span>Total</span><span id="summary-total">$0.00</span></div>
-          </div>
-          <div class="border-t border-card-border pt-4 mt-4">
-            <h3 class="font-semibold mb-2">Shipping To:</h3>
-            <div id="shipping-details" class="text-sm text-slate-400 leading-relaxed"></div>
-            <a href="address.html" class="text-sm text-primary-color hover:underline mt-2 inline-block">Change</a>
+        <!-- Order Summary -->
+        <div>
+          <div class="bg-card-background rounded-lg p-6 h-fit lg:sticky lg:top-8 shadow-xl">
+            <h2 class="text-xl font-bold border-b border-card-border pb-4 mb-4">Order Summary</h2>
+            <div id="order-summary-items" class="order-summary mb-4"></div>
+            <div class="space-y-3 text-slate-300 border-t border-card-border pt-4">
+              <div class="flex justify-between"><span>Subtotal</span><span id="summary-subtotal">$0.00</span></div>
+              <div class="flex justify-between"><span>Shipping</span><span>FREE</span></div>
+              <div class="flex justify-between text-white font-bold text-lg border-t border-card-border pt-4 mt-4"><span>Total</span><span id="summary-total">$0.00</span></div>
+            </div>
+            <div class="border-t border-card-border pt-4 mt-4">
+              <h3 class="font-semibold mb-2">Shipping To:</h3>
+              <div id="shipping-details" class="text-sm text-slate-400 leading-relaxed"></div>
+              <a href="address.html" class="text-sm text-primary-color hover:underline mt-2 inline-block">Change</a>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </main>
 
   <!-- Confirmation Modal -->
   <div class="confirmation-modal" id="confirmation-modal">
@@ -138,9 +220,16 @@
       <h2 class="text-2xl font-bold text-white mb-2">Order Confirmed!</h2>
       <p class="text-slate-300 mb-4">Your order has been successfully placed.</p>
       <p class="text-slate-400 text-sm mb-6">Order ID: <span id="modal-order-id" class="text-slate-300 font-medium"></span></p>
-      <a href="thankyou.html" id="continue-to-thankyou" class="submit-btn w-full py-3 text-center block">View Order Details</a>
+      <a href="#" id="continue-to-thankyou" class="submit-btn w-full py-3 text-center block">View Order Details</a>
     </div>
   </div>
+
+  <!-- Footer -->
+  <footer class="bg-card-background py-6 px-4 mt-8">
+    <div class="container mx-auto text-center">
+      <p class="text-slate-400 text-sm">© 2023 Gaming Odyssey. All rights reserved.</p>
+    </div>
+  </footer>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -148,11 +237,18 @@
       const finalOrder = JSON.parse(localStorage.getItem('finalOrder'));
       const confirmBtn = document.getElementById('confirm-payment-btn');
       const confirmationModal = document.getElementById('confirmation-modal');
+      const continueButton = document.getElementById('continue-to-thankyou');
       let selectedPaymentMethod = 'Card';
 
       // --- INITIAL CHECK ---
       if (!finalOrder) {
-        document.body.innerHTML = `<div class="h-screen w-full flex flex-col items-center justify-center text-center p-4"><h1 class="text-2xl font-bold">No order found!</h1><p class="text-slate-400">Your checkout session is empty.</p><a href="cart.html" class="submit-btn mt-4 py-2 px-6">Back to Cart</a></div>`;
+        document.body.innerHTML = `
+          <div class="h-screen w-full flex flex-col items-center justify-center text-center p-4">
+            <h1 class="text-2xl font-bold">No order found!</h1>
+            <p class="text-slate-400 mt-2">Your checkout session is empty.</p>
+            <a href="cart.html" class="submit-btn mt-4 py-2 px-6">Back to Cart</a>
+          </div>
+        `;
         return;
       }
 
@@ -259,6 +355,9 @@
         document.getElementById('modal-order-id').textContent = finalOrder.orderId;
         confirmationModal.classList.add('active');
         
+        // Set up the continue button
+        continueButton.href = `thankyou.html?orderId=${finalOrder.orderId}`;
+        
         // Clean up
         localStorage.removeItem('finalOrder');
         localStorage.removeItem('cart');
@@ -270,6 +369,9 @@
         
         // Add all order details to form data
         formData.append('_subject', `New Order Received! - ${orderData.orderId}`);
+        formData.append('_next', `${window.location.origin}/thankyou.html?orderId=${orderData.orderId}`);
+        formData.append('_template', 'table');
+        
         formData.append('Order ID', orderData.orderId);
         formData.append('Customer Email', orderData.customerEmail);
         formData.append('Total Amount', `$${orderData.total.toFixed(2)}`);
@@ -334,6 +436,7 @@
       }).render('#paypal-button-container');
     });
   </script>
-
 </body>
 </html>
+</html>
+
