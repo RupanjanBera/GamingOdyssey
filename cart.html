@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gaming Odyssey - Thank You for Your Order</title>
+  <title>Gaming Odyssey - Your Cart</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -35,119 +35,266 @@
       transform: translateY(-2px) scale(1.02);
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
     }
-    .outline-btn {
-        background-color: transparent;
-        border: 1px solid var(--card-border);
+    .quantity-btn {
+      background-color: var(--card-border);
+      transition: background-color 0.2s ease;
     }
-    .outline-btn:hover {
-        background-color: var(--card-border);
+    .quantity-btn:hover {
+      background-color: var(--primary-color);
+    }
+    /* Styles for the new header */
+    .sidebar {
+      background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
+      box-shadow: 4px 0 10px rgba(59, 130, 246, 0.15);
+    }
+    .gradient-glow {
+      box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+    }
+    .nav-link {
+      transition: color 0.2s ease;
+    }
+    .nav-link:hover {
+      color: var(--primary-color);
+    }
+    .mobile-menu {
+      background: linear-gradient(180deg, #1E293B, #0F172A);
+      opacity: 0;
+      transform: translateX(-100%);
+      transition: all 0.3s ease;
+    }
+    .mobile-menu.active {
+      opacity: 1;
+      transform: translateX(0);
     }
   </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4">
+<body class="min-h-screen">
 
-  <div id="order-success" class="max-w-3xl w-full bg-card-background rounded-lg shadow-2xl p-6 md:p-10 text-center">
-    <div class="w-20 h-20 mx-auto bg-green-500/10 rounded-full flex items-center justify-center mb-6">
-        <i class="fas fa-check-circle text-5xl text-green-400"></i>
+  <div class="fixed top-0 left-0 h-full w-64 sidebar gradient-glow z-20 hidden md:block">
+    <div class="p-4 sm:p-6">
+      <a href="index.html" class="flex items-center space-x-3">
+        <h1 class="text-xl sm:text-2xl font-bold text-white leading-relaxed">Gaming Odyssey</h1>
+      </a>
+      <nav class="mt-10 space-y-4">
+        <a href="index.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+          <i class="fas fa-home w-6 text-center"></i>
+          <span>Home</span>
+        </a>
+        <a href="store.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+          <i class="fas fa-store w-6 text-center"></i>
+          <span>Store</span>
+        </a>
+        <a href="cart.html" class="flex items-center space-x-3 text-[#3B82F6] font-semibold nav-link">
+          <i class="fas fa-shopping-cart w-6 text-center"></i>
+          <span>Cart</span>
+        </a>
+        <a href="tournaments.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+          <i class="fas fa-trophy w-6 text-center"></i>
+          <span>Tournaments</span>
+        </a>
+        <a href="database.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+          <i class="fas fa-database w-6 text-center"></i>
+          <span>Admin</span>
+        </a>
+      </nav>
     </div>
-    <h1 class="text-3xl md:text-4xl font-bold text-white mb-3">Thank You for Your Order!</h1>
-    <p class="text-slate-400 mb-6">Your order has been placed successfully. A confirmation has been sent to <strong id="customer-email" class="text-slate-300">your email</strong>.</p>
-    
-    <div class="bg-slate-900/50 p-6 rounded-lg text-left mb-8">
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center sm:text-left">
-            <div>
-                <p class="text-sm text-slate-400">Order ID</p>
-                <p id="order-id" class="font-semibold text-white">N/A</p>
-            </div>
-            <div>
-                <p class="text-sm text-slate-400">Total Amount</p>
-                <p id="order-total" class="font-semibold text-white">$0.00</p>
-            </div>
-             <div>
-                <p class="text-sm text-slate-400">Payment Method</p>
-                <p id="payment-method" class="font-semibold text-white">N/A</p>
-            </div>
-        </div>
+  </div>
+
+  <div class="md:hidden fixed top-0 left-0 w-full bg-[#1E293B] z-30 p-4 flex justify-between items-center gradient-glow">
+    <a href="index.html" class="text-lg font-bold text-white leading-relaxed">Gaming Odyssey</a>
+    <button id="hamburger" class="text-[#3B82F6]">
+      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+  </div>
+  <div id="mobile-menu" class="hidden md:hidden fixed top-0 left-0 w-full h-full bg-[#1E293B] z-40 p-4 mobile-menu">
+    <button id="close-menu" class="absolute top-4 right-4 text-[#3B82F6] gradient-glow rounded-full p-2">
+      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+    <nav class="space-y-4 mt-16">
+      <a href="index.html" class="flex items-center space-x-3 text-xl text-[#F1F5F9] font-semibold nav-link">
+        <i class="fas fa-home w-6 text-center"></i>
+        <span>Home</span>
+      </a>
+      <a href="store.html" class="flex items-center space-x-3 text-xl text-[#F1F5F9] font-semibold nav-link">
+        <i class="fas fa-store w-6 text-center"></i>
+        <span>Store</span>
+      </a>
+      <a href="cart.html" class="flex items-center space-x-3 text-xl text-[#3B82F6] font-semibold nav-link">
+        <i class="fas fa-shopping-cart w-6 text-center"></i>
+        <span>Cart</span>
+      </a>
+      <a href="tournaments.html" class="flex items-center space-x-3 text-xl text-[#F1F5F9] font-semibold nav-link">
+        <i class="fas fa-trophy w-6 text-center"></i>
+        <span>Tournaments</span>
+      </a>
+      <a href="database.html" class="flex items-center space-x-3 text-xl text-[#F1F5F9] font-semibold nav-link">
+        <i class="fas fa-database w-6 text-center"></i>
+        <span>Admin</span>
+      </a>
+    </nav>
+  </div>
+  <main class="md:ml-64 pt-20 md:pt-0">
+    <div class="container mx-auto px-4 py-8 md:py-16">
+      <div class="text-center mb-12">
+        <h1 class="text-4xl md:text-5xl font-bold text-white">Shopping Cart</h1>
+        <p class="text-slate-400 mt-2">Review your items before proceeding to checkout.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
-        <div class="border-t border-card-border my-6"></div>
+        <div id="cart-items-container" class="lg:col-span-2 bg-card-background rounded-lg p-6 space-y-4">
+          </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-                <h3 class="font-bold text-lg mb-3 text-white">Items Ordered</h3>
-                <div id="order-items" class="space-y-3 max-h-48 overflow-y-auto pr-2">
-                    </div>
+        <div class="lg:col-span-1">
+          <div class="bg-card-background rounded-lg p-6 sticky top-8">
+            <h2 class="text-2xl font-bold border-b border-card-border pb-4 mb-4">Order Summary</h2>
+            <div class="space-y-3 text-slate-300">
+              <div class="flex justify-between">
+                <span>Subtotal</span>
+                <span id="summary-subtotal">$0.00</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Shipping</span>
+                <span>FREE</span>
+              </div>
+              <div class="flex justify-between text-white font-bold text-lg border-t border-card-border pt-4 mt-4">
+                <span>Total</span>
+                <span id="summary-total">$0.00</span>
+              </div>
             </div>
-             <div>
-                <h3 class="font-bold text-lg mb-3 text-white">Shipping To</h3>
-                <div id="shipping-address" class="text-slate-400 leading-relaxed">
-                    </div>
-            </div>
+            <button id="checkout" class="submit-btn w-full mt-6 py-3">Proceed to Checkout</button>
+            <a href="store.html" class="block mt-4 text-center text-sm text-primary-color hover:underline">
+              <i class="fas fa-arrow-left mr-2"></i>Continue Shopping
+            </a>
+          </div>
         </div>
+      </div>
     </div>
-    
-    <div class="flex flex-col sm:flex-row justify-center gap-4">
-      <a href="store.html" class="submit-btn w-full sm:w-auto py-3 px-6">Continue Shopping</a>
-      <a href="index.html" class="outline-btn w-full sm:w-auto py-3 px-6 rounded-lg text-slate-300">Back to Home</a>
-    </div>
-  </div>
+  </main>
 
-  <div id="order-error" class="hidden max-w-lg w-full bg-card-background rounded-lg p-10 text-center">
-       <div class="w-20 h-20 mx-auto bg-red-500/10 rounded-full flex items-center justify-center mb-6">
-        <i class="fas fa-exclamation-triangle text-5xl text-red-400"></i>
-    </div>
-      <h1 class="text-3xl font-bold text-white mb-3">Order Not Found</h1>
-      <p class="text-slate-400 mb-6">We couldn't find any recent order details. Please check your email for confirmation or start a new order from the store.</p>
-      <a href="store.html" class="submit-btn w-full py-3 px-6">Go to Store</a>
-  </div>
-
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const closeMenu = document.getElementById('close-menu');
+    if (hamburger) {
+      hamburger.addEventListener('click', () => {
+        mobileMenu.classList.remove('hidden');
+        setTimeout(() => mobileMenu.classList.add('active'), 10);
+      });
+    }
+    if (closeMenu) {
+      closeMenu.addEventListener('click', () => {
+        mobileMenu.classList.remove('active');
+        setTimeout(() => mobileMenu.classList.add('hidden'), 300);
+      });
+    }
+  </script>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const lastOrder = JSON.parse(localStorage.getItem('lastOrder'));
+      const cartItemsContainer = document.getElementById('cart-items-container');
+      const summarySubtotal = document.getElementById('summary-subtotal');
+      const summaryTotal = document.getElementById('summary-total');
+      const checkoutButton = document.getElementById('checkout');
 
-        if (!lastOrder) {
-            document.getElementById('order-success').style.display = 'none';
-            document.getElementById('order-error').style.display = 'block';
-            return;
+      let cart = [];
+
+      function renderCart() {
+        cart = JSON.parse(localStorage.getItem('cart')) || [];
+        cartItemsContainer.innerHTML = '';
+        let subtotal = 0;
+
+        if (cart.length === 0) {
+          cartItemsContainer.innerHTML = `
+            <div class="text-center py-12">
+              <i class="fas fa-shopping-cart text-5xl text-slate-500 mb-4"></i>
+              <h2 class="text-2xl font-bold">Your cart is empty</h2>
+              <p class="text-slate-400">Looks like you haven't added anything to your cart yet.</p>
+            </div>
+          `;
+          updateSummary(0);
+          return;
         }
 
-        // Populate order details
-        document.getElementById('customer-email').textContent = lastOrder.customerEmail || 'your email';
-        document.getElementById('order-id').textContent = lastOrder.orderId;
-        document.getElementById('order-total').textContent = `$${lastOrder.total.toFixed(2)}`;
-        document.getElementById('payment-method').textContent = lastOrder.paymentMethod;
+        cart.forEach((item, index) => {
+          const itemTotal = item.price * item.quantity;
+          subtotal += itemTotal;
 
-        // Populate Shipping Address
-        const addr = lastOrder.shippingAddress;
-        const shippingDiv = document.getElementById('shipping-address');
-        shippingDiv.innerHTML = `
-            <p class="font-semibold text-slate-300">${addr.name}</p>
-            <p>${addr.addressLine1}</p>
-            <p>${addr.city}, ${addr.state} ${addr.zip}</p>
-            <p>${addr.country}</p>
-            <p>${addr.phone}</p>
-        `;
-
-        // Populate Order Items
-        const itemsContainer = document.getElementById('order-items');
-        itemsContainer.innerHTML = '';
-        lastOrder.items.forEach(item => {
-            const itemElement = document.createElement('div');
-            itemElement.className = 'flex justify-between items-start text-sm';
-            itemElement.innerHTML = `
-                <div>
-                    <p class="font-semibold text-slate-300">${item.name}</p>
-                    <p class="text-slate-400">Qty: ${item.quantity}</p>
-                </div>
-                <p class="text-slate-300 font-medium">$${(item.price * item.quantity).toFixed(2)}</p>
-            `;
-            itemsContainer.appendChild(itemElement);
+          const itemElement = document.createElement('div');
+          itemElement.className = 'flex flex-col sm:flex-row items-center gap-4 border-b border-card-border pb-4 last:border-b-0';
+          itemElement.innerHTML = `
+            <img src="${item.image || 'https://placehold.co/100x100/1E293B/E2E8F0?text=Image'}" alt="${item.name}" class="w-24 h-24 object-contain rounded-lg bg-slate-700">
+            <div class="flex-grow text-center sm:text-left">
+              <h3 class="font-bold text-lg">${item.name}</h3>
+              <p class="text-sm text-slate-400">$${item.price.toFixed(2)}</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <button class="quantity-btn w-8 h-8 rounded-full" data-index="${index}" data-action="decrease">-</button>
+              <span class="font-bold w-8 text-center">${item.quantity}</span>
+              <button class="quantity-btn w-8 h-8 rounded-full" data-index="${index}" data-action="increase">+</button>
+            </div>
+            <div class="font-bold text-lg w-24 text-center sm:text-right">
+              $${itemTotal.toFixed(2)}
+            </div>
+            <button class="remove-item text-slate-500 hover:text-red-500 transition-colors" data-index="${index}">
+              <i class="fas fa-trash"></i>
+            </button>
+          `;
+          cartItemsContainer.appendChild(itemElement);
         });
 
-        // Clean up local storage for next order
-        localStorage.removeItem('finalOrder');
-        localStorage.removeItem('cart');
-        localStorage.removeItem('buyNowProduct');
+        updateSummary(subtotal);
+      }
+
+      function updateSummary(subtotal) {
+        summarySubtotal.textContent = `$${subtotal.toFixed(2)}`;
+        summaryTotal.textContent = `$${subtotal.toFixed(2)}`;
+      }
+
+      function updateQuantity(index, action) {
+        if (action === 'increase') {
+          cart[index].quantity++;
+        } else if (action === 'decrease') {
+          cart[index].quantity--;
+          if (cart[index].quantity <= 0) {
+            cart.splice(index, 1);
+          }
+        }
+        localStorage.setItem('cart', JSON.stringify(cart));
+        renderCart();
+      }
+
+      function removeItem(index) {
+        cart.splice(index, 1);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        renderCart();
+      }
+
+      cartItemsContainer.addEventListener('click', (e) => {
+        const target = e.target.closest('button');
+        if (!target) return;
+
+        const index = parseInt(target.dataset.index, 10);
+        
+        if (target.classList.contains('quantity-btn')) {
+          updateQuantity(index, target.dataset.action);
+        }
+        
+        if (target.classList.contains('remove-item')) {
+          removeItem(index);
+        }
+      });
+      
+      checkoutButton.addEventListener('click', () => {
+        if (cart.length === 0) {
+            alert('Your cart is empty. Add items to proceed to checkout.');
+            return;
+        }
+        // Redirect to address page
+        window.location.href = 'address.html';
+      });
+
+      renderCart();
     });
   </script>
 </body>
