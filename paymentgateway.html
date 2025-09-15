@@ -170,22 +170,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Functions ---
+    function renderOrderSummary() { /* ... same as before ... */ }
+    function renderShippingDetails() { /* ... same as before ... */ }
+    // NOTE: I've collapsed the render functions for brevity as they are unchanged.
+    // The full, correct functions are included below in the copyable block.
     function renderOrderSummary() {
         const container = document.getElementById('order-summary-items');
         container.innerHTML = finalOrder.items.map(item => `
             <div class="flex items-center gap-4">
-                <div class="relative">
-                    <img src="${item.image || 'https://placehold.co/64x64/1E293B/E2E8F0?text=I'}" alt="${item.name}" class="w-16 h-16 object-contain rounded-md bg-slate-700">
-                    <span class="absolute -top-2 -right-2 bg-primary-color text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">${item.quantity}</span>
-                </div>
+                <div class="relative"><img src="${item.image || 'https://placehold.co/64x64/1E293B/E2E8F0?text=I'}" alt="${item.name}" class="w-16 h-16 object-contain rounded-md bg-slate-700"><span class="absolute -top-2 -right-2 bg-primary-color text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">${item.quantity}</span></div>
                 <div class="flex-grow"><p class="font-semibold">${item.name}</p></div>
                 <p class="font-bold">$${(item.price * item.quantity).toFixed(2)}</p>
             </div>`).join('');
-        
         document.getElementById('summary-subtotal').textContent = `$${finalOrder.total.toFixed(2)}`;
         document.getElementById('summary-total').textContent = `$${finalOrder.total.toFixed(2)}`;
     }
-
     function renderShippingDetails() {
         const addr = finalOrder.shippingAddress;
         document.getElementById('shipping-details').innerHTML = `<p class="font-bold">${addr.name}</p><p>${addr.addressLine1}</p><p>${addr.city}, ${addr.state} ${addr.zip}</p><p>${addr.country}</p><p>${addr.phone}</p>`;
@@ -196,90 +195,80 @@ document.addEventListener('DOMContentLoaded', () => {
         return re.test(String(email).toLowerCase());
     }
 
-    function handleOrderCompletion() {
+    // ********* NEW ROBUST COMPLETION LOGIC *********
+    async function handleOrderCompletion() {
         if (!isEmailVerified) {
             alert('Please verify your email address first.');
             return;
         }
 
-        // Show loading state
+        // 1. Show Loading State
         confirmBtn.disabled = true;
         document.getElementById('btn-text').classList.add('hidden');
         document.getElementById('btn-loader').classList.remove('hidden');
 
-        // Finalize the order object
+        // 2. Finalize and SAVE order details immediately. This is crucial.
         finalOrder.paymentMethod = selectedPaymentMethod;
         finalOrder.customerEmail = emailInput.value;
         finalOrder.orderId = 'ORD-' + Math.floor(10000 + Math.random() * 90000);
         finalOrder.status = 'pending';
         
-        // Save to the main 'orders' list for the admin panel
         let allOrders = JSON.parse(localStorage.getItem('orders')) || [];
         allOrders.push(finalOrder);
-        localStorage.setItem('orders', JSON.stringify(allOrders));
+        localStorage.setItem('orders', JSON.stringify(allOrders)); // SAVED FOR DATABASE
+        localStorage.setItem('lastOrder', JSON.stringify(finalOrder)); // SAVED FOR THANK YOU PAGE
 
-        // Save as 'lastOrder' for the thank you page
-        localStorage.setItem('lastOrder', JSON.stringify(finalOrder));
-
-        // Prepare and submit email notification via FormSubmit
-        const itemsSummary = finalOrder.items.map(item => `- ${item.name} (Qty: ${item.quantity}) @ $${item.price.toFixed(2)} each`).join('\n');
-        const shippingSummary = `${finalOrder.shippingAddress.name}\n${finalOrder.shippingAddress.addressLine1}\n${finalOrder.shippingAddress.city}, ${finalOrder.shippingAddress.state} ${finalOrder.shippingAddress.zip}\n${finalOrder.shippingAddress.country}\nPhone: ${finalOrder.shippingAddress.phone}`;
+        // 3. Attempt to send email via FormSubmit using fetch
+        const formData = new FormData();
+        formData.append('_subject', `New Order Received! - ${finalOrder.orderId}`);
+        formData.append('_template', 'table');
+        formData.append('Order ID', finalOrder.orderId);
+        formData.append('Customer Email', finalOrder.customerEmail);
+        formData.append('Total Amount', `$${finalOrder.total.toFixed(2)}`);
+        formData.append('Payment Method', selectedPaymentMethod);
+        formData.append('Order Date', new Date(finalOrder.timestamp).toLocaleString());
         
-        // This creates a path like "https://yourdomain.com/thankyou.html"
-        const thankYouUrl = `${window.location.origin}${window.location.pathname.replace('paymentgateway.html', '')}thankyou.html`;
+        const itemsSummary = finalOrder.items.map(item => `- ${item.name} (Qty: ${item.quantity}) @ $${item.price.toFixed(2)} each`).join('\n');
+        formData.append('Items Ordered', itemsSummary);
+        
+        const shippingSummary = `${finalOrder.shippingAddress.name}\n${finalOrder.shippingAddress.addressLine1}\n${finalOrder.shippingAddress.city}, ${finalOrder.shippingAddress.state} ${finalOrder.shippingAddress.zip}\n${finalOrder.shippingAddress.country}\nPhone: ${finalOrder.shippingAddress.phone}`;
+        formData.append('Shipping Address', shippingSummary);
 
-        const form = document.createElement('form');
-        form.action = 'https://formsubmit.co/support@gamingodyssey.in';
-        form.method = 'POST';
-        form.style.display = 'none';
-        form.innerHTML = `
-            <input type="hidden" name="_next" value="${thankYouUrl}">
-            <input type="hidden" name="_subject" value="New Order Received! - ${finalOrder.orderId}">
-            <input type="hidden" name="_template" value="table">
-            <input type="hidden" name="Order ID" value="${finalOrder.orderId}">
-            <input type="hidden" name="Customer Email" value="${finalOrder.customerEmail}">
-            <input type="hidden" name="Total Amount" value="$${finalOrder.total.toFixed(2)}">
-            <input type="hidden" name="Payment Method" value="${selectedPaymentMethod}">
-            <input type="hidden" name="Order Date" value="${new Date(finalOrder.timestamp).toLocaleString()}">
-            <textarea name="Items Ordered" style="display:none;">${itemsSummary}</textarea>
-            <textarea name="Shipping Address" style="display:none;">${shippingSummary}</textarea>
-        `;
-        document.body.appendChild(form);
-        form.submit();
+        try {
+            await fetch('https://formsubmit.co/support@gamingodyssey.in', {
+                method: 'POST',
+                body: formData
+            });
+        } catch (error) {
+            console.error("FormSubmit request failed. The user will still be redirected.", error);
+        }
+
+        // 4. FAILSAFE REDIRECT: Redirect the user no matter what.
+        // This ensures the UI is never stuck.
+        window.location.href = 'thankyou.html';
     }
 
     // --- Event Listeners ---
+    verifyEmailBtn.addEventListener('click', () => { /* ... unchanged ... */ });
+    emailInput.addEventListener('input', () => { /* ... unchanged ... */ });
+    document.querySelectorAll('.payment-tab').forEach(tab => { /* ... unchanged ... */ });
+    // NOTE: These listeners are also collapsed for brevity. The full, correct code is in the block below.
     verifyEmailBtn.addEventListener('click', () => {
         if (validateEmail(emailInput.value)) {
-            emailStatus.textContent = '✓ Email format is valid!';
-            emailStatus.style.color = '#4ADE80'; // Green
-            isEmailVerified = true;
-            emailInput.style.borderColor = '#4ADE80';
+            emailStatus.textContent = '✓ Email format is valid!'; emailStatus.style.color = '#4ADE80'; isEmailVerified = true; emailInput.style.borderColor = '#4ADE80';
         } else {
-            emailStatus.textContent = '✗ Please enter a valid email address.';
-            emailStatus.style.color = '#F87171'; // Red
-            isEmailVerified = false;
-            emailInput.style.borderColor = '#F87171';
+            emailStatus.textContent = '✗ Please enter a valid email address.'; emailStatus.style.color = '#F87171'; isEmailVerified = false; emailInput.style.borderColor = '#F87171';
         }
     });
-
-    emailInput.addEventListener('input', () => {
-        isEmailVerified = false;
-        emailStatus.textContent = '';
-        emailInput.style.borderColor = '';
-    });
-
+    emailInput.addEventListener('input', () => { isEmailVerified = false; emailStatus.textContent = ''; emailInput.style.borderColor = ''; });
     document.querySelectorAll('.payment-tab').forEach(tab => {
         tab.addEventListener('click', () => {
             document.querySelectorAll('.payment-tab').forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
             selectedPaymentMethod = tab.dataset.payment;
-
             document.querySelectorAll('.payment-form').forEach(form => form.style.display = 'none');
             const formToShow = document.getElementById(`${selectedPaymentMethod}-form-container`);
             if (formToShow) formToShow.style.display = 'block';
-
-            // Special handling for PayPal button visibility
             confirmBtn.style.display = (selectedPaymentMethod === 'paypal') ? 'none' : 'block';
         });
     });
@@ -295,17 +284,13 @@ document.addEventListener('DOMContentLoaded', () => {
     QRCode.toCanvas(upiLink, { width: 180 }, (error, canvas) => {
         if (error) console.error(error);
         const qrContainer = document.getElementById('upi-qr-code');
-        qrContainer.innerHTML = '';
-        qrContainer.appendChild(canvas);
+        qrContainer.innerHTML = ''; qrContainer.appendChild(canvas);
     });
 
     // Initialize PayPal Buttons
     paypal.Buttons({
         onClick: (data, actions) => {
-            if (!isEmailVerified) {
-                alert('Please verify your email address before proceeding with PayPal.');
-                return actions.reject();
-            }
+            if (!isEmailVerified) { alert('Please verify your email address before proceeding with PayPal.'); return actions.reject(); }
             return actions.resolve();
         },
         createOrder: (data, actions) => actions.order.create({ purchase_units: [{ amount: { value: finalOrder.total.toFixed(2) } }] }),
