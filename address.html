@@ -74,9 +74,15 @@
         <div>
           <h2 class="text-2xl font-bold mb-6">Shipping Information</h2>
           <form id="address-form" class="space-y-4">
-            <div>
-              <label for="name" class="block text-sm font-medium text-slate-300 mb-1">Full Name</label>
-              <input type="text" id="name" name="name" class="w-full p-3 rounded-md input-field" placeholder="John Doe" required>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label for="name" class="block text-sm font-medium text-slate-300 mb-1">Full Name</label>
+                <input type="text" id="name" name="name" class="w-full p-3 rounded-md input-field" placeholder="John Doe" required>
+              </div>
+              <div>
+                <label for="email" class="block text-sm font-medium text-slate-300 mb-1">Email Address</label>
+                <input type="email" id="email" name="email" class="w-full p-3 rounded-md input-field" placeholder="you@example.com" required>
+              </div>
             </div>
             <div>
               <label for="address-line1" class="block text-sm font-medium text-slate-300 mb-1">Address</label>
@@ -118,7 +124,7 @@
         <div class="bg-card-background rounded-lg p-6 h-fit sticky top-8">
             <h2 class="text-2xl font-bold border-b border-card-border pb-4 mb-4">Your Order</h2>
             <div id="order-summary-items" class="space-y-4 max-h-60 overflow-y-auto pr-2">
-                </div>
+            </div>
              <div class="space-y-3 text-slate-300 border-t border-card-border pt-4 mt-4">
                 <div class="flex justify-between">
                     <span>Subtotal</span>
@@ -145,45 +151,37 @@
         const summaryTotal = document.getElementById('summary-total');
         const form = document.getElementById('address-form');
         
-        const cart = JSON.parse(localStorage.getItem('cart')) || [];
-        const buyNowProduct = JSON.parse(localStorage.getItem('buyNowProduct')) || null;
+        // Use cart data as the single source of truth for this page
+        const itemsToDisplay = JSON.parse(localStorage.getItem('cart')) || [];
 
-        let isBuyNowFlow = false;
-        let itemsToDisplay = [];
-
-        if (buyNowProduct) {
-            isBuyNowFlow = true;
-            itemsToDisplay = Array.isArray(buyNowProduct) ? buyNowProduct : [buyNowProduct];
-        } else {
-            itemsToDisplay = cart;
+        // Safety check: If there are no items, redirect to cart page
+        if (itemsToDisplay.length === 0) {
+            alert("Your cart is empty. Please add items before checking out.");
+            window.location.href = 'cart.html';
+            return;
         }
 
         function renderOrderSummary() {
             orderSummaryItems.innerHTML = '';
             let subtotal = 0;
 
-            if (itemsToDisplay.length === 0) {
-                orderSummaryItems.innerHTML = '<p class="text-slate-400">No items to display.</p>';
-            } else {
-                itemsToDisplay.forEach(item => {
-                    const itemTotal = (item.price || 0) * (item.quantity || 1);
-                    subtotal += itemTotal;
-
-                    const itemElement = document.createElement('div');
-                    itemElement.className = 'flex items-center gap-4';
-                    itemElement.innerHTML = `
-                        <div class="relative">
-                            <img src="${item.image || 'https://placehold.co/64x64/1E293B/E2E8F0?text=Image'}" alt="${item.name}" class="w-16 h-16 object-contain rounded-md bg-slate-700">
-                            <span class="absolute -top-2 -right-2 bg-primary-color text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">${item.quantity || 1}</span>
-                        </div>
-                        <div class="flex-grow">
-                            <p class="font-semibold">${item.name || 'Unknown Item'}</p>
-                        </div>
-                        <p class="font-bold">$${itemTotal.toFixed(2)}</p>
-                    `;
-                    orderSummaryItems.appendChild(itemElement);
-                });
-            }
+            itemsToDisplay.forEach(item => {
+                const itemTotal = (item.price || 0) * (item.quantity || 1);
+                subtotal += itemTotal;
+                const itemElement = document.createElement('div');
+                itemElement.className = 'flex items-center gap-4';
+                itemElement.innerHTML = `
+                    <div class="relative">
+                        <img src="${item.image || 'https://placehold.co/64x64/1E293B/E2E8F0?text=Image'}" alt="${item.name}" class="w-16 h-16 object-contain rounded-md bg-slate-700">
+                        <span class="absolute -top-2 -right-2 bg-primary-color text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">${item.quantity || 1}</span>
+                    </div>
+                    <div class="flex-grow">
+                        <p class="font-semibold">${item.name || 'Unknown Item'}</p>
+                    </div>
+                    <p class="font-bold">$${itemTotal.toFixed(2)}</p>
+                `;
+                orderSummaryItems.appendChild(itemElement);
+            });
             
             summarySubtotal.textContent = `$${subtotal.toFixed(2)}`;
             summaryTotal.textContent = `$${subtotal.toFixed(2)}`;
@@ -192,8 +190,9 @@
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             
-            const address = {
+            const shippingAddress = {
                 name: document.getElementById('name').value,
+                email: document.getElementById('email').value, // Capture email
                 addressLine1: document.getElementById('address-line1').value,
                 city: document.getElementById('city').value,
                 state: document.getElementById('state').value,
@@ -202,22 +201,21 @@
                 phone: document.getElementById('phone').value,
             };
 
-            const order = {
+            // Create a complete order object ready for the payment page
+            const finalOrder = {
                 items: itemsToDisplay,
-                shippingAddress: address,
+                shippingAddress: shippingAddress,
+                customerEmail: shippingAddress.email,
                 total: itemsToDisplay.reduce((sum, item) => sum + (item.price || 0) * (item.quantity || 1), 0),
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toISOString(),
+                status: 'pending-payment' // Set initial status
             };
 
-            localStorage.setItem('finalOrder', JSON.stringify(order));
-            
-            if (isBuyNowFlow) {
-                 localStorage.removeItem('buyNowProduct');
-            } else {
-                 // You might want to clear the cart only after successful payment
-                 // For now, following the original logic to clear it here.
-                 // localStorage.removeItem('cart'); 
-            }
+            // Save the complete order object for paymentgateway.html to use
+            localStorage.setItem('finalOrder', JSON.stringify(finalOrder));
+
+            // Clean up old item (if it exists from a previous logic)
+            localStorage.removeItem('buyNowProduct');
 
             window.location.href = 'paymentgateway.html'; 
         });
