@@ -469,8 +469,6 @@
     document.addEventListener('DOMContentLoaded', () => {
 
       // --- PRODUCT DATA ---
-      // When adding a new product, ensure it has this structure.
-      // The 'dateAdded' property is a string in ISO 8601 format (YYYY-MM-DDTHH:mm:ssZ)
       const defaultProducts = [
         { id: "prod_1", name: "Razer DeathAdder V3 Pro", price: 149.99, category: "Mouse", description: "An ultra-lightweight, ergonomic esports mouse.", images: ["https://assets2.razerzone.com/images/pnx.assets/618c0b652d83f88d7c177c3851586a1f/razer-deathadder-v3-pro-white.png", "https://assets2.razerzone.com/images/pnx.assets/0a29243eae24a49c4a45053fd28003f0/500x500-deathadder-v3-pro-black.png"], dateAdded: "2025-08-30T10:00:00Z", rating: 4.8, reviews: 120 },
         { id: "prod_2", name: "Logitech G Pro X Superlight", price: 159.99, salePrice: 139.99, category: "Mouse", description: "Meticulously designed in collaboration with the world’s leading esports pros.", images: ["https://resource.logitechg.com/w_692,c_lpad,ar_4:3,q_auto,f_auto,dpr_1.0/d_transparent.gif/content/dam/gaming/en/products/pro-x-superlight/pro-x-superlight-gallery-1.png"], dateAdded: "2025-07-15T10:00:00Z", rating: 4.9, reviews: 250 },
@@ -556,24 +554,19 @@
       // --- CORE LOGIC ---
       function initializeApp() {
         loader.style.display = 'flex';
-        // This will load products from localStorage, which is populated by database.html
         let storedProducts = JSON.parse(localStorage.getItem('products')) || [];
 
-        // If localStorage is empty, use the default products as a fallback
         if(storedProducts.length === 0) {
             storedProducts = defaultProducts;
         }
         
-        // Ensure all products have a unique ID
         allProducts = storedProducts.map((product, index) => {
             if (!product.id) {
-                // Create a more robust unique ID
-                product.id = `prod_${Date.now()}_${index}`;
+                product.id = `prod_${product.name.replace(/\s+/g, '-')}_${index}`;
             }
             return product;
         });
 
-        // Save back to localStorage in case new IDs were generated
         localStorage.setItem('products', JSON.stringify(allProducts));
 
         updateCounts();
@@ -590,7 +583,10 @@
 
       function addToCart(productId, quantity = 1) {
         const product = allProducts.find(p => p.id === productId);
-        if (!product) return;
+        if (!product) {
+            console.error("Could not find product to add to cart:", productId);
+            return;
+        }
 
         const existingItem = cart.find(item => item.id === productId);
         if (existingItem) {
@@ -619,7 +615,7 @@
           const priceHTML = p.salePrice ? `<p class="text-xl font-bold text-blue-400">$${p.salePrice.toFixed(2)}</p><p class="text-sm line-through text-slate-400">$${p.price.toFixed(2)}</p>` : `<p class="text-xl font-bold text-blue-400">$${(p.price || 0).toFixed(2)}</p>`;
           
           let badgeHTML = '';
-          if (p.dateAdded || p.createdAt) { // Check for both dateAdded and createdAt from database.html
+          if (p.dateAdded || p.createdAt) {
               const addedDate = new Date(p.dateAdded || p.createdAt);
               const today = new Date();
               const diffTime = Math.abs(today - addedDate);
@@ -700,8 +696,35 @@
           document.getElementById('product-description').innerHTML = product.description || "No description available.";
           
           updateModalImage();
+          
+          // *** FIX STARTS HERE: Correctly assign click events every time the modal opens ***
+          const overlayAddToCartBtn = document.getElementById('overlay-add-to-cart');
+          const overlayBuyNowBtn = document.getElementById('overlay-buy-now');
 
-          document.getElementById('overlay-add-to-cart').onclick = () => addToCart(product.id);
+          // Clone and replace to remove any old event listeners
+          const newAddToCartBtn = overlayAddToCartBtn.cloneNode(true);
+          overlayAddToCartBtn.parentNode.replaceChild(newAddToCartBtn, overlayAddToCartBtn);
+          
+          const newBuyNowBtn = overlayBuyNowBtn.cloneNode(true);
+          overlayBuyNowBtn.parentNode.replaceChild(newBuyNowBtn, overlayBuyNowBtn);
+
+          // Add new event listeners
+          newAddToCartBtn.addEventListener('click', () => addToCart(product.id));
+
+          newBuyNowBtn.addEventListener('click', () => {
+              const itemToBuy = {
+                  id: product.id,
+                  name: product.name,
+                  price: product.salePrice || product.price,
+                  quantity: 1,
+                  image: product.images[0]
+              };
+              // Replace the entire cart with this single item for the "Buy Now" flow
+              localStorage.setItem('cart', JSON.stringify([itemToBuy]));
+              window.location.href = 'cart.html';
+          });
+          // *** FIX ENDS HERE ***
+
           document.getElementById('submit-review').onclick = () => submitReview(product.id);
           document.getElementById('get-ai-insights-btn').onclick = () => getAIInsights(product);
           document.getElementById('summarize-reviews-btn').onclick = () => getAIReviewSummary(product.id);
@@ -716,7 +739,6 @@
           
           document.getElementById('review-summary-container').classList.add('hidden');
           document.getElementById('review-summary-container').innerHTML = '';
-
 
           loadProductReviews(product.id);
           
@@ -745,7 +767,7 @@
         document.getElementById('review-count').textContent = `(${reviews.length} reviews)`;
         
         const list = document.getElementById('reviews-list');
-        list.innerHTML = ''; // Clear previous reviews
+        list.innerHTML = '';
 
         if (reviews.length > 0) {
              list.innerHTML = reviews.map(r => `
@@ -876,7 +898,6 @@
             }
             localStorage.setItem('wishlist', JSON.stringify(wishlist));
             updateCounts();
-            // Re-render products to update the heart icon
             applyFiltersAndSort(document.querySelector('#category-nav a.bg-blue-500\/20')?.dataset.category || 'All Products');
             renderWishlistMenu();
         }
@@ -890,6 +911,7 @@
 
             const itemsHTML = wishlist.map(id => {
                 const product = allProducts.find(p => p.id === id);
+                if (!product) return ''; // Failsafe for missing product
                 return `<div class="flex items-center gap-2 p-2 hover:bg-slate-700/50">
                     <img src="${(product.images && product.images.length > 0) ? product.images[0] : ''}" class="w-10 h-10 object-contain rounded">
                     <div class="flex-grow"><p class="text-sm truncate">${product.name}</p></div>
@@ -901,7 +923,6 @@
                 <div id="wishlist-menu-items" class="max-h-60 overflow-y-auto">${itemsHTML}</div>
                 <div class="p-2 border-t border-slate-700 space-y-2">
                     <button id="wishlist-add-all-to-cart" class="w-full text-center bg-blue-600 hover:bg-blue-700 text-white text-sm py-2 rounded">Add All to Cart</button>
-                    <button id="wishlist-buy-all" class="w-full text-center bg-green-600 hover:bg-green-700 text-white text-sm py-2 rounded">Buy All Items</button>
                     <button id="wishlist-clear" class="w-full text-center bg-red-600 hover:bg-red-700 text-white text-sm py-2 rounded">Clear Wishlist</button>
                 </div>
             `;
@@ -1007,7 +1028,7 @@
         
         function displaySetupResults(recs) {
             const content = document.getElementById('setup-result-content');
-            content.innerHTML = ''; // Clear spinner
+            content.innerHTML = '';
             
             ['mouse', 'keyboard', 'headset'].forEach(category => {
                 if (recs[category] && recs[category].id) {
@@ -1082,14 +1103,12 @@
           }
       });
       
-      // Comparison Listeners
       document.getElementById('clear-comparison-btn').addEventListener('click', () => {
           comparisonList = [];
           updateComparisonTray();
       });
       document.getElementById('compare-now-btn').addEventListener('click', getAIComparison);
       
-      // Wishlist Menu Listeners
       const wishlistBtn = document.getElementById('wishlist-btn');
       const wishlistMenu = document.getElementById('wishlist-menu');
       wishlistBtn.addEventListener('click', (e) => {
@@ -1113,23 +1132,13 @@
           if (e.target.id === 'wishlist-add-all-to-cart') {
               wishlist.forEach(id => addToCart(id));
               wishlist = [];
-              localStorage.setItem('cart', JSON.stringify(cart));
               localStorage.setItem('wishlist', JSON.stringify(wishlist));
               updateCounts();
               renderWishlistMenu();
               showNotification("All wishlist items added to cart.");
           }
-          if (e.target.id === 'wishlist-buy-all') {
-              const itemsToBuy = wishlist.map(id => {
-                  const product = allProducts.find(p=>p.id === id);
-                  return { name: product.name, price: product.salePrice || product.price, quantity: 1 };
-              });
-              localStorage.setItem('buyNowProduct', JSON.stringify(itemsToBuy));
-              window.location.href = 'address.html';
-          }
       });
       
-      // Close Modals & Menus Listeners
       document.addEventListener('click', (e) => {
         if (!wishlistBtn.contains(e.target) && !wishlistMenu.contains(e.target)) {
             wishlistMenu.classList.add('hidden');
@@ -1146,7 +1155,6 @@
       document.getElementById('close-comparison-modal').addEventListener('click', () => document.getElementById('comparison-modal-overlay').classList.remove('visible'));
       document.getElementById('close-setup-builder-modal').addEventListener('click', () => document.getElementById('setup-builder-overlay').classList.remove('visible'));
 
-      // AI Setup Builder Listeners
       document.getElementById('open-setup-builder-btn').addEventListener('click', () => {
           document.getElementById('setup-builder-overlay').classList.add('visible');
       });
@@ -1156,11 +1164,9 @@
           document.getElementById('setup-builder-result').style.display = 'none';
       });
 
-
       document.getElementById('hamburger').addEventListener('click', () => document.querySelector('.sidebar').classList.toggle('-translate-x-full'));
       document.getElementById('category-toggle').addEventListener('click', () => document.getElementById('category-menu').classList.toggle('translate-x-full'));
 
-      // --- NOTIFICATION SYSTEM ---
       function showNotification(message, type = 'success') {
         const container = document.getElementById('notification-container');
         const notification = document.createElement('div');
@@ -1181,9 +1187,10 @@
 
       initializeApp();
     });
-  </script>
+</script>
 </body>
 </html>
+
 
 
 
