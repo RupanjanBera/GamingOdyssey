@@ -5,351 +5,152 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gaming Odyssey - Thank You for Your Order</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
+    :root {
+      --primary-color: #3B82F6;
+      --secondary-color: #8B5CF6;
+      --background-color: #0F172A;
+      --text-color: #E2E8F0;
+      --card-background: #1E293B;
+      --card-border: #334155;
+      --font-family: 'Poppins', sans-serif;
+    }
     body {
-      font-family: 'Poppins', sans-serif;
-      background-color: #0F172A;
-      color: #F1F5F9;
-      scroll-behavior: smooth;
-      overflow-x: hidden;
+      font-family: var(--font-family);
+      background-color: var(--background-color);
+      color: var(--text-color);
       -webkit-font-smoothing: antialiased;
     }
-    .gradient-glow {
-      box-shadow: 0 0 6px rgba(59, 130, 246, 0.2);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .gradient-glow:hover {
-      box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
-      transform: translateY(-3px);
-    }
-    .sidebar {
-      background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
-      box-shadow: 2px 0 6px rgba(59, 130, 246, 0.1);
-    }
-    .content-bg {
-      background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(217, 70, 239, 0.15), #0F172A);
-      position: relative;
-      overflow: hidden;
-    }
-    .content-bg::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.2), transparent 70%);
-      animation: glow 20s ease-in-out infinite;
-      opacity: 0.5;
-    }
-    @keyframes glow {
-      0%, 100% { opacity: 0.5; }
-      50% { opacity: 0.7; }
-    }
-    .fade-in {
-      opacity: 0;
-      transform: translateY(15px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
     .submit-btn {
-      background: linear-gradient(90deg, #3B82F6, #D946EF);
-      color: #0F172A;
-      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+      color: white;
       font-weight: 600;
-      padding: 1rem 1.5rem;
       border-radius: 0.5rem;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      touch-action: manipulation;
-      font-size: 1rem;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     }
     .submit-btn:hover {
-      transform: translateY(-2px);
-       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
     }
-    .nav-link, #mobile-menu a {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      transition: color 0.2s ease;
-      font-family: 'Poppins', sans-serif;
-      font-weight: 600;
-      font-size: 1.0625rem;
-      padding: 0.5rem 0;
+    .outline-btn {
+        background-color: transparent;
+        border: 1px solid var(--card-border);
     }
-    .nav-link::after, #mobile-menu a::after {
-      content: '';
-      position: absolute;
-      width: 0;
-      height: 2px;
-      bottom: 0;
-      left: 0;
-      background: linear-gradient(to right, #3B82F6, #D946EF);
-      transition: width 0.2s ease;
-    }
-    .nav-link:hover::after, #mobile-menu a:hover::after {
-      width: 100%;
-    }
-    .nav-link:hover, #mobile-menu a:hover {
-      color: #3B82F6;
-    }
-    .mobile-menu {
-      background: linear-gradient(180deg, #1E293B, #0F172A);
-      opacity: 0;
-      transform: translateX(-100%);
-      transition: opacity 0.3s ease, transform 0.3s ease;
-    }
-    .mobile-menu.active {
-      opacity: 1;
-      transform: translateX(0);
-    }
-    @media (max-width: 640px) {
-      .submit-btn {
-        width: 100%;
-        padding: 0.875rem;
-        font-size: 0.9375rem;
-      }
-      .nav-link, #mobile-menu a {
-        font-size: 1rem;
-      }
+    .outline-btn:hover {
+        background-color: var(--card-border);
     }
   </style>
 </head>
-<body>
-  <!-- Sidebar -->
-  <div class="fixed top-0 left-0 h-full w-64 sidebar gradient-glow z-20 hidden md:block">
-    <div class="p-4 sm:p-6">
-      <h1 class="text-2xl font-bold text-white leading-relaxed">Gaming Odyssey</h1>
-      <nav class="mt-8 space-y-3">
-        <a href="index.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
-          <span>Home</span>
-        </a>
-        <a href="store.html" class="flex items-center space-x-3 text-[#3B82F6] font-semibold nav-link">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
-          <span>Store</span>
-        </a>
-        <a href="tournaments.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.196-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.783-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg>
-          <span>Tournaments</span>
-        </a>
-        <a href="#" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10l2-2h8a1 1 0 001-1z" /></svg>
-          <span>Track Order</span>
-        </a>
-        <a href="contactus.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
-          <span>Contact Us</span>
-        </a>
-        <a href="aboutus.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-          <span>About Us</span>
-        </a>
-      </nav>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div id="order-success" class="max-w-3xl w-full bg-card-background rounded-lg shadow-2xl p-6 md:p-10 text-center">
+    <div class="w-20 h-20 mx-auto bg-green-500/10 rounded-full flex items-center justify-center mb-6">
+        <i class="fas fa-check-circle text-5xl text-green-400"></i>
+    </div>
+    <h1 class="text-3xl md:text-4xl font-bold text-white mb-3">Thank You for Your Order!</h1>
+    <p class="text-slate-400 mb-6">Your order has been placed successfully. A confirmation has been sent to <strong id="customer-email" class="text-slate-300">your email</strong>.</p>
+    
+    <div class="bg-slate-900/50 p-6 rounded-lg text-left mb-8">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center sm:text-left">
+            <div>
+                <p class="text-sm text-slate-400">Order ID</p>
+                <p id="order-id" class="font-semibold text-white">N/A</p>
+            </div>
+            <div>
+                <p class="text-sm text-slate-400">Total Amount</p>
+                <p id="order-total" class="font-semibold text-white">$0.00</p>
+            </div>
+             <div>
+                <p class="text-sm text-slate-400">Payment Method</p>
+                <p id="payment-method" class="font-semibold text-white">N/A</p>
+            </div>
+        </div>
+        
+        <div class="border-t border-card-border my-6"></div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <h3 class="font-bold text-lg mb-3 text-white">Items Ordered</h3>
+                <div id="order-items" class="space-y-3 max-h-48 overflow-y-auto pr-2">
+                    </div>
+            </div>
+             <div>
+                <h3 class="font-bold text-lg mb-3 text-white">Shipping To</h3>
+                <div id="shipping-address" class="text-slate-400 leading-relaxed">
+                    </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="flex flex-col sm:flex-row justify-center gap-4">
+      <a href="store.html" class="submit-btn w-full sm:w-auto py-3 px-6">Continue Shopping</a>
+      <a href="index.html" class="outline-btn w-full sm:w-auto py-3 px-6 rounded-lg text-slate-300">Back to Home</a>
     </div>
   </div>
 
-  <!-- Mobile Hamburger Menu -->
-  <div class="md:hidden fixed top-0 left-0 w-full bg-[#1E293B] z-30 p-4 flex justify-between items-center gradient-glow">
-    <span class="text-[#F1F5F9] font-semibold text-xl">Gaming Odyssey</span>
-    <button id="hamburger" class="text-[#3B82F6]">
-      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-    </button>
-  </div>
-  <div id="mobile-menu" class="hidden md:hidden fixed top-0 left-0 w-full h-full bg-[#1E293B] z-20 p-4 mobile-menu">
-    <button id="close-menu" class="absolute top-4 right-4 text-[#3B82F6] gradient-glow rounded-full p-2">
-      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-    </button>
-    <nav class="space-y-3 mt-12">
-        <a href="index.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
-          <span>Home</span>
-        </a>
-        <a href="store.html" class="flex items-center space-x-3 text-[#3B82F6] font-semibold nav-link">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
-          <span>Store</span>
-        </a>
-        <a href="tournaments.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.196-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.783-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg>
-          <span>Tournaments</span>
-        </a>
-        <a href="#" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10l2-2h8a1 1 0 001-1z" /></svg>
-          <span>Track Order</span>
-        </a>
-        <a href="contactus.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
-          <span>Contact Us</span>
-        </a>
-        <a href="aboutus.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-          <span>About Us</span>
-        </a>
-    </nav>
+  <div id="order-error" class="hidden max-w-lg w-full bg-card-background rounded-lg p-10 text-center">
+       <div class="w-20 h-20 mx-auto bg-red-500/10 rounded-full flex items-center justify-center mb-6">
+        <i class="fas fa-exclamation-triangle text-5xl text-red-400"></i>
+    </div>
+      <h1 class="text-3xl font-bold text-white mb-3">Order Not Found</h1>
+      <p class="text-slate-400 mb-6">We couldn't find any recent order details. Please check your email for confirmation or start a new order from the store.</p>
+      <a href="store.html" class="submit-btn w-full py-3 px-6">Go to Store</a>
   </div>
 
-  <!-- Main Content -->
-  <div class="md:ml-64">
-    <section class="content-bg py-16 px-6 min-h-screen">
-      <div class="max-w-2xl mx-auto bg-[#1E293B] p-8 rounded-lg gradient-glow fade-in text-center">
-        <h1 class="text-4xl font-bold text-white mb-4">Thank You for Your Order! 🎉</h1>
-        <p class="text-xl text-[#F1F5F9] mb-6">
-          Your gaming adventure awaits! We're thrilled to have you on board with <span class="text-[#3B82F6]">Gaming Odyssey</span>. Your order has been successfully placed and is now being processed.
-        </p>
-        <div class="mb-6 bg-gray-900/50 p-6 rounded-lg">
-          <p class="text-[#F1F5F9] mb-2">Order ID: <span id="orderId" class="text-[#3B82F6] font-semibold">Not Available</span></p>
-          <p class="text-[#F1F5F9] mb-2">Total: <span id="amount" class="text-[#3B82F6] font-semibold">$0.00</span></p>
-          <p class="text-[#F1F5F9] mb-4">Payment Method: <span id="paymentMethod" class="text-[#3B82F6] font-semibold">Not Specified</span></p>
-          <div class="text-left border-t border-gray-700 pt-4">
-            <h3 class="text-xl font-bold text-white mb-2">Shipping Address</h3>
-            <p id="shipping-address-name" class="text-[#F1F5F9] font-semibold"></p>
-            <p id="shipping-address-line1" class="text-gray-400"></p>
-            <p id="shipping-address-line2" class="text-gray-400"></p>
-            <p id="shipping-address-city-state-zip" class="text-gray-400"></p>
-            <p id="shipping-address-country" class="text-gray-400"></p>
-            <p id="shipping-address-phone" class="text-gray-400"></p>
-          </div>
-        </div>
-        <div id="paymentMessage" class="text-gray-300 mb-6 p-4 bg-blue-500/10 rounded-lg">
-          <p id="upiMessage" class="hidden"><strong>UPI Payment</strong>: Your payment is pending manual verification. You'll receive a confirmation soon.</p>
-          <p id="codMessage" class="hidden"><strong>Cash on Delivery</strong>: Please have the exact amount ready for delivery.</p>
-          <p id="defaultMessage">Track your order or contact us at <a href="mailto:support@gamingodyssey.in" class="text-[#3B82F6] hover:text-[#D946EF]">support@gamingodyssey.in</a> or 6290994382 for assistance.</p>
-        </div>
-        <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-          <a href="#" class="submit-btn">Track Order</a>
-          <a href="index.html" class="submit-btn">Back to Home</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-gray-300">
-      <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
-          <div class="space-y-4">
-            <h3 class="text-sm font-semibold text-gray-400 tracking-wider uppercase">Company</h3>
-            <ul class="space-y-2">
-              <li><a href="aboutus.html" class="text-base text-gray-300 hover:text-white">About Us</a></li>
-              <li><a href="#" class="text-base text-gray-300 hover:text-white">Careers</a></li>
-              <li><a href="#" class="text-base text-gray-300 hover:text-white">Press</a></li>
-            </ul>
-          </div>
-          <div class="space-y-4">
-            <h3 class="text-sm font-semibold text-gray-400 tracking-wider uppercase">Support</h3>
-            <ul class="space-y-2">
-              <li><a href="contactus.html" class="text-base text-gray-300 hover:text-white">Contact Us</a></li>
-              <li><a href="#" class="text-base text-gray-300 hover:text-white">FAQs</a></li>
-              <li><a href="#" class="text-base text-gray-300 hover:text-white">Track Order</a></li>
-            </ul>
-          </div>
-          <div class="space-y-4">
-            <h3 class="text-sm font-semibold text-gray-400 tracking-wider uppercase">Legal</h3>
-            <ul class="space-y-2">
-              <li><a href="terms.html" class="text-base text-gray-300 hover:text-white">Terms & Conditions</a></li>
-              <li><a href="#" class="text-base text-gray-300 hover:text-white">Privacy Policy</a></li>
-              <li><a href="#" class="text-base text-gray-300 hover:text-white">Cookie Policy</a></li>
-            </ul>
-          </div>
-          <div class="space-y-4">
-            <h3 class="text-sm font-semibold text-gray-400 tracking-wider uppercase">Connect</h3>
-            <div class="flex space-x-4">
-              <a href="https://www.instagram.com/noticedveil" target="_blank" class="text-gray-400 hover:text-white transition">
-                <span class="sr-only">Instagram</span>
-                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.024.06 1.378.06 3.808s-.012 2.784-.06 3.808c-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.024.048-1.378.06-3.808.06s-2.784-.012-3.808-.06c-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.048-1.024-.06-1.378-.06-3.808s.012-2.784.06-3.808c.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 016.343 2.525c.636-.247 1.363-.416 2.427-.465C9.792 2.013 10.146 2 12.315 2zm-1.161 1.943c-1.016.046-1.634.208-2.185.41a3.003 3.003 0 00-1.15 1.15c-.202.551-.364 1.169-.41 2.185-.046 1.002-.058 1.328-.058 3.659s.012 2.657.058 3.659c.046 1.016.208 1.634.41 2.185a3.003 3.003 0 001.15 1.15c.551.202 1.169.364 2.185.41 1.002.046 1.328.058 3.659.058s2.657-.012 3.659-.058c1.016-.046 1.634-.208 2.185-.41a3.003 3.003 0 001.15-1.15c.202-.551.364-1.169.41-2.185.046-1.002.058-1.328.058-3.659s-.012-2.657-.058-3.659c-.046-1.016-.208-1.634-.41-2.185a3.003 3.003 0 00-1.15-1.15c-.551-.202-1.169-.364-2.185-.41-1.002-.046-1.328-.058-3.659-.058s-2.657.012-3.659.058zM12 6.865a5.135 5.135 0 100 10.27 5.135 5.135 0 000-10.27zm0 8.378a3.243 3.243 0 110-6.486 3.243 3.243 0 010 6.486zm5.135-8.87a1.201 1.201 0 100-2.402 1.201 1.201 0 000 2.402z" clip-rule="evenodd" /></svg>
-              </a>
-              <a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="text-gray-400 hover:text-white transition">
-                  <span class="sr-only">YouTube</span>
-                  <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M19.812 5.418c.861.23 1.538.907 1.768 1.768C21.998 8.78 22 12 22 12s0 3.22-.42 4.814c-.23.861-.907 1.538-1.768 1.768C18.218 19 12 19 12 19s-6.218 0-7.812-.42c-.861-.23-1.538-.907-1.768-1.768C2 15.22 2 12 2 12s0-3.22.42-4.814c.23-.861.907-1.538 1.768-1.768C5.782 5 12 5 12 5s6.218 0 7.812.418zM9.5 15.5V8.5l6 3.5-6 3.5z" clip-rule="evenodd" /></svg>
-              </a>
-              <a href="https://www.facebook.com" target="_blank" class="text-gray-400 hover:text-white transition">
-                <span class="sr-only">Facebook</span>
-                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" /></svg>
-              </a>
-            </div>
-          </div>
-        </div>
-        <div class="mt-8 border-t border-gray-700 pt-8 text-center">
-          <p class="text-base text-gray-400">&copy; 2025 Gaming Odyssey. All rights reserved.</p>
-        </div>
-      </div>
-    </footer>
-  </div>
 
   <script>
-    // --- AUTHENTICATION LOGIC REMOVED ---
+    document.addEventListener('DOMContentLoaded', () => {
+        const lastOrder = JSON.parse(localStorage.getItem('lastOrder'));
 
-    // Get URL query parameters
-    const urlParams = new URLSearchParams(window.location.search);
-    const orderId = urlParams.get('orderId') || 'Not Available';
-    const amount = urlParams.get('amount') || '0.00';
-    const paymentMethod = urlParams.get('method') || 'Not Specified';
-
-    // Update order details
-    document.getElementById('orderId').textContent = orderId;
-    document.getElementById('amount').textContent = `$${parseFloat(amount).toFixed(2)}`;
-    document.getElementById('paymentMethod').textContent = paymentMethod;
-
-    // Show payment-specific messages
-    const upiMessage = document.getElementById('upiMessage');
-    const codMessage = document.getElementById('codMessage');
-    const defaultMessage = document.getElementById('defaultMessage');
-
-    if (paymentMethod === 'UPI') {
-      upiMessage.classList.remove('hidden');
-      defaultMessage.classList.add('hidden');
-    } else if (paymentMethod === 'Cash on Delivery') {
-      codMessage.classList.remove('hidden');
-      defaultMessage.classList.add('hidden');
-    }
-
-    // Load and display shipping address
-    const shippingAddress = JSON.parse(localStorage.getItem('finalShippingAddress')) || {};
-
-    const nameElement = document.getElementById('shipping-address-name');
-    const line1Element = document.getElementById('shipping-address-line1');
-    const line2Element = document.getElementById('shipping-address-line2');
-    const cityStateZipElement = document.getElementById('shipping-address-city-state-zip');
-    const countryElement = document.getElementById('shipping-address-country');
-    const phoneElement = document.getElementById('shipping-address-phone');
-
-    nameElement.textContent = shippingAddress.name || 'Not Provided';
-    line1Element.textContent = shippingAddress.addressLine1 || '';
-    line2Element.textContent = shippingAddress.addressLine2 || '';
-    cityStateZipElement.textContent = `${shippingAddress.city || ''}${shippingAddress.city && shippingAddress.state ? ', ' : ''}${shippingAddress.state || ''}${shippingAddress.state && shippingAddress.zip ? ' ' : ''}${shippingAddress.zip || ''}`.trim() || '';
-    countryElement.textContent = shippingAddress.country || '';
-    phoneElement.textContent = shippingAddress.phone || '';
-
-    // Hamburger Menu Toggle
-    const hamburger = document.getElementById('hamburger');
-    const mobileMenu = document.getElementById('mobile-menu');
-    const closeMenu = document.getElementById('close-menu');
-    hamburger.addEventListener('click', () => {
-      mobileMenu.classList.remove('hidden');
-      mobileMenu.classList.add('active');
-    });
-    closeMenu.addEventListener('click', () => {
-      mobileMenu.classList.remove('active');
-       setTimeout(() => {
-          mobileMenu.classList.add('hidden');
-      }, 300)
-    });
-
-    // Fade-in Animation on Scroll
-    const fadeIns = document.querySelectorAll('.fade-in');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
+        if (!lastOrder) {
+            document.getElementById('order-success').style.display = 'none';
+            document.getElementById('order-error').style.display = 'block';
+            return;
         }
-      });
-    }, { threshold: 0.1 });
-    fadeIns.forEach(element => observer.observe(element));
+
+        // Populate order details
+        document.getElementById('customer-email').textContent = lastOrder.customerEmail || 'your email';
+        document.getElementById('order-id').textContent = lastOrder.orderId;
+        document.getElementById('order-total').textContent = `$${lastOrder.total.toFixed(2)}`;
+        document.getElementById('payment-method').textContent = lastOrder.paymentMethod;
+
+        // Populate Shipping Address
+        const addr = lastOrder.shippingAddress;
+        const shippingDiv = document.getElementById('shipping-address');
+        shippingDiv.innerHTML = `
+            <p class="font-semibold text-slate-300">${addr.name}</p>
+            <p>${addr.addressLine1}</p>
+            <p>${addr.city}, ${addr.state} ${addr.zip}</p>
+            <p>${addr.country}</p>
+            <p>${addr.phone}</p>
+        `;
+
+        // Populate Order Items
+        const itemsContainer = document.getElementById('order-items');
+        itemsContainer.innerHTML = '';
+        lastOrder.items.forEach(item => {
+            const itemElement = document.createElement('div');
+            itemElement.className = 'flex justify-between items-start text-sm';
+            itemElement.innerHTML = `
+                <div>
+                    <p class="font-semibold text-slate-300">${item.name}</p>
+                    <p class="text-slate-400">Qty: ${item.quantity}</p>
+                </div>
+                <p class="text-slate-300 font-medium">$${(item.price * item.quantity).toFixed(2)}</p>
+            `;
+            itemsContainer.appendChild(itemElement);
+        });
+
+        // Clean up local storage for next order
+        localStorage.removeItem('finalOrder');
+        localStorage.removeItem('cart');
+        localStorage.removeItem('buyNowProduct');
+    });
   </script>
 </body>
 </html>
+
 
