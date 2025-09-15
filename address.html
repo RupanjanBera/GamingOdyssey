@@ -74,15 +74,9 @@
         <div>
           <h2 class="text-2xl font-bold mb-6">Shipping Information</h2>
           <form id="address-form" class="space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-               <div>
-                <label for="name" class="block text-sm font-medium text-slate-300 mb-1">Full Name</label>
-                <input type="text" id="name" name="name" class="w-full p-3 rounded-md input-field" placeholder="John Doe" required>
-              </div>
-              <div>
-                <label for="email" class="block text-sm font-medium text-slate-300 mb-1">Email Address</label>
-                <input type="email" id="email" name="email" class="w-full p-3 rounded-md input-field" placeholder="you@example.com" required>
-              </div>
+            <div>
+              <label for="name" class="block text-sm font-medium text-slate-300 mb-1">Full Name</label>
+              <input type="text" id="name" name="name" class="w-full p-3 rounded-md input-field" placeholder="John Doe" required>
             </div>
             <div>
               <label for="address-line1" class="block text-sm font-medium text-slate-300 mb-1">Address</label>
@@ -151,22 +145,20 @@
         const summaryTotal = document.getElementById('summary-total');
         const form = document.getElementById('address-form');
         
-        // This page should only ever use the main 'cart' from localStorage.
-        // The 'buyNowProduct' logic is handled in the store page by modifying the cart itself.
-        const itemsToDisplay = JSON.parse(localStorage.getItem('cart')) || [];
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-        // Safety check: If there are no items, the user can't check out.
-        if (itemsToDisplay.length === 0) {
-            alert("Your cart is empty. Please add items before checking out.");
+        // Safety Check: If the cart is empty, the user cannot proceed.
+        if (cart.length === 0) {
+            alert("Your cart is empty. You will be redirected.");
             window.location.href = 'cart.html';
-            return; // Stop the rest of the script from running
+            return; // Stop the script
         }
 
         function renderOrderSummary() {
             orderSummaryItems.innerHTML = '';
             let subtotal = 0;
 
-            itemsToDisplay.forEach(item => {
+            cart.forEach(item => {
                 const itemTotal = (item.price || 0) * (item.quantity || 1);
                 subtotal += itemTotal;
                 const itemElement = document.createElement('div');
@@ -189,13 +181,25 @@
         }
 
         form.addEventListener('submit', (e) => {
-            // This event only fires if all 'required' fields are filled.
             e.preventDefault();
             
-            // 1. Gather all data from the form
-            const shippingAddress = {
+            // --- FIX: MANUAL VALIDATION CHECK ---
+            // This loop ensures every required field has a value.
+            const requiredFields = ['name', 'address-line1', 'city', 'state', 'zip', 'country', 'phone'];
+            for (const id of requiredFields) {
+                const input = document.getElementById(id);
+                // .trim() removes whitespace from the start and end of the value
+                if (!input.value.trim()) {
+                    // Get the label text for a user-friendly message
+                    const label = input.previousElementSibling.textContent;
+                    alert(`Please fill out the "${label}" field.`);
+                    input.focus(); // Focus on the empty field
+                    return; // Stop the function here
+                }
+            }
+
+            const address = {
                 name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
                 addressLine1: document.getElementById('address-line1').value,
                 city: document.getElementById('city').value,
                 state: document.getElementById('state').value,
@@ -204,27 +208,24 @@
                 phone: document.getElementById('phone').value,
             };
 
-            // 2. Create the complete 'finalOrder' object
-            const finalOrder = {
-                items: itemsToDisplay,
-                shippingAddress: shippingAddress,
-                total: itemsToDisplay.reduce((sum, item) => sum + (item.price || 0) * (item.quantity || 1), 0),
+            const order = {
+                items: cart,
+                shippingAddress: address,
+                total: cart.reduce((sum, item) => sum + (item.price || 0) * (item.quantity || 1), 0),
                 timestamp: new Date().toISOString()
             };
 
-            // 3. Save it for the payment page to use
-            localStorage.setItem('finalOrder', JSON.stringify(finalOrder));
-            
-            // 4. Redirect to the payment page
+            // Save the prepared order and redirect
+            localStorage.setItem('finalOrder', JSON.stringify(order));
             window.location.href = 'paymentgateway.html'; 
         });
 
-        // Run the summary render when the page loads
         renderOrderSummary();
     });
   </script>
 </body>
 </html>
+
 
 
 
