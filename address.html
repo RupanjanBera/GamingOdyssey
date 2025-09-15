@@ -75,7 +75,7 @@
           <h2 class="text-2xl font-bold mb-6">Shipping Information</h2>
           <form id="address-form" class="space-y-4">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
+               <div>
                 <label for="name" class="block text-sm font-medium text-slate-300 mb-1">Full Name</label>
                 <input type="text" id="name" name="name" class="w-full p-3 rounded-md input-field" placeholder="John Doe" required>
               </div>
@@ -151,14 +151,15 @@
         const summaryTotal = document.getElementById('summary-total');
         const form = document.getElementById('address-form');
         
-        // Use cart data as the single source of truth for this page
+        // This page should only ever use the main 'cart' from localStorage.
+        // The 'buyNowProduct' logic is handled in the store page by modifying the cart itself.
         const itemsToDisplay = JSON.parse(localStorage.getItem('cart')) || [];
 
-        // Safety check: If there are no items, redirect to cart page
+        // Safety check: If there are no items, the user can't check out.
         if (itemsToDisplay.length === 0) {
             alert("Your cart is empty. Please add items before checking out.");
             window.location.href = 'cart.html';
-            return;
+            return; // Stop the rest of the script from running
         }
 
         function renderOrderSummary() {
@@ -188,11 +189,13 @@
         }
 
         form.addEventListener('submit', (e) => {
+            // This event only fires if all 'required' fields are filled.
             e.preventDefault();
             
+            // 1. Gather all data from the form
             const shippingAddress = {
                 name: document.getElementById('name').value,
-                email: document.getElementById('email').value, // Capture email
+                email: document.getElementById('email').value,
                 addressLine1: document.getElementById('address-line1').value,
                 city: document.getElementById('city').value,
                 state: document.getElementById('state').value,
@@ -201,29 +204,27 @@
                 phone: document.getElementById('phone').value,
             };
 
-            // Create a complete order object ready for the payment page
+            // 2. Create the complete 'finalOrder' object
             const finalOrder = {
                 items: itemsToDisplay,
                 shippingAddress: shippingAddress,
-                customerEmail: shippingAddress.email,
                 total: itemsToDisplay.reduce((sum, item) => sum + (item.price || 0) * (item.quantity || 1), 0),
-                timestamp: new Date().toISOString(),
-                status: 'pending-payment' // Set initial status
+                timestamp: new Date().toISOString()
             };
 
-            // Save the complete order object for paymentgateway.html to use
+            // 3. Save it for the payment page to use
             localStorage.setItem('finalOrder', JSON.stringify(finalOrder));
-
-            // Clean up old item (if it exists from a previous logic)
-            localStorage.removeItem('buyNowProduct');
-
+            
+            // 4. Redirect to the payment page
             window.location.href = 'paymentgateway.html'; 
         });
 
+        // Run the summary render when the page loads
         renderOrderSummary();
     });
   </script>
 </body>
 </html>
+
 
 
