@@ -71,10 +71,10 @@
                 <div id="payment-details-container">
                     <div id="Card-container" class="space-y-4">
                         <h3 class="font-semibold text-lg">Enter Card Details</h3>
-                        <input type="text" placeholder="Card Number" class="input-field w-full p-3 rounded-md" required>
+                        <input type="text" placeholder="Card Number" class="input-field w-full p-3 rounded-md">
                         <div class="grid grid-cols-2 gap-4">
-                            <input type="text" placeholder="MM / YY" class="input-field w-full p-3 rounded-md" required>
-                            <input type="text" placeholder="CVV" class="input-field w-full p-3 rounded-md" required>
+                            <input type="text" placeholder="MM / YY" class="input-field w-full p-3 rounded-md">
+                            <input type="text" placeholder="CVV" class="input-field w-full p-3 rounded-md">
                         </div>
                     </div>
                     <div id="PayPal-container" class="hidden text-center"><div id="paypal-button-container"></div></div>
@@ -111,92 +111,85 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    // --- ELEMENT REFERENCES & STATE ---
     const finalOrder = JSON.parse(localStorage.getItem('finalOrder'));
     const paymentForm = document.getElementById('payment-form');
     const confirmBtn = document.getElementById('confirm-payment-btn');
     let selectedPaymentMethod = 'Card';
 
-    // --- INITIAL CHECK ---
     if (!finalOrder) {
         document.body.innerHTML = `<div class="h-screen w-full flex flex-col items-center justify-center text-center p-4"><h1 class="text-2xl font-bold">No order found!</h1><p class="text-slate-400">Your checkout session is empty.</p><a href="cart.html" class="submit-btn mt-4 py-2 px-6">Back to Cart</a></div>`;
         return;
     }
 
-    // --- RENDER FUNCTIONS ---
     function renderOrderSummary() {
         const container = document.getElementById('order-summary-items');
         container.innerHTML = finalOrder.items.map(item => `<div class="flex items-center gap-4 py-2"><div class="relative"><img src="${item.image || 'https://placehold.co/64x64/1E293B/E2E8F0?text=I'}" alt="${item.name}" class="w-16 h-16 object-contain rounded-md bg-slate-700"><span class="absolute -top-2 -right-2 bg-primary-color text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">${item.quantity}</span></div><div class="flex-grow"><p class="font-semibold">${item.name}</p></div><p class="font-bold">$${(item.price * item.quantity).toFixed(2)}</p></div>`).join('');
         document.getElementById('summary-subtotal').textContent = `$${finalOrder.total.toFixed(2)}`;
         document.getElementById('summary-total').textContent = `$${finalOrder.total.toFixed(2)}`;
     }
+
     function renderShippingDetails() {
         const addr = finalOrder.shippingAddress;
         document.getElementById('shipping-details').innerHTML = `<p class="font-bold">${addr.name}</p><p>${addr.addressLine1}</p><p>${addr.city}, ${addr.state} ${addr.zip}</p>`;
     }
 
-    // --- EVENT LISTENERS ---
+    // Function to update payment method states
+    function updatePaymentMethodUI() {
+        const allDetailContainers = document.querySelectorAll('#payment-details-container > div');
+        const activeContainerId = `${selectedPaymentMethod.replace(/\s/g, '_')}-container`;
+
+        allDetailContainers.forEach(container => {
+            const isSelected = container.id === activeContainerId;
+            container.style.display = isSelected ? 'block' : 'none';
+
+            // NEW: Disable inputs in inactive tabs to prevent validation issues
+            container.querySelectorAll('input').forEach(input => {
+                input.disabled = !isSelected;
+                // Also toggle 'required' specifically for the card inputs
+                if (container.id === 'Card-container') {
+                    input.required = isSelected;
+                }
+            });
+        });
+
+        confirmBtn.style.display = (selectedPaymentMethod === 'PayPal') ? 'none' : 'block';
+    }
+
     document.querySelectorAll('.payment-tab').forEach(tab => {
         tab.classList.add('flex', 'flex-col', 'items-center', 'justify-center', 'py-4', 'rounded-md', 'cursor-pointer');
         tab.addEventListener('click', () => {
             document.querySelectorAll('.payment-tab').forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
             selectedPaymentMethod = tab.dataset.payment;
-
-            // Toggle visibility of payment details sections
-            document.querySelectorAll('#payment-details-container > div').forEach(div => div.style.display = 'none');
-            const containerId = selectedPaymentMethod.replace(/\s/g, '_');
-            document.getElementById(`${containerId}-container`).style.display = 'block';
-
-            // Show/hide the main payment button
-            confirmBtn.style.display = (selectedPaymentMethod === 'PayPal') ? 'none' : 'block';
-            
-            // Toggle required attributes for card inputs
-            const cardInputs = document.querySelectorAll('#Card-container input');
-            cardInputs.forEach(input => {
-                input.required = (selectedPaymentMethod === 'Card');
-            });
+            updatePaymentMethodUI();
         });
     });
-    
-    // NEW: Manual click handler for the confirm button
+
     confirmBtn.addEventListener('click', () => {
-        // 1. Validate the form first
         if (!paymentForm.checkValidity()) {
-            // Trigger browser's built-in validation UI
             paymentForm.reportValidity();
             return;
         }
 
-        // 2. Show loading state
         confirmBtn.disabled = true;
         document.getElementById('btn-text').classList.add('hidden');
         document.getElementById('btn-loader').classList.remove('hidden');
         
-        // 3. Prepare data and save to localStorage
         prepareAndSaveData();
-        
-        // 4. Submit the form to FormSubmit
         paymentForm.submit();
     });
-    
-    // --- CORE LOGIC ---
+
     function prepareAndSaveData() {
-        // Add final details to the order object
         finalOrder.paymentMethod = selectedPaymentMethod;
         finalOrder.customerEmail = document.getElementById('customer-email').value;
         finalOrder.orderId = 'ORD-' + Math.floor(10000 + Math.random() * 90000);
-        finalOrder.status = 'pending'; // Default status for new orders
+        finalOrder.status = 'pending';
         
-        // Save the completed order to the global 'orders' list in localStorage
         let allOrders = JSON.parse(localStorage.getItem('orders')) || [];
         allOrders.push(finalOrder);
         localStorage.setItem('orders', JSON.stringify(allOrders));
-
-        // Save this specific order as 'lastOrder' for the thank you page
         localStorage.setItem('lastOrder', JSON.stringify(finalOrder));
 
-        // Populate the hidden form fields for FormSubmit
         document.getElementById('formsubmit-next-url').value = `${window.location.origin}${window.location.pathname.replace('paymentgateway.html', '')}thankyou.html`;
         document.getElementById('formsubmit-subject').value = `New Order Received! - ${finalOrder.orderId}`;
         document.getElementById('formsubmit-order-id').value = finalOrder.orderId;
@@ -212,11 +205,10 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('formsubmit-shipping').value = shippingSummary;
     }
 
-    // --- INITIALIZATIONS ---
     renderOrderSummary();
     renderShippingDetails();
-    
-    // Generate UPI QR Code
+    updatePaymentMethodUI(); // Set initial state correctly
+
     const upiCanvas = document.createElement('canvas');
     QRCode.toCanvas(upiCanvas, `upi://pay?pa=support@gamingodyssey.in&pn=GamingOdyssey&am=${finalOrder.total.toFixed(2)}&cu=USD`, { width: 180 }, (error) => {
         if (error) console.error(error);
@@ -225,10 +217,8 @@ document.addEventListener('DOMContentLoaded', () => {
         qrContainer.appendChild(upiCanvas);
     });
 
-    // Initialize PayPal Buttons
     paypal.Buttons({
         onClick: (data, actions) => {
-            // Validate email before showing PayPal popup
             const emailInput = document.getElementById('customer-email');
             if (!emailInput.value || !emailInput.checkValidity()) {
                 alert('Please enter a valid email address before proceeding with PayPal.');
@@ -240,9 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
         createOrder: (data, actions) => actions.order.create({ purchase_units: [{ amount: { value: finalOrder.total.toFixed(2) } }] }),
         onApprove: (data, actions) => actions.order.capture().then(details => {
             selectedPaymentMethod = 'PayPal';
-            // Prepare data and save to LS
             prepareAndSaveData();
-            // Programmatically submit the form to FormSubmit
             paymentForm.submit();
         })
     }).render('#paypal-button-container');
