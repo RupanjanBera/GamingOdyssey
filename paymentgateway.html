@@ -60,12 +60,21 @@
       border-color: var(--primary-color);
       color: white;
     }
+     .progress-line {
+        transition: width 0.4s ease;
+    }
     .payment-tab {
+        background-color: var(--card-background);
+        border: 1px solid var(--card-border);
         transition: all 0.2s ease-in-out;
+    }
+    .payment-tab:hover {
+        border-color: var(--primary-color);
     }
     .payment-tab.active {
         background-color: var(--primary-color);
         color: white;
+        border-color: var(--primary-color);
     }
   </style>
 </head>
@@ -83,7 +92,9 @@
                 <div class="step-circle w-10 h-10 rounded-full border-2 flex items-center justify-center font-bold text-lg"><i class="fas fa-check"></i></div>
                 <p class="text-sm font-semibold mt-2">Shipping</p>
             </div>
-            <div class="flex-1 h-1 bg-primary-color"></div>
+            <div class="flex-1">
+                 <div class="w-full h-1 bg-primary-color"></div>
+            </div>
             <div class="progress-step active flex-1 flex flex-col items-center">
                 <div class="step-circle w-10 h-10 rounded-full border-2 flex items-center justify-center font-bold text-lg">2</div>
                 <p class="text-sm font-semibold mt-2">Payment</p>
@@ -92,40 +103,83 @@
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        
         <div>
-          <h2 class="text-2xl font-bold mb-6">Payment Method</h2>
-          <div class="bg-card-background rounded-lg p-2 flex space-x-2 mb-6">
-              <button class="payment-tab active flex-1 text-center py-2 rounded-md" data-payment="card"><i class="fas fa-credit-card mr-2"></i>Card</button>
-              <button class="payment-tab flex-1 text-center py-2 rounded-md" data-payment="paypal"><i class="fab fa-paypal mr-2"></i>PayPal</button>
-              <button class="payment-tab flex-1 text-center py-2 rounded-md" data-payment="upi"><i class="fas fa-qrcode mr-2"></i>UPI</button>
-              <button class="payment-tab flex-1 text-center py-2 rounded-md" data-payment="cod"><i class="fas fa-money-bill-wave mr-2"></i>COD</button>
+          <h2 class="text-2xl font-bold mb-4">Contact Information</h2>
+          <div class="mb-6">
+              <label for="customer-email" class="block text-sm font-medium text-slate-300 mb-1">Email Address</label>
+              <input type="email" id="customer-email" placeholder="you@example.com" required class="input-field w-full p-3 rounded-md">
+          </div>
+            
+          <h2 class="text-2xl font-bold mb-4">Payment Method</h2>
+          <div class="grid grid-cols-2 gap-2 mb-6">
+              <button class="payment-tab active flex flex-col items-center justify-center py-4 rounded-md" data-payment="card"><i class="fas fa-credit-card text-2xl mb-2"></i><span>Card</span></button>
+              <button class="payment-tab flex flex-col items-center justify-center py-4 rounded-md" data-payment="paypal"><i class="fab fa-paypal text-2xl mb-2"></i><span>PayPal</span></button>
+              <button class="payment-tab flex flex-col items-center justify-center py-4 rounded-md" data-payment="upi"><i class="fas fa-qrcode text-2xl mb-2"></i><span>UPI</span></button>
+              <button class="payment-tab flex flex-col items-center justify-center py-4 rounded-md" data-payment="cod"><i class="fas fa-money-bill-wave text-2xl mb-2"></i><span>COD</span></button>
           </div>
           
           <div id="payment-forms-container">
             <div id="card-form-container" class="payment-form">
                  <form id="card-payment-form" class="space-y-4">
-                    <div><label for="card-number" class="block text-sm font-medium text-slate-300 mb-1">Card Number</label><input type="text" id="card-number" placeholder="1234 5678 9012 3456" required class="input-field w-full p-3 rounded-md"></div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div><label for="expiry-date" class="block text-sm font-medium text-slate-300 mb-1">Expiry Date</label><input type="text" id="expiry-date" placeholder="MM/YY" required class="input-field w-full p-3 rounded-md"></div>
-                        <div><label for="cvv" class="block text-sm font-medium text-slate-300 mb-1">CVV</label><input type="text" id="cvv" placeholder="123" required class="input-field w-full p-3 rounded-md"></div>
+                    <div>
+                        <label for="card-number" class="block text-sm font-medium text-slate-300 mb-1">Card Number</label>
+                        <input type="text" id="card-number" placeholder="1234 5678 9012 3456" required class="input-field w-full p-3 rounded-md">
                     </div>
-                    <div><label for="card-name" class="block text-sm font-medium text-slate-300 mb-1">Name on Card</label><input type="text" id="card-name" placeholder="John Doe" required class="input-field w-full p-3 rounded-md"></div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                        <label for="expiry-date" class="block text-sm font-medium text-slate-300 mb-1">Expiry Date</label>
+                        <input type="text" id="expiry-date" placeholder="MM/YY" required class="input-field w-full p-3 rounded-md">
+                        </div>
+                        <div>
+                        <label for="cvv" class="block text-sm font-medium text-slate-300 mb-1">CVV</label>
+                        <input type="text" id="cvv" placeholder="123" required class="input-field w-full p-3 rounded-md">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="card-name" class="block text-sm font-medium text-slate-300 mb-1">Name on Card</label>
+                        <input type="text" id="card-name" placeholder="John Doe" required class="input-field w-full p-3 rounded-md">
+                    </div>
                     <button type="submit" class="submit-btn w-full py-3 mt-4">Pay Now</button>
                 </form>
             </div>
-            <div id="paypal-form-container" class="payment-form hidden"><div id="paypal-button-container" class="w-full"></div></div>
-            <div id="upi-form-container" class="payment-form hidden"><div id="upi-qr-code" class="mx-auto bg-white p-2 rounded-lg w-48 h-48 flex justify-center items-center"></div><p class="text-center text-slate-400">Scan to pay with any UPI app</p></div>
-            <div id="cod-form-container" class="payment-form hidden"><form id="cod-payment-form"><p class="text-center text-slate-300 mb-4">You will pay on delivery. No upfront payment required.</p><button type="submit" class="submit-btn w-full py-3">Confirm Order</button></form></div>
+            <div id="paypal-form-container" class="payment-form hidden">
+                <p class="text-center text-slate-400 mb-4">Click below to complete your purchase with PayPal.</p>
+                <div id="paypal-button-container" class="w-full"></div>
+            </div>
+            <div id="upi-form-container" class="payment-form hidden text-center">
+                <div id="upi-qr-code" class="mx-auto bg-white p-2 rounded-lg w-48 h-48 mb-4 flex items-center justify-center"></div>
+                 <p class="text-center text-slate-400">Scan to pay with any UPI app.</p>
+                 <p class="text-sm text-slate-500 mt-2">(This is a demo. After scanning, click the button below to complete).</p>
+                 <button id="upi-confirm-btn" class="submit-btn w-full py-3 mt-4">Confirm UPI Payment</button>
+            </div>
+            <div id="cod-form-container" class="payment-form hidden">
+                <form id="cod-payment-form">
+                    <p class="text-center text-slate-300 mb-4">You will pay on delivery. No upfront payment required.</p>
+                    <button type="submit" class="submit-btn w-full py-3">Confirm Order</button>
+                </form>
+            </div>
+
           </div>
         </div>
 
         <div class="bg-card-background rounded-lg p-6 h-fit sticky top-8">
             <h2 class="text-2xl font-bold border-b border-card-border pb-4 mb-4">Your Order</h2>
-            <div id="order-summary-items" class="space-y-4 max-h-60 overflow-y-auto pr-2"></div>
-            <div class="space-y-3 text-slate-300 border-t border-card-border pt-4 mt-4">
-                <div class="flex justify-between"><span>Subtotal</span><span id="summary-subtotal">$0.00</span></div>
-                <div class="flex justify-between"><span>Shipping</span><span>FREE</span></div>
-                <div class="flex justify-between text-white font-bold text-lg border-t border-card-border pt-4 mt-4"><span>Total</span><span id="summary-total">$0.00</span></div>
+            <div id="order-summary-items" class="space-y-4 max-h-60 overflow-y-auto pr-2">
+                </div>
+             <div class="space-y-3 text-slate-300 border-t border-card-border pt-4 mt-4">
+                <div class="flex justify-between">
+                    <span>Subtotal</span>
+                    <span id="summary-subtotal">$0.00</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Shipping</span>
+                    <span>FREE</span>
+                </div>
+                <div class="flex justify-between text-white font-bold text-lg border-t border-card-border pt-4 mt-4">
+                    <span>Total</span>
+                    <span id="summary-total">$0.00</span>
+                </div>
             </div>
              <div class="border-t border-card-border pt-4 mt-4">
                 <h3 class="font-semibold mb-2">Shipping To:</h3>
@@ -143,41 +197,98 @@
         const summarySubtotal = document.getElementById('summary-subtotal');
         const summaryTotal = document.getElementById('summary-total');
         const shippingDetails = document.getElementById('shipping-details');
+
         const finalOrder = JSON.parse(localStorage.getItem('finalOrder'));
 
-        if (!finalOrder) {
-            document.body.innerHTML = `<div class="h-screen w-full flex flex-col items-center justify-center bg-background-color text-text-color"><h1 class="text-2xl font-bold">No order found!</h1><p class="text-slate-400">Please start a new checkout.</p><a href="cart.html" class="submit-btn mt-4 py-2 px-6">Back to Cart</a></div>`;
+        if (!finalOrder || !finalOrder.items || finalOrder.items.length === 0) {
+            document.body.innerHTML = `<div class="h-screen w-full flex flex-col items-center justify-center text-center p-4">
+                <h1 class="text-2xl font-bold">No order found!</h1>
+                <p class="text-slate-400">Your checkout session is empty. Please start again from your cart.</p>
+                <a href="cart.html" class="submit-btn mt-4 py-2 px-6">Back to Cart</a>
+            </div>`;
             return;
         }
 
+        function renderOrderSummary() {
+            orderSummaryItems.innerHTML = '';
+            let subtotal = finalOrder.total;
+            
+            finalOrder.items.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'flex items-center gap-4';
+                itemElement.innerHTML = `
+                    <div class="relative">
+                        <img src="${item.image || 'https://placehold.co/64x64/1E293B/E2E8F0?text=Image'}" alt="${item.name}" class="w-16 h-16 object-contain rounded-md bg-slate-700">
+                        <span class="absolute -top-2 -right-2 bg-primary-color text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">${item.quantity}</span>
+                    </div>
+                    <div class="flex-grow">
+                        <p class="font-semibold">${item.name}</p>
+                    </div>
+                    <p class="font-bold">$${(item.price * item.quantity).toFixed(2)}</p>
+                `;
+                orderSummaryItems.appendChild(itemElement);
+            });
+            
+            summarySubtotal.textContent = `$${subtotal.toFixed(2)}`;
+            summaryTotal.textContent = `$${subtotal.toFixed(2)}`;
+        }
+
+        function renderShippingDetails() {
+            const addr = finalOrder.shippingAddress;
+            shippingDetails.innerHTML = `
+                <p class="font-bold">${addr.name}</p>
+                <p>${addr.addressLine1}</p>
+                <p>${addr.city}, ${addr.state} ${addr.zip}</p>
+                <p>${addr.country}</p>
+                <p>${addr.phone}</p>
+            `;
+        }
+        
+        // Payment Tabs Logic
         const paymentTabs = document.querySelectorAll('.payment-tab');
         const paymentForms = document.querySelectorAll('.payment-form');
+
         paymentTabs.forEach(tab => {
             tab.addEventListener('click', () => {
                 paymentTabs.forEach(t => t.classList.remove('active'));
                 tab.classList.add('active');
+
                 const paymentMethod = tab.dataset.payment;
                 paymentForms.forEach(form => {
-                    form.style.display = form.id.startsWith(paymentMethod) ? 'block' : 'none';
+                    form.style.display = 'none';
                 });
+                document.getElementById(`${paymentMethod}-form-container`).style.display = 'block';
             });
         });
 
+        // --- PAYMENT FORM SUBMISSIONS ---
         function handleOrderCompletion(paymentMethod) {
+            const customerEmailInput = document.getElementById('customer-email');
+            if (!customerEmailInput.value || !customerEmailInput.checkValidity()) {
+                alert('Please enter a valid email address.');
+                customerEmailInput.focus();
+                return;
+            }
+
+            // 1. Finalize the order object
             finalOrder.paymentMethod = paymentMethod;
-            finalOrder.orderId = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
+            finalOrder.customerEmail = customerEmailInput.value;
+            finalOrder.orderId = 'ORD-' + Math.floor(10000 + Math.random() * 90000);
+            finalOrder.status = 'pending'; // Set default status for admin panel
             
+            // 2. Save to the main 'orders' list for the admin panel
             let allOrders = JSON.parse(localStorage.getItem('orders')) || [];
             allOrders.push(finalOrder);
             localStorage.setItem('orders', JSON.stringify(allOrders));
-            localStorage.setItem('lastCompletedOrder', JSON.stringify(finalOrder));
-            localStorage.removeItem('cart');
 
-            const { orderId, total, items, shippingAddress } = finalOrder;
-            const itemsSummary = items.map(item => `${item.name} (Qty: ${item.quantity})`).join(', ');
-            const shippingSummary = `${shippingAddress.name}, ${shippingAddress.addressLine1}, ${shippingAddress.city}`;
+            // 3. Save as 'lastOrder' for the thank you page
+            localStorage.setItem('lastOrder', JSON.stringify(finalOrder));
+
+            // 4. Prepare and submit email notification via FormSubmit
+            const itemsSummary = finalOrder.items.map(item => `- ${item.name} (Qty: ${item.quantity}) @ $${item.price.toFixed(2)} each`).join('\n');
+            const shippingSummary = `${finalOrder.shippingAddress.name}\n${finalOrder.shippingAddress.addressLine1}\n${finalOrder.shippingAddress.city}, ${finalOrder.shippingAddress.state} ${finalOrder.shippingAddress.zip}\n${finalOrder.shippingAddress.country}\nPhone: ${finalOrder.shippingAddress.phone}`;
             
-            const thankYouUrl = window.location.href.replace('paymentgateway.html', 'thankyou.html');
+            const thankYouUrl = `${window.location.origin}${window.location.pathname.replace('paymentgateway.html', '')}thankyou.html`;
 
             const sellerForm = document.createElement('form');
             sellerForm.action = 'https://formsubmit.co/support@gamingodyssey.in';
@@ -185,12 +296,15 @@
             sellerForm.style.display = 'none';
             sellerForm.innerHTML = `
                 <input type="hidden" name="_next" value="${thankYouUrl}">
-                <input type="hidden" name="_subject" value="New Order Received - ${orderId}">
-                <input type="hidden" name="Order ID" value="${orderId}">
-                <input type="hidden" name="Total Amount" value="$${total.toFixed(2)}">
-                <input type="hidden" name="Payment Method" value="${paymentMethod}">
-                <input type="hidden" name="Items" value="${itemsSummary}">
-                <input type="hidden" name="Shipping To" value="${shippingSummary}">
+                <input type="hidden" name="_subject" value="New Order Received! - ${finalOrder.orderId}">
+                <input type="hidden" name="_template" value="table">
+                <input type="hidden" name="Order ID" value="${finalOrder.orderId}">
+                <input type="hidden" name="Customer Email" value="${finalOrder.customerEmail}">
+                <input type="hidden" name="Total Amount" value="$${finalOrder.total.toFixed(2)}">
+                <input type="hidden" name="Payment Method" value="${finalOrder.paymentMethod}">
+                <input type="hidden" name="Order Date" value="${new Date(finalOrder.timestamp).toLocaleString()}">
+                <textarea name="Items Ordered" style="display:none;">${itemsSummary}</textarea>
+                <textarea name="Shipping Address" style="display:none;">${shippingSummary}</textarea>
             `;
             document.body.appendChild(sellerForm);
             sellerForm.submit();
@@ -200,50 +314,58 @@
             e.preventDefault();
             handleOrderCompletion('Credit Card');
         });
+
         document.getElementById('cod-payment-form').addEventListener('submit', (e) => {
             e.preventDefault();
             handleOrderCompletion('Cash on Delivery');
         });
 
+        document.getElementById('upi-confirm-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            handleOrderCompletion('UPI');
+        });
+
+        // PayPal Buttons
         paypal.Buttons({
           createOrder: (data, actions) => {
-            return actions.order.create({ purchase_units: [{ amount: { value: finalOrder.total.toFixed(2) } }] });
+            const customerEmailInput = document.getElementById('customer-email');
+             if (!customerEmailInput.value || !customerEmailInput.checkValidity()) {
+                alert('Please enter a valid email address before proceeding with PayPal.');
+                customerEmailInput.focus();
+                return Promise.reject(new Error('Email is invalid'));
+            }
+            return actions.order.create({
+              purchase_units: [{
+                amount: { value: finalOrder.total.toFixed(2) }
+              }]
+            });
           },
           onApprove: (data, actions) => {
-            return actions.order.capture().then(details => { handleOrderCompletion('PayPal'); });
+            return actions.order.capture().then(details => {
+              handleOrderCompletion('PayPal');
+            });
+          },
+          onError: (err) => {
+              console.error('PayPal button error:', err);
           }
         }).render('#paypal-button-container');
-        
+
+        // UPI QR Code
         const upiQRCodeElement = document.getElementById('upi-qr-code');
-        const upiLink = `upi://pay?pa=your-upi-id@oksbi&pn=GamingOdyssey&am=${finalOrder.total.toFixed(2)}&cu=USD&tn=Order${finalOrder.orderId || ''}`;
-        QRCode.toCanvas(upiLink, { width: 180, margin: 2 }, (error, canvas) => {
+        const upiLink = `upi://pay?pa=your-upi-id@oksbi&pn=GamingOdyssey&am=${finalOrder.total.toFixed(2)}&cu=USD&tn=Order${finalOrder.orderId}`;
+        QRCode.toCanvas(upiLink, { width: 180 }, (error, canvas) => {
             if (error) console.error(error);
             upiQRCodeElement.innerHTML = '';
             upiQRCodeElement.appendChild(canvas);
         });
 
-        function renderOrderSummary() {
-            orderSummaryItems.innerHTML = '';
-            finalOrder.items.forEach(item => {
-                const itemElement = document.createElement('div');
-                itemElement.className = 'flex items-center gap-4';
-                itemElement.innerHTML = `<div class="relative"><img src="${item.image || 'https://placehold.co/64x64/1E293B/E2E8F0?text=Img'}" alt="${item.name}" class="w-16 h-16 object-contain rounded-md bg-slate-700"><span class="absolute -top-2 -right-2 bg-primary-color text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">${item.quantity}</span></div><div class="flex-grow"><p class="font-semibold">${item.name}</p></div><p class="font-bold">$${(item.price * item.quantity).toFixed(2)}</p>`;
-                orderSummaryItems.appendChild(itemElement);
-            });
-            summarySubtotal.textContent = `$${finalOrder.total.toFixed(2)}`;
-            summaryTotal.textContent = `$${finalOrder.total.toFixed(2)}`;
-        }
-        function renderShippingDetails() {
-            const addr = finalOrder.shippingAddress;
-            shippingDetails.innerHTML = `<p class="font-bold">${addr.name}</p><p>${addr.addressLine1}</p><p>${addr.city}, ${addr.state} ${addr.zip}</p><p>${addr.country}</p><p>${addr.phone}</p>`;
-        }
-        
         renderOrderSummary();
         renderShippingDetails();
     });
   </script>
 </body>
 </html>
+
 
 
 
