@@ -5,37 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tournaments - Gaming Odyssey</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     :root {
-      /* Customizable theme variables */
-      --primary-color: #3B82F6; /* Primary accent (blue) */
-      --secondary-color: #D946EF; /* Secondary accent (pink) */
-      --background-color: #0F172A; /* Main background */
-      --text-color: #F1F5F9; /* Primary text */
-      --card-background: linear-gradient(145deg, #1E293B, #0F172A); /* Card background */
-      --font-family: 'Poppins', sans-serif; /* Primary font */
-      --shadow-glow: 0 0 6px rgba(59, 130, 246, 0.2); /* Glow effect */
-      --shadow-glow-hover: 0 0 10px rgba(59, 130, 246, 0.4); /* Hover glow */
-      /* To customize, update these values */
+      --primary-color: #3B82F6;
+      --secondary-color: #D946EF;
+      --background-color: #0F172A;
+      --text-color: #F1F5F9;
+      --card-background: rgba(30, 41, 59, 0.6); /* Semi-transparent for glass effect */
+      --font-family: 'Poppins', sans-serif;
+      --shadow-glow: 0 0 8px rgba(59, 130, 246, 0.3);
+      --shadow-glow-hover: 0 0 20px rgba(59, 130, 246, 0.5);
     }
     body {
       font-family: var(--font-family);
       background-color: var(--background-color);
+      /* NEW: Added a fixed background image */
+      background-image: url('https://images.pexels.com/photos/3165335/pexels-photo-3165335.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
+      background-attachment: fixed;
+      background-size: cover;
+      background-position: center;
       color: var(--text-color);
       scroll-behavior: smooth;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
-      font-size: clamp(16px, 2.5vw, 18px); /* Fluid typography */
     }
-    .gradient-glow {
-      box-shadow: var(--shadow-glow);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      will-change: transform, box-shadow;
-    }
-    .gradient-glow:hover {
-      box-shadow: var(--shadow-glow-hover);
-      transform: translateY(-4px);
+    .main-content-wrapper {
+        background-color: rgba(15, 23, 42, 0.8); /* Dark overlay to keep text readable */
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
     }
     .sidebar {
       background: linear-gradient(180deg, #1E293B 0%, var(--background-color) 100%);
@@ -51,373 +50,280 @@
       opacity: 1;
       transform: translateY(0);
     }
+    /* NEW: Completely redesigned tournament cards */
     .tournament-card {
       background: var(--card-background);
-      padding: clamp(1rem, 3vw, 1.25rem);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border-radius: 0.75rem;
-      text-align: center;
-      transition: transform 0.2s ease;
+      border: 1px solid var(--primary-color);
+      box-shadow: var(--shadow-glow);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
     .tournament-card:hover {
-      transform: translateY(-4px);
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: var(--shadow-glow-hover);
     }
-    .tournament-card img {
+    .card-image-container {
+      position: relative;
+      height: 180px;
+    }
+    .card-image-container img {
       width: 100%;
-      height: clamp(120px, 20vw, 150px);
+      height: 100%;
       object-fit: cover;
-      border-radius: 0.5rem;
-      margin-bottom: 1rem;
+    }
+    .card-image-container::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(30, 41, 59, 1) 5%, transparent 60%);
+    }
+    .tournament-title {
+      position: absolute;
+      bottom: 1rem;
+      left: 1rem;
+      right: 1rem;
+      font-size: clamp(1.25rem, 3vw, 1.5rem);
+      font-weight: 700;
+      color: white;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+      line-height: 1.2;
+    }
+    .card-content {
+      padding: 1rem 1.25rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+    .card-details {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+        text-align: left;
+        margin: 1rem 0;
+        font-size: clamp(0.8rem, 2vw, 0.875rem);
+        border-top: 1px solid var(--primary-color);
+        padding-top: 1rem;
     }
     .join-btn {
       background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-      color: #0F172A;
-      font-family: var(--font-family);
+      color: white;
       font-weight: 600;
-      padding: clamp(0.625rem, 2vw, 0.75rem) clamp(1rem, 3vw, 1.5rem);
+      padding: 0.75rem 1.5rem;
       border-radius: 0.5rem;
-      transition: transform 0.2s ease;
-      font-size: clamp(14px, 2vw, 15px);
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+      font-size: clamp(14px, 2vw, 16px);
       text-align: center;
-      display: inline-block;
-      width: auto;
-      min-width: 120px; /* Touch-friendly size */
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: auto; /* Pushes button to the bottom */
     }
     .join-btn:hover {
       transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(217, 70, 239, 0.3);
     }
     .heading {
-      font-family: var(--font-family);
-      font-size: clamp(2rem, 5vw, 3rem);
+      font-size: clamp(2.5rem, 5vw, 3.5rem);
       font-weight: 700;
-      color: var(--text-color);
       text-align: center;
       position: relative;
-      margin-bottom: 2rem;
+      margin-bottom: 3rem;
+      text-shadow: 0 0 15px var(--primary-color);
     }
     .heading::after {
       content: '';
       position: absolute;
-      bottom: -0.5rem;
+      bottom: -0.75rem;
       left: 50%;
       transform: translateX(-50%);
-      width: 100px;
-      height: 3px;
+      width: 120px;
+      height: 4px;
       background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+      border-radius: 2px;
     }
-    .nav-link, #mobile-menu a {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      transition: color 0.2s ease;
-      font-family: var(--font-family);
-      font-weight: 600;
-      font-size: clamp(15px, 2.5vw, 17px);
-      padding: 0.5rem 0;
-    }
-    .nav-link::after, #mobile-menu a::after {
-      content: '';
-      position: absolute;
-      width: 0;
-      height: 2px;
-      bottom: 0;
-      left: 0;
-      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-      transition: width 0.2s ease;
-    }
-    .nav-link:hover::after, #mobile-menu a:hover::after {
-      width: 100%;
-    }
-    .nav-link:hover, #mobile-menu a:hover {
-      color: var(--primary-color);
-    }
+    .nav-link:hover { color: var(--primary-color); }
     .mobile-menu {
       background: linear-gradient(180deg, #1E293B, var(--background-color));
-      opacity: 0;
-      transform: translateX(-100%);
       transition: opacity 0.3s ease, transform 0.3s ease;
+      transform: translateX(-100%);
+      opacity: 0;
     }
     .mobile-menu.active {
-      opacity: 1;
       transform: translateX(0);
+      opacity: 1;
     }
-    @media (max-width: 640px) {
-      .tournament-grid {
-        grid-template-columns: 1fr;
-      }
-      .join-btn {
-        width: 100%;
-        min-width: unset;
-      }
-      .heading {
-        font-size: clamp(1.5rem, 4vw, 2rem);
-      }
+    @media (max-width: 767px) {
+      .main-content-wrapper { margin-left: 0; }
     }
-    @media (min-width: 640px) and (max-width: 1024px) {
-      .tournament-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-    @media (min-width: 1024px) {
-      .tournament-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-    /* Customization tip: Adjust --primary-color, --secondary-color, etc., in :root to change the theme */
   </style>
 </head>
 <body>
-  <!-- Sidebar -->
-  <div class="fixed top-0 left-0 h-full w-64 sidebar gradient-glow z-20 hidden md:block">
+  <aside class="fixed top-0 left-0 h-full w-64 sidebar z-20 hidden md:block">
     <div class="p-6">
       <h1 class="text-2xl font-bold text-white leading-relaxed">Gaming Odyssey</h1>
       <nav class="mt-10 space-y-3">
-        <a href="index.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>Home</span>
-        </a>
-        <a href="store.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>Store</span>
-        </a>
-        <a href="tournaments.html" class="flex items-center space-x-2 text-[#3B82F6] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>Tournaments</span>
-        </a>
-        <a href="trackorder.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>Track Order</span>
-        </a>
-        <a href="contactus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>Contact Us</span>
-        </a>
-        <a href="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>About Us</span>
-        </a>
-        <a href="signin.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>Sign In</span>
-        </a>
-        <a href="createaccount.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>Create Account</span>
-        </a>
+        <a href="index.html" class="flex items-center space-x-3 text-slate-300 font-semibold nav-link"><i class="fas fa-home w-5 text-center"></i><span>Home</span></a>
+        <a href="store.html" class="flex items-center space-x-3 text-slate-300 font-semibold nav-link"><i class="fas fa-store w-5 text-center"></i><span>Store</span></a>
+        <a href="tournaments.html" class="flex items-center space-x-3 text-primary-color font-semibold nav-link"><i class="fas fa-trophy w-5 text-center"></i><span>Tournaments</span></a>
+        <a href="trackorder.html" class="flex items-center space-x-3 text-slate-300 font-semibold nav-link"><i class="fas fa-truck-fast w-5 text-center"></i><span>Track Order</span></a>
+        <a href="contactus.html" class="flex items-center space-x-3 text-slate-300 font-semibold nav-link"><i class="fas fa-headset w-5 text-center"></i><span>Contact Us</span></a>
+        <a href="aboutus.html" class="flex items-center space-x-3 text-slate-300 font-semibold nav-link"><i class="fas fa-info-circle w-5 text-center"></i><span>About Us</span></a>
+        <a href="signin.html" class="flex items-center space-x-3 text-slate-300 font-semibold nav-link"><i class="fas fa-sign-in-alt w-5 text-center"></i><span>Sign In</span></a>
+        <a href="createaccount.html" class="flex items-center space-x-3 text-slate-300 font-semibold nav-link"><i class="fas fa-user-plus w-5 text-center"></i><span>Create Account</span></a>
       </nav>
     </div>
-  </div>
+  </aside>
 
-  <!-- Mobile Hamburger Menu -->
-  <div class="md:hidden fixed top-0 left-0 w-full bg-[#1E293B] z-30 p-4 flex justify-between items-center gradient-glow">
+  <div class="md:hidden fixed top-0 left-0 w-full bg-[#1E293B]/80 backdrop-blur-sm z-30 p-4 flex justify-between items-center">
     <h1 class="text-lg font-bold text-white leading-relaxed">Gaming Odyssey</h1>
-    <button id="hamburger" class="text-[#3B82F6]" aria-label="Toggle menu">
-      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    <button id="hamburger" class="text-primary-color" aria-label="Toggle menu">
+      <i class="fas fa-bars text-2xl"></i>
     </button>
   </div>
-  <div id="mobile-menu" class="hidden md:hidden fixed top-0 left-0 w-full h-full mobile-menu z-20 p-4">
-    <button id="close-menu" class="absolute top-4 right-4 text-[#3B82F6] gradient-glow rounded-full p-2" aria-label="Close menu">
-      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+  <div id="mobile-menu" class="fixed top-0 left-0 w-full h-full mobile-menu z-40 p-4">
+    <button id="close-menu" class="absolute top-4 right-4 text-primary-color p-2" aria-label="Close menu">
+      <i class="fas fa-times text-3xl"></i>
     </button>
-    <nav class="space-y-3 mt-12">
-      <a href="index.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-        <span>Home</span>
-      </a>
-      <a href="store.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-        <span>Store</span>
-      </a>
-      <a href="tournaments.html" class="flex items-center space-x-2 text-[#3B82F6] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-        <span>Tournaments</span>
-      </a>
-      <a href="trackorder.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-        <span>Track Order</span>
-      </a>
-      <a href="contactus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-        <span>Contact Us</span>
-      </a>
-      <a href="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-        <span>About Us</span>
-      </a>
-      <a href="signin.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-        <span>Sign In</span>
-      </a>
-      <a href="createaccount.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-        <span>Create Account</span>
-      </a>
+    <nav class="space-y-4 mt-16">
+        <a href="index.html" class="flex items-center space-x-3 text-slate-300 font-semibold text-lg nav-link"><i class="fas fa-home w-6 text-center"></i><span>Home</span></a>
+        <a href="store.html" class="flex items-center space-x-3 text-slate-300 font-semibold text-lg nav-link"><i class="fas fa-store w-6 text-center"></i><span>Store</span></a>
+        <a href="tournaments.html" class="flex items-center space-x-3 text-primary-color font-semibold text-lg nav-link"><i class="fas fa-trophy w-6 text-center"></i><span>Tournaments</span></a>
+        <a href="trackorder.html" class="flex items-center space-x-3 text-slate-300 font-semibold text-lg nav-link"><i class="fas fa-truck-fast w-6 text-center"></i><span>Track Order</span></a>
+        <a href="contactus.html" class="flex items-center space-x-3 text-slate-300 font-semibold text-lg nav-link"><i class="fas fa-headset w-6 text-center"></i><span>Contact Us</span></a>
+        <a href="aboutus.html" class="flex items-center space-x-3 text-slate-300 font-semibold text-lg nav-link"><i class="fas fa-info-circle w-6 text-center"></i><span>About Us</span></a>
+        <a href="signin.html" class="flex items-center space-x-3 text-slate-300 font-semibold text-lg nav-link"><i class="fas fa-sign-in-alt w-6 text-center"></i><span>Sign In</span></a>
+        <a href="createaccount.html" class="flex items-center space-x-3 text-slate-300 font-semibold text-lg nav-link"><i class="fas fa-user-plus w-6 text-center"></i><span>Create Account</span></a>
     </nav>
   </div>
 
-  <!-- Main Content -->
-  <div class="md:ml-64">
-    <!-- Tournaments Section -->
-    <section class="py-16 px-4 sm:px-6 md:px-8 bg-gradient-to-b from-[#1E293B] to-[#0F172A] min-h-screen">
-      <h2 class="heading">Gaming Odyssey Tournaments</h2>
-      <div class="tournament-grid max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Tournament 1 -->
-        <div class="tournament-card gradient-glow fade-in">
-          <img src="https://via.placeholder.com/300x150" alt="Cyber Arena Showdown">
-          <h3 class="text-xl font-bold text-white mt-2">Cyber Arena Showdown</h3>
-          <p class="text-[#F1F5F9] mt-2 text-sm">Blast through rivals in a pulse-pounding FPS frenzy!</p>
-          <p class="text-[#F1F5F9] mt-1 text-sm"><strong>Entry:</strong> $50</p>
-          <p class="text-[#F1F5F9] mt-1 text-sm"><strong>Prize:</strong> $25,000</p>
-          <p class="text-[#F1F5F9] mt-1 text-sm"><strong>Starts:</strong> May 10, 2025</p>
-          <div class="flex justify-center mt-4">
-            <a href="#" class="join-btn" onclick="joinTournament('Cyber Arena Showdown')" aria-label="Join Cyber Arena Showdown">Join Now</a>
+  <div class="md:ml-64 main-content-wrapper">
+    <section class="py-16 px-4 sm:px-6 md:px-8 min-h-screen">
+      <h2 class="heading fade-in">Upcoming Tournaments</h2>
+      <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="tournament-card fade-in">
+          <div class="card-image-container">
+            <img src="https://images.pexels.com/photos/8134547/pexels-photo-8134547.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Cyber Arena Showdown">
+            <h3 class="tournament-title">Cyber Arena Showdown</h3>
+          </div>
+          <div class="card-content">
+            <p class="text-slate-300 text-sm flex-grow">Blast through rivals in a pulse-pounding FPS frenzy!</p>
+            <div class="card-details">
+              <span><strong>Entry:</strong> $50</span>
+              <span><strong>Prize:</strong> $25,000</span>
+              <span class="col-span-2"><strong>Starts:</strong> May 10, 2025</span>
+            </div>
+            <a href="#" class="join-btn" onclick="joinTournament('Cyber Arena Showdown')">Join Now <i class="fas fa-arrow-right"></i></a>
           </div>
         </div>
-        <!-- Tournament 2 -->
-        <div class="tournament-card gradient-glow fade-in">
-          <img src="https://via.placeholder.com/300x150" alt="Neon Battle Royale">
-          <h3 class="text-xl font-bold text-white mt-2">Neon Battle Royale</h3>
-          <p class="text-[#F1F5F9] mt-2 text-sm">Unleash chaos in a neon-lit survival arena!</p>
-          <p class="text-[#F1F5F9] mt-1 text-sm"><strong>Entry:</strong> $30</p>
-          <p class="text-[#F1F5F9] mt-1 text-sm"><strong>Prize:</strong> $15,000</p>
-          <p class="text-[#F1F5F9] mt-1 text-sm"><strong>Starts:</strong> May 20, 2025</p>
-          <div class="flex justify-center mt-4">
-            <a href="#" class="join-btn" onclick="joinTournament('Neon Battle Royale')" aria-label="Join Neon Battle Royale">Join Now</a>
+        <div class="tournament-card fade-in" style="transition-delay: 100ms;">
+          <div class="card-image-container">
+            <img src="https://images.pexels.com/photos/16196237/pexels-photo-16196237/free-photo-of-a-futuristic-city-at-night.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Neon Battle Royale">
+            <h3 class="tournament-title">Neon Battle Royale</h3>
+          </div>
+          <div class="card-content">
+            <p class="text-slate-300 text-sm flex-grow">Unleash chaos in a neon-lit survival arena!</p>
+            <div class="card-details">
+              <span><strong>Entry:</strong> $30</span>
+              <span><strong>Prize:</strong> $15,000</span>
+              <span class="col-span-2"><strong>Starts:</strong> May 20, 2025</span>
+            </div>
+            <a href="#" class="join-btn" onclick="joinTournament('Neon Battle Royale')">Join Now <i class="fas fa-arrow-right"></i></a>
           </div>
         </div>
-        <!-- Tournament 3 -->
-        <div class="tournament-card gradient-glow fade-in">
-          <img src="https://via.placeholder.com/300x150" alt="Quantum League">
-          <h3 class="text-xl font-bold text-white mt-2">Quantum League</h3>
-          <p class="text-[#F1F5F9] mt-2 text-sm">Bend time and outwit foes in a strategic showdown!</p>
-          <p class="text-[#F1F5F9] mt-1 text-sm"><strong>Entry:</strong> $20</p>
-          <p class="text-[#F1F5F9] mt-1 text-sm"><strong>Prize:</strong> $10,000</p>
-          <p class="text-[#F1F5F9] mt-1 text-sm"><strong>Starts:</strong> May 25, 2025</p>
-          <div class="flex justify-center mt-4">
-            <a href="#" class="join-btn" onclick="joinTournament('Quantum League')" aria-label="Join Quantum League">Join Now</a>
+        <div class="tournament-card fade-in" style="transition-delay: 200ms;">
+          <div class="card-image-container">
+            <img src="https://images.pexels.com/photos/216654/pexels-photo-216654.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Quantum League">
+            <h3 class="tournament-title">Quantum League</h3>
+          </div>
+          <div class="card-content">
+            <p class="text-slate-300 text-sm flex-grow">Bend time and outwit foes in a strategic showdown!</p>
+            <div class="card-details">
+              <span><strong>Entry:</strong> $20</span>
+              <span><strong>Prize:</strong> $10,000</span>
+              <span class="col-span-2"><strong>Starts:</strong> May 25, 2025</span>
+            </div>
+            <a href="#" class="join-btn" onclick="joinTournament('Quantum League')">Join Now <i class="fas fa-arrow-right"></i></a>
           </div>
         </div>
-        <!-- Tournament 4 -->
-        <div class="tournament-card gradient-glow fade-in">
-          <img src="https://via.placeholder.com/300x150" alt="Eclipse Tournament">
-          <h3 class="text-xl font-bold text-white mt-2">Eclipse Tournament</h3>
-          <p class="text-[#F1F5F9] mt-2 text-sm">Crush your enemies in a galactic MOBA conquest!</p>
-          <p class="text-[#F1F5F9] mt-1 text-sm"><strong>Entry:</strong> $40</p>
-          <p class="text-[#F1F5F9] mt-1 text-sm"><strong>Prize:</strong> $30,000</p>
-          <p class="text-[#F1F5F9] mt-1 text-sm"><strong>Starts:</strong> June 1, 2025</p>
-          <div class="flex justify-center mt-4">
-            <a href="#" class="join-btn" onclick="joinTournament('Eclipse Tournament')" aria-label="Join Eclipse Tournament">Join Now</a>
+        <div class="tournament-card fade-in" style="transition-delay: 300ms;">
+          <div class="card-image-container">
+            <img src="https://images.pexels.com/photos/14833446/pexels-photo-14833446.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Eclipse Tournament">
+            <h3 class="tournament-title">Eclipse Tournament</h3>
+          </div>
+          <div class="card-content">
+            <p class="text-slate-300 text-sm flex-grow">Crush your enemies in a galactic MOBA conquest!</p>
+            <div class="card-details">
+              <span><strong>Entry:</strong> $40</span>
+              <span><strong>Prize:</strong> $30,000</span>
+              <span class="col-span-2"><strong>Starts:</strong> June 1, 2025</span>
+            </div>
+            <a href="#" class="join-btn" onclick="joinTournament('Eclipse Tournament')">Join Now <i class="fas fa-arrow-right"></i></a>
           </div>
         </div>
-        <!-- Tournament 5 -->
-        <div class="tournament-card gradient-glow fade-in">
-          <img src="https://via.placeholder.com/300x150" alt="Galactic Wars">
-          <h3 class="text-xl font-bold text-white mt-2">Galactic Wars</h3>
-          <p class="text-[#F1F5F9] mt-2 text-sm">Lead epic fleets to triumph in a cosmic war!</p>
-          <p class="text-[#F1F5F9] mt-1 text-sm"><strong>Entry:</strong> $25</p>
-          <p class="text-[#F1F5F9] mt-1 text-sm"><strong>Prize:</strong> $12,000</p>
-          <p class="text-[#F1F5F9] mt-1 text-sm"><strong>Starts:</strong> June 5, 2025</p>
-          <div class="flex justify-center mt-4">
-            <a href="#" class="join-btn" onclick="joinTournament('Galactic Wars')" aria-label="Join Galactic Wars">Join Now</a>
+        <div class="tournament-card fade-in" style="transition-delay: 400ms;">
+          <div class="card-image-container">
+            <img src="https://images.pexels.com/photos/127027/pexels-photo-127027.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Galactic Wars">
+            <h3 class="tournament-title">Galactic Wars</h3>
+          </div>
+          <div class="card-content">
+            <p class="text-slate-300 text-sm flex-grow">Lead epic fleets to triumph in a cosmic war!</p>
+            <div class="card-details">
+              <span><strong>Entry:</strong> $25</span>
+              <span><strong>Prize:</strong> $12,000</span>
+              <span class="col-span-2"><strong>Starts:</strong> June 5, 2025</span>
+            </div>
+            <a href="#" class="join-btn" onclick="joinTournament('Galactic Wars')">Join Now <i class="fas fa-arrow-right"></i></a>
           </div>
         </div>
-        <!-- Tournament 6 -->
-        <div class="tournament-card gradient-glow fade-in">
-          <img src="https://via.placeholder.com/300x150" alt="Phantom Clash">
-          <h3 class="text-xl font-bold text-white mt-2">Phantom Clash</h3>
-          <p class="text-[#F1F5F9] mt-2 text-sm">Strike fast in a heart-pounding martial arts brawl!</p>
-          <p class="text-[#F1F5F9] mt-1 text-sm"><strong>Entry:</strong> $15</p>
-          <p class="text-[#F1F5F9] mt-1 text-sm"><strong>Prize:</strong> $8,000</p>
-          <p class="text-[#F1F5F9] mt-1 text-sm"><strong>Starts:</strong> June 10, 2025</p>
-          <div class="flex justify-center mt-4">
-            <a href="#" class="join-btn" onclick="joinTournament('Phantom Clash')" aria-label="Join Phantom Clash">Join Now</a>
+        <div class="tournament-card fade-in" style="transition-delay: 500ms;">
+          <div class="card-image-container">
+            <img src="https://images.pexels.com/photos/1038935/pexels-photo-1038935.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Phantom Clash">
+            <h3 class="tournament-title">Phantom Clash</h3>
           </div>
-        </div>
-        <!-- Tournament 7 -->
-        <div class="tournament-card gradient-glow fade-in">
-          <img src="https://via.placeholder.com/300x150" alt="Astral Showdown">
-          <h3 class="text-xl font-bold text-white mt-2">Astral Showdown</h3>
-          <p class="text-[#F1F5F9] mt-2 text-sm">Forge your legend in an epic RPG adventure!</p>
-          <p class="text-[#F1F5F9] mt-1 text-sm"><strong>Entry:</strong> $35</p>
-          <p class="text-[#F1F5F9] mt-1 text-sm"><strong>Prize:</strong> $20,000</p>
-          <p class="text-[#F1F5F9] mt-1 text-sm"><strong>Starts:</strong> June 15, 2025</p>
-          <div class="flex justify-center mt-4">
-            <a href="#" class="join-btn" onclick="joinTournament('Astral Showdown')" aria-label="Join Astral Showdown">Join Now</a>
-          </div>
-        </div>
-        <!-- Tournament 8 -->
-        <div class="tournament-card gradient-glow fade-in">
-          <img src="https://via.placeholder.com/300x150" alt="Void Champions">
-          <h3 class="text-xl font-bold text-white mt-2">Void Champions</h3>
-          <p class="text-[#F1F5F9] mt-2 text-sm">Rise to glory in a futuristic sports spectacle!</p>
-          <p class="text-[#F1F5F9] mt-1 text-sm"><strong>Entry:</strong> $10</p>
-          <p class="text-[#F1F5F9] mt-1 text-sm"><strong>Prize:</strong> $5,000</p>
-          <p class="text-[#F1F5F9] mt-1 text-sm"><strong>Starts:</strong> June 20, 2025</p>
-          <div class="flex justify-center mt-4">
-            <a href="#" class="join-btn" onclick="joinTournament('Void Champions')" aria-label="Join Void Champions">Join Now</a>
-          </div>
-        </div>
-        <!-- Tournament 9 -->
-        <div class="tournament-card gradient-glow fade-in">
-          <img src="https://via.placeholder.com/300x150" alt="Inferno League">
-          <h3 class="text-xl font-bold text-white mt-2">Inferno League</h3>
-          <p class="text-[#F1F5F9] mt-2 text-sm">Burn up the tracks in a fiery racing showdown!</p>
-          <p class="text-[#F1F5F9] mt-1 text-sm"><strong>Entry:</strong> $45</p>
-          <p class="text-[#F1F5F9] mt-1 text-sm"><strong>Prize:</strong> $35,000</p>
-          <p class="text-[#F1F5F9] mt-1 text-sm"><strong>Starts:</strong> June 25, 2025</p>
-          <div class="flex justify-center mt-4">
-            <a href="#" class="join-btn" onclick="joinTournament('Inferno League')" aria-label="Join Inferno League">Join Now</a>
-          </div>
-        </div>
-        <!-- Tournament 10 -->
-        <div class="tournament-card gradient-glow fade-in">
-          <img src="https://via.placeholder.com/300x150" alt="Celestial Gauntlet">
-          <h3 class="text-xl font-bold text-white mt-2">Celestial Gauntlet</h3>
-          <p class="text-[#F1F5F9] mt-2 text-sm">Unravel cosmic mysteries in a puzzle-packed battle!</p>
-          <p class="text-[#F1F5F9] mt-1 text-sm"><strong>Entry:</strong> $20</p>
-          <p class="text-[#F1F5F9] mt-1 text-sm"><strong>Prize:</strong> $7,000</p>
-          <p class="text-[#F1F5F9] mt-1 text-sm"><strong>Starts:</strong> July 1, 2025</p>
-          <div class="flex justify-center mt-4">
-            <a href="#" class="join-btn" onclick="joinTournament('Celestial Gauntlet')" aria-label="Join Celestial Gauntlet">Join Now</a>
+          <div class="card-content">
+            <p class="text-slate-300 text-sm flex-grow">Strike fast in a heart-pounding martial arts brawl!</p>
+            <div class="card-details">
+              <span><strong>Entry:</strong> $15</span>
+              <span><strong>Prize:</strong> $8,000</span>
+              <span class="col-span-2"><strong>Starts:</strong> June 10, 2025</span>
+            </div>
+            <a href="#" class="join-btn" onclick="joinTournament('Phantom Clash')">Join Now <i class="fas fa-arrow-right"></i></a>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-[#1E293B] py-10 px-4 sm:px-6 md:px-8">
-      <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        <div>
-          <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Contact</h3>
-          <p class="text-[#F1F5F9] mb-2 text-sm leading-relaxed">📧 <a href="mailto:businessgamingodyssey@gmail.com" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link">support@gamingodyssey.in</a></p>
-          <p class="text-[#F1F5F9] text-sm leading-relaxed">📞 6290994382</p>
+    <footer class="bg-[#1E293B]/80 py-10 px-4 sm:px-6 md:px-8">
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+            <div>
+                <h3 class="text-lg font-bold text-white mb-4">Contact</h3>
+                <p class="text-slate-300 mb-2 text-sm"><a href="mailto:businessgamingodyssey@gmail.com" class="hover:text-primary-color transition">support@gamingodyssey.in</a></p>
+                <p class="text-slate-300 text-sm">6290994382</p>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold text-white mb-4">Useful Links</h3>
+                <ul class="space-y-2">
+                    <li><a href="index.html" class="text-slate-300 hover:text-primary-color transition text-sm">Home</a></li>
+                    <li><a href="store.html" class="text-slate-300 hover:text-primary-color transition text-sm">Store</a></li>
+                    <li><a href="tournaments.html" class="text-slate-300 hover:text-primary-color transition text-sm">Tournaments</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold text-white mb-4">Follow Us</h3>
+                <div class="flex space-x-4 justify-center md:justify-start">
+                    <a href="https://www.instagram.com/noticedveil" target="_blank" class="text-slate-300 hover:text-primary-color transition" aria-label="Follow us on Instagram"><i class="fab fa-instagram text-2xl"></i></a>
+                    <a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="text-slate-300 hover:text-primary-color transition" aria-label="Follow us on YouTube"><i class="fab fa-youtube text-2xl"></i></a>
+                    <a href="https://www.facebook.com" target="_blank" class="text-slate-300 hover:text-primary-color transition" aria-label="Follow us on Facebook"><i class="fab fa-facebook text-2xl"></i></a>
+                </div>
+            </div>
         </div>
-        <div>
-          <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Useful Links</h3>
-          <ul class="space-y-2">
-            <li><a href="index.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Home</a></li>
-            <li><a href="store.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Store</a></li>
-            <li><a href="tournaments.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Tournaments</a></li>
-            <li><a href="trackorder.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Track Order</a></li>
-            <li><a href="contactus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Contact Us</a></li>
-            <li><a href="aboutus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">About Us</a></li>
-          </ul>
-        </div>
-        <div>
-          <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Follow Us</h3>
-          <div class="flex space-x-3">
-            <a href="https://www.instagram.com/noticedveil" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full" aria-label="Follow us on Instagram">
-              <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" class="w-5 h-5">
-            </a>
-            <a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full" aria-label="Follow us on YouTube">
-              <img src="https://cdn-icons-png.flaticon.com/512/3938/3938026.png" alt="YouTube" class="w-5 h-5">
-            </a>
-            <a href="https://www.facebook.com" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full" aria-label="Follow us on Facebook">
-              <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" class="w-5 h-5">
-            </a>
-          </div>
-        </div>
-      </div>
-      <p class="text-center text-[#F1F5F9] mt-6 text-sm leading-relaxed">© 2025 Gaming Odyssey. All rights reserved.</p>
+        <p class="text-center text-slate-400 mt-8 text-sm">© 2025 Gaming Odyssey. All rights reserved.</p>
     </footer>
   </div>
 
@@ -427,16 +333,13 @@
     const mobileMenu = document.getElementById('mobile-menu');
     const closeMenu = document.getElementById('close-menu');
     hamburger.addEventListener('click', () => {
-      mobileMenu.classList.remove('hidden');
       mobileMenu.classList.add('active');
     });
     closeMenu.addEventListener('click', () => {
-      mobileMenu.classList.add('hidden');
       mobileMenu.classList.remove('active');
     });
 
     // Fade-in Animation on Scroll
-    const fadeIns = document.querySelectorAll('.fade-in');
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -444,10 +347,13 @@
         }
       });
     }, { threshold: 0.1 });
-    fadeIns.forEach(element => observer.observe(element));
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
     // Join Tournament Function (Placeholder)
     function joinTournament(tournamentName) {
       alert(`Joining ${tournamentName}! Please complete the registration process.`);
     }
   </script>
+</body>
+</html>
+
