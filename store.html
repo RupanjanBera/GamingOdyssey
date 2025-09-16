@@ -249,19 +249,19 @@
       background-color: var(--primary-color);
       color: var(--background-color);
     }
-    @keyframes subtle-gradient-move {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
+
+    /* UPDATED: New background image for hero section */
     .hero-bg {
-      background: linear-gradient(270deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1), rgba(59, 130, 246, 0.1));
-      background-size: 200% 200%;
-      animation: subtle-gradient-move 15s ease infinite;
+      background-image: 
+        linear-gradient(270deg, rgba(15, 23, 42, 0.9), rgba(139, 92, 246, 0.3), rgba(15, 23, 42, 0.9)),
+        url('https://images.pexels.com/photos/7915228/pexels-photo-7915228.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
+      background-size: cover;
+      background-position: center;
       position: relative;
       overflow: hidden;
       border-bottom: 1px solid var(--card-border);
     }
+    
     #cart-overlay.visible {
       opacity: 1;
       pointer-events: auto;
@@ -389,7 +389,7 @@
       </div>
   </aside>
 
-  <main class="w-full md:ml-64 md:mr-64 transition-all duration-300 ease-in-out pb-24">
+  <main class="transition-all duration-300 ease-in-out pb-24 md:ml-64 md:mr-64">
     <header class="sticky top-0 bg-slate-900/80 backdrop-blur-md z-10 p-4 flex justify-between items-center md:justify-end border-b border-slate-700">
       <button id="hamburger" class="md:hidden text-blue-400 text-2xl"><i class="fas fa-bars"></i></button>
       <div class="flex items-center gap-4">
@@ -458,6 +458,7 @@
       </div>
     </footer>
   </main>
+  
   <div id="comparison-tray" class="fixed bottom-[-100%] left-0 right-0 z-40 bg-slate-800/80 backdrop-blur-md shadow-lg transition-all duration-500 ease-in-out">
     <div class="max-w-7xl mx-auto p-4 flex justify-between items-center">
         <div class="flex items-center gap-4">
@@ -1314,11 +1315,3 @@
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
