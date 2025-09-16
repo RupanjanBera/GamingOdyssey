@@ -136,6 +136,10 @@
     .email-not-verified {
       color: #EF4444;
     }
+    .verification-code-container {
+      margin-top: 0.5rem;
+      display: none;
+    }
     @media (min-width: 1024px) {
       #payment-method-selector {
         grid-template-columns: repeat(4, 1fr);
@@ -180,6 +184,13 @@
                 <i class="fas fa-check-circle email-verified hidden"></i>
                 <i class="fas fa-times-circle email-not-verified hidden"></i>
                 <span id="email-status-text"></span>
+              </div>
+              <div id="verification-code-container" class="verification-code-container">
+                <label for="verification-code" class="block text-sm font-medium text-slate-300 mb-1 mt-2">Verification Code</label>
+                <div class="flex gap-2">
+                  <input type="text" id="verification-code" placeholder="Enter code sent to your email" class="input-field w-full p-3 rounded-md">
+                  <button type="button" id="confirm-code-btn" class="bg-primary-color text-white px-4 rounded-md hover:bg-blue-600 transition">Confirm</button>
+                </div>
               </div>
             </div>
             
@@ -270,9 +281,13 @@
       const emailStatusText = document.getElementById('email-status-text');
       const emailVerifiedIcon = document.querySelector('.email-verified');
       const emailNotVerifiedIcon = document.querySelector('.email-not-verified');
+      const verificationCodeContainer = document.getElementById('verification-code-container');
+      const verificationCodeInput = document.getElementById('verification-code');
+      const confirmCodeBtn = document.getElementById('confirm-code-btn');
       
       let selectedPaymentMethod = 'Card';
       let isEmailVerified = false;
+      let verificationCode = '';
 
       // --- INITIAL CHECK ---
       if (!finalOrder) {
@@ -331,14 +346,34 @@
           return;
         }
         
-        // Simulate email verification (in a real app, you might send a verification code)
-        showEmailStatus('Email verified successfully', true);
-        isEmailVerified = true;
-        updateConfirmButtonState();
+        // Generate and send verification code
+        verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+        showEmailStatus('Verification code sent to your email', true);
+        verificationCodeContainer.style.display = 'block';
+        
+        // In a real app, you would send this code to the user's email
+        console.log(`Verification code for ${email}: ${verificationCode}`);
+        
+        // For demo purposes, we'll auto-fill the code
+        setTimeout(() => {
+          verificationCodeInput.value = verificationCode;
+          alert(`For demo purposes, the verification code is: ${verificationCode}`);
+        }, 1000);
+      }
+      
+      function confirmVerificationCode() {
+        if (verificationCodeInput.value === verificationCode) {
+          showEmailStatus('Email verified successfully', true);
+          isEmailVerified = true;
+          updateConfirmButtonState();
+          verificationCodeContainer.style.display = 'none';
+        } else {
+          showEmailStatus('Invalid verification code', false);
+        }
       }
       
       function isValidEmail(email) {
-        const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[09]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(String(email).toLowerCase());
       }
       
@@ -366,9 +401,11 @@
         isEmailVerified = false;
         updateConfirmButtonState();
         emailStatus.classList.add('hidden');
+        verificationCodeContainer.style.display = 'none';
       });
       
       verifyEmailBtn.addEventListener('click', verifyEmail);
+      confirmCodeBtn.addEventListener('click', confirmVerificationCode);
       
       document.querySelectorAll('.payment-tab').forEach(tab => {
         tab.addEventListener('click', () => {
@@ -456,34 +493,74 @@
         formData.append('_next', `${window.location.origin}/thankyou.html?orderId=${orderData.orderId}`);
         formData.append('_template', 'table');
         
-        // Add customer email for autoresponse
+        // Add customer email for autoresponse - MUST be named "email" for FormSubmit
         formData.append('email', orderData.customerEmail);
         
         // Create autoresponse message
         const customerMessage = `
-Thank you for your order with Gaming Odyssey!
-
-Order ID: ${orderData.orderId}
-Order Date: ${new Date(orderData.timestamp).toLocaleString()}
-Total Amount: $${orderData.total.toFixed(2)}
-Payment Method: ${orderData.paymentMethod}
-
-Items Ordered:
-${orderData.items.map(item => `- ${item.name} (Qty: ${item.quantity}) - $${(item.price * item.quantity).toFixed(2)}`).join('\n')}
-
-Shipping Address:
-${orderData.shippingAddress.name}
-${orderData.shippingAddress.addressLine1}
-${orderData.shippingAddress.city}, ${orderData.shippingAddress.state} ${orderData.shippingAddress.zip}
-${orderData.shippingAddress.country}
-Phone: ${orderData.shippingAddress.phone}
-
-We'll notify you when your order ships. If you have any questions, please contact our support team.
-
-Thank you for shopping with Gaming Odyssey!
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .header { background: linear-gradient(90deg, #3B82F6, #8B5CF6); padding: 20px; text-align: center; color: white; }
+    .content { padding: 20px; }
+    .order-details { background: #f9f9f9; padding: 15px; border-radius: 5px; margin: 15px 0; }
+    .item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
+    .footer { background: #f0f0f0; padding: 15px; text-align: center; font-size: 14px; color: #666; }
+    .highlight { color: #3B82F6; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Thank You for Your Order!</h1>
+    <p>Your gaming adventure is about to begin</p>
+  </div>
+  
+  <div class="content">
+    <p>Hello ${orderData.shippingAddress.name},</p>
+    <p>Thank you for shopping with <span class="highlight">Gaming Odyssey</span>. We're excited to let you know that we've received your order and it's now being processed.</p>
+    
+    <div class="order-details">
+      <h2>Order Details</h2>
+      <p><strong>Order ID:</strong> ${orderData.orderId}</p>
+      <p><strong>Order Date:</strong> ${new Date(orderData.timestamp).toLocaleString()}</p>
+      <p><strong>Total Amount:</strong> $${orderData.total.toFixed(2)}</p>
+      <p><strong>Payment Method:</strong> ${orderData.paymentMethod}</p>
+    </div>
+    
+    <h2>Items Ordered</h2>
+    ${orderData.items.map(item => `
+      <div class="item">
+        <div>${item.name} (Qty: ${item.quantity})</div>
+        <div>$${(item.price * item.quantity).toFixed(2)}</div>
+      </div>
+    `).join('')}
+    
+    <h2>Shipping Address</h2>
+    <p>
+      ${orderData.shippingAddress.name}<br>
+      ${orderData.shippingAddress.addressLine1}<br>
+      ${orderData.shippingAddress.city}, ${orderData.shippingAddress.state} ${orderData.shippingAddress.zip}<br>
+      ${orderData.shippingAddress.country}<br>
+      Phone: ${orderData.shippingAddress.phone}
+    </p>
+    
+    <p>We'll notify you when your order ships. If you have any questions, please contact our support team at support@gamingodyssey.in.</p>
+    
+    <p>Happy Gaming,<br>The Gaming Odyssey Team</p>
+  </div>
+  
+  <div class="footer">
+    <p>© 2023 Gaming Odyssey. All rights reserved.</p>
+    <p>This is an automated message, please do not reply to this email.</p>
+  </div>
+</body>
+</html>
         `;
         
         formData.append('_autoresponse', customerMessage);
+        formData.append('_autoresponseSubject', 'Thank you for your order with Gaming Odyssey!');
         
         formData.append('Order ID', orderData.orderId);
         formData.append('Customer Email', orderData.customerEmail);
@@ -550,4 +627,3 @@ Thank you for shopping with Gaming Odyssey!
   </script>
 </body>
 </html>
-
