@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tournament Registration - Gaming Odyssey</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --primary-color: #3B82F6;
+      --secondary-color: #D946EF;
+      --background-color: #0F172A;
+      --text-color: #F1F5F9;
+      --card-background: rgba(30, 41, 59, 0.6);
+      --input-background: #2c3a4f;
+      --card-border: #334155;
+      --font-family: 'Poppins', sans-serif;
+    }
+    body {
+      font-family: var(--font-family);
+      background-color: var(--background-color);
+      background-image: url('https://images.pexels.com/photos/3165335/pexels-photo-3165335.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
+      background-attachment: fixed;
+      background-size: cover;
+      background-position: center;
+      color: var(--text-color);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    .main-content-wrapper {
+        background-color: rgba(15, 23, 42, 0.8);
+        backdrop-filter: blur(8px);
+    }
+    .sidebar {
+      background: linear-gradient(180deg, #1E293B 0%, var(--background-color) 100%);
+      box-shadow: 2px 0 6px rgba(59, 130, 246, 0.1);
+    }
+    .form-container {
+        background: var(--card-background);
+        backdrop-filter: blur(12px);
+        border: 1px solid var(--primary-color);
+        border-radius: 0.75rem;
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+    }
+    .form-input {
+      background-color: var(--input-background);
+      border: 1px solid var(--card-border);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      border-radius: 0.5rem;
+    }
+    .form-input:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4);
+      outline: none;
+    }
+    .submit-btn {
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+    }
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(217, 70, 239, 0.3);
+    }
+    .heading {
+      font-size: clamp(2.5rem, 5vw, 3.5rem);
+      font-weight: 700;
+      text-align: center;
+      position: relative;
+      margin-bottom: 3rem;
+      text-shadow: 0 0 15px var(--primary-color);
+    }
+    .heading::after {
+      content: '';
+      position: absolute;
+      bottom: -0.75rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+      border-radius: 2px;
+    }
+    .nav-link:hover { color: var(--primary-color); }
+    .mobile-menu {
+      background: linear-gradient(180deg, #1E293B, var(--background-color));
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    .mobile-menu.active {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    @media (max-width: 767px) {
+      .main-content-wrapper { margin-left: 0; }
+    }
+  </style>
+</head>
+<body>
+  <aside class="fixed top-0 left-0 h-full w-64 sidebar z-20 hidden md:block">
+    <div class="p-6">
+      <h1 class="text-2xl font-bold text-white leading-relaxed">Gaming Odyssey</h1>
+      <nav class="mt-10 space-y-3">
+        <a href="index.html" class="flex items-center space-x-3 text-slate-300 font-semibold nav-link"><i class="fas fa-home w-5 text-center"></i><span>Home</span></a>
+        <a href="store.html" class="flex items-center space-x-3 text-slate-300 font-semibold nav-link"><i class="fas fa-store w-5 text-center"></i><span>Store</span></a>
+        <a href="tournaments.html" class="flex items-center space-x-3 text-slate-300 font-semibold nav-link"><i class="fas fa-trophy w-5 text-center"></i><span>Tournaments</span></a>
+        <a href="trackorder.html" class="flex items-center space-x-3 text-slate-300 font-semibold nav-link"><i class="fas fa-truck-fast w-5 text-center"></i><span>Track Order</span></a>
+        <a href="contactus.html" class="flex items-center space-x-3 text-slate-300 font-semibold nav-link"><i class="fas fa-headset w-5 text-center"></i><span>Contact Us</span></a>
+        <a href="aboutus.html" class="flex items-center space-x-3 text-slate-300 font-semibold nav-link"><i class="fas fa-info-circle w-5 text-center"></i><span>About Us</span></a>
+        <a href="signin.html" class="flex items-center space-x-3 text-slate-300 font-semibold nav-link"><i class="fas fa-sign-in-alt w-5 text-center"></i><span>Sign In</span></a>
+        <a href="createaccount.html" class="flex items-center space-x-3 text-slate-300 font-semibold nav-link"><i class="fas fa-user-plus w-5 text-center"></i><span>Create Account</span></a>
+      </nav>
+    </div>
+  </aside>
+
+  <div class="md:hidden fixed top-0 left-0 w-full bg-[#1E293B]/80 backdrop-blur-sm z-30 p-4 flex justify-between items-center">
+    <h1 class="text-lg font-bold text-white leading-relaxed">Gaming Odyssey</h1>
+    <button id="hamburger" class="text-primary-color" aria-label="Toggle menu"><i class="fas fa-bars text-2xl"></i></button>
+  </div>
+  <div id="mobile-menu" class="fixed top-0 left-0 w-full h-full mobile-menu z-40 p-4">
+    <button id="close-menu" class="absolute top-4 right-4 text-primary-color p-2" aria-label="Close menu"><i class="fas fa-times text-3xl"></i></button>
+    <nav class="space-y-4 mt-16">
+        <a href="index.html" class="flex items-center space-x-3 text-slate-300 font-semibold text-lg nav-link"><i class="fas fa-home w-6 text-center"></i><span>Home</span></a>
+        <a href="store.html" class="flex items-center space-x-3 text-slate-300 font-semibold text-lg nav-link"><i class="fas fa-store w-6 text-center"></i><span>Store</span></a>
+        <a href="tournaments.html" class="flex items-center space-x-3 text-slate-300 font-semibold text-lg nav-link"><i class="fas fa-trophy w-6 text-center"></i><span>Tournaments</span></a>
+        </nav>
+  </div>
+
+  <div class="md:ml-64 main-content-wrapper">
+    <section class="py-16 px-4 sm:px-6 md:px-8 min-h-screen flex items-center justify-center">
+      <div class="max-w-2xl w-full">
+        <h1 class="heading">Tournament Registration</h1>
+        
+        <div class="form-container p-8">
+          <form action="https://formsubmit.co/support@gamingodyssey.in" method="POST">
+            
+            <input type="hidden" name="_subject" value="New Tournament Registration!">
+            <input type="hidden" name="_next" value="https://yourwebsite.com/registration-success.html"> <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="col-span-1 md:col-span-2">
+                <h2 class="text-xl font-semibold mb-4 border-b border-card-border pb-2">Personal Details</h2>
+              </div>
+              <div>
+                <label for="full-name" class="block text-sm font-medium text-slate-300 mb-2">Full Name</label>
+                <input type="text" name="full-name" id="full-name" class="w-full p-3 form-input" placeholder="John Doe" required>
+              </div>
+              <div>
+                <label for="email" class="block text-sm font-medium text-slate-300 mb-2">Email Address</label>
+                <input type="email" name="email" id="email" class="w-full p-3 form-input" placeholder="player@example.com" required>
+              </div>
+
+              <div class="col-span-1 md:col-span-2 mt-4">
+                <h2 class="text-xl font-semibold mb-4 border-b border-card-border pb-2">Gaming Information</h2>
+              </div>
+              <div>
+                <label for="gamer-tag" class="block text-sm font-medium text-slate-300 mb-2">Gamer Tag / In-Game Name</label>
+                <input type="text" name="gamer-tag" id="gamer-tag" class="w-full p-3 form-input" placeholder="ProGamer123" required>
+              </div>
+              <div>
+                <label for="team-name" class="block text-sm font-medium text-slate-300 mb-2">Team Name (Optional)</label>
+                <input type="text" name="team-name" id="team-name" class="w-full p-3 form-input" placeholder="The A-Team">
+              </div>
+              <div class="col-span-1 md:col-span-2">
+                <label for="tournament-selection" class="block text-sm font-medium text-slate-300 mb-2">Select Tournament</label>
+                <select name="tournament-selection" id="tournament-selection" class="w-full p-3 form-input" required>
+                  <option value="" disabled selected>Choose an event...</option>
+                  <option value="Cyber Arena Showdown">Cyber Arena Showdown ($50 Entry)</option>
+                  <option value="Neon Battle Royale">Neon Battle Royale ($30 Entry)</option>
+                  <option value="Quantum League">Quantum League ($20 Entry)</option>
+                  <option value="Eclipse Tournament">Eclipse Tournament ($40 Entry)</option>
+                  <option value="Galactic Wars">Galactic Wars ($25 Entry)</option>
+                  <option value="Phantom Clash">Phantom Clash ($15 Entry)</option>
+                  <option value="Astral Showdown">Astral Showdown ($35 Entry)</option>
+                  <option value="Void Champions">Void Champions ($10 Entry)</option>
+                  <option value="Inferno League">Inferno League ($45 Entry)</option>
+                  <option value="Celestial Gauntlet">Celestial Gauntlet ($20 Entry)</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="mt-8">
+              <div class="flex items-start">
+                <div class="flex items-center h-5">
+                  <input id="terms" name="terms" type="checkbox" class="focus:ring-primary-color h-4 w-4 text-primary-color border-gray-300 rounded" required>
+                </div>
+                <div class="ml-3 text-sm">
+                  <label for="terms" class="font-medium text-slate-300">I agree to the <a href="#" class="text-primary-color hover:underline">Tournament Rules and Terms of Service</a>.</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-8">
+              <button type="submit" class="w-full submit-btn text-lg">Register and Proceed to Payment</button>
+            </div>
+          </form>
+        </div>
+        <p class="text-center text-slate-400 text-sm mt-6">
+          After registration, you will be redirected to complete your entry fee payment.
+        </p>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // Hamburger Menu Toggle
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const closeMenu = document.getElementById('close-menu');
+    hamburger.addEventListener('click', () => {
+      mobileMenu.classList.add('active');
+    });
+    closeMenu.addEventListener('click', () => {
+      mobileMenu.classList.remove('active');
+    });
+  </script>
+</body>
+</html>

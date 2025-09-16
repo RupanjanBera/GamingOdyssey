@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registration Submitted - Gaming Odyssey</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --primary-color: #3B82F6;
+      --secondary-color: #D946EF;
+      --background-color: #0F172A;
+      --text-color: #F1F5F9;
+      --font-family: 'Poppins', sans-serif;
+    }
+    body {
+      font-family: var(--font-family);
+      background-color: var(--background-color);
+      background-image: url('https://images.pexels.com/photos/3165335/pexels-photo-3165335.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
+      background-attachment: fixed;
+      background-size: cover;
+      background-position: center;
+      color: var(--text-color);
+    }
+    .content-box {
+        background-color: rgba(30, 41, 59, 0.8);
+        backdrop-filter: blur(10px);
+        border-radius: 1rem;
+        border: 1px solid var(--primary-color);
+        box-shadow: 0 0 25px rgba(59, 130, 246, 0.4);
+    }
+    .back-btn {
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      font-weight: 600;
+      padding: 0.75rem 2rem;
+      border-radius: 0.5rem;
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+    }
+    .back-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(217, 70, 239, 0.3);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="content-box p-8 md:p-12 text-center">
+    <div class="text-green-400 mb-4">
+      <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+    </div>
+    <h1 class="text-3xl md:text-4xl font-bold mb-4">Thank You!</h1>
+    <p class="text-slate-300 max-w-md mx-auto mb-8">
+      Your registration has been submitted. We've sent a confirmation to your email address with the next steps. Please check your inbox (and spam folder) to complete your payment.
+    </p>
+    <a href="tournaments.html" class="back-btn inline-block">Back to Tournaments</a>
+  </div>
+
+</body>
+</html>
