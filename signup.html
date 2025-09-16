@@ -179,6 +179,35 @@
     .divider:not(:empty)::after {
       margin-left: .5em;
     }
+
+    /* Google Button Customization */
+    #google-btn-container {
+      /* This targets the container div for the Google button */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0.5rem; /* Padding around the button */
+      background: #1E293B; /* Background for the container */
+      border-radius: 0.75rem; /* Rounded edges for the container */
+      border: 1px solid #3B82F6; /* Border for the container */
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      overflow: hidden; /* Important to hide the default square edges */
+    }
+    #google-btn-container:hover {
+      border-color: #D946EF;
+      box-shadow: 0 0 12px rgba(217, 70, 239, 0.4);
+      transform: translateY(-2px);
+    }
+    /* Target the actual Google button's iframe for minimal adjustment */
+    .g_id_signin {
+      border-radius: 0.5rem !important; /* Force rounded edges on the button itself */
+      width: 100% !important; /* Make it fill the container */
+    }
+    .g_id_signin > div { /* Target the inner div to ensure sizing is correct */
+      width: 100% !important;
+    }
+
     @media (max-width: 640px) {
       .submit-btn {
         width: 100%;
@@ -380,7 +409,7 @@
           
           <div class="divider">OR</div>
 
-          <div id="google-btn-container" class="flex justify-center"></div>
+          <div id="google-btn-container" class="w-full max-w-sm mx-auto"></div>
           
           <div class="text-center mt-6 text-[#94A3B8] text-sm">
             Already have an account? <a href="login.html" class="text-[#3B82F6] hover:underline">Log in</a>
@@ -463,7 +492,6 @@
   <script>
     // --- Google OAuth Implementation ---
 
-    // Function to decode the JWT token from Google
     function jwt_decode(token) {
       try {
         return JSON.parse(atob(token.split('.')[1]));
@@ -472,7 +500,6 @@
       }
     }
     
-    // Callback function to handle the credential response from Google
     function handleCredentialResponse(response) {
       const responsePayload = jwt_decode(response.credential);
       const email = responsePayload.email;
@@ -481,34 +508,29 @@
 
       const formStatus = document.getElementById('form-status');
 
-      // Get existing users from localStorage or create an empty array
       let users = JSON.parse(localStorage.getItem('users')) || [];
 
-      // Check if a user with this email already exists
       const userExists = users.some(user => user.email === email);
 
       if (!userExists) {
-        // Create a new user object if they don't exist
         const newUser = {
           firstName: firstName,
           lastName: lastName,
           email: email,
-          username: email.split('@')[0], // Use part of email as a default username
-          password: 'GoogleUser_NoPassword', // Placeholder for Google-authenticated users
+          username: email.split('@')[0],
+          password: 'GoogleUser_NoPassword',
           signupDate: new Date().toISOString()
         };
         users.push(newUser);
         localStorage.setItem('users', JSON.stringify(users));
       }
 
-      // Store current user data for session management (avatar, etc.)
       localStorage.setItem('userData', JSON.stringify({
         name: firstName,
         username: email.split('@')[0],
         email: email
       }));
 
-      // Show success message and redirect
       formStatus.textContent = 'Signed in successfully! Redirecting...';
       formStatus.className = 'success text-center';
       setTimeout(() => {
@@ -516,25 +538,24 @@
       }, 2000);
     }
 
-    // Initialize Google Identity Services when the window loads
     window.onload = function () {
       google.accounts.id.initialize({
         client_id: '964191300629-ri9d35rqf4p0tgshv4k8u31r5rptmf9m.apps.googleusercontent.com',
         callback: handleCredentialResponse
       });
 
-      // Render the Google Sign-Up button
       google.accounts.id.renderButton(
         document.getElementById('google-btn-container'), {
           theme: 'outline',
           size: 'large',
           type: 'standard',
           text: 'signup_with',
-          shape: 'rectangular'
+          shape: 'rectangular', /* This makes the default button rectangular */
+          width: '100%', /* Occupy full width of its container */
+          locale: 'en'
         }
       );
 
-      // Display the One Tap prompt
       google.accounts.id.prompt();
     };
 
