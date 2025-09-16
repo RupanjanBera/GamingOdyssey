@@ -28,24 +28,20 @@
       box-shadow: 2px 0 6px rgba(59, 130, 246, 0.1);
     }
     .hero-bg {
-      background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(217, 70, 239, 0.15), #0F172A);
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(217, 70, 239, 0.1), #0F172A 70%);
       position: relative;
       overflow: hidden;
     }
     .hero-bg::before {
       content: '';
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      top: 0; left: 0; right: 0; bottom: 0;
       background: radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.2), transparent 70%);
-      animation: glow 20s ease-in-out infinite;
-      opacity: 0.5;
+      animation: glow 20s ease-in-out infinite alternate;
     }
     @keyframes glow {
-      0%, 100% { opacity: 0.5; }
-      50% { opacity: 0.7; }
+      from { transform: scale(1) rotate(0deg); opacity: 0.5; }
+      to { transform: scale(1.2) rotate(15deg); opacity: 0.7; }
     }
     .fade-in {
       opacity: 0;
@@ -58,13 +54,9 @@
     }
     .nav-link, #mobile-menu a {
       position: relative;
-      display: inline-flex;
-      align-items: center;
       transition: color 0.2s ease;
-      font-family: 'Poppins', sans-serif;
       font-weight: 600;
-      font-size: 1.0625rem;
-      padding: 0.5rem 0;
+      padding: 0.5rem 0.25rem;
     }
     .nav-link::after, #mobile-menu a::after {
       content: '';
@@ -74,13 +66,13 @@
       bottom: 0;
       left: 0;
       background: linear-gradient(to right, #3B82F6, #D946EF);
-      transition: width 0.2s ease;
+      transition: width 0.3s ease;
     }
-    .nav-link:hover::after, #mobile-menu a:hover::after {
+    .nav-link:hover::after, #mobile-menu a:hover::after, .nav-link.active::after {
       width: 100%;
     }
-    .nav-link:hover, #mobile-menu a:hover {
-      color: #3B82F6;
+    .nav-link:hover, #mobile-menu a:hover, .nav-link.active {
+      color: #60A5FA;
     }
     .mobile-menu {
       background: linear-gradient(180deg, #1E293B, #0F172A);
@@ -95,325 +87,296 @@
     .card {
       background: linear-gradient(145deg, #1E293B, #0F172A);
       border-radius: 0.75rem;
-      padding: 1.25rem;
-      transition: transform 0.2s ease;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 1.5rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     .card:hover {
-      transform: translateY(-4px);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
     }
-    @media (max-width: 640px) {
-      .hero-bg h2 {
-        font-size: 2.25rem;
-      }
-      .hero-bg h3 {
-        font-size: 1.5rem;
-      }
-      .hero-bg h4 {
-        font-size: 1.125rem;
-      }
-      .nav-link, #mobile-menu a {
-        font-size: 1rem;
-      }
+    .content-text p, .content-text li {
+        line-height: 1.8;
+        color: #CBD5E1;
     }
-    @media (min-width: 640px) and (max-width: 768px) {
-      .hero-bg h2 {
-        font-size: 3rem;
-      }
+    .content-text h3 {
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #334155;
+    }
+    .content-text ul {
+        margin-top: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    #to-top-button {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        z-index: 50;
+    }
+    #to-top-button.visible {
+        opacity: 1;
+        transform: translateY(0);
     }
   </style>
 </head>
 <body>
-  <!-- Sidebar -->
-  <div class="fixed top-0 left-0 h-full w-64 sidebar gradient-glow z-20 hidden md:block">
-    <div class="p-4 sm:p-6">
-      <h1 class="text-xl sm:text-2xl font-bold text-white leading-relaxed">Gaming Odyssey</h1>
-      <nav class="mt-8 space-y-3">
-        <a href="#" data-link="index.html" class="flex items-center space-x-2 text-[#3B82F6] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>Home</span>
+  <div class="fixed top-0 left-0 h-full w-64 sidebar z-20 hidden md:block">
+    <div class="p-6">
+      <h1 class="text-2xl font-bold text-white leading-relaxed">Gaming Odyssey</h1>
+      <nav class="mt-8 space-y-2">
+        <a href="#" data-link="index.html" class="flex items-center space-x-3 text-[#F1F5F9] nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" /></svg>
+            <span>Home</span>
         </a>
-        <a href="#" data-link="store.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>Store</span>
+        <a href="#" data-link="store.html" class="flex items-center space-x-3 text-[#F1F5F9] nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" /></svg>
+            <span>Store</span>
         </a>
-        <a href="#" data-link="tournaments.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>Tournaments</span>
+        <a href="#" data-link="tournaments.html" class="flex items-center space-x-3 text-[#F1F5F9] nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 14.95a1 1 0 001.414 1.414l.707-.707a1 1 0 00-1.414-1.414l-.707.707zM4 10a1 1 0 01-1 1H2a1 1 0 110-2h1a1 1 0 011 1zM7 16a1 1 0 00-2 0v1a1 1 0 102 0v-1zM14.243 15.657a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM10 2a1 1 0 00-1 1v1a1 1 0 102 0V3a1 1 0 00-1-1zM5.757 4.343a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414l-.707-.707zM13 16a1 1 0 00-2 0v1a1 1 0 102 0v-1z" /><path d="M10 5a5 5 0 100 10 5 5 0 000-10z" /></svg>
+            <span>Tournaments</span>
         </a>
-        <a href="#" data-link="trackorder.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>Track Order</span>
+        <a href="#" data-link="trackorder.html" class="flex items-center space-x-3 text-[#F1F5F9] nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" /><path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v5a1 1 0 001 1h2.05a2.5 2.5 0 014.9 0H19a1 1 0 001-1V8a1 1 0 00-1-1h-5z" /></svg>
+            <span>Track Order</span>
         </a>
-        <a href="#" data-link="contactus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>Contact Us</span>
+        <a href="#" data-link="contactus.html" class="flex items-center space-x-3 text-[#F1F5F9] nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" /><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" /></svg>
+            <span>Contact Us</span>
         </a>
-        <a href="#" data-link="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>About Us</span>
+        <a href="#" data-link="aboutus.html" class="flex items-center space-x-3 text-[#F1F5F9] nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" /></svg>
+            <span>About Us</span>
         </a>
-        <a href="signin.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>Sign In</span>
+        <a href="signin.html" class="flex items-center space-x-3 text-[#F1F5F9] nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 3a1 1 0 011 1v12a1 1 0 11-2 0V4a1 1 0 011-1zm7.707 3.293a1 1 0 010 1.414L9.414 9H17a1 1 0 110 2H9.414l1.293 1.293a1 1 0 01-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+            <span>Sign In</span>
         </a>
-        <a href="createaccount.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>Create Account</span>
+        <a href="createaccount.html" class="flex items-center space-x-3 text-[#F1F5F9] nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 11a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1v-1z" /></svg>
+            <span>Create Account</span>
         </a>
-        <div id="user-display" class="hidden flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-          <span>User</span>
+        <div id="user-display" class="hidden flex items-center space-x-3 text-[#F1F5F9] nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" /></svg>
+            <span>User</span>
         </div>
       </nav>
     </div>
   </div>
 
-  <!-- Mobile Hamburger Menu -->
   <div class="md:hidden fixed top-0 left-0 w-full bg-[#1E293B] z-30 p-4 flex justify-between items-center gradient-glow">
     <h1 class="text-lg font-bold text-white leading-relaxed">Gaming Odyssey</h1>
-    <button id="hamburger" class="text-[#3B82F6]">
-      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-    </button>
+    <button id="hamburger" class="text-[#3B82F6]"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
   </div>
   <div id="mobile-menu" class="hidden md:hidden fixed top-0 left-0 w-full h-full bg-[#1E293B] z-20 p-4 mobile-menu">
-    <button id="close-menu" class="absolute top-4 right-4 text-[#3B82F6] gradient-glow rounded-full p-2">
-      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-    </button>
-    <nav class="space-y-3 mt-12">
-      <a href="#" data-link="index.html" class="flex items-center space-x-2 text-[#3B82F6] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-        <span>Home</span>
-      </a>
-      <a href="#" data-link="store.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-        <span>Store</span>
-      </a>
-      <a href="#" data-link="tournaments.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-        <span>Tournaments</span>
-      </a>
-      <a href="#" data-link="trackorder.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-        <span>Track Order</span>
-      </a>
-      <a href="#" data-link="contactus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-        <span>Contact Us</span>
-      </a>
-      <a href="#" data-link="aboutus.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-        <span>About Us</span>
-      </a>
-      <a href="signin.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-        <span>Sign In</span>
-      </a>
-      <a href="createaccount.html" class="flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-        <span>Create Account</span>
-      </a>
-      <div id="mobile-user-display" class="hidden flex items-center space-x-2 text-[#F1F5F9] font-semibold nav-link">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
-        <span>User</span>
-      </div>
-    </nav>
-  </div>
+     </div>
 
-  <!-- Main Content -->
   <div class="md:ml-64">
-    <!-- Terms and Conditions Section -->
-    <section class="hero-bg py-12 sm:py-16 px-4 sm:px-6 md:px-8">
+    <section class="hero-bg py-16 px-4 sm:px-6 md:px-8">
       <div class="max-w-4xl mx-auto">
-        <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 fade-in">Terms and Conditions</h2>
-        <div class="card gradient-glow fade-in p-6 sm:p-8">
-          <p class="text-[#F1F5F9] mb-4"><strong>Effective Date:</strong> May 1, 2025</p>
-          <p class="text-[#F1F5F9] mb-6">Welcome to Gaming Odyssey. These Terms and Conditions ("Terms") govern your access to and use of our website (www.gamingodyssey.in), services, content, products, and features provided by Gaming Odyssey ("we", "us", or "our"). By using our site or services, you agree to these Terms. If you do not agree, please do not use our website.</p>
+        <h2 class="text-4xl font-bold text-white text-center mb-6 fade-in">Policies & Terms</h2>
+        <p class="text-center text-slate-300 mb-12 fade-in">Everything you need to know about using our services.</p>
+
+        <div class="card gradient-glow fade-in mb-12 p-6">
+            <h3 class="text-xl font-bold text-white mb-4">Quick Navigation</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                <a href="#terms" class="bg-slate-700/50 p-3 rounded-lg hover:bg-blue-500/30 transition">Terms & Conditions</a>
+                <a href="#privacy" class="bg-slate-700/50 p-3 rounded-lg hover:bg-blue-500/30 transition">Privacy Policy</a>
+                <a href="#shipping" class="bg-slate-700/50 p-3 rounded-lg hover:bg-blue-500/30 transition">Shipping Policy</a>
+                <a href="#refund" class="bg-slate-700/50 p-3 rounded-lg hover:bg-blue-500/30 transition">Refund Policy</a>
+            </div>
+        </div>
+
+        <div id="terms" class="card gradient-glow fade-in content-text">
+          <h3 class="text-2xl font-bold text-white mb-4">📜 Terms and Conditions</h3>
+          <p class="text-slate-400 mb-4"><strong>Effective Date:</strong> May 1, 2025</p>
+          <p class="mb-6">Welcome to Gaming Odyssey. These Terms and Conditions ("Terms") govern your access to and use of our website (www.gamingodyssey.in), services, content, products, and features provided by Gaming Odyssey ("we", "us", or "our"). By using our site or services, you agree to these Terms. If you do not agree, please do not use our website.</p>
           
-          <h3 class="text-xl font-bold text-white mb-4">1. User Eligibility</h3>
-          <ul class="list-disc pl-6 text-[#F1F5F9] mb-6">
+          <h4 class="text-xl font-bold text-white mt-6 mb-4">1. User Eligibility</h4>
+          <ul class="list-disc pl-6">
             <li>You must be at least 13 years old to use this website.</li>
             <li>If you are under the age of 18, you must have the permission of a parent or legal guardian.</li>
           </ul>
 
-          <h3 class="text-xl font-bold text-white mb-4">2. User Accounts</h3>
-          <ul class="list-disc pl-6 text-[#F1F5F9] mb-6">
+          <h4 class="text-xl font-bold text-white mt-6 mb-4">2. User Accounts</h4>
+          <ul class="list-disc pl-6">
             <li>To access certain features, you may need to create an account.</li>
             <li>You are responsible for maintaining the confidentiality of your account credentials.</li>
             <li>You agree to provide accurate and complete information when registering.</li>
             <li>We reserve the right to suspend or terminate accounts found to be in violation of these terms.</li>
           </ul>
 
-          <h3 class="text-xl font-bold text-white mb-4">3. Purchases and Payments</h3>
-          <ul class="list-disc pl-6 text-[#F1F5F9] mb-6">
+          <h4 class="text-xl font-bold text-white mt-6 mb-4">3. Purchases and Payments</h4>
+          <ul class="list-disc pl-6">
             <li>All purchases made through the website are final unless otherwise specified.</li>
             <li>We use secure third-party payment processors.</li>
             <li>You agree not to use fraudulent methods of payment.</li>
             <li>Prices and product availability are subject to change without notice.</li>
           </ul>
 
-          <h3 class="text-xl font-bold text-white mb-4">4. Tournaments and Competitions</h3>
-          <ul class="list-disc pl-6 text-[#F1F5F9] mb-6">
+          <h4 class="text-xl font-bold text-white mt-6 mb-4">4. Tournaments and Competitions</h4>
+          <ul class="list-disc pl-6">
             <li>By participating in any tournament hosted by Gaming Odyssey, you agree to abide by the specific tournament rules provided.</li>
             <li>Cheating, exploitation, or unsportsmanlike behavior will result in disqualification.</li>
             <li>Prizes are non-transferable and subject to eligibility verification.</li>
             <li>We reserve the right to modify or cancel tournaments at our discretion.</li>
           </ul>
 
-          <h3 class="text-xl font-bold text-white mb-4">5. Intellectual Property</h3>
-          <ul class="list-disc pl-6 text-[#F1F5F9] mb-6">
+          <h4 class="text-xl font-bold text-white mt-6 mb-4">5. Intellectual Property</h4>
+          <ul class="list-disc pl-6">
             <li>All content, including text, graphics, logos, designs, and software, is the property of Gaming Odyssey and protected under copyright and trademark laws.</li>
             <li>You may not reproduce, distribute, or create derivative works without our express written permission.</li>
           </ul>
 
-          <h3 class="text-xl font-bold text-white mb-4">6. User Content</h3>
-          <ul class="list-disc pl-6 text-[#F1F5F9] mb-6">
+          <h4 class="text-xl font-bold text-white mt-6 mb-4">6. User Content</h4>
+          <ul class="list-disc pl-6">
             <li>You may submit content such as feedback, comments, or suggestions.</li>
             <li>By submitting content, you grant Gaming Odyssey a worldwide, non-exclusive, royalty-free license to use, reproduce, and publish your content.</li>
             <li>You agree not to upload content that is offensive, harmful, or violates any laws.</li>
           </ul>
 
-          <h3 class="text-xl font-bold text-white mb-4">7. Prohibited Activities</h3>
-          <p class="text-[#F1F5F9] mb-2">You agree not to:</p>
-          <ul class="list-disc pl-6 text-[#F1F5F9] mb-6">
+          <h4 class="text-xl font-bold text-white mt-6 mb-4">7. Prohibited Activities</h4>
+          <p class="mb-2">You agree not to:</p>
+          <ul class="list-disc pl-6">
             <li>Use the website for illegal or unauthorized purposes.</li>
             <li>Attempt to hack, exploit, or interfere with the website’s functionality or servers.</li>
             <li>Impersonate any person or misrepresent your identity.</li>
             <li>Engage in spamming or unsolicited messaging.</li>
           </ul>
 
-          <h3 class="text-xl font-bold text-white mb-4">8. Limitation of Liability</h3>
-          <ul class="list-disc pl-6 text-[#F1F5F9] mb-6">
+          <h4 class="text-xl font-bold text-white mt-6 mb-4">8. Limitation of Liability</h4>
+          <ul class="list-disc pl-6">
             <li>Gaming Odyssey shall not be liable for any indirect, incidental, or consequential damages resulting from the use or inability to use our services.</li>
             <li>We do not guarantee uninterrupted or error-free service.</li>
           </ul>
 
-          <h3 class="text-xl font-bold text-white mb-4">9. External Links</h3>
-          <ul class="list-disc pl-6 text-[#F1F5F9] mb-6">
+          <h4 class="text-xl font-bold text-white mt-6 mb-4">9. External Links</h4>
+          <ul class="list-disc pl-6">
             <li>Our site may contain links to third-party websites.</li>
             <li>We are not responsible for the content or practices of those sites and encourage you to review their respective terms and policies.</li>
           </ul>
 
-          <h3 class="text-xl font-bold text-white mb-4">10. Termination</h3>
-          <ul class="list-disc pl-6 text-[#F1F5F9] mb-6">
+          <h4 class="text-xl font-bold text-white mt-6 mb-4">10. Termination</h4>
+          <ul class="list-disc pl-6">
             <li>We reserve the right to suspend or permanently terminate your access to the site at any time, without notice, if you violate these Terms.</li>
           </ul>
 
-          <h3 class="text-xl font-bold text-white mb-4">11. Changes to Terms</h3>
-          <ul class="list-disc pl-6 text-[#F1F5F9] mb-6">
+          <h4 class="text-xl font-bold text-white mt-6 mb-4">11. Changes to Terms</h4>
+          <ul class="list-disc pl-6">
             <li>We may update these Terms periodically.</li>
             <li>Any changes will be effective immediately upon posting on this page.</li>
             <li>Continued use of the website constitutes acceptance of the revised terms.</li>
           </ul>
         </div>
 
-        <!-- Privacy Policy Section -->
-        <div class="card gradient-glow fade-in mt-8 p-6 sm:p-8">
+        <div id="privacy" class="card gradient-glow fade-in mt-8 content-text">
           <h3 class="text-2xl font-bold text-white mb-4">🔒 Privacy Policy</h3>
-          <p class="text-[#F1F5F9] mb-4"><strong>Effective Date:</strong> May 1, 2025</p>
-          <p class="text-[#F1F5F9] mb-6">At Gaming Odyssey, your privacy is important to us. This Privacy Policy outlines how we collect, use, and protect your personal information.</p>
+          <p class="text-slate-400 mb-4"><strong>Effective Date:</strong> May 1, 2025</p>
+          <p class="mb-6">At Gaming Odyssey, your privacy is important to us. This Privacy Policy outlines how we collect, use, and protect your personal information.</p>
 
-          <h4 class="text-lg font-bold text-white mb-4">1. Information We Collect</h4>
-          <ul class="list-disc pl-6 text-[#F1F5F9] mb-6">
+          <h4 class="text-lg font-bold text-white mt-6 mb-4">1. Information We Collect</h4>
+          <ul class="list-disc pl-6">
             <li><strong>Personal Details:</strong> Name, email, address, phone number.</li>
             <li><strong>Payment Information:</strong> Processed securely via third-party payment gateways.</li>
             <li><strong>Usage Data:</strong> IP address, browser type, device info, and activity on our site.</li>
             <li><strong>Account Information:</strong> Login credentials for accessing services or forums.</li>
           </ul>
 
-          <h4 class="text-lg font-bold text-white mb-4">2. How We Use Your Information</h4>
-          <ul class="list-disc pl-6 text-[#F1F5F9] mb-6">
+          <h4 class="text-lg font-bold text-white mt-6 mb-4">2. How We Use Your Information</h4>
+          <ul class="list-disc pl-6">
             <li>To process orders and provide services.</li>
             <li>To respond to your inquiries or customer support requests.</li>
             <li>To improve our services and personalize your experience.</li>
             <li>To send marketing updates (only if you opt in).</li>
           </ul>
 
-          <h4 class="text-lg font-bold text-white mb-4">3. Data Security</h4>
-          <ul class="list-disc pl-6 text-[#F1F5F9] mb-6">
+          <h4 class="text-lg font-bold text-white mt-6 mb-4">3. Data Security</h4>
+          <ul class="list-disc pl-6">
             <li>We use secure encryption and trusted third-party platforms to protect your data.</li>
             <li>Your personal details are never sold or shared without consent, except where required by law.</li>
           </ul>
 
-          <h4 class="text-lg font-bold text-white mb-4">4. Cookies</h4>
-          <ul class="list-disc pl-6 text-[#F1F5F9] mb-6">
+          <h4 class="text-lg font-bold text-white mt-6 mb-4">4. Cookies</h4>
+          <ul class="list-disc pl-6">
             <li>Our site uses cookies to enhance user experience and track analytics.</li>
             <li>You may disable cookies via your browser settings.</li>
           </ul>
 
-          <h4 class="text-lg font-bold text-white mb-4">5. Your Rights</h4>
-          <ul class="list-disc pl-6 text-[#F1F5F9] mb-6">
+          <h4 class="text-lg font-bold text-white mt-6 mb-4">5. Your Rights</h4>
+          <ul class="list-disc pl-6">
             <li>You may request access, correction, or deletion of your personal information by contacting us at <a href="mailto:support@gamingodyssey.in" class="text-[#3B82F6] hover:underline">support@gamingodyssey.in</a>.</li>
           </ul>
         </div>
 
-        <!-- Shipping & Delivery Policy Section -->
-        <div class="card gradient-glow fade-in mt-8 p-6 sm:p-8">
+        <div id="shipping" class="card gradient-glow fade-in mt-8 content-text">
           <h3 class="text-2xl font-bold text-white mb-4">📦 Shipping & Delivery Policy</h3>
-          <p class="text-[#F1F5F9] mb-6"><strong>Shipping Coverage:</strong> India-wide (for now). We may expand internationally soon.</p>
+          <p class="mb-6"><strong>Shipping Coverage:</strong> India-wide (for now). We may expand internationally soon.</p>
 
-          <h4 class="text-lg font-bold text-white mb-4">1. Processing Time</h4>
-          <ul class="list-disc pl-6 text-[#F1F5F9] mb-6">
+          <h4 class="text-lg font-bold text-white mt-6 mb-4">1. Processing Time</h4>
+          <ul class="list-disc pl-6">
             <li>Orders are processed within 1–2 business days.</li>
             <li>Custom PC builds may take 3–7 business days depending on parts availability.</li>
           </ul>
 
-          <h4 class="text-lg font-bold text-white mb-4">2. Shipping Time</h4>
-          <ul class="list-disc pl-6 text-[#F1F5F9] mb-6">
+          <h4 class="text-lg font-bold text-white mt-6 mb-4">2. Shipping Time</h4>
+          <ul class="list-disc pl-6">
             <li><strong>Standard Delivery:</strong> 3–7 business days.</li>
             <li><strong>Express Delivery:</strong> 1–3 business days (charges apply).</li>
           </ul>
 
-          <h4 class="text-lg font-bold text-white mb-4">3. Shipping Charges</h4>
-          <ul class="list-disc pl-6 text-[#F1F5F9] mb-6">
+          <h4 class="text-lg font-bold text-white mt-6 mb-4">3. Shipping Charges</h4>
+          <ul class="list-disc pl-6">
             <li>Calculated at checkout based on weight and location.</li>
-            <li>甸Free shipping for orders above ₹10,000.</li>
+            <li>Free shipping for orders above ₹10,000.</li>
           </ul>
 
-          <h4 class="text-lg font-bold text-white mb-4">4. Order Tracking</h4>
-          <ul class="list-disc pl-6 text-[#F1F5F9] mb-6">
+          <h4 class="text-lg font-bold text-white mt-6 mb-4">4. Order Tracking</h4>
+          <ul class="list-disc pl-6">
             <li>Once shipped, you'll receive a tracking link via email/SMS.</li>
           </ul>
 
-          <h4 class="text-lg font-bold text-white mb-4">5. Delivery Delays</h4>
-          <ul class="list-disc pl-6 text-[#F1F5F9] mb-6">
+          <h4 class="text-lg font-bold text-white mt-6 mb-4">5. Delivery Delays</h4>
+          <ul class="list-disc pl-6">
             <li>We are not responsible for delays caused by courier services, weather conditions, or unforeseen events, but we’ll assist with tracking and resolution.</li>
           </ul>
         </div>
 
-        <!-- Refund & Replacement Policy Section -->
-        <div class="card gradient-glow fade-in mt-8 p-6 sm:p-8">
+        <div id="refund" class="card gradient-glow fade-in mt-8 content-text">
           <h3 class="text-2xl font-bold text-white mb-4">🔁 Refund & Replacement Policy</h3>
 
-          <h4 class="text-lg font-bold text-white mb-4">1. Eligibility</h4>
-          <ul class="list-disc pl-6 text-[#F1F5F9] mb-6">
+          <h4 class="text-lg font-bold text-white mt-6 mb-4">1. Eligibility</h4>
+          <ul class="list-disc pl-6">
             <li>You may request a return or replacement within 3 days of delivery if:</li>
-            <ul class="list-circle pl-6">
+            <ul class="list-circle pl-6 mt-2">
               <li>The product is damaged or defective upon arrival.</li>
               <li>You received the wrong item.</li>
               <li>The item is unused and in its original packaging.</li>
             </ul>
-            <li><strong>Important:</strong> For your convenience and protection, please record an unboxing video while opening the package. This serves as proof in case of any claims regarding damage, defects, or incorrect products. Refund or replacement requests without an unboxing video may be declined.</li>
+            <li class="mt-4"><strong>Important:</strong> For your convenience and protection, please record an unboxing video while opening the package. This serves as proof in case of any claims regarding damage, defects, or incorrect products. Refund or replacement requests without an unboxing video may be declined.</li>
           </ul>
 
-          <h4 class="text-lg font-bold text-white mb-4">2. Non-Returnable Items</h4>
-          <ul class="list-disc pl-6 text-[#F1F5F9] mb-6">
+          <h4 class="text-lg font-bold text-white mt-6 mb-4">2. Non-Returnable Items</h4>
+          <ul class="list-disc pl-6">
             <li>Used or damaged items due to customer mishandling.</li>
             <li>Opened software or digital products.</li>
             <li>Custom-built PCs (unless found defective during delivery).</li>
           </ul>
 
-          <h4 class="text-lg font-bold text-white mb-4">3. Return & Replacement Process</h4>
-          <ul class="list-disc pl-6 text-[#F1F5F9] mb-6">
+          <h4 class="text-lg font-bold text-white mt-6 mb-4">3. Return & Replacement Process</h4>
+          <ul class="list-disc pl-6">
             <li>Once your request is approved, our agent will arrange a pickup of the item.</li>
             <li>After receiving the item, our team will inspect it:</li>
-            <ul class="list-circle pl-6">
+            <ul class="list-circle pl-6 mt-2">
               <li>If the product matches your claim (wrong/damaged), we’ll issue a refund or send a replacement.</li>
               <li>If the item is found to be in proper condition, it can be sent back to you, but you will bear the return shipping cost.</li>
             </ul>
           </ul>
 
-          <h4 class="text-lg font-bold text-white mb-4">4. Refund Timeline</h4>
-          <ul class="list-disc pl-6 text-[#F1F5F9] mb-6">
+          <h4 class="text-lg font-bold text-white mt-6 mb-4">4. Refund Timeline</h4>
+          <ul class="list-disc pl-6">
             <li>Refunds are processed within 5–7 business days after inspection and approval.</li>
             <li>Refunds are issued to the original payment method only.</li>
           </ul>
@@ -421,107 +384,26 @@
       </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-[#1E293B] py-10 px-4 sm:px-6 md:px-8">
-      <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        <div>
-          <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Contact</h3>
-          <p class="text-[#F1F5F9] mb-2 text-sm leading-relaxed">📧 <a href="mailto:support@gamingodyssey.in" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link">support@gamingodyssey.in</a></p>
-          <p class="text-[#F1F5F9] text-sm leading-relaxed">📞 6290994382</p>
-        </div>
-        <div>
-          <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Useful Links</h3>
-          <ul class="space-y-2">
-            <li><a href="#" data-link="index.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Home</a></li>
-            <li><a href="#" data-link="store.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Store</a></li>
-            <li><a href="#" data-link="tournaments.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Tournaments</a></li>
-            <li><a href="#" data-link="trackorder.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Track Order</a></li>
-            <li><a href="#" data-link="contactus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Contact Us</a></li>
-            <li><a href="#" data-link="aboutus.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">About Us</a></li>
-            <li><a href="terms.html" class="text-[#F1F5F9] hover:text-[#3B82F6] transition nav-link text-sm leading-relaxed">Terms & Conditions</a></li>
-          </ul>
-        </div>
-        <div>
-          <h3 class="text-lg font-bold text-white mb-3 leading-relaxed">Follow Us</h3>
-          <div class="flex space-x-3">
-            <a href="https://www.instagram.com/noticedveil" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full">
-              <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" class="w-5 h-5">
-            </a>
-            <a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full">
-              <img src="https://cdn-icons-png.flaticon.com/512/3938/3938026.png" alt="YouTube" class="w-5 h-5">
-            </a>
-            <a href="https://www.facebook.com" target="_blank" class="text-[#F1F5F9] hover:text-[#3B82F6] transition gradient-glow p-2 rounded-full">
-              <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" class="w-5 h-5">
-            </a>
-          </div>
-        </div>
-      </div>
-      <p class="text-center text-[#F1F5F9] mt-6 text-sm leading-relaxed">© 2025 Gaming Odyssey. All rights reserved.</p>
-    </footer>
+    <footer class="bg-[#1E293B] py-10 px-4 sm:px-6 md:px-8 mt-8">
+       </footer>
   </div>
 
+  <a href="#" id="to-top-button" class="bg-blue-600 hover:bg-blue-500 text-white rounded-full p-3 gradient-glow">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" /></svg>
+  </a>
+
   <script>
-    // Authentication Logic
-    function isAuthenticated() {
-      return localStorage.getItem('isAuthenticated') === 'true';
-    }
+    // ... Your existing script content for Auth, Menu, and Fade-in ...
 
-    function handleProtectedLink(event) {
-      event.preventDefault();
-      const link = event.currentTarget.getAttribute('data-link') || event.currentTarget.getAttribute('href');
-      // Allow direct access to signin.html, createaccount.html, terms.html, and external links
-      if (link === 'signin.html' || link === 'createaccount.html' || link === 'terms.html' || link.startsWith('http')) {
-        window.location.href = link;
-        return;
-      }
-      // Require authentication for other pages
-      if (isAuthenticated()) {
-        window.location.href = link;
-      } else {
-        window.location.href = 'createaccount.html';
-      }
-    }
-
-    document.querySelectorAll('.nav-link').forEach(link => {
-      link.addEventListener('click', handleProtectedLink);
-    });
-
-    // Display Username in Sidebar and Mobile Menu
-    const userDisplay = document.getElementById('user-display');
-    const mobileUserDisplay = document.getElementById('mobile-user-display');
-    if (isAuthenticated()) {
-      const username = localStorage.getItem('currentUser');
-      if (username) {
-        userDisplay.classList.remove('hidden');
-        mobileUserDisplay.classList.remove('hidden');
-        userDisplay.querySelector('span').textContent = username;
-        mobileUserDisplay.querySelector('span').textContent = username;
-      }
-    }
-
-    // Hamburger Menu Toggle
-    const hamburger = document.getElementById('hamburger');
-    const mobileMenu = document.getElementById('mobile-menu');
-    const closeMenu = document.getElementById('close-menu');
-    hamburger.addEventListener('click', () => {
-      mobileMenu.classList.remove('hidden');
-      mobileMenu.classList.add('active');
-    });
-    closeMenu.addEventListener('click', () => {
-      mobileMenu.classList.add('hidden');
-      mobileMenu.classList.remove('active');
-    });
-
-    // Fade-in Animation on Scroll
-    const fadeIns = document.querySelectorAll('.fade-in');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
+    // Back to Top Button Logic
+    const toTopButton = document.getElementById('to-top-button');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+            toTopButton.classList.add('visible');
+        } else {
+            toTopButton.classList.remove('visible');
         }
-      });
-    }, { threshold: 0.1 });
-    fadeIns.forEach(element => observer.observe(element));
+    });
   </script>
 </body>
 </html>
