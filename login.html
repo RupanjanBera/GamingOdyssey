@@ -7,6 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
     :root {
       --primary: #3B82F6;
@@ -108,10 +109,27 @@
       border-radius: 0.625rem;
       padding: 2.5rem;
     }
+    .divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      color: #94A3B8;
+      margin: 1.5rem 0;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid #475569;
+    }
+    .divider:not(:empty)::before {
+      margin-right: .5em;
+    }
+    .divider:not(:empty)::after {
+      margin-left: .5em;
+    }
   </style>
 </head>
 <body>
-  <!-- Sidebar -->
   <div class="fixed top-0 left-0 h-full w-64 sidebar z-20 hidden md:block">
     <div class="p-6">
       <div class="flex items-center space-x-3">
@@ -155,9 +173,7 @@
     </div>
   </div>
 
-  <!-- Main Content -->
   <div class="md:ml-64">
-    <!-- Hero Section -->
     <section class="hero-bg min-h-[40vh] flex items-center justify-center text-center p-6">
       <div>
         <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4 leading-tight tech-font">Welcome Back</h1>
@@ -165,7 +181,6 @@
       </div>
     </section>
 
-    <!-- Login Form Section -->
     <section class="py-16 px-6">
       <div class="max-w-md mx-auto">
         <div class="gradient-border">
@@ -194,13 +209,17 @@
                   <a href="#" class="text-[var(--primary)] hover:underline">Forgot Password?</a>
               </div>
               
-              <div class="text-center pt-4">
+              <div class="text-center pt-2">
                 <button type="submit" class="submit-btn w-full px-10 py-3 flex items-center justify-center gap-2 mx-auto">
                   <i class="fas fa-sign-in-alt"></i> Log In
                 </button>
                 <p id="form-status" class="mt-4 text-center error"></p>
               </div>
-              
+
+              <div class="divider">OR</div>
+
+              <div id="google-btn-container" class="flex justify-center"></div>
+
               <div class="text-center pt-2 text-[#94A3B8]">
                 Don't have an account? <a href="signup.html" class="text-[var(--primary)] hover:underline font-semibold">Sign Up</a>
               </div>
@@ -210,8 +229,7 @@
       </div>
     </section>
 
-     <!-- Footer -->
-    <footer class="bg-transparent py-12 px-6 border-t border-[#1E293B]">
+     <footer class="bg-transparent py-12 px-6 border-t border-[#1E293B]">
         <div class="text-center">
           <p class="text-[#94A3B8] text-sm">© 2025 Gaming Odyssey. All rights reserved.</p>
         </div>
@@ -219,6 +237,78 @@
   </div>
 
   <script>
+    // --- Google OAuth Implementation ---
+
+    // Function to decode the JWT token from Google
+    function jwt_decode(token) {
+      try {
+        return JSON.parse(atob(token.split('.')[1]));
+      } catch (e) {
+        return null;
+      }
+    }
+    
+    // Callback function to handle the credential response from Google
+    function handleCredentialResponse(response) {
+      const responsePayload = jwt_decode(response.credential);
+      const email = responsePayload.email;
+      const firstName = responsePayload.given_name;
+
+      const formStatus = document.getElementById('form-status');
+
+      // Get existing users from localStorage
+      const users = JSON.parse(localStorage.getItem('users')) || [];
+
+      // Find if a user with this email exists
+      const user = users.find(u => u.email === email);
+      
+      if (user) {
+        // If user exists, log them in
+        formStatus.textContent = 'Login successful! Redirecting...';
+        formStatus.className = 'success text-center';
+
+        // Store session data
+        localStorage.setItem('userData', JSON.stringify({
+          name: user.firstName || firstName,
+          username: user.username,
+          email: user.email,
+        }));
+
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 1500);
+
+      } else {
+        // If user does not exist, show an error
+        formStatus.textContent = 'Account not found. Please sign up first.';
+        formStatus.className = 'error text-center';
+      }
+    }
+
+    // Initialize Google Identity Services when the window loads
+    window.onload = function () {
+      google.accounts.id.initialize({
+        client_id: '964191300629-ri9d35rqf4p0tgshv4k8u31r5rptmf9m.apps.googleusercontent.com',
+        callback: handleCredentialResponse
+      });
+
+      // Render the Google Sign-In button
+      google.accounts.id.renderButton(
+        document.getElementById('google-btn-container'), {
+          theme: 'outline',
+          size: 'large',
+          type: 'standard',
+          text: 'signin_with',
+          shape: 'rectangular'
+        }
+      );
+      
+      // Display the One Tap prompt
+      google.accounts.id.prompt();
+    };
+
+    // --- Existing JavaScript ---
+
     // Toggle password visibility
     const togglePassword = document.getElementById('toggle-password');
     const passwordInput = document.getElementById('password');
@@ -249,7 +339,7 @@
             
             // Store session data
             localStorage.setItem('userData', JSON.stringify({
-                name: user.name,
+                name: user.firstName,
                 username: user.username,
                 email: user.email,
             }));
