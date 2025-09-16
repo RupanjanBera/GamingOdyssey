@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ | Gaming Odyssey</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #3B82F6;
+      --secondary: #D946EF;
+      --accent: #10B981;
+      --dark: #0F172A;
+      --darker: #020617;
+      --light: #F1F5F9;
+      --mid: #1E293B;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--dark);
+      color: var(--light);
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      background-image: 
+        radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.1) 0%, transparent 25%),
+        radial-gradient(circle at 80% 70%, rgba(217, 70, 239, 0.1) 0%, transparent 25%);
+    }
+    
+    .tech-font {
+      font-family: 'Orbitron', sans-serif;
+      letter-spacing: 1px;
+    }
+    
+    .gradient-text {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .sidebar {
+      background: linear-gradient(180deg, var(--mid) 0%, var(--dark) 100%);
+      box-shadow: 4px 0 15px rgba(59, 130, 246, 0.2);
+    }
+    
+    .nav-link:hover {
+      color: var(--primary);
+    }
+
+    .input-field {
+      background: rgba(30, 41, 59, 0.7);
+      color: var(--light);
+      border: 1px solid rgba(59, 130, 246, 0.5);
+      border-radius: 0.5rem;
+      padding: 0.75rem 1rem;
+      width: 100%;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+    }
+    
+    .input-field:focus {
+      outline: none;
+      border-color: var(--secondary);
+      box-shadow: 0 0 10px rgba(217, 70, 239, 0.3);
+    }
+
+    .user-avatar {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      z-index: 1040;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .user-avatar:hover {
+      transform: scale(1.1);
+    }
+
+    /* --- FAQ Accordion Styles --- */
+    .faq-item {
+        background-color: var(--mid);
+        border-radius: 0.75rem;
+        border: 1px solid transparent;
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+    .faq-item:hover {
+        border-color: var(--primary);
+    }
+    .faq-question {
+        padding: 1.25rem 1.5rem;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: var(--light);
+    }
+    .faq-answer {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
+        color: #94A3B8;
+        line-height: 1.7;
+    }
+    .faq-answer p {
+        padding: 0 1.5rem 1.25rem;
+        border-top: 1px solid var(--dark);
+        padding-top: 1.25rem;
+        margin-top: -1px;
+    }
+    .faq-icon {
+        transition: transform 0.3s ease;
+    }
+    .faq-item.active .faq-answer {
+        max-height: 500px; /* Adjust if answers are very long */
+    }
+    .faq-item.active .faq-icon {
+        transform: rotate(180deg);
+    }
+  </style>
+</head>
+<body>
+  <div class="fixed top-0 left-0 h-full w-64 sidebar z-20 hidden md:block">
+    <div class="p-6">
+      <div class="flex items-center space-x-3">
+        <img src="https://cdn-icons-png.flaticon.com/512/3612/3612569.png" alt="Logo" class="w-10 h-10">
+        <h1 class="text-2xl font-bold text-white leading-relaxed tech-font">GAMING ODYSSEY</h1>
+      </div>
+      <nav class="mt-12 space-y-4">
+        <a href="index.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+          <i class="fas fa-home w-5 h-5"></i>
+          <span>Home</span>
+        </a>
+        <a href="store.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+          <i class="fas fa-gamepad w-5 h-5"></i>
+          <span>Store</span>
+        </a>
+        <a href="tournaments.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+          <i class="fas fa-trophy w-5 h-5"></i>
+          <span>Tournaments</span>
+        </a>
+        <a href="trackorder.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+          <i class="fas fa-shipping-fast w-5 h-5"></i>
+          <span>Track Order</span>
+        </a>
+        <a href="contactus.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+          <i class="fas fa-headset w-5 h-5"></i>
+          <span>Contact Us</span>
+        </a>
+        <a href="aboutus.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+          <i class="fas fa-info-circle w-5 h-5"></i>
+          <span>About Us</span>
+        </a>
+        <a href="faq.html" class="flex items-center space-x-3 text-[#3B82F6] font-semibold nav-link">
+          <i class="fas fa-question-circle w-5 h-5"></i>
+          <span>FAQ</span>
+        </a>
+        <a href="login.html" id="login-link-desktop" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+          <i class="fas fa-sign-in-alt w-5 h-5"></i>
+          <span>Login</span>
+        </a>
+        <a href="signup.html" id="signup-link-desktop" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+          <i class="fas fa-user-plus w-5 h-5"></i>
+          <span>Sign Up</span>
+        </a>
+      </nav>
+    </div>
+  </div>
+
+  <div id="user-avatar" class="user-avatar hidden"></div>
+  <div id="user-menu" class="hidden fixed top-20 right-5 bg-[#1E293B] rounded-lg shadow-2xl z-50 w-64 border border-[#3B82F6] transform transition-all duration-300">
+    <div class="p-4 border-b border-[#3B82F6] text-center">
+        <p class="font-bold text-white text-lg" id="menu-username">User Name</p>
+        <p class="text-sm text-[#94A3B8]" id="menu-user-email">user@email.com</p>
+    </div>
+    <div class="p-2">
+        <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-[#F1F5F9] hover:bg-[#3B82F6] rounded-md transition-colors flex items-center gap-3">
+            <i class="fas fa-sign-out-alt w-4"></i> Logout
+        </button>
+    </div>
+  </div>
+
+  <div class="md:hidden fixed top-0 left-0 w-full bg-[#1E293B] z-30 p-4 flex justify-between items-center shadow-lg">
+    <div class="flex items-center space-x-2">
+      <img src="https://cdn-icons-png.flaticon.com/512/3612/3612569.png" alt="Logo" class="w-8 h-8">
+      <h1 class="text-lg font-bold text-white leading-relaxed tech-font">GAMING ODYSSEY</h1>
+    </div>
+    <button id="hamburger" class="text-[#3B82F6]">
+      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+  </div>
+  
+  <div id="mobile-menu" class="hidden md:hidden fixed top-0 left-0 w-full h-full bg-[#1E293B] z-20 p-4 transition-all duration-300 ease-in-out transform -translate-x-full">
+    <button id="close-menu" class="absolute top-4 right-4 text-[#3B82F6] p-2 rounded-full">
+      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+    <nav class="space-y-4 mt-16">
+      <a href="index.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+        <i class="fas fa-home w-5 h-5"></i>
+        <span>Home</span>
+      </a>
+      <a href="faq.html" class="flex items-center space-x-3 text-[#3B82F6] font-semibold nav-link">
+        <i class="fas fa-question-circle w-5 h-5"></i>
+        <span>FAQ</span>
+      </a>
+      <a href="login.html" id="login-link-mobile" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+        <i class="fas fa-sign-in-alt w-5 h-5"></i>
+        <span>Login</span>
+      </a>
+      <a href="signup.html" id="signup-link-mobile" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+        <i class="fas fa-user-plus w-5 h-5"></i>
+        <span>Sign Up</span>
+      </a>
+    </nav>
+  </div>
+
+  <div class="md:ml-64">
+    <main class="p-6 sm:p-10">
+        <section class="text-center mb-12">
+            <h1 class="text-4xl sm:text-5xl font-bold text-white mb-4 tech-font">
+                How Can We <span class="gradient-text">Help</span> You?
+            </h1>
+            <p class="text-lg text-slate-300 max-w-2xl mx-auto">
+                Have questions? We've got answers. Find help with your orders, account, tournaments, and more.
+            </p>
+        </section>
+
+        <section class="max-w-3xl mx-auto mb-12">
+            <div class="relative">
+                <input type="text" id="faq-search" placeholder="Search for a question..." class="input-field pl-12">
+                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            </div>
+        </section>
+
+        <section class="max-w-4xl mx-auto">
+            <div id="faq-container" class="space-y-4">
+                
+                <h2 class="text-2xl font-bold text-white tech-font border-l-4 border-primary pl-4 mb-6">General & Account</h2>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How do I create an account?</span>
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>You can create an account by clicking the "Sign Up" button on the navigation menu. You'll need to provide a valid email address and create a password. We'll send a verification link to your email to complete the process.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>I forgot my password. What should I do?</span>
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>On the "Login" page, you will find a "Forgot Password?" link. Click it and enter your registered email address. We will send you instructions on how to reset your password.</p>
+                    </div>
+                </div>
+
+                <h2 class="text-2xl font-bold text-white tech-font border-l-4 border-primary pl-4 mt-12 mb-6">Orders & Shipping</h2>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How can I track my order?</span>
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Once your order is shipped, you will receive an email with a tracking number and a link to the courier's website. You can also visit the "Track Order" page on our website and enter your order ID and email to see the latest status.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>What is your return policy?</span>
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>We offer a 14-day return policy for most items in their original, unopened condition. Custom-built PCs and certain digital goods are non-refundable. Please visit our Privacy Policy page or contact support for detailed information.</p>
+                    </div>
+                </div>
+
+                <h2 class="text-2xl font-bold text-white tech-font border-l-4 border-primary pl-4 mt-12 mb-6">Tournaments</h2>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How do I register for a tournament?</span>
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>To register for a tournament, navigate to the "Tournaments" page, find the event you're interested in, and click "Register Now". You must be logged into your Gaming Odyssey account. Some tournaments may have entry fees or specific rank requirements.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How are prize pools distributed?</span>
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Prize pool distribution varies by tournament but is typically paid out to the top 3 or top 8 teams/players. The exact breakdown is always listed on the tournament details page. Payouts are processed within 7-10 business days after the event concludes.</p>
+                    </div>
+                </div>
+
+                <h2 class="text-2xl font-bold text-white tech-font border-l-4 border-primary pl-4 mt-12 mb-6">Minecraft Server</h2>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How do I connect to the Minecraft server?</span>
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Open Minecraft (Java Edition), click on "Multiplayer," then "Add Server." Enter "Gaming Odyssey" as the server name and <strong>play.gamingodyssey.in</strong> as the Server Address. Click "Done" and join the server!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="text-center mt-16 p-8 bg-mid rounded-xl">
+            <h2 class="text-3xl font-bold text-white mb-4 tech-font">Still Have Questions?</h2>
+            <p class="text-slate-300 max-w-xl mx-auto mb-6">
+                If you couldn't find the answer you were looking for, our support team is here to help.
+            </p>
+            <a href="contactus.html" class="inline-block bg-gradient-to-r from-primary to-secondary text-white font-semibold px-8 py-3 rounded-lg hover:opacity-90 transition-opacity duration-300">
+                Contact Support
+            </a>
+        </section>
+    </main>
+
+    <footer class="bg-[#020617] py-12 px-6 border-t border-[#1E293B]">
+        <div class="max-w-7xl mx-auto text-center">
+            <p class="text-[#94A3B8] text-sm">© 2025 Gaming Odyssey. All rights reserved.</p>
+        </div>
+    </footer>
+  </div>
+
+  <script>
+    // --- Mobile Menu Toggle ---
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const closeMenu = document.getElementById('close-menu');
+    
+    hamburger.addEventListener('click', () => {
+      mobileMenu.classList.remove('hidden');
+      setTimeout(() => mobileMenu.classList.remove('-translate-x-full'), 10);
+    });
+    
+    closeMenu.addEventListener('click', () => {
+      mobileMenu.classList.add('-translate-x-full');
+    });
+
+    // --- User Avatar & Menu Logic ---
+    document.addEventListener('DOMContentLoaded', () => {
+        const userData = JSON.parse(localStorage.getItem('userData'));
+        const userAvatar = document.getElementById('user-avatar');
+        const userMenu = document.getElementById('user-menu');
+
+        if (userData) {
+            document.getElementById('login-link-desktop').style.display = 'none';
+            document.getElementById('signup-link-desktop').style.display = 'none';
+            // Also hide mobile links if needed
+            document.getElementById('login-link-mobile').style.display = 'none';
+            document.getElementById('signup-link-mobile').style.display = 'none';
+
+            userAvatar.classList.remove('hidden');
+            userAvatar.textContent = userData.name.charAt(0).toUpperCase();
+            document.getElementById('menu-username').textContent = userData.name;
+            document.getElementById('menu-user-email').textContent = userData.email;
+
+            userAvatar.addEventListener('click', () => {
+                userMenu.classList.toggle('hidden');
+            });
+
+            document.getElementById('logout-btn').addEventListener('click', () => {
+                localStorage.removeItem('userData');
+                window.location.reload();
+            });
+            
+            document.addEventListener('click', (e) => {
+                if (!userAvatar.contains(e.target) && !userMenu.contains(e.target)) {
+                    userMenu.classList.add('hidden');
+                }
+            });
+        }
+    });
+
+    // --- FAQ Accordion Logic ---
+    const faqItems = document.querySelectorAll('.faq-item');
+    faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        question.addEventListener('click', () => {
+            const currentlyActive = document.querySelector('.faq-item.active');
+            if (currentlyActive && currentlyActive !== item) {
+                currentlyActive.classList.remove('active');
+            }
+            item.classList.toggle('active');
+        });
+    });
+
+    // --- FAQ Search/Filter Logic ---
+    const searchInput = document.getElementById('faq-search');
+    const allFaqItems = document.querySelectorAll('#faq-container .faq-item');
+
+    searchInput.addEventListener('input', (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+
+        allFaqItems.forEach(item => {
+            const questionText = item.querySelector('.faq-question span').textContent.toLowerCase();
+            const answerText = item.querySelector('.faq-answer p').textContent.toLowerCase();
+            
+            if (questionText.includes(searchTerm) || answerText.includes(searchTerm)) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    });
+  </script>
+</body>
+</html>
