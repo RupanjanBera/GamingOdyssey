@@ -127,6 +127,34 @@
     .divider:not(:empty)::after {
       margin-left: .5em;
     }
+
+    /* Google Button Customization */
+    #google-btn-container {
+      /* This targets the container div for the Google button */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0.5rem; /* Padding around the button */
+      background: var(--mid); /* Background for the container */
+      border-radius: 0.75rem; /* Rounded edges for the container */
+      border: 1px solid var(--primary); /* Border for the container */
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      overflow: hidden; /* Important to hide the default square edges */
+    }
+    #google-btn-container:hover {
+      border-color: var(--secondary);
+      box-shadow: 0 0 12px rgba(217, 70, 239, 0.4);
+      transform: translateY(-2px);
+    }
+    /* Target the actual Google button's iframe for minimal adjustment */
+    .g_id_signin {
+      border-radius: 0.5rem !important; /* Force rounded edges on the button itself */
+      width: 100% !important; /* Make it fill the container */
+    }
+    .g_id_signin > div { /* Target the inner div to ensure sizing is correct */
+      width: 100% !important;
+    }
   </style>
 </head>
 <body>
@@ -218,7 +246,7 @@
 
               <div class="divider">OR</div>
 
-              <div id="google-btn-container" class="flex justify-center"></div>
+              <div id="google-btn-container" class="w-full max-w-sm mx-auto"></div>
 
               <div class="text-center pt-2 text-[#94A3B8]">
                 Don't have an account? <a href="signup.html" class="text-[var(--primary)] hover:underline font-semibold">Sign Up</a>
@@ -239,7 +267,6 @@
   <script>
     // --- Google OAuth Implementation ---
 
-    // Function to decode the JWT token from Google
     function jwt_decode(token) {
       try {
         return JSON.parse(atob(token.split('.')[1]));
@@ -248,7 +275,6 @@
       }
     }
     
-    // Callback function to handle the credential response from Google
     function handleCredentialResponse(response) {
       const responsePayload = jwt_decode(response.credential);
       const email = responsePayload.email;
@@ -256,18 +282,14 @@
 
       const formStatus = document.getElementById('form-status');
 
-      // Get existing users from localStorage
       const users = JSON.parse(localStorage.getItem('users')) || [];
 
-      // Find if a user with this email exists
       const user = users.find(u => u.email === email);
       
       if (user) {
-        // If user exists, log them in
         formStatus.textContent = 'Login successful! Redirecting...';
         formStatus.className = 'success text-center';
 
-        // Store session data
         localStorage.setItem('userData', JSON.stringify({
           name: user.firstName || firstName,
           username: user.username,
@@ -279,31 +301,29 @@
         }, 1500);
 
       } else {
-        // If user does not exist, show an error
         formStatus.textContent = 'Account not found. Please sign up first.';
         formStatus.className = 'error text-center';
       }
     }
 
-    // Initialize Google Identity Services when the window loads
     window.onload = function () {
       google.accounts.id.initialize({
         client_id: '964191300629-ri9d35rqf4p0tgshv4k8u31r5rptmf9m.apps.googleusercontent.com',
         callback: handleCredentialResponse
       });
 
-      // Render the Google Sign-In button
       google.accounts.id.renderButton(
         document.getElementById('google-btn-container'), {
           theme: 'outline',
           size: 'large',
           type: 'standard',
           text: 'signin_with',
-          shape: 'rectangular'
+          shape: 'rectangular', /* This makes the default button rectangular */
+          width: '100%', /* Occupy full width of its container */
+          locale: 'en'
         }
       );
       
-      // Display the One Tap prompt
       google.accounts.id.prompt();
     };
 
@@ -329,15 +349,12 @@
         
         const users = JSON.parse(localStorage.getItem('users')) || [];
         
-        // Find user by email or username
         const user = users.find(u => (u.email === identifier || u.username === identifier));
         
         if (user && user.password === password) {
-            // Success
             statusEl.textContent = 'Login successful! Redirecting...';
             statusEl.className = 'success text-center';
             
-            // Store session data
             localStorage.setItem('userData', JSON.stringify({
                 name: user.firstName,
                 username: user.username,
@@ -348,7 +365,6 @@
                 window.location.href = 'index.html';
             }, 1500);
         } else {
-            // Failure
             statusEl.textContent = 'Invalid credentials. Please try again.';
             statusEl.className = 'error text-center';
         }
