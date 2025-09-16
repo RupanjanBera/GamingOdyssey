@@ -252,28 +252,43 @@
               <input type="hidden" name="_next" value="https://gamingodyssey.in/messagesent.html">
               <input type="hidden" name="_captcha" value="false">
               
-              <div class="space-y-6">
-                <div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div class="sm:col-span-2">
                   <label for="name" class="block text-slate-300 mb-2 text-sm font-medium">Name</label>
                   <input type="text" id="name" name="name" required placeholder="Your full name" aria-required="true" />
                   <p id="name-error" class="error hidden">Please enter your name</p>
                 </div>
+                
                 <div>
                   <label for="email" class="block text-slate-300 mb-2 text-sm font-medium">Email</label>
                   <input type="email" id="email" name="email" required placeholder="you@example.com" aria-required="true" />
                   <p id="email-error" class="error hidden">Please enter a valid email</p>
                 </div>
+
                 <div>
+                  <label for="mobile" class="block text-slate-300 mb-2 text-sm font-medium">Mobile Number</label>
+                  <input type="tel" id="mobile" name="mobile" required placeholder="Your 10-digit mobile number" aria-required="true" />
+                  <p id="mobile-error" class="error hidden">Please enter a valid 10-digit number</p>
+                </div>
+
+                <div class="sm:col-span-2">
+                  <label for="company" class="block text-slate-300 mb-2 text-sm font-medium">Company Name <span class="text-slate-500">(Optional)</span></label>
+                  <input type="text" id="company" name="company" placeholder="Your company name" />
+                </div>
+
+                <div class="sm:col-span-2">
                   <label for="subject" class="block text-slate-300 mb-2 text-sm font-medium">Subject</label>
                   <input type="text" id="subject" name="subject" required placeholder="What is this about?" aria-required="true" />
                   <p id="subject-error" class="error hidden">Please enter a subject</p>
                 </div>
-                <div>
+
+                <div class="sm:col-span-2">
                   <label for="message" class="block text-slate-300 mb-2 text-sm font-medium">Message</label>
                   <textarea id="message" name="message" rows="5" required placeholder="Tell us how we can help..." aria-required="true"></textarea>
                   <p id="message-error" class="error hidden">Please enter a message</p>
                 </div>
-                <div class="text-center">
+
+                <div class="sm:col-span-2 text-center">
                   <button type="submit" class="submit-btn">Send Message</button>
                   <p id="form-status" class="mt-4">
                     </p>
@@ -342,6 +357,7 @@
     document.getElementById('contact-form').addEventListener('submit', function(event) {
       const name = document.getElementById('name').value.trim();
       const email = document.getElementById('email').value.trim();
+      const mobile = document.getElementById('mobile').value.trim();
       const subject = document.getElementById('subject').value.trim();
       const message = document.getElementById('message').value.trim();
       const status = document.getElementById('form-status');
@@ -357,6 +373,11 @@
         document.getElementById('email-error').classList.remove('hidden');
         isValid = false;
       }
+      // Mobile number must be exactly 10 digits
+      if (!mobile || !/^\d{10}$/.test(mobile)) {
+        document.getElementById('mobile-error').classList.remove('hidden');
+        isValid = false;
+      }
       if (!subject) {
         document.getElementById('subject-error').classList.remove('hidden');
         isValid = false;
@@ -368,7 +389,7 @@
       
       if (!isValid) {
         event.preventDefault();
-        status.textContent = 'Please fill all fields correctly.';
+        status.textContent = 'Please fill all required fields correctly.';
         status.className = 'error';
       } else {
         status.textContent = 'Sending your message...';
