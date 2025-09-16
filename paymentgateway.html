@@ -118,6 +118,24 @@
       grid-template-columns: repeat(2, 1fr);
       gap: 0.75rem;
     }
+    .email-verification {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .email-status {
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .email-verified {
+      color: #10B981;
+    }
+    .email-not-verified {
+      color: #EF4444;
+    }
     @media (min-width: 1024px) {
       #payment-method-selector {
         grid-template-columns: repeat(4, 1fr);
@@ -154,7 +172,15 @@
             <div>
               <h2 class="text-xl font-bold mb-4">1. Contact Information</h2>
               <label for="customer-email" class="block text-sm font-medium text-slate-300 mb-1">Email Address</label>
-              <input type="email" id="customer-email" name="customer-email" placeholder="you@example.com" required class="input-field w-full p-3 rounded-md">
+              <div class="flex gap-2">
+                <input type="email" id="customer-email" name="customer-email" placeholder="you@example.com" required class="input-field w-full p-3 rounded-md">
+                <button type="button" id="verify-email-btn" class="bg-primary-color text-white px-4 rounded-md hover:bg-blue-600 transition">Verify</button>
+              </div>
+              <div id="email-status" class="email-status hidden">
+                <i class="fas fa-check-circle email-verified hidden"></i>
+                <i class="fas fa-times-circle email-not-verified hidden"></i>
+                <span id="email-status-text"></span>
+              </div>
             </div>
             
             <div>
@@ -182,7 +208,7 @@
             </div>
 
             <div class="pt-4">
-              <button type="button" id="confirm-payment-btn" class="submit-btn w-full py-3 text-lg">
+              <button type="button" id="confirm-payment-btn" class="submit-btn w-full py-3 text-lg" disabled>
                 <span id="btn-text">Confirm & Pay</span>
                 <span id="btn-loader" class="hidden"><i class="fas fa-spinner fa-spin mr-2"></i>Processing...</span>
               </button>
@@ -238,7 +264,15 @@
       const confirmBtn = document.getElementById('confirm-payment-btn');
       const confirmationModal = document.getElementById('confirmation-modal');
       const continueButton = document.getElementById('continue-to-thankyou');
+      const emailInput = document.getElementById('customer-email');
+      const verifyEmailBtn = document.getElementById('verify-email-btn');
+      const emailStatus = document.getElementById('email-status');
+      const emailStatusText = document.getElementById('email-status-text');
+      const emailVerifiedIcon = document.querySelector('.email-verified');
+      const emailNotVerifiedIcon = document.querySelector('.email-not-verified');
+      
       let selectedPaymentMethod = 'Card';
+      let isEmailVerified = false;
 
       // --- INITIAL CHECK ---
       if (!finalOrder) {
@@ -283,7 +317,59 @@
         `;
       }
 
+      // --- EMAIL VERIFICATION ---
+      function verifyEmail() {
+        const email = emailInput.value.trim();
+        
+        if (!email) {
+          showEmailStatus('Please enter an email address', false);
+          return;
+        }
+        
+        if (!isValidEmail(email)) {
+          showEmailStatus('Please enter a valid email address', false);
+          return;
+        }
+        
+        // Simulate email verification (in a real app, you might send a verification code)
+        showEmailStatus('Email verified successfully', true);
+        isEmailVerified = true;
+        updateConfirmButtonState();
+      }
+      
+      function isValidEmail(email) {
+        const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(String(email).toLowerCase());
+      }
+      
+      function showEmailStatus(message, isSuccess) {
+        emailStatus.classList.remove('hidden');
+        emailStatusText.textContent = message;
+        
+        if (isSuccess) {
+          emailVerifiedIcon.classList.remove('hidden');
+          emailNotVerifiedIcon.classList.add('hidden');
+          emailStatusText.className = 'email-verified';
+        } else {
+          emailVerifiedIcon.classList.add('hidden');
+          emailNotVerifiedIcon.classList.remove('hidden');
+          emailStatusText.className = 'email-not-verified';
+        }
+      }
+      
+      function updateConfirmButtonState() {
+        confirmBtn.disabled = !isEmailVerified;
+      }
+
       // --- EVENT LISTENERS ---
+      emailInput.addEventListener('input', () => {
+        isEmailVerified = false;
+        updateConfirmButtonState();
+        emailStatus.classList.add('hidden');
+      });
+      
+      verifyEmailBtn.addEventListener('click', verifyEmail);
+      
       document.querySelectorAll('.payment-tab').forEach(tab => {
         tab.addEventListener('click', () => {
           document.querySelectorAll('.payment-tab').forEach(t => t.classList.remove('active'));
@@ -304,10 +390,8 @@
           return;
         }
         
-        const emailInput = document.getElementById('customer-email');
-        if (!emailInput.value || !emailInput.checkValidity()) {
-          alert('Please enter a valid email address.');
-          emailInput.focus();
+        if (!isEmailVerified) {
+          alert('Please verify your email address before proceeding.');
           return;
         }
         
@@ -372,6 +456,35 @@
         formData.append('_next', `${window.location.origin}/thankyou.html?orderId=${orderData.orderId}`);
         formData.append('_template', 'table');
         
+        // Add customer email for autoresponse
+        formData.append('email', orderData.customerEmail);
+        
+        // Create autoresponse message
+        const customerMessage = `
+Thank you for your order with Gaming Odyssey!
+
+Order ID: ${orderData.orderId}
+Order Date: ${new Date(orderData.timestamp).toLocaleString()}
+Total Amount: $${orderData.total.toFixed(2)}
+Payment Method: ${orderData.paymentMethod}
+
+Items Ordered:
+${orderData.items.map(item => `- ${item.name} (Qty: ${item.quantity}) - $${(item.price * item.quantity).toFixed(2)}`).join('\n')}
+
+Shipping Address:
+${orderData.shippingAddress.name}
+${orderData.shippingAddress.addressLine1}
+${orderData.shippingAddress.city}, ${orderData.shippingAddress.state} ${orderData.shippingAddress.zip}
+${orderData.shippingAddress.country}
+Phone: ${orderData.shippingAddress.phone}
+
+We'll notify you when your order ships. If you have any questions, please contact our support team.
+
+Thank you for shopping with Gaming Odyssey!
+        `;
+        
+        formData.append('_autoresponse', customerMessage);
+        
         formData.append('Order ID', orderData.orderId);
         formData.append('Customer Email', orderData.customerEmail);
         formData.append('Total Amount', `$${orderData.total.toFixed(2)}`);
@@ -421,9 +534,8 @@
       // Initialize PayPal
       paypal.Buttons({
         onClick: (data, actions) => {
-          const emailInput = document.getElementById('customer-email');
-          if (!emailInput.value || !emailInput.checkValidity()) {
-            alert('Please enter a valid email address before proceeding with PayPal.');
+          if (!isEmailVerified) {
+            alert('Please verify your email address before proceeding with PayPal.');
             return actions.reject();
           }
           return actions.resolve();
@@ -437,6 +549,5 @@
     });
   </script>
 </body>
-</html>
 </html>
 
