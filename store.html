@@ -244,7 +244,7 @@
         }
     }
     
-    /* --- NEW: Visual Enhancements & Cart Menu Styles --- */
+    /* --- Visual Enhancements & Cart Menu Styles --- */
     ::selection {
       background-color: var(--primary-color);
       color: var(--background-color);
@@ -365,7 +365,7 @@
         <span id="cart-subtotal">$0.00</span>
       </div>
       <div class="grid grid-cols-2 gap-3">
-          <a href="cart.html" class="submit-btn text-center py-3">Checkout</a>
+          <a href="address.html" class="submit-btn text-center py-3">Checkout</a>
           <button id="continue-shopping-btn" class="py-3 bg-slate-700 text-white font-semibold rounded-lg hover:bg-slate-600 transition-colors">Continue Shopping</button>
       </div>
     </div>
@@ -544,7 +544,7 @@
       const comparisonTray = document.getElementById('comparison-tray');
       const modals = document.querySelectorAll('.modal-overlay');
 
-      // NEW: Cart Menu elements
+      // Cart Menu elements
       const cartMenu = document.getElementById('cart-menu');
       const cartOverlay = document.getElementById('cart-overlay');
       const cartItemsContainer = document.getElementById('cart-items-container');
@@ -643,7 +643,7 @@
         document.getElementById('wishlist-count-desktop').textContent = wishlist.length;
       }
       
-      // --- NEW: Sliding Cart Menu Functions ---
+      // --- Sliding Cart Menu Functions ---
       function openCartMenu() {
         renderCartMenu();
         cartMenu.classList.add('visible');
@@ -708,7 +708,6 @@
         if (product) showNotification(`${product.name} removed from cart.`, 'info');
       }
 
-      // MODIFIED: addToCart now opens the menu
       function addToCart(productId, quantity = 1) {
         const product = allProducts.find(p => p.id === productId);
         if (!product) {
@@ -724,7 +723,7 @@
         }
         localStorage.setItem('cart', JSON.stringify(cart));
         updateCounts();
-        openCartMenu(); // Replaces showNotification()
+        openCartMenu();
       }
 
       // --- PRODUCT & CATEGORY RENDERING ---
@@ -826,14 +825,12 @@
           
           updateModalImage();
           
-          // *** BUG FIX: Use direct .onclick assignment to prevent stale event listeners ***
           document.getElementById('overlay-add-to-cart').onclick = () => addToCart(product.id);
           document.getElementById('overlay-buy-now').onclick = () => {
               const itemToBuy = { id: product.id, name: product.name, price: product.salePrice || product.price, quantity: 1, image: product.images[0] };
               localStorage.setItem('cart', JSON.stringify([itemToBuy]));
-              window.location.href = 'cart.html';
+              window.location.href = 'address.html';
           };
-          // *** END OF FIX ***
 
           document.getElementById('submit-review').onclick = () => submitReview(product.id);
           document.getElementById('get-ai-insights-btn').onclick = () => getAIInsights(product);
@@ -1117,7 +1114,7 @@
             const priority = document.getElementById('priority').value;
 
             const availableProducts = JSON.stringify(allProducts.map(p => ({id: p.id, name: p.name, category: p.category, description: p.description})));
-            const prompt = `You are an expert gaming setup curator. A user needs a complete setup (one mouse, one keyboard, one headset). Their preferences are: \n- Primary Games: ${gameType}\n- Main Priority: ${priority}\n\nFrom the following JSON list of available products, select the single best mouse, keyboard, and headset for this user. \n\nProducts: ${availableProducts}\n\nPlease respond with ONLY a valid JSON object in this exact format, with no extra text or markdown: {"mouse": {"id": "product_id", "reason": "brief explanation"}, "keyboard": {"id": "product_id", "reason": "brief explanation"}, "headset": {"id": "product_id", "reason": "brief explanation"}, "summary": "A brief overall summary of why this setup is a great match."}`;
+            const prompt = `You are an expert gaming setup curator. A user needs a complete setup (one mouse, one keyboard, one headset). Their preferences are: \n- Primary Games: ${gameType}\n- Main Priority: ${priority}\n\nFrom the following JSON list of available products, select the single best mouse, keyboard, and headset for this user. \n\nPlease respond with ONLY a valid JSON object in this exact format, with no extra text or markdown: {"mouse": {"id": "product_id", "reason": "brief explanation"}, "keyboard": {"id": "product_id", "reason": "brief explanation"}, "headset": {"id": "product_id", "reason": "brief explanation"}, "summary": "A brief overall summary of why this setup is a great match."}`;
             
             const response = await callGeminiAPI(prompt);
             
@@ -1276,7 +1273,7 @@
       document.getElementById('hamburger').addEventListener('click', () => document.querySelector('.sidebar').classList.toggle('-translate-x-full'));
       document.getElementById('category-toggle').addEventListener('click', () => document.getElementById('category-menu').classList.toggle('translate-x-full'));
 
-      // NEW: Event listeners for the cart menu
+      // Event listeners for the cart menu
       closeCartBtn.addEventListener('click', closeCartMenu);
       continueShoppingBtn.addEventListener('click', closeCartMenu);
       cartOverlay.addEventListener('click', closeCartMenu);
@@ -1295,7 +1292,6 @@
             removeFromCart(removeBtn.dataset.id);
         }
       });
-      // END of new event listeners
 
       function showNotification(message, type = 'success') {
         const container = document.getElementById('notification-container');
@@ -1320,6 +1316,7 @@
 </script>
 </body>
 </html>
+
 
 
 
