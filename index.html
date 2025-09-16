@@ -1678,7 +1678,7 @@
       }
     });
 
-    // --- NEW & IMPROVED Chatbot Functionality ---
+    // --- HYBRID Chatbot Functionality (Perplexity for Chat + Hugging Face for Images) ---
     const chatbotContainer = document.getElementById('chatbot-container');
     const chatbotHeader = document.getElementById('chatbot-header');
     const chatbotBody = document.getElementById('chatbot-body');
@@ -1691,15 +1691,20 @@
     
     // =========================================================================================
     // !!! CRITICAL SECURITY WARNING !!!
-    // Exposing your API key on the client-side (in HTML/JS) is extremely insecure.
-    // Anyone can view your key and use it, which could lead to high bills or account suspension.
-    // **SOLUTION**: Create a backend server (e.g., using Node.js/Express) to act as a proxy.
-    // Your website should call your backend, and your backend will securely call the Together AI API.
-    // This key is left here ONLY for temporary functionality based on your original code.
+    // Exposing API keys on the client-side is extremely insecure. For a real application,
+    // you MUST build a backend server to handle these API calls securely.
     // =========================================================================================
-    const TOGETHER_API_KEY = 'tgp_v1_qQeqHwW67jDbBrgxYS2SPbA6Had-zvMeWeZRFdKG4TU';
-    const TOGETHER_API_URL = 'https://api.together.xyz/v1/chat/completions';
-    const TOGETHER_IMAGE_API_URL = 'https://api.together.xyz/v1/images/generate';
+
+    // --- API Configuration ---
+    // 1. For Chat (Perplexity AI)
+    const PERPLEXITY_API_KEY = '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';
+    const PERPLEXITY_API_URL = 'https://api.perplexity.ai/chat/completions';
+
+    // 2. For Image Generation (Hugging Face)
+    // PASTE YOUR HUGGING FACE TOKEN HERE
+    const HUGGING_FACE_API_KEY = 'hf_YOUR_HUGGING_FACE_TOKEN_HERE';
+    const HUGGING_FACE_API_URL = 'https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0';
+
 
     let isChatbotOpen = false;
     let conversationHistory = [];
@@ -1709,15 +1714,13 @@
         {
           role: "system",
           content: `You are a highly capable AI assistant for 'Gaming Odyssey,' a premier gaming platform. Your name is OdysseyAI. You are friendly, professional, and an expert in all things gaming.
-          You can:
-          1.  Answer detailed questions about Gaming Odyssey's products (keyboards, mice, etc.), tournaments (schedules, prizes), and the Minecraft server (IP: play.gamingodyssey.in).
-          2.  Handle a wide range of general knowledge questions.
-          3.  Generate high-quality images when a user starts their prompt with "/generate" or "/image".
-          4.  Use the current date and time context provided to you to answer questions like "what day is it?".
+          You have two main capabilities:
+          1.  For regular conversation, you can answer detailed questions about Gaming Odyssey's products, tournaments, the Minecraft server (IP: play.gamingodyssey.in), and handle general knowledge questions.
+          2.  For image generation, you can create images when a user starts their prompt with "/generate" or "/image".
           Always keep your responses concise and helpful. Use markdown for lists when appropriate.`
         }
       ];
-      addMessage('bot', `Hello! I'm OdysseyAI, your Gaming Odyssey assistant. How can I help you today? You can ask me about products, tournaments, or even ask me to generate an image for you using the <code>/generate</code> command! 😊`);
+      addMessage('bot', `Hello! I'm OdysseyAI. I can answer your questions or generate an image for you. Just type <code>/generate</code> followed by a description! 😊`);
     }
 
     function toggleChatbot() {
@@ -1799,7 +1802,6 @@
 
     async function sendMessageToAI(message) {
       let contextualMessage = message;
-      // Provide date/time context for relevant queries
       if (message.toLowerCase().match(/\b(date|day|time|today)\b/)) {
         contextualMessage = `(System Note: The current date and time is ${new Date().toString()}) \n\nUser query: "${message}"`;
       }
@@ -1808,14 +1810,14 @@
       showTypingIndicator();
       
       try {
-        const response = await fetch(TOGETHER_API_URL, {
+        const response = await fetch(PERPLEXITY_API_URL, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${TOGETHER_API_KEY}`
+            'Authorization': `Bearer ${PERPLEXITY_API_KEY}`
           },
           body: JSON.stringify({
-            model: "meta-llama/Llama-3-70b-chat-hf",
+            model: "llama-3-70b-instruct",
             messages: conversationHistory,
             max_tokens: 500,
             temperature: 0.7
@@ -1826,8 +1828,8 @@
 
         if (!response.ok) {
             const errorData = await response.json();
-            console.error('API Error:', errorData);
-            addMessage('bot', `Sorry, I encountered an error (Status: ${response.status}). Please check the console for details.`);
+            console.error('Perplexity API Error:', errorData);
+            addMessage('bot', `Sorry, I encountered a chat error (Status: ${response.status}). Please check the console.`);
             return;
         }
         
@@ -1837,9 +1839,9 @@
         conversationHistory.push({ role: "assistant", content: aiResponse });
         addMessage('bot', aiResponse);
       } catch (error) {
-        console.error('Error calling Together AI API:', error);
+        console.error('Error calling Perplexity AI API:', error);
         hideTypingIndicator();
-        addMessage('bot', "Sorry, I'm having trouble connecting. Please check your internet connection or the API key.");
+        addMessage('bot', "Sorry, I'm having trouble connecting to the chat service.");
       }
     }
 
@@ -1849,39 +1851,44 @@
         return;
       }
       
+      if (HUGGING_FACE_API_KEY === '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') {
+          addMessage('bot', "The image generation API key is missing. The site owner needs to add it to the code.");
+          return;
+      }
+      
       showTypingIndicator();
       
       try {
-        const response = await fetch(TOGETHER_IMAGE_API_URL, {
+        const response = await fetch(HUGGING_FACE_API_URL, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${TOGETHER_API_KEY}`
+            'Authorization': `Bearer ${HUGGING_FACE_API_KEY}`
           },
-          body: JSON.stringify({
-            prompt: prompt,
-            model: "stabilityai/stable-diffusion-xl-base-1.0",
-            width: 512,
-            height: 512,
-            steps: 40
-          })
+          body: JSON.stringify({ inputs: prompt })
         });
         
         hideTypingIndicator();
         
         if (!response.ok) {
             const errorData = await response.json();
-            console.error('Image API Error:', errorData);
-            addMessage('bot', `Image generation failed (Status: ${response.status}). The model may be busy. Please try again later.`);
+            console.error('Hugging Face API Error:', errorData);
+            let errorMessage = `Image generation failed (Status: ${response.status}).`;
+            if (errorData.error && errorData.error.includes("is currently loading")) {
+                errorMessage += " The model is loading, please try again in a moment.";
+            } else if (errorData.error) {
+                errorMessage += ` Details: ${errorData.error}`;
+            }
+            addMessage('bot', errorMessage);
             return;
         }
         
-        const data = await response.json();
-        const imageUrl = data.output.choices[0].image_base64;
+        const imageBlob = await response.blob();
+        const imageUrl = URL.createObjectURL(imageBlob);
         
         const imageContent = `
           <p>Here is the image you requested for: "<em>${prompt}</em>"</p>
-          <img src="data:image/png;base64,${imageUrl}" class="generated-image" alt="Generated image of ${prompt}">
+          <img src="${imageUrl}" class="generated-image" alt="Generated image of ${prompt}">
         `;
         addMessage('bot', imageContent);
         
@@ -1926,4 +1933,3 @@
   </script>
 </body>
 </html>
-
