@@ -4,36 +4,66 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Message Sent - Gaming Odyssey</title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
   <style>
-    /* Background */
+    :root {
+      --primary-glow: #7a00ff;
+      --secondary-glow: #00ccff;
+      --text-primary: #e0e0e0;
+      --text-secondary: #a64dff;
+      --bg-dark-1: #0d0d1a;
+      --bg-dark-2: #1a1a40;
+    }
+
+    /* Background & Core Styles */
     body {
       margin: 0;
       font-family: "Orbitron", sans-serif;
-      background: linear-gradient(135deg, #0d0d1a, #1a1a40, #301934, #220044);
+      background: linear-gradient(135deg, var(--bg-dark-1), var(--bg-dark-2));
       background-size: 400% 400%;
-      animation: gradientShift 12s ease infinite;
-      color: #fff;
+      animation: gradientShift 15s ease infinite;
+      color: var(--text-primary);
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
       text-align: center;
+      overflow: hidden; /* Prevents scrollbars during animation */
+    }
+    
+    /* NEW: Subtle background texture */
+    body::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+        background-size: 25px 25px;
+        opacity: 0.5;
+        z-index: -1;
     }
 
-    /* Neon Glow Container */
+    /* Main Container */
     .container {
       background: rgba(20, 20, 50, 0.85);
-      padding: 50px;
+      padding: 50px 40px;
       border-radius: 20px;
-      box-shadow: 0 0 25px #7a00ff, 0 0 50px #4400ff, inset 0 0 20px #111;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 0 30px var(--primary-glow), 0 0 60px var(--bg-dark-2), inset 0 0 20px #111;
       max-width: 600px;
       width: 90%;
       position: relative;
       overflow: hidden;
+      /* NEW: Entry Animation */
+      animation: slideUpFadeIn 1s ease-out forwards;
     }
 
-    /* Glow Border Animation */
+    /* Animated Glow Border */
     .container::before {
       content: "";
       position: absolute;
@@ -41,66 +71,90 @@
       left: -2px;
       right: -2px;
       bottom: -2px;
-      background: linear-gradient(45deg, #6a00ff, #00ccff, #8800ff, #00bfff);
-      background-size: 600% 600%;
-      animation: borderGlow 10s linear infinite;
+      background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow), var(--primary-glow));
+      background-size: 400% 400%;
+      animation: borderGlow 8s linear infinite;
       z-index: -1;
       border-radius: 22px;
-      filter: blur(12px);
+      filter: blur(15px);
     }
 
-    /* Icon */
+    /* Icon Styling */
     .icon {
-      font-size: 4rem;
-      color: #00ccff;
-      margin-bottom: 20px;
-      text-shadow: 0 0 15px #00ccff, 0 0 30px #6600ff;
-      animation: pulse 1.5s infinite;
+      font-size: 4.5rem;
+      color: var(--secondary-glow);
+      margin-bottom: 25px;
+      /* NEW: Refined icon animation */
+      animation: iconFloatAndGlow 3s ease-in-out infinite;
     }
 
+    /* Typography */
     h1 {
-      font-size: 2.5rem;
-      margin-bottom: 15px;
-      color: #a64dff;
-      text-shadow: 0 0 10px #9933ff, 0 0 20px #00ccff;
+      font-size: 2.8rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: var(--text-secondary);
+      text-shadow: 0 0 10px var(--text-secondary), 0 0 25px var(--secondary-glow);
+      /* NEW: Added letter-spacing */
+      letter-spacing: 2px;
     }
 
     p {
-      font-size: 1.2rem;
-      margin-bottom: 30px;
-      color: #ccc;
+      font-size: 1.1rem;
+      line-height: 1.7; /* NEW: Increased for readability */
+      margin-bottom: 40px;
+      color: var(--text-primary);
+      max-width: 450px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    p strong {
+        color: #fff;
+        font-weight: normal;
     }
 
+    /* Button Container */
     .buttons {
       display: flex;
       justify-content: center;
-      gap: 15px;
+      gap: 20px;
       flex-wrap: wrap;
     }
 
-    a {
-      display: inline-block;
+    /* Button Styling */
+    a.button {
+      display: inline-flex; /* NEW: for better alignment of icon and text */
+      align-items: center;
+      gap: 10px;
       padding: 14px 28px;
-      background: linear-gradient(135deg, #6a00ff, #00ccff);
+      background: linear-gradient(135deg, var(--primary-glow), var(--secondary-glow));
       color: #fff;
       font-weight: bold;
+      font-size: 1rem;
       border-radius: 12px;
       text-decoration: none;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 15px #6a00ff, 0 0 30px #00ccff;
+      /* NEW: Added subtle border and smoother transition */
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      box-shadow: 0 0 15px rgba(106, 0, 255, 0.5), 0 0 30px rgba(0, 204, 255, 0.3);
     }
 
-    a:hover {
-      background: linear-gradient(135deg, #00ccff, #6a00ff);
-      transform: scale(1.07);
-      box-shadow: 0 0 25px #9933ff, 0 0 50px #00ccff;
+    a.button:hover {
+      transform: translateY(-5px) scale(1.05); /* NEW: More engaging hover */
+      box-shadow: 0 0 25px var(--primary-glow), 0 0 50px var(--secondary-glow);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+    
+    /* NEW: Click feedback */
+    a.button:active {
+        transform: translateY(-2px) scale(1.02);
     }
 
     /* Animations */
     @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
+      0%, 100% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
     }
 
     @keyframes borderGlow {
@@ -108,25 +162,42 @@
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
+    
+    /* NEW: Refined icon animation */
+    @keyframes iconFloatAndGlow {
+        0%, 100% {
+            transform: translateY(0);
+            text-shadow: 0 0 15px var(--secondary-glow), 0 0 30px var(--primary-glow);
+        }
+        50% {
+            transform: translateY(-15px);
+            text-shadow: 0 0 25px var(--secondary-glow), 0 0 50px var(--primary-glow);
+        }
+    }
 
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.2); opacity: 0.8; }
+    /* NEW: Entry Animation */
+    @keyframes slideUpFadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="icon"><i class="fas fa-check-circle"></i></div>
-    <h1>Message Sent Successfully!</h1>
-    <p>Thank you for reaching out to <strong>Gaming Odyssey</strong>.<br>
-       Your message has been received and our team will respond soon.</p>
+    <h1>Message Sent!</h1>
+    <p>Thank you for reaching out to <strong>Gaming Odyssey</strong>. Our team has received your message and will get back to you shortly.</p>
     
     <div class="buttons">
-      <a href="index.html"><i class="fas fa-home"></i> Back to Home</a>
-      <a href="contactus.html"><i class="fas fa-paper-plane"></i> Send Another Message</a>
+      <a href="index.html" class="button"><i class="fas fa-home"></i> Back to Home</a>
+      <a href="contactus.html" class="button"><i class="fas fa-paper-plane"></i> Send Another</a>
     </div>
   </div>
 </body>
 </html>
-
