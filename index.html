@@ -725,6 +725,43 @@
     .typing-indicator span {
         animation: bounce 1s infinite;
     }
+
+    /* --- SLIDESHOW STYLES --- */
+    .slide {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transition: opacity 1.5s ease-in-out;
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        padding: 1.5rem;
+        text-align: center;
+    }
+    .slide.active {
+        opacity: 1;
+    }
+    .slide-caption {
+        background-color: rgba(15, 23, 42, 0.7);
+        backdrop-filter: blur(5px);
+        color: white;
+        padding: 0.75rem 1.25rem;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 1rem;
+        transform: translateY(20px);
+        opacity: 0;
+        transition: transform 0.5s ease-out 0.5s, opacity 0.5s ease-out 0.5s;
+    }
+    .slide.active .slide-caption {
+        transform: translateY(0);
+        opacity: 1;
+    }
     
     @media (max-width: 640px) {
       .hero-bg h1 {
@@ -887,15 +924,12 @@
         <h1 class="text-5xl sm:text-6xl md:text-7xl font-bold text-white mb-6 leading-tight tech-font">
           <span class="gradient-text">GAMING ODYSSEY</span>
         </h1>
-        <p class="text-xl sm:text-2xl text-[#F1F5F9] mb-8 leading-relaxed">Where Gaming Meets Glory</p>
-        <div class="flex flex-col sm:flex-row justify-center gap-4">
-          <a href="tournaments.html" class="glow-button px-8 py-3 rounded-lg font-semibold text-white gradient-bg flex items-center justify-center gap-2">
-            <i class="fas fa-trophy"></i> View Tournaments
-          </a>
-          <a href="signup.html" class="glow-button px-8 py-3 rounded-lg font-semibold text-white bg-gradient-to-r from-[#10B981] to-[#3B82F6] flex items-center justify-center gap-2">
-            <i class="fas fa-user-plus"></i> Join Now
-          </a>
-        </div>
+        <p class="text-xl sm:text-2xl text-[#F1F5F9] mb-4 leading-relaxed">Where Gaming Meets Glory</p>
+        <p class="text-lg text-slate-300 max-w-3xl mx-auto mb-8">
+            Your ultimate destination for high-performance gaming gear, competitive tournaments, and a vibrant community. From building your dream PC to designing the perfect setup, we've got you covered.
+        </p>
+        <div id="hero-slideshow" class="relative w-full max-w-3xl h-56 sm:h-72 md:h-80 mx-auto overflow-hidden rounded-lg shadow-2xl holographic-effect">
+            </div>
       </div>
     </section>
 
@@ -1106,7 +1140,7 @@
           </div>
           <div class="md:w-1/2 fade-in">
             <div class="holographic-effect rounded-xl overflow-hidden">
-              <img src="https://i.imgur.com/5XrXQ9W.jpg" alt="Minecraft Server" class="w-full h-auto object-cover">
+              <img src="https://i.imgur.com/aVPAf89.jpeg" alt="Minecraft Minigames Server" class="w-full h-auto object-cover">
             </div>
           </div>
         </div>
@@ -1497,6 +1531,49 @@
                 }
             }, true); 
         }
+
+        // --- Slideshow Functionality ---
+        const slideshowContainer = document.getElementById('hero-slideshow');
+        if (slideshowContainer) {
+            const slides = [
+                {
+                    img: 'https://images.unsplash.com/photo-1598920953457-df088b6b27e8?q=80&w=2070&auto=format&fit=crop',
+                    caption: 'Discover premium peripherals for the ultimate edge.'
+                },
+                {
+                    img: 'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?q=80&w=2042&auto=format&fit=crop',
+                    caption: 'Let us build your dream custom PC, tailored to your needs.'
+                },
+                {
+                    img: 'https://images.unsplash.com/photo-1603481588273-2f908a9a7a1b?q=80&w=2070&auto=format&fit=crop',
+                    caption: 'Design a complete, aesthetic gaming setup with our help.'
+                }
+            ];
+            let currentSlide = 0;
+
+            function createSlides() {
+                slides.forEach((slide, index) => {
+                    const slideElement = document.createElement('div');
+                    slideElement.className = 'slide';
+                    if (index === 0) {
+                        slideElement.classList.add('active');
+                    }
+                    slideElement.style.backgroundImage = `url('${slide.img}')`;
+                    slideElement.innerHTML = `<div class="slide-caption">${slide.caption}</div>`;
+                    slideshowContainer.appendChild(slideElement);
+                });
+            }
+
+            function showNextSlide() {
+                const slideElements = document.querySelectorAll('#hero-slideshow .slide');
+                slideElements[currentSlide].classList.remove('active');
+                currentSlide = (currentSlide + 1) % slides.length;
+                slideElements[currentSlide].classList.add('active');
+            }
+
+            createSlides();
+            setInterval(showNextSlide, 5000); // Change slide every 5 seconds
+        }
     });
 
     // Initialize EmailJS
@@ -1849,4 +1926,3 @@
   </script>
 </body>
 </html>
-
