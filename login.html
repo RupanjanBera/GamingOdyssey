@@ -220,32 +220,29 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
-    // --- REVERTED: Google OAuth now uses localStorage ---
-    function jwt_decode(token) {
-      try { return JSON.parse(atob(token.split('.')[1])); } catch (e) { return null; }
-    }
-    
+    // --- MODIFIED: Google Sign-In now uses Firebase ---
     function handleCredentialResponse(response) {
-      const responsePayload = jwt_decode(response.credential);
-      const email = responsePayload.email;
-      const firstName = responsePayload.given_name;
       const formStatus = document.getElementById('form-status');
-      const users = JSON.parse(localStorage.getItem('users')) || [];
-      const user = users.find(u => u.email === email);
       
-      if (user) {
-        formStatus.textContent = 'Google login successful! Redirecting...';
-        formStatus.className = 'success text-center';
-        localStorage.setItem('userData', JSON.stringify({
-          name: user.firstName || firstName,
-          username: user.username,
-          email: user.email,
-        }));
-        setTimeout(() => { window.location.href = 'index.html'; }, 1500);
-      } else {
-        formStatus.textContent = 'Google account not found. Please sign up first.';
-        formStatus.className = 'error text-center';
-      }
+      // 1. Get the ID token from the Google Sign-In response.
+      const id_token = response.credential;
+      
+      // 2. Create a Firebase credential with the Google ID token.
+      const credential = firebase.auth.GoogleAuthProvider.credential(id_token);
+
+      // 3. Sign in to Firebase with the credential.
+      auth.signInWithCredential(credential)
+        .then((result) => {
+          // User is signed in.
+          formStatus.textContent = 'Signed in successfully! Redirecting...';
+          formStatus.className = 'success text-center';
+          setTimeout(() => { window.location.href = 'index.html'; }, 1500);
+        })
+        .catch((error) => {
+          // Handle errors here.
+          formStatus.textContent = error.message;
+          formStatus.className = 'error text-center';
+        });
     }
 
     window.onload = function () {
@@ -301,4 +298,5 @@
   </script>
 </body>
 </html>
+
 
