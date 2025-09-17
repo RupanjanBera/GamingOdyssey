@@ -226,40 +226,29 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
-    // --- REVERTED: Google OAuth now uses localStorage ---
-    function jwt_decode(token) {
-      try { return JSON.parse(atob(token.split('.')[1])); } catch (e) { return null; }
-    }
-    
+    // --- MODIFIED: Google Sign-In now uses Firebase ---
     function handleCredentialResponse(response) {
-      const responsePayload = jwt_decode(response.credential);
-      const email = responsePayload.email;
-      const firstName = responsePayload.given_name;
-      const lastName = responsePayload.family_name;
       const formStatus = document.getElementById('form-status');
-      let users = JSON.parse(localStorage.getItem('users')) || [];
-      const userExists = users.some(user => user.email === email);
+      
+      // 1. Get the ID token from the Google Sign-In response.
+      const id_token = response.credential;
+      
+      // 2. Create a Firebase credential with the Google ID token.
+      const credential = firebase.auth.GoogleAuthProvider.credential(id_token);
 
-      if (!userExists) {
-        const newUser = {
-          firstName, lastName, email,
-          username: email.split('@')[0],
-          password: 'GoogleUser_NoPassword', // Placeholder for Google users
-          signupDate: new Date().toISOString()
-        };
-        users.push(newUser);
-        localStorage.setItem('users', JSON.stringify(users));
-      }
-
-      localStorage.setItem('userData', JSON.stringify({
-        name: firstName,
-        username: email.split('@')[0],
-        email: email
-      }));
-
-      formStatus.textContent = 'Signed in with Google successfully! Redirecting...';
-      formStatus.className = 'success text-center';
-      setTimeout(() => { window.location.href = 'index.html'; }, 2000);
+      // 3. Sign in to Firebase with the credential.
+      auth.signInWithCredential(credential)
+        .then((result) => {
+          // User is signed in. Firebase will create a new user if it's their first time.
+          formStatus.textContent = 'Signed in successfully! Redirecting...';
+          formStatus.className = 'success text-center';
+          setTimeout(() => { window.location.href = 'index.html'; }, 1500);
+        })
+        .catch((error) => {
+          // Handle errors here.
+          formStatus.textContent = error.message;
+          formStatus.className = 'error text-center';
+        });
     }
 
     window.onload = function () {
@@ -311,7 +300,7 @@
             return user.updateProfile({ displayName: firstName });
           })
           .then(() => {
-            formStatus.textContent = 'Firebase account created! Redirecting...';
+            formStatus.textContent = 'GAMING ODYSSEY account created! Redirecting...';
             formStatus.className = 'success text-center';
             setTimeout(() => { window.location.href = 'index.html'; }, 2000);
           })
@@ -329,4 +318,5 @@
   </script>
 </body>
 </html>
+
 
