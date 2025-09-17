@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forgot Password - Gaming Odyssey</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <style>
+    :root {
+      --primary: #3B82F6;
+      --secondary: #D946EF;
+      --dark: #0F172A;
+      --light: #F1F5F9;
+      --mid: #1E293B;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--dark);
+      color: var(--light);
+      background-image: 
+        radial-gradient(circle at 15% 25%, rgba(59, 130, 246, 0.15) 0%, transparent 30%),
+        radial-gradient(circle at 85% 75%, rgba(217, 70, 239, 0.15) 0%, transparent 30%);
+      background-attachment: fixed;
+    }
+    .tech-font { font-family: 'Orbitron', sans-serif; }
+    .sidebar {
+      background: linear-gradient(180deg, var(--mid) 0%, var(--dark) 100%);
+      box-shadow: 4px 0 15px rgba(59, 130, 246, 0.1);
+    }
+    .form-container {
+      background: rgba(30, 41, 59, 0.6);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 1rem;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      transition: all 0.3s ease;
+    }
+    .input-group { position: relative; }
+    .input-icon {
+      position: absolute; left: 1rem; top: 50%;
+      transform: translateY(-50%); color: #94A3B8;
+    }
+    .input-field {
+      background: rgba(15, 23, 42, 0.8);
+      color: var(--light); border: 1px solid var(--mid);
+      border-radius: 0.5rem; padding: 0.75rem 0.75rem 0.75rem 3rem;
+      width: 100%; transition: all 0.3s ease;
+    }
+    .input-field:focus {
+      outline: none; border-color: var(--primary);
+      box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+    }
+    .submit-btn {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: white; font-weight: 600; padding: 0.85rem 1.5rem;
+      border-radius: 0.5rem; transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
+      border: none;
+    }
+    .submit-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(217, 70, 239, 0.3);
+    }
+    .error { color: #F87171; font-size: 0.875rem; }
+    .success { color: #4ADE80; font-size: 1rem; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col md:flex-row">
+  <div class="w-full md:w-64 sidebar z-20">
+     <div class="p-6">
+      <div class="flex items-center space-x-3">
+        <img src="https://cdn-icons-png.flaticon.com/512/3612/3612569.png" alt="Logo" class="w-10 h-10">
+        <h1 class="text-2xl font-bold text-white leading-relaxed tech-font">Gaming Odyssey</h1>
+      </div>
+    </div>
+  </div>
+
+  <main class="flex-1 flex items-center justify-center p-6">
+    <div class="w-full max-w-md">
+      <div class="form-container p-8 md:p-10">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold tech-font text-white">Reset Password</h1>
+            <p class="text-slate-400 mt-2">Enter your email to receive a reset link.</p>
+        </div>
+
+        <form id="reset-form" class="space-y-6">
+          <div class="input-group">
+            <i class="fas fa-envelope input-icon"></i>
+            <input type="email" id="email" name="email" required placeholder="Your Email Address" class="input-field" />
+          </div>
+          
+          <div class="pt-2">
+            <button type="submit" class="submit-btn w-full">
+              Send Reset Link
+            </button>
+            <p id="form-status" class="mt-4 text-center"></p>
+          </div>
+          
+          <div class="text-center text-slate-400 text-sm">
+            Remembered your password? <a href="login.html" class="text-[var(--primary)] hover:underline font-semibold">Log In</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+  
+  <script>
+    // --- Firebase Configuration ---
+    const firebaseConfig = {
+      apiKey:"AIzaSyDA218WauVZNgqeMgiR_5H6TLYQB5HXZkY",
+      authDomain: "gamingodyssey-2e642.firebaseapp.com",
+      databaseURL: "https://gamingodyssey-2e642-default-rtdb.firebaseio.com",
+      projectId: "gamingodyssey-2e642",
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // --- Password Reset Form ---
+    document.getElementById('reset-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const email = document.getElementById('email').value.trim();
+        const statusEl = document.getElementById('form-status');
+        
+        statusEl.textContent = ''; // Clear previous messages
+
+        auth.sendPasswordResetEmail(email)
+          .then(() => {
+            statusEl.textContent = 'Password reset email sent! Please check your inbox.';
+            statusEl.className = 'success text-center';
+          })
+          .catch((error) => {
+            let errorMessage = 'An error occurred. Please try again.';
+            if (error.code === 'auth/user-not-found') {
+                // To prevent email enumeration, we show a generic success message
+                statusEl.textContent = 'Password reset email sent! Please check your inbox.';
+                statusEl.className = 'success text-center';
+            } else if (error.code === 'auth/invalid-email') {
+                errorMessage = 'Please enter a valid email address.';
+                statusEl.className = 'error text-center';
+                statusEl.textContent = errorMessage;
+            } else {
+                 statusEl.textContent = errorMessage;
+                 statusEl.className = 'error text-center';
+            }
+          });
+    });
+  </script>
+</body>
+</html>
