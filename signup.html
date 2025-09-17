@@ -8,6 +8,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
     :root {
@@ -69,7 +73,7 @@
       color: var(--light);
       border: 1px solid var(--mid);
       border-radius: 0.5rem;
-      padding: 0.75rem 0.75rem 0.75rem 3rem; /* Left padding for icon */
+      padding: 0.75rem 0.75rem 0.75rem 3rem;
       width: 100%;
       transition: all 0.3s ease;
     }
@@ -187,15 +191,10 @@
             <i class="fas fa-envelope input-icon"></i>
             <input type="email" id="email" name="email" placeholder="Email Address" required class="input-field" />
           </div>
-
-          <div class="input-group">
-            <i class="fas fa-at input-icon"></i>
-            <input type="text" id="username" name="username" placeholder="Username" required class="input-field" />
-          </div>
           
           <div class="input-group">
             <i class="fas fa-lock input-icon"></i>
-            <input type="password" id="password" name="password" placeholder="Password" required class="input-field" />
+            <input type="password" id="password" name="password" placeholder="Password (min. 8 characters)" required class="input-field" />
             <i class="fas fa-eye-slash password-toggle" id="toggle-password"></i>
           </div>
           
@@ -217,45 +216,41 @@
   <div id="gsi_btn_container" style="display: none;"></div>
 
   <script>
+    // --- Firebase Configuration ---
+    const firebaseConfig = {
+      apiKey:"AIzaSyDA218WauVZNgqeMgiR_5H6TLYQB5HXZkY",
+      authDomain: "gamingodyssey-2e642.firebaseapp.com",
+      databaseURL: "https://gamingodyssey-2e642-default-rtdb.firebaseio.com",
+      projectId: "gamingodyssey-2e642",
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
     // --- Google OAuth Implementation ---
-    function jwt_decode(token) {
-      try { return JSON.parse(atob(token.split('.')[1])); } catch (e) { return null; }
-    }
-    
     function handleCredentialResponse(response) {
-      const responsePayload = jwt_decode(response.credential);
-      const email = responsePayload.email;
-      const firstName = responsePayload.given_name;
-      const lastName = responsePayload.family_name;
       const formStatus = document.getElementById('form-status');
-      let users = JSON.parse(localStorage.getItem('users')) || [];
-      const userExists = users.some(user => user.email === email);
+      const id_token = response.credential;
+      const credential = firebase.auth.GoogleAuthProvider.credential(id_token);
 
-      if (!userExists) {
-        const newUser = {
-          firstName, lastName, email,
-          username: email.split('@')[0],
-          password: 'GoogleUser_NoPassword',
-          signupDate: new Date().toISOString()
-        };
-        users.push(newUser);
-        localStorage.setItem('users', JSON.stringify(users));
-      }
-
-      localStorage.setItem('userData', JSON.stringify({
-        name: firstName,
-        username: email.split('@')[0],
-        email: email
-      }));
-
-      formStatus.textContent = 'Signed in successfully! Redirecting...';
-      formStatus.className = 'success text-center';
-      setTimeout(() => { window.location.href = 'index.html'; }, 2000);
+      auth.signInWithCredential(credential)
+        .then((result) => {
+          // Signed in 
+          formStatus.textContent = 'Signed in successfully! Redirecting...';
+          formStatus.className = 'success text-center';
+          setTimeout(() => { window.location.href = 'index.html'; }, 1500);
+        })
+        .catch((error) => {
+          // Handle Errors here.
+          formStatus.textContent = error.message;
+          formStatus.className = 'error text-center';
+        });
     }
 
     window.onload = function () {
       google.accounts.id.initialize({
-        client_id: '964191300629-ri9d35rqf4p0tgshv4k8u31r5rptmf9m.apps.googleusercontent.com',
+        client_id: '964191300629-ri9d35rqf4p0tgshv4k8u31r5rptmf9m.apps.googleusercontent.com', // Your Google Client ID
         callback: handleCredentialResponse
       });
       google.accounts.id.renderButton(
@@ -269,7 +264,7 @@
         if (googleButton) { googleButton.click(); }
     });
 
-    // --- Existing JavaScript ---
+    // --- Password Toggle ---
     const togglePassword = document.getElementById('toggle-password');
     const passwordInput = document.getElementById('password');
     togglePassword.addEventListener('click', () => {
@@ -279,82 +274,51 @@
         togglePassword.classList.toggle('fa-eye-slash');
     });
 
-    // --- RESTORED: Full form validation and data saving logic ---
+    // --- Email/Password Sign Up Form ---
     document.getElementById('signup-form').addEventListener('submit', function(event) {
         event.preventDefault();
         
-        // Get form values
         const firstName = document.getElementById('first-name').value.trim();
-        const lastName = document.getElementById('last-name').value.trim();
         const email = document.getElementById('email').value.trim();
-        const username = document.getElementById('username').value.trim();
         const password = document.getElementById('password').value;
         const formStatus = document.getElementById('form-status');
         
-        // Basic validation
-        if (!firstName || !lastName || !email || !username || !password) {
+        formStatus.textContent = ''; // Clear previous messages
+        
+        if (!firstName || !email || !password) {
             formStatus.textContent = 'Please fill out all fields.';
             formStatus.className = 'error text-center';
             return;
         }
 
-        if (password.length < 8) {
-            formStatus.textContent = 'Password must be at least 8 characters.';
+        auth.createUserWithEmailAndPassword(email, password)
+          .then((userCredential) => {
+            // Signed up and signed in 
+            const user = userCredential.user;
+            // Optionally, update the user's profile with their first name
+            return user.updateProfile({
+              displayName: firstName
+            });
+          })
+          .then(() => {
+            formStatus.textContent = 'Account created successfully! Redirecting...';
+            formStatus.className = 'success text-center';
+            setTimeout(() => { window.location.href = 'index.html'; }, 2000);
+          })
+          .catch((error) => {
+            let errorMessage = error.message;
+            // Provide more user-friendly error messages
+            if (error.code == 'auth/email-already-in-use') {
+              errorMessage = 'An account with this email already exists.';
+            } else if (error.code == 'auth/weak-password') {
+              errorMessage = 'Password is too weak. Please use at least 6 characters.';
+            } else if (error.code == 'auth/invalid-email') {
+              errorMessage = 'Please enter a valid email address.';
+            }
+            formStatus.textContent = errorMessage;
             formStatus.className = 'error text-center';
-            return;
-        }
-
-        // Get existing users from localStorage or create empty array
-        let users = JSON.parse(localStorage.getItem('users')) || [];
-        
-        // Check if email or username already exists
-        const emailExists = users.some(user => user.email === email);
-        const usernameExists = users.some(user => user.username === username);
-        
-        if (emailExists) {
-            formStatus.textContent = 'An account with this email already exists.';
-            formStatus.className = 'error text-center';
-            return;
-        }
-        
-        if (usernameExists) {
-            formStatus.textContent = 'This username is already taken.';
-            formStatus.className = 'error text-center';
-            return;
-        }
-
-        // Create new user object
-        const userData = {
-            firstName,
-            lastName,
-            email,
-            username,
-            password, // In a real app, you must hash the password before saving!
-            signupDate: new Date().toISOString()
-        };
-        
-        // Add new user to the array
-        users.push(userData);
-        
-        // Save the updated users array to localStorage
-        localStorage.setItem('users', JSON.stringify(users));
-        
-        // Also store current user data for the session
-        localStorage.setItem('userData', JSON.stringify({
-            name: firstName,
-            username: username,
-            email: email
-        }));
-        
-        // Show success message and redirect
-        formStatus.textContent = 'Account created successfully! Redirecting...';
-        formStatus.className = 'success text-center';
-        
-        setTimeout(() => {
-            window.location.href = 'index.html';
-        }, 2000);
+          });
     });
   </script>
 </body>
 </html>
-
