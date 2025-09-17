@@ -45,27 +45,6 @@
       color: transparent;
     }
     
-    .gradient-bg {
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-    }
-    
-    .gradient-border {
-      position: relative;
-      background: var(--dark);
-    }
-    
-    .gradient-border::before {
-      content: '';
-      position: absolute;
-      top: -2px;
-      left: -2px;
-      right: -2px;
-      bottom: -2px;
-      background: linear-gradient(45deg, var(--primary), var(--secondary));
-      z-index: -1;
-      border-radius: inherit;
-    }
-    
     .holographic-effect {
       position: relative;
       overflow: hidden;
@@ -73,51 +52,6 @@
       box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
     }
     
-    .holographic-effect::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(
-        45deg,
-        rgba(59, 130, 246, 0.1) 0%,
-        rgba(217, 70, 239, 0.1) 50%,
-        rgba(59, 130, 246, 0.1) 100%
-      );
-      background-size: 200% 200%;
-      animation: holographic 8s ease infinite;
-      z-index: 1;
-      pointer-events: none;
-    }
-    
-    @keyframes holographic {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    
-    .holographic-card {
-      perspective: 1000px;
-      transform-style: preserve-3d;
-    }
-    
-    .holographic-card-inner {
-      transition: transform 0.6s;
-      transform-style: preserve-3d;
-    }
-    
-    .holographic-card:hover .holographic-card-inner {
-      transform: rotateY(15deg) rotateX(5deg) translateY(-10px);
-    }
-    
-    .sidebar {
-      background: linear-gradient(180deg, var(--mid) 0%, var(--dark) 100%);
-      box-shadow: 4px 0 15px rgba(59, 130, 246, 0.2);
-    }
-    
-    /* --- NEW HERO BACKGROUND --- */
     .hero-bg {
         background-image: 
             linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.9)),
@@ -128,40 +62,6 @@
         overflow: hidden;
     }
     
-    .hero-bg::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: 
-        radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.2), transparent 70%),
-        radial-gradient(circle at 80% 80%, rgba(217, 70, 239, 0.2), transparent 70%);
-      animation: glow 15s ease-in-out infinite alternate;
-      opacity: 0.5;
-      z-index: 0;
-    }
-    
-    .hero-content {
-      position: relative;
-      z-index: 1;
-    }
-    
-    .pixel-grid {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: 
-        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-      background-size: 20px 20px;
-      z-index: 0;
-      opacity: 0.5;
-    }
-    
     .glow-button {
       position: relative;
       overflow: hidden;
@@ -169,36 +69,9 @@
       box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
     }
     
-    .glow-button::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: linear-gradient(
-        45deg,
-        transparent 0%,
-        rgba(255, 255, 255, 0.1) 50%,
-        transparent 100%
-      );
-      transform: rotate(45deg);
-      animation: shine 3s infinite;
-      opacity: 0;
-    }
-    
-    .glow-button:hover::before {
-      opacity: 1;
-    }
-    
-    @keyframes shine {
-      0% { transform: translateX(-100%) rotate(45deg); }
-      100% { transform: translateX(100%) rotate(45deg); }
-    }
-    
-    @keyframes glow {
-      0%, 100% { opacity: 0.5; }
-      50% { opacity: 0.8; }
+    .glow-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 25px rgba(59, 130, 246, 0.5);
     }
     
     .nav-link, #mobile-menu a {
@@ -271,7 +144,7 @@
       font-weight: bold;
       font-size: 1.2rem;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-      z-index: 1040; /* Increased z-index */
+      z-index: 1040;
       cursor: pointer;
       transition: all 0.3s ease;
     }
@@ -279,14 +152,6 @@
     .user-avatar:hover {
       transform: scale(1.1);
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-    }
-    
-    .social-icon {
-      transition: all 0.3s ease;
-    }
-    
-    .social-icon:hover {
-      transform: translateY(-3px) scale(1.1);
     }
     
     .tournament-card {
@@ -302,26 +167,19 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: linear-gradient(
-        to bottom,
-        transparent 60%,
-        rgba(0, 0, 0, 0.7) 90%
-      );
+      background: linear-gradient( to bottom, transparent 60%, rgba(0, 0, 0, 0.7) 90% );
       z-index: 1;
-    }
-    
-    .tournament-card-content {
-      position: relative;
-      z-index: 2;
     }
     
     .tournament-card:hover {
       transform: translateY(-5px);
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
     }
-    
-    .holographic-product {
+
+     .holographic-product {
       position: relative;
+      background: var(--mid);
+      border: 1px solid #334155;
       transform-style: preserve-3d;
       transition: all 0.5s ease;
       perspective: 1000px;
@@ -329,47 +187,8 @@
     
     .holographic-product:hover {
       transform: translateY(-10px) rotateX(5deg);
-    }
-    
-    .holographic-product::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(
-        135deg,
-        rgba(59, 130, 246, 0.1) 0%,
-        rgba(217, 70, 239, 0.1) 50%,
-        rgba(59, 130, 246, 0.1) 100%
-      );
-      animation: holographic 8s ease infinite;
-      z-index: 1;
-      pointer-events: none;
-    }
-    
-    .holographic-product::after {
-      content: '';
-      position: absolute;
-      top: -2px;
-      left: -2px;
-      right: -2px;
-      bottom: -2px;
-      background: linear-gradient(
-        45deg,
-        var(--primary),
-        var(--secondary),
-        var(--primary)
-      );
-      z-index: -1;
-      filter: blur(5px);
-      opacity: 0.7;
-      transition: all 0.3s ease;
-    }
-    
-    .holographic-product:hover::after {
-      opacity: 0.9;
+      border-color: var(--primary);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     }
     
     .price-tag {
@@ -377,7 +196,7 @@
       top: 10px;
       right: 10px;
       background: linear-gradient(45deg, var(--primary), var(--secondary));
-      color: var(--dark);
+      color: var(--darker);
       font-weight: bold;
       padding: 0.25rem 0.5rem;
       border-radius: 0.25rem;
@@ -402,334 +221,6 @@
       border-radius: 3px;
     }
     
-    .stats-item {
-      position: relative;
-      padding: 1rem;
-      border-radius: 0.5rem;
-      overflow: hidden;
-    }
-    
-    .stats-item::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(
-        135deg,
-        rgba(59, 130, 246, 0.2),
-        rgba(217, 70, 239, 0.2)
-      );
-      z-index: -1;
-    }
-    
-    /* WhatsApp Widget Styles */
-    .whatsapp-widget {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      z-index: 1000;
-      font-family: 'Poppins', sans-serif;
-    }
-    
-    .whatsapp-bubble {
-      width: 60px;
-      height: 60px;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
-      transition: all 0.3s ease;
-      animation: pulse 2s infinite;
-    }
-    
-    .whatsapp-bubble:hover {
-      transform: scale(1.1);
-      box-shadow: 0 6px 25px rgba(59, 130, 246, 0.6);
-    }
-    
-    .whatsapp-bubble i {
-      color: white;
-      font-size: 28px;
-    }
-    
-    .whatsapp-chat-box {
-      position: absolute;
-      bottom: 70px;
-      right: 0;
-      width: 300px;
-      background: linear-gradient(145deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98));
-      border-radius: 12px;
-      box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
-      overflow: hidden;
-      transform: translateY(10px);
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(59, 130, 246, 0.3);
-    }
-    
-    .whatsapp-chat-box::before {
-      content: '';
-      position: absolute;
-      top: -2px;
-      left: -2px;
-      right: -2px;
-      bottom: -2px;
-      background: linear-gradient(45deg, var(--primary), var(--secondary), var(--primary));
-      z-index: -1;
-      border-radius: inherit;
-      animation: border-glow 3s infinite;
-    }
-    
-    .whatsapp-chat-box.active {
-      transform: translateY(0);
-      opacity: 1;
-      visibility: visible;
-    }
-    
-    .whatsapp-header {
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
-      padding: 15px;
-      display: flex;
-      align-items: center;
-      color: white;
-    }
-    
-    .whatsapp-header img {
-      width: 40px;
-      height: 40px;
-      margin-right: 10px;
-      border-radius: 8px;
-    }
-    
-    .whatsapp-header h3 {
-      font-size: 16px;
-      font-weight: 600;
-      margin: 0;
-    }
-    
-    .whatsapp-body {
-      padding: 15px;
-    }
-    
-    .whatsapp-message {
-      background: rgba(30, 41, 59, 0.7);
-      padding: 12px;
-      border-radius: 8px;
-      margin-bottom: 15px;
-      font-size: 14px;
-      line-height: 1.5;
-      border-left: 3px solid var(--primary);
-    }
-    
-    .whatsapp-button {
-      display: block;
-      width: 100%;
-      padding: 12px;
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-align: center;
-      text-decoration: none;
-      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
-    }
-    
-    .whatsapp-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
-    }
-    
-    .whatsapp-close {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: transparent;
-      border: none;
-      color: white;
-      cursor: pointer;
-      font-size: 18px;
-    }
-    
-    @keyframes pulse {
-      0% {
-        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
-      }
-      70% {
-        box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
-      }
-      100% {
-        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
-      }
-    }
-    
-    @keyframes border-glow {
-      0% {
-        opacity: 0.7;
-      }
-      50% {
-        opacity: 1;
-      }
-      100% {
-        opacity: 0.7;
-      }
-    }
-    
-    /* --- NEW CHATBOT STYLES --- */
-    #chatbot-container {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      z-index: 1050;
-      width: 350px;
-      transform: translateY(100%) translateY(30px);
-      opacity: 0;
-      transition: transform 0.4s ease-out, opacity 0.4s ease-out;
-    }
-    #chatbot-container.open {
-      transform: translateY(0);
-      opacity: 1;
-    }
-    #chatbot-header {
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: white;
-      padding: 1rem;
-      border-top-left-radius: 12px;
-      border-top-right-radius: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-      box-shadow: 0 -4px 15px rgba(0,0,0,0.2);
-    }
-    #chatbot-header h3 {
-      font-family: 'Orbitron', sans-serif;
-      font-weight: bold;
-      font-size: 1rem;
-    }
-    #chatbot-body {
-      background-color: var(--dark);
-      border: 1px solid var(--mid);
-      border-top: none;
-      border-bottom-left-radius: 12px;
-      border-bottom-right-radius: 12px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-      overflow: hidden;
-      height: 450px;
-      display: flex;
-      flex-direction: column;
-    }
-    #chatbot-messages {
-      flex: 1;
-      padding: 1rem;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      scrollbar-width: thin;
-      scrollbar-color: var(--primary) var(--dark);
-    }
-    .message-container {
-      display: flex;
-      gap: 10px;
-      max-width: 85%;
-    }
-    .bot-message-container {
-      align-self: flex-start;
-    }
-    .user-message-container {
-      align-self: flex-end;
-      flex-direction: row-reverse;
-    }
-    .avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-    .bot-avatar {
-      background-color: var(--mid);
-    }
-    .user-avatar-icon {
-      background-color: var(--primary);
-    }
-    .message-content {
-      padding: 0.75rem;
-      font-size: 0.9rem;
-      line-height: 1.5;
-    }
-    .bot-message {
-      background-color: var(--mid);
-      border-radius: 12px 12px 12px 0;
-    }
-    .user-message {
-      background: linear-gradient(135deg, var(--primary), #4f46ef);
-      color: white;
-      border-radius: 12px 12px 0 12px;
-    }
-    .generated-image {
-        max-width: 100%;
-        border-radius: 8px;
-        margin-top: 8px;
-        border: 2px solid var(--primary);
-    }
-    #chatbot-input-area {
-      padding: 1rem;
-      border-top: 1px solid var(--mid);
-    }
-    #chatbot-input {
-      background-color: var(--mid);
-      color: var(--light);
-      border-radius: 8px;
-      padding: 0.75rem;
-      width: 100%;
-      border: 1px solid transparent;
-      transition: all 0.3s ease;
-    }
-    #chatbot-input:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
-    }
-    .action-buttons {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 0.5rem;
-      padding: 0 0.25rem;
-    }
-    .action-buttons button {
-      font-size: 0.75rem;
-      color: #94A3B8;
-      background: none;
-      border: none;
-      cursor: pointer;
-      transition: color 0.3s ease;
-    }
-    .action-buttons button:hover {
-      color: var(--primary);
-    }
-    /* Typing indicator animation */
-    @keyframes bounce {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-4px); }
-    }
-    .typing-indicator span {
-        animation: bounce 1s infinite;
-    }
-
-    /* --- SLIDESHOW STYLES --- */
     .slide {
         position: absolute;
         top: 0;
@@ -766,46 +257,208 @@
         opacity: 1;
     }
     
-    @media (max-width: 640px) {
-      .hero-bg h1 {
-        font-size: 2.5rem;
-      }
-      
-      .hero-bg p {
-        font-size: 1rem;
-      }
-      
-      .user-avatar {
-        width: 40px;
-        height: 40px;
-        font-size: 1rem;
-      }
-      
-      .whatsapp-widget {
-        bottom: 20px;
-        right: 20px;
-      }
-      
-      .whatsapp-chat-box {
-        width: 280px;
-        right: -10px;
-      }
-      
-      #chatbot-container {
-        width: calc(100% - 40px);
-        right: 20px;
-        bottom: 20px;
-      }
+    .sidebar {
+      background: linear-gradient(180deg, var(--mid) 0%, var(--dark) 100%);
+      box-shadow: 4px 0 15px rgba(59, 130, 246, 0.2);
+    }
+
+    .social-icon {
+      transition: all 0.3s ease;
     }
     
-    @media (min-width: 641px) and (max-width: 768px) {
-      .hero-bg h1 {
-        font-size: 3.5rem;
-      }
+    .social-icon:hover {
+      transform: translateY(-3px) scale(1.1);
     }
+    
+    .stats-item {
+      position: relative;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+    
+    .stats-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        135deg,
+        rgba(59, 130, 246, 0.2),
+        rgba(217, 70, 239, 0.2)
+      );
+      z-index: -1;
+    }
+    
+    /* WhatsApp Widget Styles */
+    .whatsapp-widget {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 1000;
+    }
+    .whatsapp-bubble {
+      width: 60px;
+      height: 60px;
+      background: #25D366;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+      transition: all 0.3s ease;
+    }
+    .whatsapp-bubble:hover {
+      transform: scale(1.1);
+    }
+    .whatsapp-bubble i {
+      color: white;
+      font-size: 28px;
+    }
+
+    /* --- NEW: Shop by Category Styles --- */
+    .category-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: 0.75rem;
+        background-color: var(--mid);
+        border: 1px solid transparent;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+    .category-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        border-color: var(--primary);
+    }
+    .category-card img {
+        transition: transform 0.3s ease;
+    }
+    .category-card:hover img {
+        transform: scale(1.05);
+    }
+    .category-card-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(15, 23, 42, 0.9) 0%, transparent 100%);
+    }
+
+    /* --- NEW: Flash Deal Styles --- */
+    .timer-box {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(5px);
+      border: 1px solid var(--primary);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      text-align: center;
+      width: 80px;
+    }
+    .timer-box span {
+        display: block;
+    }
+
+    /* --- NEW: Testimonial Styles --- */
+    .testimonial-card {
+      background: var(--mid);
+      border-left: 4px solid var(--primary);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .testimonial-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    }
+
+    /* --- CHATBOT STYLES --- */
+    #chatbot-container {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 1050;
+      width: 350px;
+      transform: translateY(100%) translateY(30px);
+      opacity: 0;
+      transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+    }
+    #chatbot-container.open {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    #chatbot-header {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 1rem;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      box-shadow: 0 -4px 15px rgba(0,0,0,0.2);
+    }
+    #chatbot-body {
+      background-color: var(--dark);
+      border: 1px solid var(--mid);
+      border-top: none;
+      border-bottom-left-radius: 12px;
+      border-bottom-right-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      overflow: hidden;
+      height: 450px;
+      display: flex;
+      flex-direction: column;
+    }
+    #chatbot-messages {
+      flex: 1;
+      padding: 1rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    #chatbot-messages::-webkit-scrollbar { width: 5px; }
+    #chatbot-messages::-webkit-scrollbar-track { background: var(--dark); }
+    #chatbot-messages::-webkit-scrollbar-thumb { background-color: var(--primary); border-radius: 10px; }
+    .message-container { display: flex; gap: 10px; max-width: 85%; }
+    .bot-message-container { align-self: flex-start; }
+    .user-message-container { align-self: flex-end; flex-direction: row-reverse; }
+    .avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .bot-avatar { background-color: var(--mid); }
+    .user-avatar-icon { background-color: var(--primary); }
+    .message-content { padding: 0.75rem; font-size: 0.9rem; line-height: 1.5; }
+    .bot-message { background-color: var(--mid); border-radius: 12px 12px 12px 0; }
+    .user-message { background: linear-gradient(135deg, var(--primary), #4f46ef); color: white; border-radius: 12px 12px 0 12px; }
+    .generated-image-container { position: relative; }
+    .generated-image { max-width: 100%; border-radius: 8px; margin-top: 8px; border: 2px solid var(--primary); }
+    .download-btn {
+        position: absolute;
+        bottom: 1rem;
+        right: 0.5rem;
+        background-color: rgba(15, 23, 42, 0.7);
+        backdrop-filter: blur(5px);
+        color: white;
+        border: 1px solid var(--primary);
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+    }
+    .download-btn:hover { background-color: var(--primary); transform: scale(1.1); }
+    #chatbot-input-area { padding: 1rem; border-top: 1px solid var(--mid); }
+    #chatbot-input { background-color: var(--mid); color: var(--light); border-radius: 8px; padding: 0.75rem 3rem 0.75rem 0.75rem; width: 100%; border: 1px solid transparent; transition: all 0.3s ease; }
+    #chatbot-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 10px rgba(59, 130, 246, 0.3); }
+
+    /* Fix for search bar text visibility */
+    #desktop-search-bar::placeholder, #mobile-search-bar::placeholder { color: #94A3B8; }
+    #desktop-search-bar, #mobile-search-bar { color: var(--light); }
   </style>
 </head>
 <body>
+  <!-- Sidebar, User Avatar and Mobile Menu (Retained) -->
   <div class="fixed top-0 left-0 h-full w-64 sidebar z-20 hidden md:block">
     <div class="p-6">
       <div class="flex items-center space-x-3">
@@ -872,9 +525,17 @@
       <img src="favicon.png" alt="Logo" class="w-8 h-8">
       <h1 class="text-lg font-bold text-white leading-relaxed tech-font">GAMING ODYSSEY</h1>
     </div>
-    <button id="hamburger" class="text-[#3B82F6]">
-      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-    </button>
+     <div class="flex items-center gap-4">
+        <div class="relative flex-grow">
+            <form id="mobile-search-form">
+                <input type="search" id="mobile-search-bar" placeholder="Search..." class="bg-dark border border-mid rounded-full py-2 pl-4 pr-10 w-full text-sm focus:outline-none focus:border-primary">
+                <button type="submit" class="absolute right-0 top-0 mt-2 mr-3"><i class="fas fa-search text-gray-400"></i></button>
+            </form>
+        </div>
+        <button id="hamburger" class="text-primary">
+          <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+    </div>
   </div>
   
   <div id="mobile-menu" class="hidden md:hidden fixed top-0 left-0 w-full h-full bg-[#1E293B] z-20 p-4 transition-all duration-300 ease-in-out transform -translate-x-full">
@@ -890,37 +551,25 @@
         <i class="fas fa-gamepad w-5 h-5"></i>
         <span>Store</span>
       </a>
-      <a href="tournaments.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
-        <i class="fas fa-trophy w-5 h-5"></i>
-        <span>Tournaments</span>
-      </a>
-      <a href="trackorder.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
-        <i class="fas fa-shipping-fast w-5 h-5"></i>
-        <span>Track Order</span>
-      </a>
-      <a href="contactus.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
-        <i class="fas fa-headset w-5 h-5"></i>
-        <span>Contact Us</span>
-      </a>
-      <a href="aboutus.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
-        <i class="fas fa-info-circle w-5 h-5"></i>
-        <span>About Us</span>
-      </a>
-      <a href="login.html" id="login-link-mobile" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
-        <i class="fas fa-sign-in-alt w-5 h-5"></i>
-        <span>Login</span>
-      </a>
-      <a href="signup.html" id="signup-link-mobile" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
-        <i class="fas fa-user-plus w-5 h-5"></i>
-        <span>Sign Up</span>
-      </a>
     </nav>
   </div>
 
   <div class="md:ml-64">
+    <!-- Header with Search -->
+    <header class="sticky top-0 z-10 bg-dark/80 backdrop-blur-md hidden md:block">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="relative">
+                <form id="desktop-search-form">
+                    <input type="search" id="desktop-search-bar" placeholder="Search for your next competitive edge..." class="w-full bg-mid border border-transparent rounded-full py-3 pl-6 pr-12 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition">
+                    <button type="submit" class="absolute right-0 top-0 mt-3 mr-4"><i class="fas fa-search text-gray-400"></i></button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section with Slideshow -->
     <section class="hero-bg min-h-screen flex items-center justify-center text-center p-6 relative overflow-hidden">
-      <div class="pixel-grid"></div>
-      <div class="hero-content max-w-4xl mx-auto fade-in">
+      <div class="relative z-10 max-w-4xl mx-auto fade-in">
         <div class="flex justify-center mb-6">
           <img src="favicon.png" alt="Logo" class="w-20 h-20 animate-pulse">
         </div>
@@ -932,120 +581,45 @@
             Your ultimate destination for high-performance gaming gear, competitive tournaments, and a vibrant community. From building your dream PC to designing the perfect setup, we've got you covered.
         </p>
         <div id="hero-slideshow" class="relative w-full max-w-3xl h-56 sm:h-72 md:h-80 mx-auto overflow-hidden rounded-lg shadow-2xl holographic-effect">
-            </div>
+            <!-- Slides will be injected here by JS -->
+        </div>
       </div>
     </section>
 
-    <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B] relative overflow-hidden">
+    <!-- NEW: Shop by Category -->
+    <section class="py-20 px-6 bg-dark">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 tech-font section-title">Shop by Category</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <a href="store.html?category=Keyboard" class="category-card block fade-in"><img src="https://images.unsplash.com/photo-1618384887924-2c8ab63a2a07?q=80&w=2070&auto=format&fit=crop" alt="Mechanical Keyboards" class="w-full h-80 object-cover"><div class="category-card-overlay flex items-end p-6"><h3 class="text-2xl font-bold text-white">Keyboards</h3></div></a>
+                <a href="store.html?category=Mouse" class="category-card block fade-in" style="transition-delay: 100ms;"><img src="https://images.unsplash.com/photo-1615663249893-e7f0b2d5ce18?q=80&w=1974&auto=format&fit=crop" alt="Gaming Mice" class="w-full h-80 object-cover"><div class="category-card-overlay flex items-end p-6"><h3 class="text-2xl font-bold text-white">Mice</h3></div></a>
+                <a href="store.html?category=Headset" class="category-card block fade-in" style="transition-delay: 200ms;"><img src="https://images.unsplash.com/photo-1585298726266-6274e17f3d4d?q=80&w=2070&auto=format&fit=crop" alt="Gaming Headsets" class="w-full h-80 object-cover"><div class="category-card-overlay flex items-end p-6"><h3 class="text-2xl font-bold text-white">Headsets</h3></div></a>
+                <a href="store.html?category=Monitor" class="category-card block fade-in" style="transition-delay: 300ms;"><img src="https://images.unsplash.com/photo-1593349480500-589e73d36559?q=80&w=2070&auto=format&fit=crop" alt="Gaming Monitors" class="w-full h-80 object-cover"><div class="category-card-overlay flex items-end p-6"><h3 class="text-2xl font-bold text-white">Monitors</h3></div></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Gaming Gear (Now Dynamic) -->
+    <section class="py-20 px-6 bg-mid relative overflow-hidden">
       <div class="max-w-7xl mx-auto">
-        <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Featured Gaming Gear</h2>
-        
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          <div class="holographic-product rounded-xl p-6 fade-in">
-            <div class="price-tag">$149.99</div>
-            <div class="h-48 flex items-center justify-center mb-6">
-              <img src="https://m.media-amazon.com/images/I/81L4FpeS3VL.jpg" alt="Razer BlackWidow V4 Pro" class="max-h-full object-contain">
-            </div>
-            <h3 class="text-xl font-bold text-white mb-2">Razer BlackWidow V4 Pro</h3>
-            <p class="text-[#94A3B8] text-sm mb-4">Mechanical Gaming Keyboard with Razer™ Yellow Mechanical Switches</p>
-            <div class="flex justify-between items-center">
-              <div class="flex text-yellow-400 text-sm">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star-half-alt"></i>
-                <span class="text-[#94A3B8] ml-1">(428)</span>
-              </div>
-              <a href="store.html" class="text-[#3B82F6] hover:text-[#D946EF] transition">
-                <i class="fas fa-shopping-cart"></i>
-              </a>
-            </div>
-          </div>
-          
-          <div class="holographic-product rounded-xl p-6 fade-in">
-            <div class="price-tag">$199.99</div>
-            <div class="h-48 flex items-center justify-center mb-6">
-              <img src="https://m.media-amazon.com/images/I/61UIHG3egGL._AC_SL1500_.jpg" alt="Razer Cobra Pro" class="max-h-full object-contain">
-            </div>
-            <h3 class="text-xl font-bold text-white mb-2">Razer Cobra Pro</h3>
-            <p class="text-[#94A3B8] text-sm mb-4">Wireless Gaming Mouse with Chroma™ RGB</p>
-            <div class="flex justify-between items-center">
-              <div class="flex text-yellow-400 text-sm">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <span class="text-[#94A3B8] ml-1">(512)</span>
-              </div>
-              <a href="store.html" class="text-[#3B82F6] hover:text-[#D946EF] transition">
-                <i class="fas fa-shopping-cart"></i>
-              </a>
-            </div>
-          </div>
-          
-          <div class="holographic-product rounded-xl p-6 fade-in">
-            <div class="price-tag">$299.99</div>
-            <div class="h-48 flex items-center justify-center mb-6">
-              <img src="https://m.media-amazon.com/images/I/71NZawTvdDL._AC_SL1500_.jpg" alt="HyperX Cloud III" class="max-h-full object-contain">
-            </div>
-            <h3 class="text-xl font-bold text-white mb-2">HyperX Cloud III</h3>
-            <p class="text-[#94A3B8] text-sm mb-4">Wireless Gaming Headset with DTS Headphone:X</p>
-            <div class="flex justify-between items-center">
-              <div class="flex text-yellow-400 text-sm">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star-half-alt"></i>
-                <span class="text-[#94A3B8] ml-1">(387)</span>
-              </div>
-              <a href="store.html" class="text-[#3B82F6] hover:text-[#D946EF] transition">
-                <i class="fas fa-shopping-cart"></i>
-              </a>
-            </div>
-          </div>
-          
-          <div class="holographic-product rounded-xl p-6 fade-in">
-            <div class="price-tag">$249.99</div>
-            <div class="h-48 flex items-center justify-center mb-6">
-              <img src="https://m.media-amazon.com/images/I/71LCmvrndjL._AC_SL1500_.jpg" alt="FIFINE Gaming Microphone" class="max-h-full object-contain">
-            </div>
-            <h3 class="text-xl font-bold text-white mb-2">FIFINE AmpliGame AM8</h3>
-            <p class="text-[#94A3B8] text-sm mb-4">Professional USB Condenser Streaming Microphone</p>
-            <div class="flex justify-between items-center">
-              <div class="flex text-yellow-400 text-sm">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="far fa-star"></i>
-                <span class="text-[#94A3B8] ml-1">(276)</span>
-              </div>
-              <a href="store.html" class="text-[#3B82F6] hover:text-[#D946EF] transition">
-                <i class="fas fa-shopping-cart"></i>
-              </a>
-            </div>
-          </div>
+        <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 tech-font section-title">Featured Gaming Gear</h2>
+        <div id="featured-products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- Products will be dynamically inserted here -->
         </div>
-        
         <div class="text-center mt-12">
-          <a href="store.html" class="inline-block glow-button px-8 py-3 rounded-lg font-semibold text-white gradient-bg">
-            View All Products <i class="fas fa-arrow-right ml-2"></i>
-          </a>
+          <a href="store.html" class="inline-block glow-button px-8 py-3 rounded-lg font-semibold text-white bg-gradient-to-r from-primary to-secondary">View All Products <i class="fas fa-arrow-right ml-2"></i></a>
         </div>
       </div>
     </section>
-
+    
+    <!-- Upcoming Tournaments Section -->
     <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A] relative overflow-hidden">
       <div class="max-w-7xl mx-auto">
         <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Upcoming Tournaments</h2>
-        
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div class="tournament-card rounded-xl overflow-hidden fade-in">
             <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Cyber Clash 2025" class="w-full h-64 object-cover">
-            <div class="tournament-card-content p-6 absolute bottom-0 left-0 right-0">
+            <div class="p-6 absolute bottom-0 left-0 right-0 z-10">
               <div class="flex justify-between items-start mb-2">
                 <h3 class="text-xl font-bold text-white">Cyber Clash 2025</h3>
                 <span class="bg-[#3B82F6] text-[#0F172A] text-xs font-bold px-2 py-1 rounded">$10K Prize</span>
@@ -1056,17 +630,16 @@
               </div>
               <div class="flex items-center text-[#94A3B8] text-sm mb-4">
                 <i class="fas fa-calendar-alt mr-2 text-[#3B82F6]"></i>
-                <span>May 15, 2025</span>
+                <span>Oct 25, 2025</span>
               </div>
               <a href="tournaments.html" class="inline-block w-full text-center bg-gradient-to-r from-[#3B82F6] to-[#D946EF] text-white py-2 rounded-lg font-medium hover:opacity-90 transition">
                 Register Now
               </a>
             </div>
           </div>
-          
-          <div class="tournament-card rounded-xl overflow-hidden fade-in">
+          <div class="tournament-card rounded-xl overflow-hidden fade-in" style="transition-delay: 150ms;">
             <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80" alt="Neon Strike" class="w-full h-64 object-cover">
-            <div class="tournament-card-content p-6 absolute bottom-0 left-0 right-0">
+            <div class="p-6 absolute bottom-0 left-0 right-0 z-10">
               <div class="flex justify-between items-start mb-2">
                 <h3 class="text-xl font-bold text-white">Neon Strike</h3>
                 <span class="bg-[#D946EF] text-[#0F172A] text-xs font-bold px-2 py-1 rounded">$15K Prize</span>
@@ -1077,17 +650,16 @@
               </div>
               <div class="flex items-center text-[#94A3B8] text-sm mb-4">
                 <i class="fas fa-calendar-alt mr-2 text-[#3B82F6]"></i>
-                <span>June 10, 2025</span>
+                <span>Nov 10, 2025</span>
               </div>
               <a href="tournaments.html" class="inline-block w-full text-center bg-gradient-to-r from-[#3B82F6] to-[#D946EF] text-white py-2 rounded-lg font-medium hover:opacity-90 transition">
                 Register Now
               </a>
             </div>
           </div>
-          
-          <div class="tournament-card rounded-xl overflow-hidden fade-in">
+          <div class="tournament-card rounded-xl overflow-hidden fade-in" style="transition-delay: 300ms;">
             <img src="https://images.unsplash.com/photo-1633613286848-e6f43bbafb8d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Odyssey League" class="w-full h-64 object-cover">
-            <div class="tournament-card-content p-6 absolute bottom-0 left-0 right-0">
+             <div class="p-6 absolute bottom-0 left-0 right-0 z-10">
               <div class="flex justify-between items-start mb-2">
                 <h3 class="text-xl font-bold text-white">Odyssey League</h3>
                 <span class="bg-[#10B981] text-[#0F172A] text-xs font-bold px-2 py-1 rounded">$20K Prize</span>
@@ -1098,7 +670,7 @@
               </div>
               <div class="flex items-center text-[#94A3B8] text-sm mb-4">
                 <i class="fas fa-calendar-alt mr-2 text-[#3B82F6]"></i>
-                <span>July 5, 2025</span>
+                <span>Dec 05, 2025</span>
               </div>
               <a href="tournaments.html" class="inline-block w-full text-center bg-gradient-to-r from-[#3B82F6] to-[#D946EF] text-white py-2 rounded-lg font-medium hover:opacity-90 transition">
                 Register Now
@@ -1106,15 +678,42 @@
             </div>
           </div>
         </div>
-        
         <div class="text-center mt-12">
-          <a href="tournaments.html" class="inline-block glow-button px-8 py-3 rounded-lg font-semibold text-white gradient-bg">
-            View All Tournaments <i class="fas fa-arrow-right ml-2"></i>
-          </a>
+          <a href="tournaments.html" class="inline-block glow-button px-8 py-3 rounded-lg font-semibold text-white bg-gradient-to-r from-primary to-secondary">View All Tournaments <i class="fas fa-arrow-right ml-2"></i></a>
         </div>
       </div>
     </section>
 
+    <!-- NEW: Flash Deal of the Day -->
+    <section class="py-20 px-6 bg-dark">
+        <div class="max-w-5xl mx-auto bg-cover bg-center rounded-xl p-8 md:p-16 text-white" style="background-image: linear-gradient(rgba(15, 23, 42, 0.8), rgba(139, 92, 246, 0.5)), url('https://images.unsplash.com/photo-1549419409-17083a41e828?q=80&w=1932&auto=format&fit=crop');">
+            <div class="text-center fade-in">
+                <h2 class="text-3xl md:text-5xl font-bold tech-font mb-2">Flash Deal of the Day</h2>
+                <p class="text-lg text-slate-300 mb-8">Get the HyperX Cloud III Wireless for a massive discount. Ends soon!</p>
+                <div id="countdown-timer" class="flex justify-center gap-4 mb-8">
+                    <div class="timer-box"><span id="days" class="text-3xl font-bold">00</span><span class="text-xs uppercase text-slate-400">Days</span></div>
+                    <div class="timer-box"><span id="hours" class="text-3xl font-bold">00</span><span class="text-xs uppercase text-slate-400">Hours</span></div>
+                    <div class="timer-box"><span id="minutes" class="text-3xl font-bold">00</span><span class="text-xs uppercase text-slate-400">Minutes</span></div>
+                    <div class="timer-box"><span id="seconds" class="text-3xl font-bold text-secondary">00</span><span class="text-xs uppercase text-slate-400">Seconds</span></div>
+                </div>
+                <a href="store.html?product=prod_105" class="glow-button px-8 py-4 rounded-lg font-semibold text-white bg-gradient-to-r from-primary to-secondary">Claim Deal Now - $129.99</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW: What Our Gamers Say -->
+    <section class="py-20 px-6 bg-mid">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 tech-font section-title">What Our Gamers Say</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="testimonial-card rounded-lg p-8 fade-in"><div class="flex items-center mb-4"><img src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="Alex R." class="w-12 h-12 rounded-full mr-4"><div><p class="font-bold text-white">Alex "Viper" R.</p><p class="text-sm text-slate-400">Pro Valorant Player</p></div></div><p class="text-slate-300">"The gear I got from Gaming Odyssey completely changed my game. The response time on the mouse is insane. 10/10 would recommend."</p></div>
+                <div class="testimonial-card rounded-lg p-8 fade-in" style="transition-delay: 150ms;"><div class="flex items-center mb-4"><img src="https://i.pravatar.cc/150?u=a042581f4e29026704e" alt="Jenna S." class="w-12 h-12 rounded-full mr-4"><div><p class="font-bold text-white">Jenna "Pixel" S.</p><p class="text-sm text-slate-400">Twitch Streamer</p></div></div><p class="text-slate-300">"Customer support was amazing. They helped me pick the perfect setup for my stream, and it looks incredible. My community loves it!"</p></div>
+                <div class="testimonial-card rounded-lg p-8 fade-in" style="transition-delay: 300ms;"><div class="flex items-center mb-4"><img src="https://i.pravatar.cc/150?u=a042581f4e29026704f" alt="Mike L." class="w-12 h-12 rounded-full mr-4"><div><p class="font-bold text-white">Mike "Tank" L.</p><p class="text-sm text-slate-400">Casual MMO Raider</p></div></div><p class="text-slate-300">"I'm not a pro, but I love gaming. The keyboard is so comfortable for long sessions of raiding. Quality is top-notch."</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RESTORED: Minecraft Server Section -->
     <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B] relative overflow-hidden">
       <div class="max-w-7xl mx-auto">
         <div class="flex flex-col md:flex-row items-center gap-8">
@@ -1133,7 +732,7 @@
               </div>
             </div>
             <div class="flex flex-col sm:flex-row gap-4">
-              <a href="http://play.gamingodyssey.in" class="glow-button px-6 py-3 rounded-lg font-semibold text-white gradient-bg flex items-center justify-center gap-2">
+              <a href="http://play.gamingodyssey.in" class="glow-button px-6 py-3 rounded-lg font-semibold text-white bg-gradient-to-r from-primary to-secondary flex items-center justify-center gap-2">
                 <i class="fas fa-plug"></i> Connect Now
               </a>
               <a href="ranks.html" class="glow-button px-6 py-3 rounded-lg font-semibold text-white bg-[#1E293B] border border-[#3B82F6] flex items-center justify-center gap-2">
@@ -1150,250 +749,92 @@
       </div>
     </section>
 
+    <!-- RESTORED: Why Choose Us Section -->
     <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A]">
       <div class="max-w-7xl mx-auto">
         <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Why Choose Gaming Odyssey?</h2>
-        
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div class="stats-item fade-in">
-            <div class="text-center p-6">
-              <div class="bg-[#3B82F6] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i class="fas fa-trophy text-2xl text-white"></i>
-              </div>
-              <h3 class="text-3xl font-bold text-white text-center mb-2">50+</h3>
-              <p class="text-[#94A3B8] text-center">Tournaments Hosted</p>
-            </div>
-          </div>
-          
-          <div class="stats-item fade-in">
-            <div class="text-center p-6">
-              <div class="bg-[#D946EF] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i class="fas fa-users text-2xl text-white"></i>
-              </div>
-              <h3 class="text-3xl font-bold text-white text-center mb-2">10K+</h3>
-              <p class="text-[#94A3B8] text-center">Active Members</p>
-            </div>
-          </div>
-          
-          <div class="stats-item fade-in">
-            <div class="text-center p-6">
-              <div class="bg-[#10B981] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i class="fas fa-gamepad text-2xl text-white"></i>
-              </div>
-              <h3 class="text-3xl font-bold text-white text-center mb-2">100+</h3>
-              <p class="text-[#94A3B8] text-center">Supported Games</p>
-            </div>
-          </div>
-          
-          <div class="stats-item fade-in">
-            <div class="text-center p-6">
-              <div class="bg-[#F59E0B] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i class="fas fa-headset text-2xl text-white"></i>
-              </div>
-              <h3 class="text-3xl font-bold text-white text-center mb-2">24/7</h3>
-              <p class="text-[#94A3B8] text-center">Customer Support</p>
-            </div>
-          </div>
+          <div class="stats-item fade-in"><div class="text-center p-6"><div class="bg-[#3B82F6] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-trophy text-2xl text-white"></i></div><h3 class="text-3xl font-bold text-white text-center mb-2">50+</h3><p class="text-[#94A3B8] text-center">Tournaments Hosted</p></div></div>
+          <div class="stats-item fade-in"><div class="text-center p-6"><div class="bg-[#D946EF] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-users text-2xl text-white"></i></div><h3 class="text-3xl font-bold text-white text-center mb-2">10K+</h3><p class="text-[#94A3B8] text-center">Active Members</p></div></div>
+          <div class="stats-item fade-in"><div class="text-center p-6"><div class="bg-[#10B981] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-gamepad text-2xl text-white"></i></div><h3 class="text-3xl font-bold text-white text-center mb-2">100+</h3><p class="text-[#94A3B8] text-center">Supported Games</p></div></div>
+          <div class="stats-item fade-in"><div class="text-center p-6"><div class="bg-[#F59E0B] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-headset text-2xl text-white"></i></div><h3 class="text-3xl font-bold text-white text-center mb-2">24/7</h3><p class="text-[#94A3B8] text-center">Customer Support</p></div></div>
         </div>
       </div>
     </section>
 
+    <!-- RESTORED: Contact Us Section -->
     <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B]">
       <div class="max-w-4xl mx-auto">
         <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Contact Us</h2>
-        
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div class="fade-in">
             <div class="holographic-effect rounded-xl p-6 h-full">
               <h3 class="text-xl font-bold text-white mb-4">Get In Touch</h3>
               <div class="space-y-4">
-                <div class="flex items-start">
-                  <i class="fas fa-map-marker-alt mt-1 text-[#3B82F6] mr-3"></i>
-                  <div>
-                    <h4 class="text-white font-medium">Address</h4>
-                    <p class="text-[#94A3B8] text-sm">Howrah,WEST BENGAL</p>
-                  </div>
-                </div>
-                <div class="flex items-center">
-                  <i class="fas fa-envelope text-[#3B82F6] mr-3"></i>
-                  <div>
-                    <h4 class="text-white font-medium">Email</h4>
-                    <a href="mailto:support@gamingodyssey.in" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition">support@gamingodyssey.in</a>
-                  </div>
-                </div>
-                <div class="flex items-center">
-                  <i class="fas fa-phone text-[#3B82F6] mr-3"></i>
-                  <div>
-                    <h4 class="text-white font-medium">Phone</h4>
-                    <p class="text-[#94A3B8] text-sm">+91-6289119156</p>
-                  </div>
-                </div>
-                <div class="flex items-center">
-                  <i class="fas fa-server text-[#3B82F6] mr-3"></i>
-                  <div>
-                    <h4 class="text-white font-medium">Minecraft Server</h4>
-                    <p class="text-[#94A3B8] text-sm">play.gamingodyssey.in</p>
-                  </div>
-                </div>
+                <div class="flex items-start"><i class="fas fa-map-marker-alt mt-1 text-[#3B82F6] mr-3"></i><div><h4 class="text-white font-medium">Address</h4><p class="text-[#94A3B8] text-sm">Howrah,WEST BENGAL</p></div></div>
+                <div class="flex items-center"><i class="fas fa-envelope text-[#3B82F6] mr-3"></i><div><h4 class="text-white font-medium">Email</h4><a href="mailto:support@gamingodyssey.in" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition">support@gamingodyssey.in</a></div></div>
+                <div class="flex items-center"><i class="fas fa-phone text-[#3B82F6] mr-3"></i><div><h4 class="text-white font-medium">Phone</h4><p class="text-[#94A3B8] text-sm">+91-6289119156</p></div></div>
               </div>
-              
               <div class="mt-8">
                 <h3 class="text-xl font-bold text-white mb-4">Follow Us</h3>
                 <div class="flex space-x-4">
-                  <a href="https://www.instagram.com/noticedveil" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#E1306C]">
-                    <i class="fab fa-instagram text-2xl"></i>
-                  </a>
-                  <a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#FF0000]">
-                    <i class="fab fa-youtube text-2xl"></i>
-                  </a>
-                  <a href="https://www.facebook.com" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#1877F2]">
-                    <i class="fab fa-facebook text-2xl"></i>
-                  </a>
-                  <a href="https://www.twitter.com" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#1DA1F2]">
-                    <i class="fab fa-twitter text-2xl"></i>
-                  </a>
+                  <a href="https://www.instagram.com/noticedveil" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#E1306C]"><i class="fab fa-instagram text-2xl"></i></a>
+                  <a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#FF0000]"><i class="fab fa-youtube text-2xl"></i></a>
+                  <a href="https://www.facebook.com" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#1877F2]"><i class="fab fa-facebook text-2xl"></i></a>
+                  <a href="https://www.twitter.com" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#1DA1F2]"><i class="fab fa-twitter text-2xl"></i></a>
                 </div>
               </div>
             </div>
           </div>
-          
           <div class="fade-in">
             <div class="holographic-effect rounded-xl p-6">
               <form id="contact-form">
-                <div class="mb-5">
-                  <label for="name" class="block text-[#F1F5F9] mb-2 font-medium">Name</label>
-                  <input type="text" id="name" name="name" required placeholder="Your name" class="input-field">
-                  <p id="name-error" class="text-red-500 text-sm mt-1 hidden">Please enter your name</p>
-                </div>
-                <div class="mb-5">
-                  <label for="email" class="block text-[#F1F5F9] mb-2 font-medium">Email</label>
-                  <input type="email" id="email" name="email" required placeholder="Your email" class="input-field">
-                  <p id="email-error" class="text-red-500 text-sm mt-1 hidden">Please enter a valid email</p>
-                </div>
-                <div class="mb-5">
-                  <label for="subject" class="block text-[#F1F5F9] mb-2 font-medium">Subject</label>
-                  <input type="text" id="subject" name="subject" required placeholder="Subject" class="input-field">
-                  <p id="subject-error" class="text-red-500 text-sm mt-1 hidden">Please enter a subject</p>
-                </div>
-                <div class="mb-5">
-                  <label for="message" class="block text-[#F1F5F9] mb-2 font-medium">Message</label>
-                  <textarea id="message" name="message" rows="4" required placeholder="Your message" class="input-field"></textarea>
-                  <p id="message-error" class="text-red-500 text-sm mt-1 hidden">Please enter a message</p>
-                </div>
-                <button type="submit" class="w-full glow-button px-6 py-3 rounded-lg font-semibold text-white gradient-bg flex items-center justify-center gap-2">
-                  <i class="fas fa-paper-plane"></i> Send Message
-                </button>
-                <p id="form-status" class="mt-3 text-sm text-center"></p>
-            </form>
+                <div class="mb-5"><label for="name" class="block text-[#F1F5F9] mb-2 font-medium">Name</label><input type="text" id="name" name="name" required placeholder="Your name" class="input-field"></div>
+                <div class="mb-5"><label for="email" class="block text-[#F1F5F9] mb-2 font-medium">Email</label><input type="email" id="email" name="email" required placeholder="Your email" class="input-field"></div>
+                <div class="mb-5"><label for="subject" class="block text-[#F1F5F9] mb-2 font-medium">Subject</label><input type="text" id="subject" name="subject" required placeholder="Subject of your message" class="input-field"></div>
+                <div class="mb-5"><label for="message" class="block text-[#F1F5F9] mb-2 font-medium">Message</label><textarea id="message" name="message" rows="4" required placeholder="Your message" class="input-field"></textarea></div>
+                <button type="submit" class="w-full glow-button px-6 py-3 rounded-lg font-semibold text-white bg-gradient-to-r from-primary to-secondary flex items-center justify-center gap-2"><i class="fas fa-paper-plane"></i> Send Message</button>
+              </form>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <footer class="bg-[#020617] py-12 px-6 border-t border-[#1E293B]">
+    <!-- RESTORED: Footer -->
+    <footer class="bg-darker py-12 px-6 border-t border-mid">
       <div class="max-w-7xl mx-auto">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <div class="flex items-center space-x-3 mb-4">
-              <img src="favicon.png" alt="Logo" class="w-10 h-10">
-              <h3 class="text-xl font-bold text-white tech-font">GAMING ODYSSEY</h3>
-            </div>
-            <p class="text-[#94A3B8] text-sm mb-4 leading-relaxed">
-              Where Gaming Meets Glory. Join our community of passionate gamers and elevate your gaming experience.
-            </p>
-            <div class="flex space-x-4">
-              <a href="https://www.instagram.com/noticedveil" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#E1306C]">
-                <i class="fab fa-instagram"></i>
-              </a>
-              <a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#FF0000]">
-                <i class="fab fa-youtube"></i>
-              </a>
-              <a href="https://www.facebook.com" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#1877F2]">
-                <i class="fab fa-facebook"></i>
-              </a>
-              <a href="https://www.twitter.com" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#1DA1F2]">
-                <i class="fab fa-twitter"></i>
-              </a>
-            </div>
+            <div class="flex items-center space-x-3 mb-4"><img src="favicon.png" alt="Logo" class="w-10 h-10"><h3 class="text-xl font-bold text-white tech-font">GAMING ODYSSEY</h3></div>
+            <p class="text-[#94A3B8] text-sm mb-4 leading-relaxed">Where Gaming Meets Glory. Join our community of passionate gamers and elevate your gaming experience.</p>
           </div>
-          
           <div>
             <h3 class="text-lg font-bold text-white mb-4">Quick Links</h3>
             <ul class="space-y-3">
-              <li>
-                <a href="index.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center">
-                  <i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Home
-                </a>
-              </li>
-              <li>
-                <a href="store.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center">
-                  <i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Store
-                </a>
-              </li>
-              <li>
-                <a href="tournaments.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center">
-                  <i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Tournaments
-                </a>
-              </li>
-              <li>
-                <a href="trackorder.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center">
-                  <i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Track Order
-                </a>
-              </li>
-              <li>
-                <a href="signup.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center">
-                  <i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Sign Up
-                </a>
-              </li>
+              <li><a href="index.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center"><i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Home</a></li>
+              <li><a href="store.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center"><i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Store</a></li>
+              <li><a href="tournaments.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center"><i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Tournaments</a></li>
+              <li><a href="trackorder.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center"><i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Track Order</a></li>
+              <li><a href="signup.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center"><i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Sign Up</a></li>
             </ul>
           </div>
-          
           <div>
             <h3 class="text-lg font-bold text-white mb-4">Support</h3>
             <ul class="space-y-3">
-              <li>
-                <a href="contactus.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center">
-                  <i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Contact Us
-                </a>
-              </li>
-              <li>
-                <a href="aboutus.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center">
-                  <i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> About Us
-                </a>
-              </li>
-              <li>
-                <a href="terms.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center">
-                  <i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Terms & Conditions
-                </a>
-              </li>
-              <li>
-                <a href="privacy.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center">
-                  <i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Privacy Policy
-                </a>
-              </li>
-              <li>
-                <a href="faq.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center">
-                  <i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> FAQ
-                </a>
-              </li>
+              <li><a href="contactus.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center"><i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Contact Us</a></li>
+              <li><a href="aboutus.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center"><i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> About Us</a></li>
+              <li><a href="terms.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center"><i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Terms & Conditions</a></li>
+              <li><a href="privacy.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center"><i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Privacy Policy</a></li>
+              <li><a href="faq.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center"><i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> FAQ</a></li>
             </ul>
           </div>
-          
           <div>
             <h3 class="text-lg font-bold text-white mb-4">Newsletter</h3>
-            <p class="text-[#94A3B8] text-sm mb-4">
-              Subscribe to our newsletter for the latest updates on tournaments, products, and special offers.
-            </p>
-            <form class="flex">
-              <input type="email" placeholder="Your email" class="input-field rounded-r-none">
-              <button type="submit" class="bg-gradient-to-r from-[#3B82F6] to-[#D946EF] text-white px-4 rounded-r-lg">
-                <i class="fas fa-paper-plane"></i>
-              </button>
-            </form>
+            <p class="text-[#94A3B8] text-sm mb-4">Subscribe to our newsletter for the latest updates.</p>
+            <form class="flex"><input type="email" placeholder="Your email" class="input-field rounded-r-none"><button type="submit" class="bg-gradient-to-r from-[#3B82F6] to-[#D946EF] text-white px-4 rounded-r-lg"><i class="fas fa-paper-plane"></i></button></form>
           </div>
         </div>
-        
         <div class="border-t border-[#1E293B] mt-10 pt-6 text-center">
           <p class="text-[#94A3B8] text-sm">© 2025 Gaming Odyssey. All rights reserved.</p>
         </div>
@@ -1401,53 +842,24 @@
     </footer>
   </div>
 
-  <div class="whatsapp-widget">
+  <a href="https://wa.me/916289119156" target="_blank" class="whatsapp-widget">
     <div class="whatsapp-bubble" id="whatsapp-bubble">
       <i class="fab fa-whatsapp"></i>
     </div>
-    <div class="whatsapp-chat-box" id="whatsapp-chat-box">
-      <button class="whatsapp-close" id="whatsapp-close">
-        <i class="fas fa-times"></i>
-      </button>
-      <div class="whatsapp-header">
-        <img src="https://cdn-icons-png.flaticon.com/512/3612/3612569.png" alt="Gaming Odyssey Logo">
-        <h3>Gaming Odyssey</h3>
-      </div>
-      <div class="whatsapp-body">
-        <div class="whatsapp-message">
-          Hi 👋 Welcome to Gaming Odyssey! Need help? Chat with us on WhatsApp.
-        </div>
-        <a href="https://wa.me/916289119156" target="_blank" class="whatsapp-button">
-          <i class="fab fa-whatsapp"></i> Start Chat
-        </a>
-      </div>
-    </div>
-  </div>
+  </a>
 
+  <!-- NEW: Gemini AI Chatbot -->
   <div id="chatbot-container">
       <div id="chatbot-header">
-          <h3>Gaming Odyssey Assistant</h3>
-          <button id="chatbot-toggle-btn" class="text-white">
-              <svg id="chatbot-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-              </svg>
-          </button>
+          <h3 class="tech-font">OdysseyAI Assistant</h3>
+          <button id="chatbot-toggle-btn" class="text-white"><svg id="chatbot-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
       </div>
       <div id="chatbot-body" class="hidden">
-          <div id="chatbot-messages">
-              </div>
+          <div id="chatbot-messages"></div>
           <div id="chatbot-input-area">
               <div class="relative flex items-center">
-                  <input id="chatbot-input" type="text" placeholder="Ask me anything..." class="w-full">
-                  <button id="chatbot-send-btn" class="absolute right-2 top-1/2 -translate-y-1/2 bg-gradient-to-r from-[#3B82F6] to-[#D946EF] text-white rounded-md p-2 hover:opacity-90 transition">
-                      <i class="fas fa-paper-plane"></i>
-                  </button>
-              </div>
-              <div class="action-buttons">
-                  <button id="clear-chat-btn">
-                      <i class="fas fa-trash-alt mr-1"></i> Clear Chat
-                  </button>
-                  <span class="text-xs text-[#94A3B8]">Use /generate to create an image</span>
+                  <input id="chatbot-input" type="text" placeholder="Ask or type /generate...">
+                  <button id="chatbot-send-btn" class="absolute right-2 top-1/2 -translate-y-1/2 bg-gradient-to-r from-primary to-secondary text-white rounded-md p-2 hover:opacity-90 transition"><i class="fas fa-paper-plane"></i></button>
               </div>
           </div>
       </div>
@@ -1455,492 +867,113 @@
 
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-  
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-  <script src="https://js.puter.com/v2/"></script>
   <script>
-    // --- Firebase Configuration ---
-    const firebaseConfig = {
-      apiKey:"AIzaSyDA218WauVZNgqeMgiR_5H6TLYQB5HXZkY",
-      authDomain: "gamingodyssey-2e642.firebaseapp.com",
-      databaseURL: "https://gamingodyssey-2e642-default-rtdb.firebaseio.com",
-      projectId: "gamingodyssey-2e642",
-    };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-
-    // --- Unified UI Control Function ---
-    function setupUserUI(user) {
-        // This function will be called for both Firebase and localStorage users
-        const userAvatar = document.getElementById('user-avatar');
-        
-        document.getElementById('login-link-desktop').style.display = 'none';
-        document.getElementById('signup-link-desktop').style.display = 'none';
-        document.getElementById('login-link-mobile').style.display = 'none';
-        document.getElementById('signup-link-mobile').style.display = 'none';
-
-        userAvatar.classList.remove('hidden');
-        
-        // Use user.displayName for Firebase, user.name for localStorage
-        const userName = user.displayName || user.name; 
-        const userEmail = user.email;
-
-        // For Firebase, profile picture is on user.photoURL, for localStorage it's custom
-        const profilePic = user.photoURL || localStorage.getItem('profilePic');
-        if (profilePic) {
-            userAvatar.innerHTML = `<img src="${profilePic}" class="w-full h-full rounded-full object-cover">`;
-        } else {
-            userAvatar.textContent = userName.charAt(0).toUpperCase();
-        }
-        userAvatar.title = `Welcome, ${userName}`;
-
-        // Populate and set up user menu
-        const userMenu = document.getElementById('user-menu');
-        document.getElementById('menu-username').textContent = userName;
-        document.getElementById('menu-user-email').textContent = userEmail;
-
-        const changePicBtn = document.getElementById('change-pic-btn');
-        const picInput = document.getElementById('pic-input');
-        const logoutBtn = document.getElementById('logout-btn');
-
-        userAvatar.addEventListener('click', () => {
-            userMenu.classList.toggle('hidden');
-        });
-
-        changePicBtn.addEventListener('click', () => picInput.click());
-
-        picInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                const base64Image = event.target.result;
-                // Note: Changing pic for Firebase users would require updating their profile
-                // For now, we'll keep it simple and use localStorage for both
-                localStorage.setItem('profilePic', base64Image);
-                userAvatar.innerHTML = `<img src="${base64Image}" class="w-full h-full rounded-full object-cover">`;
-                userMenu.classList.add('hidden');
-            };
-            reader.readAsDataURL(file);
-        });
-
-        logoutBtn.addEventListener('click', () => {
-            if (auth.currentUser) { // If it's a Firebase user
-                auth.signOut().then(() => {
-                    localStorage.removeItem('profilePic'); // Also clear custom pic
-                    window.location.reload();
-                });
-            } else { // If it's a localStorage user
-                localStorage.removeItem('userData');
-                localStorage.removeItem('profilePic');
-                window.location.reload();
-            }
-        });
-        
-        document.addEventListener('click', (e) => {
-            if (!userAvatar.contains(e.target) && !userMenu.contains(e.target)) {
-                userMenu.classList.add('hidden');
-            }
-        });
-    }
-
-    // --- NEW: Main Authentication Check ---
     document.addEventListener('DOMContentLoaded', () => {
+        // --- Firebase Configuration & Auth (from original file) ---
+        const firebaseConfig = {
+          apiKey:"AIzaSyDA218WauVZNgqeMgiR_5H6TLYQB5HXZkY",
+          authDomain: "gamingodyssey-2e642.firebaseapp.com",
+          databaseURL: "https://gamingodyssey-2e642-default-rtdb.firebaseio.com",
+          projectId: "gamingodyssey-2e642",
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        function setupUserUI(user) {
+            const userAvatar = document.getElementById('user-avatar');
+            document.getElementById('login-link-desktop').style.display = 'none';
+            document.getElementById('signup-link-desktop').style.display = 'none';
+            userAvatar.classList.remove('hidden');
+            const userName = user.displayName || user.name; 
+            const userEmail = user.email;
+            const profilePic = user.photoURL || localStorage.getItem('profilePic');
+            if (profilePic) { userAvatar.innerHTML = `<img src="${profilePic}" class="w-full h-full rounded-full object-cover">`; } else { userAvatar.textContent = userName.charAt(0).toUpperCase(); }
+            userAvatar.title = `Welcome, ${userName}`;
+            const userMenu = document.getElementById('user-menu');
+            document.getElementById('menu-username').textContent = userName;
+            document.getElementById('menu-user-email').textContent = userEmail;
+            userAvatar.addEventListener('click', () => { userMenu.classList.toggle('hidden'); });
+            document.getElementById('change-pic-btn').addEventListener('click', () => document.getElementById('pic-input').click());
+            document.getElementById('logout-btn').addEventListener('click', () => { auth.signOut().then(() => { localStorage.clear(); window.location.reload(); }); });
+        }
         auth.onAuthStateChanged(firebaseUser => {
-            if (firebaseUser) {
-                // Case 1: A Firebase user is logged in.
-                setupUserUI(firebaseUser);
-            } else {
-                // Case 2: No Firebase user. Check for a localStorage (Google) user.
-                const localUserData = JSON.parse(localStorage.getItem('userData'));
-                if (localUserData) {
-                    setupUserUI(localUserData);
-                } else {
-                    // Case 3: No user is logged in at all.
-                    // Set up the redirector for logged-out users.
-                    document.addEventListener('click', (e) => {
-                        const link = e.target.closest('a');
-                        if (link && link.href) {
-                            const targetUrl = new URL(link.href);
-                            const targetPage = targetUrl.pathname.split('/').pop();
-                            const isInternalNav = link.hostname === window.location.hostname;
-                            const allowedWhenLoggedOut = ['signup.html', 'index.html', '', 'login.html'];
-                            
-                            if (isInternalNav && !allowedWhenLoggedOut.includes(targetPage) && !link.href.includes('#')) {
-                                e.preventDefault();
-                                window.location.href = 'signup.html';
-                            }
-                        }
-                    }, true); 
-                }
+            if (firebaseUser) { setupUserUI(firebaseUser); } 
+            else { 
+                const localUser = JSON.parse(localStorage.getItem('userData'));
+                if(localUser) setupUserUI(localUser)
             }
         });
 
-        // --- Slideshow Functionality ---
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const closeMenu = document.getElementById('close-menu');
+        hamburger.addEventListener('click', () => { mobileMenu.classList.remove('hidden', '-translate-x-full'); });
+        closeMenu.addEventListener('click', () => { mobileMenu.classList.add('-translate-x-full'); });
+
+        const fadeIns = document.querySelectorAll('.fade-in');
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } });
+        }, { threshold: 0.1 });
+        fadeIns.forEach(element => observer.observe(element));
+
+        // --- Slideshow Functionality (RESTORED) ---
         const slideshowContainer = document.getElementById('hero-slideshow');
         if (slideshowContainer) {
-            const slides = [
-                {
-                    img: 'https://9to5toys.com/wp-content/uploads/sites/5/2022/11/best-peripherals-feature.png?q=80&w=2070&auto=format&fit=crop',
-                    caption: 'Discover premium peripherals for the ultimate edge.'
-                },
-                {
-                    img: 'https://www.gladiatorpc.co.uk/assets/img/special/landingpages/gamingpc/gamingpcbgm.webp?q=80&w=2042&auto=format&fit=crop',
-                    caption: 'Let us build your dream custom PC, tailored to your needs.'
-                },
-                {
-                    img: 'https://www.cyberpowerpc.com/blog/w/wp-content/uploads/2024/08/BlogPurpScrup-scaled.jpg?q=80&w=2070&auto=format&fit=crop',
-                    caption: 'Design a complete, aesthetic gaming setup with our help.'
-                }
-            ];
+            const slides = [ { img: 'https://9to5toys.com/wp-content/uploads/sites/5/2022/11/best-peripherals-feature.png?q=80&w=2070&auto=format&fit=crop', caption: 'Discover premium peripherals for the ultimate edge.' }, { img: 'https://www.gladiatorpc.co.uk/assets/img/special/landingpages/gamingpc/gamingpcbgm.webp?q=80&w=2042&auto=format&fit=crop', caption: 'Let us build your dream custom PC, tailored to your needs.' }, { img: 'https://www.cyberpowerpc.com/blog/w/wp-content/uploads/2024/08/BlogPurpScrup-scaled.jpg?q=80&w=2070&auto=format&fit=crop', caption: 'Design a complete, aesthetic gaming setup with our help.' } ];
             let currentSlide = 0;
+            slides.forEach((slide, index) => { const el = document.createElement('div'); el.className = 'slide'; if (index === 0) el.classList.add('active'); el.style.backgroundImage = `url('${slide.img}')`; el.innerHTML = `<div class="slide-caption">${slide.caption}</div>`; slideshowContainer.appendChild(el); });
+            setInterval(() => { const els = document.querySelectorAll('#hero-slideshow .slide'); if(els.length === 0) return; els[currentSlide].classList.remove('active'); currentSlide = (currentSlide + 1) % slides.length; els[currentSlide].classList.add('active'); }, 5000);
+        }
 
-            function createSlides() {
-                slides.forEach((slide, index) => {
-                    const slideElement = document.createElement('div');
-                    slideElement.className = 'slide';
-                    if (index === 0) slideElement.classList.add('active');
-                    slideElement.style.backgroundImage = `url('${slide.img}')`;
-                    slideElement.innerHTML = `<div class="slide-caption">${slide.caption}</div>`;
-                    slideshowContainer.appendChild(slideElement);
-                });
+        // --- DYNAMIC STORE INTEGRATION (NEW & CORRECTED) ---
+        function handleSearch(event) {
+            event.preventDefault();
+            const searchTerm = this.querySelector('input[type="search"]').value.trim();
+            if (searchTerm) {
+                const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
+                window.location.href = `${baseUrl}store.html?search=${encodeURIComponent(searchTerm)}`;
             }
-
-            function showNextSlide() {
-                const slideElements = document.querySelectorAll('#hero-slideshow .slide');
-                slideElements[currentSlide].classList.remove('active');
-                currentSlide = (currentSlide + 1) % slides.length;
-                slideElements[currentSlide].classList.add('active');
-            }
-
-            createSlides();
-            setInterval(showNextSlide, 5000);
         }
-    });
+        document.getElementById('desktop-search-form').addEventListener('submit', handleSearch);
+        document.getElementById('mobile-search-form').addEventListener('submit', handleSearch);
 
-    // --- ALL OTHER PAGE FUNCTIONALITY REMAINS THE SAME ---
+        const products = [ { id: "prod_101", name: "Razer BlackWidow V4 Pro", price: 149.99, image: "https://m.media-amazon.com/images/I/81L4FpeS3VL.jpg", dateAdded: "2025-09-15T10:00:00Z" }, { id: "prod_104", name: "Razer Cobra Pro", price: 199.99, image: "https://m.media-amazon.com/images/I/61UIHG3egGL._AC_SL1500_.jpg", dateAdded: "2025-09-17T10:00:00Z" }, { id: "prod_105", name: "HyperX Cloud III Wireless", price: 299.99, image: "https://m.media-amazon.com/images/I/71NZawTvdDL._AC_SL1500_.jpg", dateAdded: "2025-09-16T10:00:00Z" }, { id: "prod_102", name: "Logitech G Pro X Superlight", price: 159.99, image: "https://resource.logitechg.com/w_692,c_lpad,ar_4:3,q_auto,f_auto,dpr_1.0/d_transparent.gif/content/dam/gaming/en/products/pro-x-superlight/pro-x-superlight-gallery-1.png", dateAdded: "2025-08-20T10:00:00Z" }];
+        const grid = document.getElementById('featured-products-grid');
+        if (grid) { const sorted = [...products].sort((a,b)=>new Date(b.dateAdded)-new Date(a.dateAdded)).slice(0,4); grid.innerHTML = sorted.map((p,i)=>`<div class="holographic-product rounded-xl p-6 fade-in" style="transition-delay: ${i*100}ms;"><div class="price-tag">$${p.price.toFixed(2)}</div><div class="h-48 flex items-center justify-center mb-6"><img src="${p.image}" alt="${p.name}" class="max-h-full object-contain"></div><h3 class="text-xl font-bold text-white mb-2">${p.name}</h3><div class="flex justify-end items-center mt-4"><a href="store.html?product=${p.id}" class="text-primary hover:text-secondary transition text-2xl"><i class="fas fa-shopping-cart"></i></a></div></div>`).join(''); document.querySelectorAll('#featured-products-grid .fade-in').forEach(el => observer.observe(el));}
 
-    // Initialize EmailJS
-    emailjs.init('__S5AyIeoL526kGwQ');
-
-    // Mobile Menu Toggle
-    const hamburger = document.getElementById('hamburger');
-    const mobileMenu = document.getElementById('mobile-menu');
-    const closeMenu = document.getElementById('close-menu');
-    
-    hamburger.addEventListener('click', () => {
-      mobileMenu.classList.remove('hidden');
-      mobileMenu.classList.remove('-translate-x-full');
-    });
-    
-    closeMenu.addEventListener('click', () => {
-      mobileMenu.classList.add('-translate-x-full');
-    });
-
-    // Fade-in Animation on Scroll
-    const fadeIns = document.querySelectorAll('.fade-in');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
+        // --- NEW SECTIONS JS ---
+        function startCountdown() {
+            const timer = setInterval(() => { const now = new Date(); const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1); const d = endOfDay - now; if(d < 0) {clearInterval(timer); return;} document.getElementById('days').textContent=String(Math.floor(d/(1000*60*60*24))).padStart(2,'0'); document.getElementById('hours').textContent=String(Math.floor((d%(1000*60*60*24))/(1000*60*60))).padStart(2,'0'); document.getElementById('minutes').textContent=String(Math.floor((d%(1000*60*60))/(1000*60))).padStart(2,'0'); document.getElementById('seconds').textContent=String(Math.floor((d%(1000*60))/1000)).padStart(2,'0');}, 1000);
         }
-      });
-    }, { threshold: 0.1 });
-    
-    fadeIns.forEach(element => observer.observe(element));
+        startCountdown();
 
-    // Contact Form Submission
-    document.getElementById('contact-form').addEventListener('submit', function(event) {
-      event.preventDefault();
-      const name = document.getElementById('name').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const subject = document.getElementById('subject').value.trim();
-      const message = document.getElementById('message').value.trim();
-      const status = document.getElementById('form-status');
-      
-      document.querySelectorAll('.error').forEach(el => el.classList.add('hidden'));
-      let isValid = true;
-      
-      if (!name) {
-        document.getElementById('name-error').classList.remove('hidden');
-        isValid = false;
-      }
-      
-      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        document.getElementById('email-error').classList.remove('hidden');
-        isValid = false;
-      }
-      
-      if (!subject) {
-        document.getElementById('subject-error').classList.remove('hidden');
-        isValid = false;
-      }
-      
-      if (!message) {
-        document.getElementById('message-error').classList.remove('hidden');
-        isValid = false;
-      }
-      
-      if (!isValid) {
-        status.textContent = 'Please fill all fields correctly';
-        status.className = 'text-red-500 text-sm text-center';
-        return;
-      }
-      
-      emailjs.send('service_94tnfxp', 'template_6ahr5g1', {
-        name: name,
-        email: email,
-        subject: subject,
-        message: message
-      }).then(() => {
-        status.textContent = 'Message sent successfully!';
-        status.className = 'text-green-500 text-sm text-center';
-        document.getElementById('contact-form').reset();
-      }).catch((error) => {
-        status.textContent = 'Failed to send message: ' + error.text;
-        status.className = 'text-red-500 text-sm text-center';
-      });
-    });
+        // --- GEMINI AI CHATBOT (NEW & CORRECTED) ---
+        const chatbotContainer = document.getElementById('chatbot-container'); const chatbotHeader = document.getElementById('chatbot-header'); const chatbotBody = document.getElementById('chatbot-body'); const chatbotMessages = document.getElementById('chatbot-messages'); const chatbotInput = document.getElementById('chatbot-input'); const chatbotSendBtn = document.getElementById('chatbot-send-btn');
+        const chatbotToggleBtn = document.getElementById('chatbot-toggle-btn');
+        const chatbotIcon = document.getElementById('chatbot-icon');
+        const apiKey = ""; // This will be provided by the environment
+        let isChatbotOpen = false;
 
-    // WhatsApp Widget Functionality
-    const whatsappBubble = document.getElementById('whatsapp-bubble');
-    const whatsappChatBox = document.getElementById('whatsapp-chat-box');
-    const whatsappClose = document.getElementById('whatsapp-close');
-    
-    whatsappBubble.addEventListener('click', () => {
-      whatsappChatBox.classList.toggle('active');
-    });
-    
-    whatsappClose.addEventListener('click', (e) => {
-      e.stopPropagation();
-      whatsappChatBox.classList.remove('active');
-    });
-    
-    document.addEventListener('click', (e) => {
-      if (!whatsappChatBox.contains(e.target) && !whatsappBubble.contains(e.target)) {
-        whatsappChatBox.classList.remove('active');
-      }
-    });
-
-    // --- HYBRID Chatbot Functionality (Hugging Face for Chat + Puter for Images) ---
-    const chatbotContainer = document.getElementById('chatbot-container');
-    const chatbotHeader = document.getElementById('chatbot-header');
-    const chatbotBody = document.getElementById('chatbot-body');
-    const chatbotMessages = document.getElementById('chatbot-messages');
-    const chatbotInput = document.getElementById('chatbot-input');
-    const chatbotSendBtn = document.getElementById('chatbot-send-btn');
-    const chatbotToggleBtn = document.getElementById('chatbot-toggle-btn');
-    const chatbotIcon = document.getElementById('chatbot-icon');
-    const clearChatBtn = document.getElementById('clear-chat-btn');
-    
-    // API Configuration
-    const HUGGINGFACE_API_KEY = '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';
-    const HUGGINGFACE_API_URL = 'https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2';
-    
-    let isChatbotOpen = false;
-    let conversationHistory = [];
-    let puter; // To hold the Puter instance
-
-    function initializeConversation() {
-      // History is now built dynamically.
-      conversationHistory = [];
-      addMessage('bot', `Hello! I'm OdysseyAI. I can answer your questions or generate an image for you. Just type <code>/generate</code> followed by a description! 😊`);
-    }
-
-    function toggleChatbot() {
-      isChatbotOpen = !isChatbotOpen;
-      if (isChatbotOpen) {
-        chatbotBody.classList.remove('hidden');
-        chatbotContainer.classList.add('open');
-        chatbotIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>`;
-      } else {
-        chatbotBody.classList.add('hidden');
-        chatbotContainer.classList.remove('open');
-        chatbotIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>`;
-      }
-    }
-
-    function addMessage(role, content) {
-      const messageContainer = document.createElement('div');
-      messageContainer.className = `message-container ${role}-message-container`;
-      const avatar = document.createElement('div');
-      avatar.className = `avatar ${role === 'user' ? 'user-avatar-icon' : 'bot-avatar'}`;
-      if (role === 'bot') {
-        avatar.innerHTML = `<img src="favicon.png" alt="Bot" class="w-6 h-6 p-0.5">`;
-      } else {
-        avatar.innerHTML = `<i class="fas fa-user text-white text-sm"></i>`;
-      }
-      const messageContent = document.createElement('div');
-      messageContent.className = `message-content ${role}-message`;
-      messageContent.innerHTML = content;
-      messageContainer.appendChild(avatar);
-      messageContainer.appendChild(messageContent);
-      chatbotMessages.appendChild(messageContainer);
-      chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-    }
-
-    function showTypingIndicator() {
-      const typingDiv = document.createElement('div');
-      typingDiv.className = 'message-container bot-message-container';
-      typingDiv.id = 'typing-indicator';
-      typingDiv.innerHTML = `
-        <div class="avatar bot-avatar"><img src="favicon.png" alt="Bot" class="w-6 h-6 p-0.5"></div>
-        <div class="message-content bot-message"><div class="typing-indicator flex items-center p-2">
-            <span class="w-2 h-2 bg-white rounded-full mx-1" style="animation: bounce 1s infinite;"></span>
-            <span class="w-2 h-2 bg-white rounded-full mx-1" style="animation: bounce 1s infinite; animation-delay: 0.2s;"></span>
-            <span class="w-2 h-2 bg-white rounded-full mx-1" style="animation: bounce 1s infinite; animation-delay: 0.4s;"></span>
-        </div></div>`;
-      chatbotMessages.appendChild(typingDiv);
-      chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-    }
-
-    function hideTypingIndicator() {
-      const typingIndicator = document.getElementById('typing-indicator');
-      if (typingIndicator) typingIndicator.remove();
-    }
-
-    async function handleUserMessage() {
-        const userInput = chatbotInput.value.trim();
-        if (!userInput) return;
-        addMessage('user', userInput);
-        chatbotInput.value = '';
-        if (userInput.toLowerCase().startsWith('/generate') || userInput.toLowerCase().startsWith('/image')) {
-            const prompt = userInput.substring(userInput.indexOf(' ')).trim();
-            await generateImage(prompt);
-        } else {
-            await sendMessageToAI(userInput);
+        function toggleChatbot() { 
+            isChatbotOpen = !isChatbotOpen; 
+            chatbotBody.classList.toggle('hidden'); 
+            chatbotContainer.classList.toggle('open'); 
+            if(isChatbotOpen) { chatbotIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>`; } else { chatbotIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>`; }
         }
-    }
-
-    async function sendMessageToAI(message) {
-      // Add the user's plain message to our history
-      conversationHistory.push({ role: "user", content: message });
-      showTypingIndicator();
-
-      // Prepare payload for Hugging Face Conversational API
-      const pastUserInputs = conversationHistory
-        .filter(msg => msg.role === 'user')
-        .map(msg => msg.content);
-      const generatedResponses = conversationHistory
-        .filter(msg => msg.role === 'assistant')
-        .map(msg => msg.content);
+        function addMessage(role, content) { const c = document.createElement('div'); c.className = `message-container ${role}-message-container`; c.innerHTML = `<div class="avatar ${role==='user'?'user-avatar-icon':'bot-avatar'}">${role==='user'?'<i class="fas fa-user text-white text-sm"></i>':'<img src="favicon.png" alt="Bot" class="w-6 h-6 p-0.5">'}</div><div class="message-content ${role}-message">${content}</div>`; chatbotMessages.appendChild(c); chatbotMessages.scrollTop = chatbotMessages.scrollHeight; }
+        function showTyping() { addMessage('bot', '<div id="typing-indicator" class="px-2">...</div>'); }
+        function hideTyping() { document.getElementById('typing-indicator')?.parentElement?.parentElement.remove(); }
+        async function handleUserMessage() { const i = chatbotInput.value.trim(); if (!i) return; addMessage('user', i); chatbotInput.value = ''; showTyping(); if (i.toLowerCase().startsWith('/generate ')) { await generateImage(i.substring(10).trim()); } else { await getChatResponse(i); }}
+        async function getChatResponse(prompt) { const u=`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`; const p={contents:[{parts:[{text:`You are OdysseyAI, a helpful assistant for Gaming Odyssey. Be friendly and concise. User asked: ${prompt}`}]}]}; try { const r=await fetch(u,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(p)}); if(!r.ok) throw new Error(r.status); const d=await r.json(); hideTyping(); addMessage('bot',d.candidates?.[0]?.content?.parts?.[0]?.text||"Sorry, I couldn't process that."); } catch (e) { hideTyping(); addMessage('bot',"Error connecting to AI."); }}
+        async function generateImage(prompt) { const u=`https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${apiKey}`; const p={instances:[{prompt:prompt}],parameters:{"sampleCount":1}}; try { const r=await fetch(u,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(p)}); if(!r.ok) throw new Error(r.status); const d=await r.json(); const b=d.predictions?.[0]?.bytesBase64Encoded; hideTyping(); if(b){ const i=`data:image/png;base64,${b}`; const content=`<p>Image for: "<em>${prompt}</em>"</p><div class="generated-image-container"><img src="${i}" class="generated-image"><a href="${i}" download="gemini-image-${Date.now()}.png" class="download-btn" title="Download"><i class="fas fa-download"></i></a></div>`; addMessage('bot',content); } else { addMessage('bot',"Could not generate image."); }} catch(e){ hideTyping(); addMessage('bot',"Image generation failed."); }}
         
-      // The most recent user message is the primary input
-      const currentUserInput = pastUserInputs.pop() || "";
-
-      // Add system prompt to the first message to give context to the AI
-      let textToSend = currentUserInput;
-      if (conversationHistory.filter(m => m.role === 'user').length === 1) {
-          const systemPrompt = "You are a friendly and professional AI assistant for 'Gaming Odyssey,' a premier gaming platform. Your name is OdysseyAI. You are an expert in gaming. Keep responses concise and helpful. You do not generate images; if asked, direct the user to use the /generate command. ";
-          textToSend = systemPrompt + "USER: " + currentUserInput + " ASSISTANT:";
-      }
-
-      try {
-        const response = await fetch(HUGGINGFACE_API_URL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${HUGGINGFACE_API_KEY}`
-          },
-          body: JSON.stringify({
-            inputs: {
-              past_user_inputs: pastUserInputs,
-              generated_responses: generatedResponses,
-              text: textToSend
-            },
-            parameters: {
-              max_new_tokens: 250,
-              repetition_penalty: 1.1,
-              return_full_text: false,
-            }
-          })
-        });
-
-        hideTypingIndicator();
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          try {
-            const errorData = JSON.parse(errorText);
-            console.error('Hugging Face API Error:', errorData);
-            if (errorData.error && errorData.error.includes("is currently loading")) {
-              addMessage('bot', `The AI model is warming up. Please wait about ${Math.round(errorData.estimated_time)} seconds and try again. 😊`);
-            } else {
-              throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
-            }
-          } catch (e) {
-             throw new Error(`HTTP error! status: ${response.status}. Response: ${errorText}`);
-          }
-          conversationHistory.pop(); // Remove failed message from history
-          return;
-        }
-
-        const data = await response.json();
-        const aiResponse = data[0].generated_text.trim();
-
-        // Add AI response to history and UI
-        conversationHistory.push({ role: "assistant", content: aiResponse });
-        addMessage('bot', aiResponse);
-
-      } catch (error) {
-        console.error('Error:', error);
-        hideTypingIndicator();
-        addMessage('bot', "Sorry, I'm having trouble connecting to the AI assistant right now. Please try again later.");
-        conversationHistory.pop(); // Remove failed message from history
-      }
-    }
-
-    async function generateImage(prompt) {
-        if (!prompt) {
-            addMessage('bot', "Please provide a description after `/generate`.");
-            return;
-        }
-        showTypingIndicator();
-        try {
-            // Initialize Puter on first use
-            if (!puter) {
-                puter = new Puter();
-            }
-            
-            // Check if user is logged in, if not, prompt them
-            if (!(await puter.auth.isLoggedIn())) {
-                hideTypingIndicator();
-                addMessage('bot', "You need to log in to Puter to generate images. A popup should appear.");
-                await puter.auth.login();
-                showTypingIndicator(); // Show again after login attempt
-            }
-
-            const image = await puter.ai.imagine(prompt);
-            hideTypingIndicator();
-            
-            const imageUrl = await image.url();
-            
-            addMessage('bot', `<p>Here's your image for: "<em>${prompt}</em>"</p><img src="${imageUrl}" class="generated-image" alt="Generated image of ${prompt}">`);
-            conversationHistory.push({ role: "assistant", content: `[Generated an image for: "${prompt}"]`});
-
-        } catch (error) {
-            console.error('Puter Image Generation Error:', error);
-            hideTypingIndicator();
-            addMessage('bot', "Sorry, image generation failed. Please ensure you are logged in and try again.");
-        }
-    }
-
-
-    function clearChat() {
-      chatbotMessages.innerHTML = '';
-      initializeConversation();
-    }
-
-    chatbotSendBtn.addEventListener('click', handleUserMessage);
-    chatbotInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleUserMessage(); });
-    clearChatBtn.addEventListener('click', clearChat);
-    chatbotHeader.addEventListener('click', toggleChatbot);
-    chatbotToggleBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleChatbot(); });
-    initializeConversation();
-    setTimeout(() => { if (!isChatbotOpen) toggleChatbot(); }, 1500);
-
+        chatbotSendBtn.addEventListener('click', handleUserMessage); 
+        chatbotInput.addEventListener('keypress', (e)=>{if(e.key==='Enter')handleUserMessage();}); 
+        chatbotHeader.addEventListener('click', toggleChatbot); 
+        chatbotToggleBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleChatbot(); });
+        
+        addMessage('bot',"Hi! I'm OdysseyAI. Ask me anything or use <code>/generate &lt;prompt&gt;</code> to create an image!"); 
+        setTimeout(()=>{if(!isChatbotOpen)toggleChatbot();},3000);
+    });
   </script>
 </body>
 </html>
-
-
