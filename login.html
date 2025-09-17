@@ -220,32 +220,26 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
-    // --- MODIFIED: Google Sign-In now uses Firebase ---
+    // --- 1. Google OAuth (Unified with Firebase) ---
     function handleCredentialResponse(response) {
       const formStatus = document.getElementById('form-status');
-      
-      // 1. Get the ID token from the Google Sign-In response.
       const id_token = response.credential;
-      
-      // 2. Create a Firebase credential with the Google ID token.
       const credential = firebase.auth.GoogleAuthProvider.credential(id_token);
 
-      // 3. Sign in to Firebase with the credential.
       auth.signInWithCredential(credential)
         .then((result) => {
-          // User is signed in.
           formStatus.textContent = 'Signed in successfully! Redirecting...';
           formStatus.className = 'success text-center';
           setTimeout(() => { window.location.href = 'index.html'; }, 1500);
         })
         .catch((error) => {
-          // Handle errors here.
           formStatus.textContent = error.message;
           formStatus.className = 'error text-center';
         });
     }
 
     window.onload = function () {
+      // Initialize Google Sign-In
       google.accounts.id.initialize({
         client_id: '964191300629-ri9d35rqf4p0tgshv4k8u31r5rptmf9m.apps.googleusercontent.com',
         callback: handleCredentialResponse
@@ -254,6 +248,11 @@
         document.getElementById('gsi_btn_container'), 
         { theme: 'outline', size: 'large' }
       );
+      
+      // --- 3. Phone (SMS) Authentication Setup ---
+      window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+        'size': 'invisible'
+      });
     };
 
     document.getElementById('custom-google-btn').addEventListener('click', () => {
@@ -261,17 +260,7 @@
         if (googleButton) { googleButton.click(); }
     });
 
-    // --- Password Toggle ---
-    const togglePassword = document.getElementById('toggle-password');
-    const passwordInput = document.getElementById('password');
-    togglePassword.addEventListener('click', () => {
-        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-        passwordInput.setAttribute('type', type);
-        togglePassword.classList.toggle('fa-eye');
-        togglePassword.classList.toggle('fa-eye-slash');
-    });
-
-    // --- UNCHANGED: Email/Password login still uses Firebase ---
+    // --- 2. Email/Password Login Logic ---
     document.getElementById('login-form').addEventListener('submit', function(event) {
         event.preventDefault();
         const email = document.getElementById('email').value.trim();
@@ -295,8 +284,77 @@
             statusEl.className = 'error text-center';
           });
     });
+    
+    // --- 3. Phone (SMS) Authentication Logic ---
+    const sendOtpBtn = document.getElementById('send-otp-btn');
+    const verifyOtpBtn = document.getElementById('verify-otp-btn');
+    const phoneNumberInput = document.getElementById('phone-number');
+    const otpCodeInput = document.getElementById('otp-code');
+    const phoneAuthFormStatus = document.getElementById('form-status');
+    const phoneSection = document.getElementById('phone-input-section');
+    const otpSection = document.getElementById('otp-input-section');
+
+    sendOtpBtn.addEventListener('click', () => {
+        const phoneNumber = phoneNumberInput.value;
+        if (!phoneNumber) {
+            phoneAuthFormStatus.textContent = "Please enter a phone number.";
+            phoneAuthFormStatus.className = 'error text-center';
+            return;
+        }
+        const appVerifier = window.recaptchaVerifier;
+        
+        phoneAuthFormStatus.textContent = "Sending OTP...";
+        phoneAuthFormStatus.className = 'text-slate-400 text-center';
+
+        auth.signInWithPhoneNumber(phoneNumber, appVerifier)
+            .then((confirmationResult) => {
+                window.confirmationResult = confirmationResult;
+                phoneAuthFormStatus.textContent = "OTP sent successfully!";
+                phoneAuthFormStatus.className = 'success text-center';
+                phoneSection.classList.add('hidden');
+                otpSection.classList.remove('hidden');
+            }).catch((error) => {
+                console.error("SMS Error:", error);
+                phoneAuthFormStatus.textContent = `Error: ${error.message}`;
+                phoneAuthFormStatus.className = 'error text-center';
+                recaptchaVerifier.render().then((widgetId) => {
+                    grecaptcha.reset(widgetId);
+                });
+            });
+    });
+
+    verifyOtpBtn.addEventListener('click', () => {
+        const code = otpCodeInput.value;
+        if (!code) {
+            phoneAuthFormStatus.textContent = "Please enter the OTP.";
+            phoneAuthFormStatus.className = 'error text-center';
+            return;
+        }
+        phoneAuthFormStatus.textContent = "Verifying...";
+        phoneAuthFormStatus.className = 'text-slate-400 text-center';
+
+        window.confirmationResult.confirm(code).then((result) => {
+            phoneAuthFormStatus.textContent = 'Phone number verified! Redirecting...';
+            phoneAuthFormStatus.className = 'success text-center';
+            setTimeout(() => { window.location.href = 'index.html'; }, 2000);
+        }).catch((error) => {
+            phoneAuthFormStatus.textContent = 'Invalid OTP. Please try again.';
+            phoneAuthFormStatus.className = 'error text-center';
+        });
+    });
+
+    // --- Password Toggle Utility ---
+    const togglePassword = document.getElementById('toggle-password');
+    const passwordInput = document.getElementById('password');
+    togglePassword.addEventListener('click', () => {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        togglePassword.classList.toggle('fa-eye');
+        togglePassword.classList.toggle('fa-eye-slash');
+    });
   </script>
 </body>
 </html>
+
 
 
