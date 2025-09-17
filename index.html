@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gaming Odyssey | Premium Gaming Gear & Tournaments</title>
+  <link rel="icon" type="image/png" href="favicon.png">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://js.puter.com/v2/"></script>
@@ -807,7 +808,7 @@
   <div class="fixed top-0 left-0 h-full w-64 sidebar z-20 hidden md:block">
     <div class="p-6">
       <div class="flex items-center space-x-3">
-        <img src="https://cdn-icons-png.flaticon.com/512/3612/3612569.png" alt="Logo" class="w-10 h-10">
+        <img src="favicon.png" alt="Logo" class="w-10 h-10">
         <h1 class="text-2xl font-bold text-white leading-relaxed tech-font">GAMING ODYSSEY</h1>
       </div>
       <nav class="mt-12 space-y-4">
@@ -867,7 +868,7 @@
 
   <div class="md:hidden fixed top-0 left-0 w-full bg-[#1E293B] z-30 p-4 flex justify-between items-center shadow-lg">
     <div class="flex items-center space-x-2">
-      <img src="https://cdn-icons-png.flaticon.com/512/3612/3612569.png" alt="Logo" class="w-8 h-8">
+      <img src="favicon.png" alt="Logo" class="w-8 h-8">
       <h1 class="text-lg font-bold text-white leading-relaxed tech-font">GAMING ODYSSEY</h1>
     </div>
     <button id="hamburger" class="text-[#3B82F6]">
@@ -920,7 +921,7 @@
       <div class="pixel-grid"></div>
       <div class="hero-content max-w-4xl mx-auto fade-in">
         <div class="flex justify-center mb-6">
-          <img src="https://cdn-icons-png.flaticon.com/512/3612/3612569.png" alt="Logo" class="w-20 h-20 animate-pulse">
+          <img src="favicon.png" alt="Logo" class="w-20 h-20 animate-pulse">
         </div>
         <h1 class="text-5xl sm:text-6xl md:text-7xl font-bold text-white mb-6 leading-tight tech-font">
           <span class="gradient-text">GAMING ODYSSEY</span>
@@ -1294,7 +1295,7 @@
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <div class="flex items-center space-x-3 mb-4">
-              <img src="https://cdn-icons-png.flaticon.com/512/3612/3612569.png" alt="Logo" class="w-10 h-10">
+              <img src="favicon.png" alt="Logo" class="w-10 h-10">
               <h3 class="text-xl font-bold text-white tech-font">GAMING ODYSSEY</h3>
             </div>
             <p class="text-[#94A3B8] text-sm mb-4 leading-relaxed">
@@ -1408,7 +1409,7 @@
         <i class="fas fa-times"></i>
       </button>
       <div class="whatsapp-header">
-        <img src="https://cdn-icons-png.flaticon.com/512/3612/3612569.png" alt="Gaming Odyssey Logo">
+        <img src="favicon.png" alt="Gaming Odyssey Logo">
         <h3>Gaming Odyssey</h3>
       </div>
       <div class="whatsapp-body">
@@ -1431,9 +1432,9 @@
               </svg>
           </button>
       </div>
-      <div id="chatbot-body" class="hidden">
+      <div id="chatbot-body">
           <div id="chatbot-messages">
-              </div>
+          </div>
           <div id="chatbot-input-area">
               <div class="relative flex items-center">
                   <input id="chatbot-input" type="text" placeholder="Ask me anything..." class="w-full">
@@ -1725,14 +1726,13 @@
 
     function toggleChatbot() {
       isChatbotOpen = !isChatbotOpen;
+      chatbotContainer.classList.toggle('open'); // Use toggle for simplicity
       if (isChatbotOpen) {
-        chatbotBody.classList.remove('hidden');
-        chatbotContainer.classList.add('open');
-        chatbotIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>`; // Down arrow
+        // Set icon to down arrow when open
+        chatbotIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>`;
       } else {
-        chatbotBody.classList.add('hidden');
-        chatbotContainer.classList.remove('open');
-        chatbotIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>`; // Up arrow
+        // Set icon to up arrow when closed
+        chatbotIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>`;
       }
     }
 
@@ -1743,7 +1743,7 @@
       const avatar = document.createElement('div');
       avatar.className = `avatar ${role === 'user' ? 'user-avatar-icon' : 'bot-avatar'}`;
       if (role === 'bot') {
-        avatar.innerHTML = `<img src="https://cdn-icons-png.flaticon.com/512/3612/3612569.png" alt="Bot" class="w-6 h-6 p-0.5">`;
+        avatar.innerHTML = `<img src="favicon.png" alt="Bot" class="w-6 h-6 p-0.5">`;
       } else {
         avatar.innerHTML = `<i class="fas fa-user text-white text-sm"></i>`;
       }
@@ -1764,7 +1764,7 @@
       typingDiv.id = 'typing-indicator';
       typingDiv.innerHTML = `
         <div class="avatar bot-avatar">
-            <img src="https://cdn-icons-png.flaticon.com/512/3612/3612569.png" alt="Bot" class="w-6 h-6 p-0.5">
+            <img src="favicon.png" alt="Bot" class="w-6 h-6 p-0.5">
         </div>
         <div class="message-content bot-message">
           <div class="typing-indicator flex items-center p-2">
