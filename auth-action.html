@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account Action - Gaming Odyssey</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <style>
+    :root { --primary: #3B82F6; --secondary: #D946EF; --dark: #0F172A; --light: #F1F5F9; --mid: #1E293B; }
+    body { font-family: 'Poppins', sans-serif; background-color: var(--dark); color: var(--light); display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+    .tech-font { font-family: 'Orbitron', sans-serif; }
+    .form-container { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(10px); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 1rem; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); width: 100%; max-width: 450px; padding: 2.5rem; }
+    .input-group { position: relative; }
+    .input-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #94A3B8; }
+    .input-field { background: rgba(15, 23, 42, 0.8); color: var(--light); border: 1px solid var(--mid); border-radius: 0.5rem; padding: 0.75rem 0.75rem 0.75rem 3rem; width: 100%; }
+    .submit-btn { background: linear-gradient(90deg, var(--primary), var(--secondary)); color: white; font-weight: 600; padding: 0.85rem 1.5rem; border-radius: 0.5rem; border: none; }
+    .error { color: #F87171; }
+    .success { color: #4ADE80; }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <div class="text-center mb-8">
+        <h1 id="action-title" class="text-3xl font-bold tech-font text-white">Verifying...</h1>
+        <p id="action-description" class="text-slate-400 mt-2">Please wait while we process your request.</p>
+    </div>
+
+    <form id="password-reset-form" class="hidden space-y-6">
+      <div class="input-group">
+        <i class="fas fa-lock input-icon"></i>
+        <input type="password" id="new-password" placeholder="New Password" required class="input-field" />
+      </div>
+      <button type="submit" class="submit-btn w-full">Reset Password</button>
+    </form>
+
+    <div id="status-message" class="mt-4 text-center"></div>
+  </div>
+
+  <script>
+    // --- Firebase Configuration ---
+    const firebaseConfig = {
+      apiKey:"AIzaSyDA218WauVZNgqeMgiR_5H6TLYQB5HXZkY",
+      authDomain: "gamingodyssey-2e642.firebaseapp.com",
+      databaseURL: "https://gamingodyssey-2e642-default-rtdb.firebaseio.com",
+      projectId: "gamingodyssey-2e642",
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // --- Get action code and mode from URL parameters ---
+    const urlParams = new URLSearchParams(window.location.search);
+    const mode = urlParams.get('mode');
+    const actionCode = urlParams.get('oobCode');
+
+    const actionTitle = document.getElementById('action-title');
+    const actionDescription = document.getElementById('action-description');
+    const passwordResetForm = document.getElementById('password-reset-form');
+    const statusMessage = document.getElementById('status-message');
+
+    // --- Handle the different action modes ---
+    switch (mode) {
+      case 'resetPassword':
+        handlePasswordReset(actionCode);
+        break;
+      case 'verifyEmail':
+        // You can add email verification logic here in the future
+        actionTitle.textContent = "Verify Your Email";
+        // handleEmailVerification(auth, actionCode);
+        break;
+      default:
+        // Error: invalid mode.
+        actionTitle.textContent = "Error";
+        actionDescription.textContent = "Invalid action. Please check the link and try again.";
+    }
+
+    function handlePasswordReset(code) {
+      // Verify the code is valid.
+      auth.verifyPasswordResetCode(code).then((email) => {
+        // Update the UI
+        actionTitle.textContent = 'Reset Your Password';
+        actionDescription.textContent = `Enter a new password for ${email}.`;
+        passwordResetForm.classList.remove('hidden');
+
+        // Add a submit event listener to the form
+        passwordResetForm.addEventListener('submit', (event) => {
+          event.preventDefault();
+          const newPassword = document.getElementById('new-password').value;
+
+          // Save the new password.
+          auth.confirmPasswordReset(code, newPassword).then(() => {
+            // Password reset has been confirmed and saved.
+            passwordResetForm.classList.add('hidden');
+            actionDescription.textContent = "";
+            statusMessage.innerHTML = `<p class="success">Password reset successfully! You can now log in with your new password.</p><br><a href="login.html" class="submit-btn">Go to Login</a>`;
+          }).catch((error) => {
+            statusMessage.innerHTML = `<p class="error">Error: ${error.message}</p>`;
+          });
+        });
+      }).catch((error) => {
+        // Invalid or expired code.
+        actionTitle.textContent = "Error";
+        actionDescription.textContent = "The password reset link is invalid or has expired. Please request a new one.";
+        statusMessage.innerHTML = `<p class="error">${error.message}</p>`;
+      });
+    }
+  </script>
+
+</body>
+</html>
