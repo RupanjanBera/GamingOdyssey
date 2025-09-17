@@ -1722,7 +1722,7 @@
       }
     });
 
-    // --- HYBRID Chatbot Functionality (Perplexity for Chat + Puter for Images) ---
+    // --- HYBRID Chatbot Functionality (Hugging Face for Chat + Puter for Images) ---
     const chatbotContainer = document.getElementById('chatbot-container');
     const chatbotHeader = document.getElementById('chatbot-header');
     const chatbotBody = document.getElementById('chatbot-body');
@@ -1734,20 +1734,16 @@
     const clearChatBtn = document.getElementById('clear-chat-btn');
     
     // API Configuration
-    const PERPLEXITY_API_KEY = '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';
-    const PERPLEXITY_API_URL = 'https://api.perplexity.ai/chat/completions';
+    const HUGGINGFACE_API_KEY = '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';
+    const HUGGINGFACE_API_URL = 'https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2';
     
     let isChatbotOpen = false;
     let conversationHistory = [];
     let puter; // To hold the Puter instance
 
     function initializeConversation() {
-      conversationHistory = [
-        {
-          role: "system",
-          content: `You are a highly capable AI assistant for 'Gaming Odyssey,' a premier gaming platform. Your name is OdysseyAI. You are friendly, professional, and an expert in all things gaming. You can answer questions and generate images when a user starts their prompt with "/generate". Always keep your responses concise and helpful.`
-        }
-      ];
+      // History is now built dynamically.
+      conversationHistory = [];
       addMessage('bot', `Hello! I'm OdysseyAI. I can answer your questions or generate an image for you. Just type <code>/generate</code> followed by a description! 😊`);
     }
 
@@ -1817,25 +1813,80 @@
     }
 
     async function sendMessageToAI(message) {
-      let contextualMessage = `(System Note: Current time is ${new Date().toString()}) User query: "${message}"`;
-      conversationHistory.push({ role: "user", content: contextualMessage });
+      // Add the user's plain message to our history
+      conversationHistory.push({ role: "user", content: message });
       showTypingIndicator();
+
+      // Prepare payload for Hugging Face Conversational API
+      const pastUserInputs = conversationHistory
+        .filter(msg => msg.role === 'user')
+        .map(msg => msg.content);
+      const generatedResponses = conversationHistory
+        .filter(msg => msg.role === 'assistant')
+        .map(msg => msg.content);
+        
+      // The most recent user message is the primary input
+      const currentUserInput = pastUserInputs.pop() || "";
+
+      // Add system prompt to the first message to give context to the AI
+      let textToSend = currentUserInput;
+      if (conversationHistory.filter(m => m.role === 'user').length === 1) {
+          const systemPrompt = "You are a friendly and professional AI assistant for 'Gaming Odyssey,' a premier gaming platform. Your name is OdysseyAI. You are an expert in gaming. Keep responses concise and helpful. You do not generate images; if asked, direct the user to use the /generate command. ";
+          textToSend = systemPrompt + "USER: " + currentUserInput + " ASSISTANT:";
+      }
+
       try {
-        const response = await fetch(PERPLEXITY_API_URL, {
+        const response = await fetch(HUGGINGFACE_API_URL, {
           method: 'POST',
-          headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${PERPLEXITY_API_KEY}`},
-          body: JSON.stringify({model: "llama-3-70b-instruct", messages: conversationHistory})
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${HUGGINGFACE_API_KEY}`
+          },
+          body: JSON.stringify({
+            inputs: {
+              past_user_inputs: pastUserInputs,
+              generated_responses: generatedResponses,
+              text: textToSend
+            },
+            parameters: {
+              max_new_tokens: 250,
+              repetition_penalty: 1.1,
+              return_full_text: false,
+            }
+          })
         });
+
         hideTypingIndicator();
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          try {
+            const errorData = JSON.parse(errorText);
+            console.error('Hugging Face API Error:', errorData);
+            if (errorData.error && errorData.error.includes("is currently loading")) {
+              addMessage('bot', `The AI model is warming up. Please wait about ${Math.round(errorData.estimated_time)} seconds and try again. 😊`);
+            } else {
+              throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+            }
+          } catch (e) {
+             throw new Error(`HTTP error! status: ${response.status}. Response: ${errorText}`);
+          }
+          conversationHistory.pop(); // Remove failed message from history
+          return;
+        }
+
         const data = await response.json();
-        const aiResponse = data.choices[0].message.content;
+        const aiResponse = data[0].generated_text.trim();
+
+        // Add AI response to history and UI
         conversationHistory.push({ role: "assistant", content: aiResponse });
         addMessage('bot', aiResponse);
+
       } catch (error) {
         console.error('Error:', error);
         hideTypingIndicator();
-        addMessage('bot', "Sorry, I'm having trouble connecting.");
+        addMessage('bot', "Sorry, I'm having trouble connecting to the AI assistant right now. Please try again later.");
+        conversationHistory.pop(); // Remove failed message from history
       }
     }
 
@@ -1891,4 +1942,3 @@
   </script>
 </body>
 </html>
-
