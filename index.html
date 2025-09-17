@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="icon" type="image/png" href="favicon.png">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gaming Odyssey | Premium Gaming Gear & Tournaments</title>
-  <link rel="icon" type="image/png" href="favicon.png">
+  <title>Gaming Odyssey | Ultimate Hub for Esports, Tournaments & Pro Gear</title>
+  <meta name="description" content="Join Gaming Odyssey – your hub for online gaming tournaments, esports events, and premium gaming gear. Level up your play with pro-quality equipment today!">
+  <meta name="keywords" content="Gaming Odyssey, gaming tournaments, esports events, buy gaming gear, pro gaming accessories, cyberpunk gaming, competitive gaming, gaming store, PC gaming gear, online esports">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://js.puter.com/v2/"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
@@ -120,7 +121,7 @@
     .hero-bg {
         background-image: 
             linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.9)),
-            url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop');
+            url('https://static.vecteezy.com/system/resources/thumbnails/042/960/123/small_2x/ai-generated-gamepad-in-the-hands-of-a-gamer-on-a-technological-background-neon-lighting-video-games-online-with-friends-winnings-prizes-fun-entertainment-youth-culture-virtual-reality-photo.jpg?q=80&w=2070&auto=format&fit=crop');
         background-size: cover;
         background-position: center;
         position: relative;
@@ -1210,7 +1211,7 @@
                   <i class="fas fa-map-marker-alt mt-1 text-[#3B82F6] mr-3"></i>
                   <div>
                     <h4 class="text-white font-medium">Address</h4>
-                    <p class="text-[#94A3B8] text-sm">123 Gaming Street, Virtual City, VC 12345</p>
+                    <p class="text-[#94A3B8] text-sm">Howrah,WEST BENGAL</p>
                   </div>
                 </div>
                 <div class="flex items-center">
@@ -1224,7 +1225,7 @@
                   <i class="fas fa-phone text-[#3B82F6] mr-3"></i>
                   <div>
                     <h4 class="text-white font-medium">Phone</h4>
-                    <p class="text-[#94A3B8] text-sm">6290994382</p>
+                    <p class="text-[#94A3B8] text-sm">+91-6289119156</p>
                   </div>
                 </div>
                 <div class="flex items-center">
@@ -1295,7 +1296,7 @@
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <div class="flex items-center space-x-3 mb-4">
-              <img src="favicon.png" alt="Logo" class="w-10 h-10">
+              <img src="https://cdn-icons-png.flaticon.com/512/3612/3612569.png" alt="Logo" class="w-10 h-10">
               <h3 class="text-xl font-bold text-white tech-font">GAMING ODYSSEY</h3>
             </div>
             <p class="text-[#94A3B8] text-sm mb-4 leading-relaxed">
@@ -1409,7 +1410,7 @@
         <i class="fas fa-times"></i>
       </button>
       <div class="whatsapp-header">
-        <img src="favicon.png" alt="Gaming Odyssey Logo">
+        <img src="https://cdn-icons-png.flaticon.com/512/3612/3612569.png" alt="Gaming Odyssey Logo">
         <h3>Gaming Odyssey</h3>
       </div>
       <div class="whatsapp-body">
@@ -1432,9 +1433,9 @@
               </svg>
           </button>
       </div>
-      <div id="chatbot-body">
+      <div id="chatbot-body" class="hidden">
           <div id="chatbot-messages">
-          </div>
+              </div>
           <div id="chatbot-input-area">
               <div class="relative flex items-center">
                   <input id="chatbot-input" type="text" placeholder="Ask me anything..." class="w-full">
@@ -1452,87 +1453,128 @@
       </div>
   </div>
 
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <script src="https://js.puter.com/v2/"></script>
   <script>
-    // --- Authentication and UI Control ---
-    document.addEventListener('DOMContentLoaded', () => {
-        const userData = JSON.parse(localStorage.getItem('userData'));
+    // --- Firebase Configuration ---
+    const firebaseConfig = {
+      apiKey:"AIzaSyDA218WauVZNgqeMgiR_5H6TLYQB5HXZkY",
+      authDomain: "gamingodyssey-2e642.firebaseapp.com",
+      databaseURL: "https://gamingodyssey-2e642-default-rtdb.firebaseio.com",
+      projectId: "gamingodyssey-2e642",
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // --- Unified UI Control Function ---
+    function setupUserUI(user) {
+        // This function will be called for both Firebase and localStorage users
         const userAvatar = document.getElementById('user-avatar');
+        
+        document.getElementById('login-link-desktop').style.display = 'none';
+        document.getElementById('signup-link-desktop').style.display = 'none';
+        document.getElementById('login-link-mobile').style.display = 'none';
+        document.getElementById('signup-link-mobile').style.display = 'none';
 
-        if (userData) {
-            // User is logged in
-            document.getElementById('login-link-desktop').style.display = 'none';
-            document.getElementById('signup-link-desktop').style.display = 'none';
-            document.getElementById('login-link-mobile').style.display = 'none';
-            document.getElementById('signup-link-mobile').style.display = 'none';
+        userAvatar.classList.remove('hidden');
+        
+        // Use user.displayName for Firebase, user.name for localStorage
+        const userName = user.displayName || user.name; 
+        const userEmail = user.email;
 
-            userAvatar.classList.remove('hidden');
-            const profilePic = localStorage.getItem('profilePic');
-            if (profilePic) {
-                userAvatar.innerHTML = `<img src="${profilePic}" class="w-full h-full rounded-full object-cover">`;
-            } else {
-                userAvatar.textContent = userData.name.charAt(0).toUpperCase();
-            }
-            userAvatar.title = `Welcome, ${userData.name}`;
+        // For Firebase, profile picture is on user.photoURL, for localStorage it's custom
+        const profilePic = user.photoURL || localStorage.getItem('profilePic');
+        if (profilePic) {
+            userAvatar.innerHTML = `<img src="${profilePic}" class="w-full h-full rounded-full object-cover">`;
+        } else {
+            userAvatar.textContent = userName.charAt(0).toUpperCase();
+        }
+        userAvatar.title = `Welcome, ${userName}`;
 
-            // Populate and set up user menu
-            const userMenu = document.getElementById('user-menu');
-            document.getElementById('menu-username').textContent = userData.name;
-            document.getElementById('menu-user-email').textContent = userData.email;
+        // Populate and set up user menu
+        const userMenu = document.getElementById('user-menu');
+        document.getElementById('menu-username').textContent = userName;
+        document.getElementById('menu-user-email').textContent = userEmail;
 
-            const changePicBtn = document.getElementById('change-pic-btn');
-            const picInput = document.getElementById('pic-input');
-            const logoutBtn = document.getElementById('logout-btn');
+        const changePicBtn = document.getElementById('change-pic-btn');
+        const picInput = document.getElementById('pic-input');
+        const logoutBtn = document.getElementById('logout-btn');
 
-            userAvatar.addEventListener('click', () => {
-                userMenu.classList.toggle('hidden');
-            });
+        userAvatar.addEventListener('click', () => {
+            userMenu.classList.toggle('hidden');
+        });
 
-            changePicBtn.addEventListener('click', () => picInput.click());
+        changePicBtn.addEventListener('click', () => picInput.click());
 
-            picInput.addEventListener('change', (e) => {
-                const file = e.target.files[0];
-                if (!file) return;
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    const base64Image = event.target.result;
-                    localStorage.setItem('profilePic', base64Image);
-                    userAvatar.innerHTML = `<img src="${base64Image}" class="w-full h-full rounded-full object-cover">`;
-                    userMenu.classList.add('hidden');
-                };
-                reader.readAsDataURL(file);
-            });
+        picInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const base64Image = event.target.result;
+                // Note: Changing pic for Firebase users would require updating their profile
+                // For now, we'll keep it simple and use localStorage for both
+                localStorage.setItem('profilePic', base64Image);
+                userAvatar.innerHTML = `<img src="${base64Image}" class="w-full h-full rounded-full object-cover">`;
+                userMenu.classList.add('hidden');
+            };
+            reader.readAsDataURL(file);
+        });
 
-            logoutBtn.addEventListener('click', () => {
+        logoutBtn.addEventListener('click', () => {
+            if (auth.currentUser) { // If it's a Firebase user
+                auth.signOut().then(() => {
+                    localStorage.removeItem('profilePic'); // Also clear custom pic
+                    window.location.reload();
+                });
+            } else { // If it's a localStorage user
                 localStorage.removeItem('userData');
                 localStorage.removeItem('profilePic');
                 window.location.reload();
-            });
-            
-            document.addEventListener('click', (e) => {
-                if (!userAvatar.contains(e.target) && !userMenu.contains(e.target)) {
-                    userMenu.classList.add('hidden');
-                }
-            });
+            }
+        });
+        
+        document.addEventListener('click', (e) => {
+            if (!userAvatar.contains(e.target) && !userMenu.contains(e.target)) {
+                userMenu.classList.add('hidden');
+            }
+        });
+    }
 
-        } else {
-            // User is not logged in, set up redirector
-            document.addEventListener('click', (e) => {
-                const link = e.target.closest('a');
-                if (link && link.href) {
-                    const targetUrl = new URL(link.href);
-                    const targetPage = targetUrl.pathname.split('/').pop();
-                    const isInternalNav = link.hostname === window.location.hostname;
-                    
-                    const allowedWhenLoggedOut = ['signup.html', 'index.html', '', 'login.html'];
-                    
-                    if (isInternalNav && !allowedWhenLoggedOut.includes(targetPage) && !link.href.includes('#')) {
-                        e.preventDefault();
-                        window.location.href = 'signup.html';
-                    }
+    // --- NEW: Main Authentication Check ---
+    document.addEventListener('DOMContentLoaded', () => {
+        auth.onAuthStateChanged(firebaseUser => {
+            if (firebaseUser) {
+                // Case 1: A Firebase user is logged in.
+                setupUserUI(firebaseUser);
+            } else {
+                // Case 2: No Firebase user. Check for a localStorage (Google) user.
+                const localUserData = JSON.parse(localStorage.getItem('userData'));
+                if (localUserData) {
+                    setupUserUI(localUserData);
+                } else {
+                    // Case 3: No user is logged in at all.
+                    // Set up the redirector for logged-out users.
+                    document.addEventListener('click', (e) => {
+                        const link = e.target.closest('a');
+                        if (link && link.href) {
+                            const targetUrl = new URL(link.href);
+                            const targetPage = targetUrl.pathname.split('/').pop();
+                            const isInternalNav = link.hostname === window.location.hostname;
+                            const allowedWhenLoggedOut = ['signup.html', 'index.html', '', 'login.html'];
+                            
+                            if (isInternalNav && !allowedWhenLoggedOut.includes(targetPage) && !link.href.includes('#')) {
+                                e.preventDefault();
+                                window.location.href = 'signup.html';
+                            }
+                        }
+                    }, true); 
                 }
-            }, true); 
-        }
+            }
+        });
 
         // --- Slideshow Functionality ---
         const slideshowContainer = document.getElementById('hero-slideshow');
@@ -1557,9 +1599,7 @@
                 slides.forEach((slide, index) => {
                     const slideElement = document.createElement('div');
                     slideElement.className = 'slide';
-                    if (index === 0) {
-                        slideElement.classList.add('active');
-                    }
+                    if (index === 0) slideElement.classList.add('active');
                     slideElement.style.backgroundImage = `url('${slide.img}')`;
                     slideElement.innerHTML = `<div class="slide-caption">${slide.caption}</div>`;
                     slideshowContainer.appendChild(slideElement);
@@ -1574,9 +1614,11 @@
             }
 
             createSlides();
-            setInterval(showNextSlide, 5000); // Change slide every 5 seconds
+            setInterval(showNextSlide, 5000);
         }
     });
+
+    // --- ALL OTHER PAGE FUNCTIONALITY REMAINS THE SAME ---
 
     // Initialize EmailJS
     emailjs.init('__S5AyIeoL526kGwQ');
@@ -1680,7 +1722,7 @@
       }
     });
 
-    // --- HYBRID Chatbot Functionality (Perplexity for Chat + Puter.js for Images) ---
+    // --- HYBRID Chatbot Functionality (Perplexity for Chat + Puter for Images) ---
     const chatbotContainer = document.getElementById('chatbot-container');
     const chatbotHeader = document.getElementById('chatbot-header');
     const chatbotBody = document.getElementById('chatbot-body');
@@ -1690,35 +1732,20 @@
     const chatbotToggleBtn = document.getElementById('chatbot-toggle-btn');
     const chatbotIcon = document.getElementById('chatbot-icon');
     const clearChatBtn = document.getElementById('clear-chat-btn');
-
-    // =========================================================================================
-    // !!! CRITICAL SECURITY WARNING !!!
-    // Exposing API keys on the client-side is extremely insecure. For a real application,
-    // you MUST build a backend server to handle these API calls securely.
-    // =========================================================================================
-
-    // --- Initialize Puter.js ---
-    // The script is loaded in the <head>. This creates a `Puter` class.
-    // NOTE: Users may be prompted to log in to their Puter account to use image generation.
-    const puter = new Puter();
-
-    // --- API Configuration ---
-    // 1. For Chat (Perplexity AI)
+    
+    // API Configuration
     const PERPLEXITY_API_KEY = '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';
     const PERPLEXITY_API_URL = 'https://api.perplexity.ai/chat/completions';
-
+    
     let isChatbotOpen = false;
     let conversationHistory = [];
+    let puter; // To hold the Puter instance
 
     function initializeConversation() {
       conversationHistory = [
         {
           role: "system",
-          content: `You are a highly capable AI assistant for 'Gaming Odyssey,' a premier gaming platform. Your name is OdysseyAI. You are friendly, professional, and an expert in all things gaming.
-          You have two main capabilities:
-          1.  For regular conversation, you can answer detailed questions about Gaming Odyssey's products, tournaments, the Minecraft server (IP: play.gamingodyssey.in), and handle general knowledge questions.
-          2.  For image generation, you can create images when a user starts their prompt with "/generate" or "/image".
-          Always keep your responses concise and helpful. Use markdown for lists when appropriate.`
+          content: `You are a highly capable AI assistant for 'Gaming Odyssey,' a premier gaming platform. Your name is OdysseyAI. You are friendly, professional, and an expert in all things gaming. You can answer questions and generate images when a user starts their prompt with "/generate". Always keep your responses concise and helpful.`
         }
       ];
       addMessage('bot', `Hello! I'm OdysseyAI. I can answer your questions or generate an image for you. Just type <code>/generate</code> followed by a description! 😊`);
@@ -1726,12 +1753,13 @@
 
     function toggleChatbot() {
       isChatbotOpen = !isChatbotOpen;
-      chatbotContainer.classList.toggle('open'); // Use toggle for simplicity
       if (isChatbotOpen) {
-        // Set icon to down arrow when open
+        chatbotBody.classList.remove('hidden');
+        chatbotContainer.classList.add('open');
         chatbotIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>`;
       } else {
-        // Set icon to up arrow when closed
+        chatbotBody.classList.add('hidden');
+        chatbotContainer.classList.remove('open');
         chatbotIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>`;
       }
     }
@@ -1739,7 +1767,6 @@
     function addMessage(role, content) {
       const messageContainer = document.createElement('div');
       messageContainer.className = `message-container ${role}-message-container`;
-      
       const avatar = document.createElement('div');
       avatar.className = `avatar ${role === 'user' ? 'user-avatar-icon' : 'bot-avatar'}`;
       if (role === 'bot') {
@@ -1747,11 +1774,9 @@
       } else {
         avatar.innerHTML = `<i class="fas fa-user text-white text-sm"></i>`;
       }
-      
       const messageContent = document.createElement('div');
       messageContent.className = `message-content ${role}-message`;
       messageContent.innerHTML = content;
-      
       messageContainer.appendChild(avatar);
       messageContainer.appendChild(messageContent);
       chatbotMessages.appendChild(messageContainer);
@@ -1763,35 +1788,26 @@
       typingDiv.className = 'message-container bot-message-container';
       typingDiv.id = 'typing-indicator';
       typingDiv.innerHTML = `
-        <div class="avatar bot-avatar">
-            <img src="favicon.png" alt="Bot" class="w-6 h-6 p-0.5">
-        </div>
-        <div class="message-content bot-message">
-          <div class="typing-indicator flex items-center p-2">
+        <div class="avatar bot-avatar"><img src="favicon.png" alt="Bot" class="w-6 h-6 p-0.5"></div>
+        <div class="message-content bot-message"><div class="typing-indicator flex items-center p-2">
             <span class="w-2 h-2 bg-white rounded-full mx-1" style="animation: bounce 1s infinite;"></span>
             <span class="w-2 h-2 bg-white rounded-full mx-1" style="animation: bounce 1s infinite; animation-delay: 0.2s;"></span>
             <span class="w-2 h-2 bg-white rounded-full mx-1" style="animation: bounce 1s infinite; animation-delay: 0.4s;"></span>
-          </div>
-        </div>
-      `;
+        </div></div>`;
       chatbotMessages.appendChild(typingDiv);
       chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
     }
 
     function hideTypingIndicator() {
       const typingIndicator = document.getElementById('typing-indicator');
-      if (typingIndicator) {
-        typingIndicator.remove();
-      }
+      if (typingIndicator) typingIndicator.remove();
     }
 
     async function handleUserMessage() {
         const userInput = chatbotInput.value.trim();
         if (!userInput) return;
-
         addMessage('user', userInput);
         chatbotInput.value = '';
-
         if (userInput.toLowerCase().startsWith('/generate') || userInput.toLowerCase().startsWith('/image')) {
             const prompt = userInput.substring(userInput.indexOf(' ')).trim();
             await generateImage(prompt);
@@ -1801,88 +1817,63 @@
     }
 
     async function sendMessageToAI(message) {
-      let contextualMessage = message;
-      if (message.toLowerCase().match(/\b(date|day|time|today)\b/)) {
-        contextualMessage = `(System Note: The current date and time is ${new Date().toString()}) \n\nUser query: "${message}"`;
-      }
-
+      let contextualMessage = `(System Note: Current time is ${new Date().toString()}) User query: "${message}"`;
       conversationHistory.push({ role: "user", content: contextualMessage });
       showTypingIndicator();
-      
       try {
         const response = await fetch(PERPLEXITY_API_URL, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${PERPLEXITY_API_KEY}`
-          },
-          body: JSON.stringify({
-            model: "llama-3-70b-instruct",
-            messages: conversationHistory,
-            max_tokens: 500,
-            temperature: 0.7
-          })
+          headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${PERPLEXITY_API_KEY}`},
+          body: JSON.stringify({model: "llama-3-70b-instruct", messages: conversationHistory})
         });
-        
         hideTypingIndicator();
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            console.error('Perplexity API Error:', errorData);
-            addMessage('bot', `Sorry, I encountered a chat error (Status: ${response.status}). Please check the console.`);
-            return;
-        }
-        
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();
         const aiResponse = data.choices[0].message.content;
-        
         conversationHistory.push({ role: "assistant", content: aiResponse });
         addMessage('bot', aiResponse);
       } catch (error) {
-        console.error('Error calling Perplexity AI API:', error);
+        console.error('Error:', error);
         hideTypingIndicator();
-        addMessage('bot', "Sorry, I'm having trouble connecting to the chat service.");
+        addMessage('bot', "Sorry, I'm having trouble connecting.");
       }
     }
 
     async function generateImage(prompt) {
-      if (!prompt) {
-        addMessage('bot', "Please provide a description for the image after the `/generate` command.");
-        return;
-      }
-      
-      showTypingIndicator();
-      
-      try {
-        // Use Puter.js to generate the image
-        const response = await puter.ai.generateImage({
-            prompt: prompt,
-        });
-
-        hideTypingIndicator();
-        
-        if (response && response.url) {
-            const imageUrl = response.url;
-            const imageContent = `
-              <p>Here is the image you requested for: "<em>${prompt}</em>"</p>
-              <img src="${imageUrl}" class="generated-image" alt="Generated image of ${prompt}">
-            `;
-            addMessage('bot', imageContent);
-            
-            conversationHistory.push({
-              role: "assistant",
-              content: `[Successfully generated an image for the user based on the prompt: "${prompt}"]`
-            });
-        } else {
-             console.error('Puter.js API Error:', response);
-             addMessage('bot', "Sorry, image generation failed. The response may have been blocked or empty.");
+        if (!prompt) {
+            addMessage('bot', "Please provide a description after `/generate`.");
+            return;
         }
-      } catch (error) {
-        console.error('Error generating image with Puter.js:', error);
-        hideTypingIndicator();
-        addMessage('bot', "Sorry, I couldn't generate the image due to a technical issue. You might need to be logged into a Puter account.");
-      }
+        showTypingIndicator();
+        try {
+            // Initialize Puter on first use
+            if (!puter) {
+                puter = new Puter();
+            }
+            
+            // Check if user is logged in, if not, prompt them
+            if (!(await puter.auth.isLoggedIn())) {
+                hideTypingIndicator();
+                addMessage('bot', "You need to log in to Puter to generate images. A popup should appear.");
+                await puter.auth.login();
+                showTypingIndicator(); // Show again after login attempt
+            }
+
+            const image = await puter.ai.imagine(prompt);
+            hideTypingIndicator();
+            
+            const imageUrl = await image.url();
+            
+            addMessage('bot', `<p>Here's your image for: "<em>${prompt}</em>"</p><img src="${imageUrl}" class="generated-image" alt="Generated image of ${prompt}">`);
+            conversationHistory.push({ role: "assistant", content: `[Generated an image for: "${prompt}"]`});
+
+        } catch (error) {
+            console.error('Puter Image Generation Error:', error);
+            hideTypingIndicator();
+            addMessage('bot', "Sorry, image generation failed. Please ensure you are logged in and try again.");
+        }
     }
+
 
     function clearChat() {
       chatbotMessages.innerHTML = '';
@@ -1890,27 +1881,13 @@
     }
 
     chatbotSendBtn.addEventListener('click', handleUserMessage);
-    chatbotInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        handleUserMessage();
-      }
-    });
-
+    chatbotInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleUserMessage(); });
     clearChatBtn.addEventListener('click', clearChat);
     chatbotHeader.addEventListener('click', toggleChatbot);
-    chatbotToggleBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        toggleChatbot();
-    });
-
-    // Initialize chatbot on page load
+    chatbotToggleBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleChatbot(); });
     initializeConversation();
-    // Auto-open chatbot after a short delay
-    setTimeout(() => {
-        if (!isChatbotOpen) {
-            toggleChatbot();
-        }
-    }, 1500);
+    setTimeout(() => { if (!isChatbotOpen) toggleChatbot(); }, 1500);
+
   </script>
 </body>
 </html>
