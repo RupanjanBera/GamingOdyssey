@@ -250,9 +250,12 @@
       );
       
       // --- 3. Phone (SMS) Authentication Setup ---
-      window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-        'size': 'invisible'
-      });
+      // FIX: Check if the reCAPTCHA container exists before initializing
+      if (document.getElementById('recaptcha-container')) {
+          window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+            'size': 'invisible'
+          });
+      }
     };
 
     document.getElementById('custom-google-btn').addEventListener('click', () => {
@@ -294,54 +297,57 @@
     const phoneSection = document.getElementById('phone-input-section');
     const otpSection = document.getElementById('otp-input-section');
 
-    sendOtpBtn.addEventListener('click', () => {
-        const phoneNumber = phoneNumberInput.value;
-        if (!phoneNumber) {
-            phoneAuthFormStatus.textContent = "Please enter a phone number.";
-            phoneAuthFormStatus.className = 'error text-center';
-            return;
-        }
-        const appVerifier = window.recaptchaVerifier;
-        
-        phoneAuthFormStatus.textContent = "Sending OTP...";
-        phoneAuthFormStatus.className = 'text-slate-400 text-center';
-
-        auth.signInWithPhoneNumber(phoneNumber, appVerifier)
-            .then((confirmationResult) => {
-                window.confirmationResult = confirmationResult;
-                phoneAuthFormStatus.textContent = "OTP sent successfully!";
-                phoneAuthFormStatus.className = 'success text-center';
-                phoneSection.classList.add('hidden');
-                otpSection.classList.remove('hidden');
-            }).catch((error) => {
-                console.error("SMS Error:", error);
-                phoneAuthFormStatus.textContent = `Error: ${error.message}`;
+    // FIX: Check if these elements exist before adding event listeners
+    if (sendOtpBtn && verifyOtpBtn && phoneSection && otpSection) {
+        sendOtpBtn.addEventListener('click', () => {
+            const phoneNumber = phoneNumberInput.value;
+            if (!phoneNumber) {
+                phoneAuthFormStatus.textContent = "Please enter a phone number.";
                 phoneAuthFormStatus.className = 'error text-center';
-                recaptchaVerifier.render().then((widgetId) => {
-                    grecaptcha.reset(widgetId);
+                return;
+            }
+            const appVerifier = window.recaptchaVerifier;
+            
+            phoneAuthFormStatus.textContent = "Sending OTP...";
+            phoneAuthFormStatus.className = 'text-slate-400 text-center';
+
+            auth.signInWithPhoneNumber(phoneNumber, appVerifier)
+                .then((confirmationResult) => {
+                    window.confirmationResult = confirmationResult;
+                    phoneAuthFormStatus.textContent = "OTP sent successfully!";
+                    phoneAuthFormStatus.className = 'success text-center';
+                    phoneSection.classList.add('hidden');
+                    otpSection.classList.remove('hidden');
+                }).catch((error) => {
+                    console.error("SMS Error:", error);
+                    phoneAuthFormStatus.textContent = `Error: ${error.message}`;
+                    phoneAuthFormStatus.className = 'error text-center';
+                    recaptchaVerifier.render().then((widgetId) => {
+                        grecaptcha.reset(widgetId);
+                    });
                 });
-            });
-    });
-
-    verifyOtpBtn.addEventListener('click', () => {
-        const code = otpCodeInput.value;
-        if (!code) {
-            phoneAuthFormStatus.textContent = "Please enter the OTP.";
-            phoneAuthFormStatus.className = 'error text-center';
-            return;
-        }
-        phoneAuthFormStatus.textContent = "Verifying...";
-        phoneAuthFormStatus.className = 'text-slate-400 text-center';
-
-        window.confirmationResult.confirm(code).then((result) => {
-            phoneAuthFormStatus.textContent = 'Phone number verified! Redirecting...';
-            phoneAuthFormStatus.className = 'success text-center';
-            setTimeout(() => { window.location.href = 'index.html'; }, 2000);
-        }).catch((error) => {
-            phoneAuthFormStatus.textContent = 'Invalid OTP. Please try again.';
-            phoneAuthFormStatus.className = 'error text-center';
         });
-    });
+
+        verifyOtpBtn.addEventListener('click', () => {
+            const code = otpCodeInput.value;
+            if (!code) {
+                phoneAuthFormStatus.textContent = "Please enter the OTP.";
+                phoneAuthFormStatus.className = 'error text-center';
+                return;
+            }
+            phoneAuthFormStatus.textContent = "Verifying...";
+            phoneAuthFormStatus.className = 'text-slate-400 text-center';
+
+            window.confirmationResult.confirm(code).then((result) => {
+                phoneAuthFormStatus.textContent = 'Phone number verified! Redirecting...';
+                phoneAuthFormStatus.className = 'success text-center';
+                setTimeout(() => { window.location.href = 'index.html'; }, 2000);
+            }).catch((error) => {
+                phoneAuthFormStatus.textContent = 'Invalid OTP. Please try again.';
+                phoneAuthFormStatus.className = 'error text-center';
+            });
+        });
+    }
 
     // --- Password Toggle Utility ---
     const togglePassword = document.getElementById('toggle-password');
@@ -355,6 +361,3 @@
   </script>
 </body>
 </html>
-
-
-
