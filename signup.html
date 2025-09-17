@@ -215,7 +215,7 @@
   
   <div id="gsi_btn_container" style="display: none;"></div>
 
-  <script>
+<script>
     // --- Firebase Configuration ---
     const firebaseConfig = {
       apiKey:"AIzaSyDA218WauVZNgqeMgiR_5H6TLYQB5HXZkY",
@@ -223,34 +223,48 @@
       databaseURL: "https://gamingodyssey-2e642-default-rtdb.firebaseio.com",
       projectId: "gamingodyssey-2e642",
     };
-
-    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
-    // --- Google OAuth Implementation ---
+    // --- REVERTED: Google OAuth now uses localStorage ---
+    function jwt_decode(token) {
+      try { return JSON.parse(atob(token.split('.')[1])); } catch (e) { return null; }
+    }
+    
     function handleCredentialResponse(response) {
+      const responsePayload = jwt_decode(response.credential);
+      const email = responsePayload.email;
+      const firstName = responsePayload.given_name;
+      const lastName = responsePayload.family_name;
       const formStatus = document.getElementById('form-status');
-      const id_token = response.credential;
-      const credential = firebase.auth.GoogleAuthProvider.credential(id_token);
+      let users = JSON.parse(localStorage.getItem('users')) || [];
+      const userExists = users.some(user => user.email === email);
 
-      auth.signInWithCredential(credential)
-        .then((result) => {
-          // Signed in 
-          formStatus.textContent = 'Signed in successfully! Redirecting...';
-          formStatus.className = 'success text-center';
-          setTimeout(() => { window.location.href = 'index.html'; }, 1500);
-        })
-        .catch((error) => {
-          // Handle Errors here.
-          formStatus.textContent = error.message;
-          formStatus.className = 'error text-center';
-        });
+      if (!userExists) {
+        const newUser = {
+          firstName, lastName, email,
+          username: email.split('@')[0],
+          password: 'GoogleUser_NoPassword', // Placeholder for Google users
+          signupDate: new Date().toISOString()
+        };
+        users.push(newUser);
+        localStorage.setItem('users', JSON.stringify(users));
+      }
+
+      localStorage.setItem('userData', JSON.stringify({
+        name: firstName,
+        username: email.split('@')[0],
+        email: email
+      }));
+
+      formStatus.textContent = 'Signed in with Google successfully! Redirecting...';
+      formStatus.className = 'success text-center';
+      setTimeout(() => { window.location.href = 'index.html'; }, 2000);
     }
 
     window.onload = function () {
       google.accounts.id.initialize({
-        client_id: '964191300629-ri9d35rqf4p0tgshv4k8u31r5rptmf9m.apps.googleusercontent.com', // Your Google Client ID
+        client_id: '964191300629-ri9d35rqf4p0tgshv4k8u31r5rptmf9m.apps.googleusercontent.com',
         callback: handleCredentialResponse
       });
       google.accounts.id.renderButton(
@@ -274,7 +288,7 @@
         togglePassword.classList.toggle('fa-eye-slash');
     });
 
-    // --- Email/Password Sign Up Form ---
+    // --- UNCHANGED: Email/Password signup still uses Firebase ---
     document.getElementById('signup-form').addEventListener('submit', function(event) {
         event.preventDefault();
         
@@ -283,7 +297,7 @@
         const password = document.getElementById('password').value;
         const formStatus = document.getElementById('form-status');
         
-        formStatus.textContent = ''; // Clear previous messages
+        formStatus.textContent = '';
         
         if (!firstName || !email || !password) {
             formStatus.textContent = 'Please fill out all fields.';
@@ -293,27 +307,20 @@
 
         auth.createUserWithEmailAndPassword(email, password)
           .then((userCredential) => {
-            // Signed up and signed in 
             const user = userCredential.user;
-            // Optionally, update the user's profile with their first name
-            return user.updateProfile({
-              displayName: firstName
-            });
+            return user.updateProfile({ displayName: firstName });
           })
           .then(() => {
-            formStatus.textContent = 'Account created successfully! Redirecting...';
+            formStatus.textContent = 'Firebase account created! Redirecting...';
             formStatus.className = 'success text-center';
             setTimeout(() => { window.location.href = 'index.html'; }, 2000);
           })
           .catch((error) => {
             let errorMessage = error.message;
-            // Provide more user-friendly error messages
             if (error.code == 'auth/email-already-in-use') {
-              errorMessage = 'An account with this email already exists.';
+              errorMessage = 'A Firebase account with this email already exists.';
             } else if (error.code == 'auth/weak-password') {
               errorMessage = 'Password is too weak. Please use at least 6 characters.';
-            } else if (error.code == 'auth/invalid-email') {
-              errorMessage = 'Please enter a valid email address.';
             }
             formStatus.textContent = errorMessage;
             formStatus.className = 'error text-center';
@@ -322,3 +329,4 @@
   </script>
 </body>
 </html>
+
