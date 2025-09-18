@@ -117,7 +117,6 @@
       box-shadow: 4px 0 15px rgba(59, 130, 246, 0.2);
     }
     
-    /* --- NEW HERO BACKGROUND --- */
     .hero-bg {
         background-image: 
             linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.9)),
@@ -256,6 +255,7 @@
       box-shadow: 0 0 10px rgba(217, 70, 239, 0.3);
     }
     
+    /* MODIFIED: Increased z-index for avatar */
     .user-avatar {
       position: fixed;
       top: 20px;
@@ -271,7 +271,7 @@
       font-weight: bold;
       font-size: 1.2rem;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-      z-index: 1040; /* Increased z-index */
+      z-index: 1060; /* Higher than chatbot */
       cursor: pointer;
       transition: all 0.3s ease;
     }
@@ -428,9 +428,14 @@
     .whatsapp-widget {
       position: fixed;
       bottom: 30px;
-      right: 30px;
+      left: 30px; /* MODIFIED: Moved to the left */
       z-index: 1000;
       font-family: 'Poppins', sans-serif;
+    }
+    .whatsapp-chat-box {
+        bottom: 70px;
+        left: 0; /* MODIFIED */
+        right: auto;
     }
     
     .whatsapp-bubble {
@@ -459,8 +464,6 @@
     
     .whatsapp-chat-box {
       position: absolute;
-      bottom: 70px;
-      right: 0;
       width: 300px;
       background: linear-gradient(145deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98));
       border-radius: 12px;
@@ -584,7 +587,6 @@
       }
     }
     
-    /* --- NEW CHATBOT STYLES --- */
     #chatbot-container {
       position: fixed;
       bottom: 30px;
@@ -720,7 +722,6 @@
     .action-buttons button:hover {
       color: var(--primary);
     }
-    /* Typing indicator animation */
     @keyframes bounce {
         0%, 100% { transform: translateY(0); }
         50% { transform: translateY(-4px); }
@@ -728,8 +729,6 @@
     .typing-indicator span {
         animation: bounce 1s infinite;
     }
-
-    /* --- SLIDESHOW STYLES --- */
     .slide {
         position: absolute;
         top: 0;
@@ -765,39 +764,96 @@
         transform: translateY(0);
         opacity: 1;
     }
+
+    /* --- NEW FLASH SALE STYLES --- */
+    .countdown-timer {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+    .countdown-item {
+      text-align: center;
+    }
+    .countdown-number {
+      background: rgba(15, 23, 42, 0.8);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: white;
+      min-width: 80px;
+      border: 1px solid var(--mid);
+    }
+    .countdown-label {
+      font-size: 0.875rem;
+      color: var(--light);
+      margin-top: 0.5rem;
+    }
+
+    /* --- NEW CATEGORY CARD STYLES --- */
+    .category-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 0.75rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      transition: transform 0.3s ease;
+    }
+    .category-card:hover {
+      transform: translateY(-10px);
+    }
+    .category-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+    .category-card:hover img {
+      transform: scale(1.1);
+    }
+    .category-card-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to top, rgba(15,23,42,0.9) 10%, transparent 70%);
+    }
+    .category-card-title {
+      position: absolute;
+      bottom: 1.5rem;
+      left: 1.5rem;
+      color: white;
+      font-size: 1.5rem;
+      font-weight: bold;
+      font-family: 'Orbitron', sans-serif;
+    }
     
     @media (max-width: 640px) {
       .hero-bg h1 {
         font-size: 2.5rem;
       }
-      
       .hero-bg p {
         font-size: 1rem;
       }
-      
       .user-avatar {
         width: 40px;
         height: 40px;
         font-size: 1rem;
       }
-      
       .whatsapp-widget {
         bottom: 20px;
-        right: 20px;
+        left: 20px;
       }
-      
       .whatsapp-chat-box {
         width: 280px;
-        right: -10px;
+        left: -10px;
       }
-      
       #chatbot-container {
         width: calc(100% - 40px);
         right: 20px;
         bottom: 20px;
       }
     }
-    
     @media (min-width: 641px) and (max-width: 768px) {
       .hero-bg h1 {
         font-size: 3.5rem;
@@ -938,6 +994,39 @@
 
     <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B] relative overflow-hidden">
       <div class="max-w-7xl mx-auto">
+        <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Shop By Category</h2>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+          <a href="store.html" class="category-card aspect-[3/4] fade-in">
+            <img src="https://images.unsplash.com/photo-1629429408209-1f9122651d8b?q=80&w=1974&auto=format&fit=crop" alt="Keyboards">
+            <div class="category-card-overlay"></div>
+            <h3 class="category-card-title">Keyboards</h3>
+          </a>
+          <a href="store.html" class="category-card aspect-[3/4] fade-in">
+            <img src="https://images.unsplash.com/photo-1615663249893-e7116a524a83?q=80&w=1974&auto=format&fit=crop" alt="Mice">
+            <div class="category-card-overlay"></div>
+            <h3 class="category-card-title">Mice</h3>
+          </a>
+          <a href="store.html" class="category-card aspect-[3/4] fade-in">
+            <img src="https://images.unsplash.com/photo-1546435770-a3e426bf4022?q=80&w=2070&auto=format&fit=crop" alt="Headsets">
+            <div class="category-card-overlay"></div>
+            <h3 class="category-card-title">Headsets</h3>
+          </a>
+          <a href="store.html" class="category-card aspect-[3/4] fade-in">
+            <img src="https://images.unsplash.com/photo-1593640408182-31c70c8268f5?q=80&w=2042&auto=format&fit=crop" alt="Pre-Built PCs">
+            <div class="category-card-overlay"></div>
+            <h3 class="category-card-title">Pre-Built PCs</h3>
+          </a>
+          <a href="store.html" class="category-card aspect-[3/4] fade-in">
+            <img src="https://images.unsplash.com/photo-1555680202-c86f0e12f086?q=80&w=2070&auto=format&fit=crop" alt="Custom PCs">
+            <div class="category-card-overlay"></div>
+            <h3 class="category-card-title">Custom PCs</h3>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A] relative overflow-hidden">
+      <div class="max-w-7xl mx-auto">
         <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Featured Gaming Gear</h2>
         
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -1038,7 +1127,7 @@
       </div>
     </section>
 
-    <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A] relative overflow-hidden">
+    <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B] relative overflow-hidden">
       <div class="max-w-7xl mx-auto">
         <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Upcoming Tournaments</h2>
         
@@ -1113,6 +1202,34 @@
           </a>
         </div>
       </div>
+    </section>
+
+    <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A] relative overflow-hidden">
+        <div class="max-w-7xl mx-auto holographic-effect rounded-2xl p-8 md:p-12">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="fade-in">
+                    <img src="https://m.media-amazon.com/images/I/71pWH2q7t-L.jpg" alt="Flash Sale Product" class="rounded-lg shadow-2xl w-full">
+                </div>
+                <div class="text-center lg:text-left fade-in">
+                    <h2 class="text-4xl sm:text-5xl font-bold text-white mb-4 section-title tech-font">Flash Sale!</h2>
+                    <p class="text-2xl font-bold gradient-text mb-4">Razer Huntsman V2 Analog</p>
+                    <p class="text-slate-300 mb-6">Experience unparalleled control with pressure-sensitive analog optical switches. A new dimension of gaming awaits.</p>
+                    <div class="flex items-center justify-center lg:justify-start gap-4 mb-8">
+                        <span class="text-4xl font-bold text-white">$149.99</span>
+                        <span class="text-2xl text-slate-400 line-through">$249.99</span>
+                    </div>
+                    <div id="countdown-timer" class="countdown-timer mb-8">
+                        <div class="countdown-item"><div id="flash-days" class="countdown-number">00</div><span class="countdown-label">Days</span></div>
+                        <div class="countdown-item"><div id="flash-hours" class="countdown-number">00</div><span class="countdown-label">Hours</span></div>
+                        <div class="countdown-item"><div id="flash-mins" class="countdown-number">00</div><span class="countdown-label">Mins</span></div>
+                        <div class="countdown-item"><div id="flash-secs" class="countdown-number">00</div><span class="countdown-label">Secs</span></div>
+                    </div>
+                    <a href="store.html" class="inline-block glow-button px-10 py-4 rounded-lg font-semibold text-white gradient-bg text-lg">
+                        Claim Deal Now <i class="fas fa-bolt ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
     </section>
 
     <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B] relative overflow-hidden">
@@ -1240,10 +1357,10 @@
               <div class="mt-8">
                 <h3 class="text-xl font-bold text-white mb-4">Follow Us</h3>
                 <div class="flex space-x-4">
-                  <a href="https://www.instagram.com" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#E1306C]">
+                  <a href="https://www.instagram.com/noticedveil" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#E1306C]">
                     <i class="fab fa-instagram text-2xl"></i>
                   </a>
-                  <a href="https://www.youtube.com" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#FF0000]">
+                  <a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#FF0000]">
                     <i class="fab fa-youtube text-2xl"></i>
                   </a>
                   <a href="https://www.facebook.com" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#1877F2]">
@@ -1303,10 +1420,10 @@
               Where Gaming Meets Glory. Join our community of passionate gamers and elevate your gaming experience.
             </p>
             <div class="flex space-x-4">
-              <a href="https://www.instagram.com" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#E1306C]">
+              <a href="https://www.instagram.com/noticedveil" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#E1306C]">
                 <i class="fab fa-instagram"></i>
               </a>
-              <a href="https://www.youtube.com" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#FF0000]">
+              <a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#FF0000]">
                 <i class="fab fa-youtube"></i>
               </a>
               <a href="https://www.facebook.com" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#1877F2]">
@@ -1471,7 +1588,6 @@
 
     // --- Unified UI Control Function ---
     function setupUserUI(user) {
-        // This function will be called for both Firebase and localStorage users
         const userAvatar = document.getElementById('user-avatar');
         
         document.getElementById('login-link-desktop').style.display = 'none';
@@ -1481,12 +1597,10 @@
 
         userAvatar.classList.remove('hidden');
         
-        // Use user.displayName for Firebase, user.name for localStorage
-        const userName = user.displayName || user.name; 
-        const userEmail = user.email;
+        const userName = user.displayName || 'Gamer';
+        const userEmail = user.email || 'No email provided';
 
-        // For Firebase, profile picture is on user.photoURL, for localStorage it's custom
-        const profilePic = user.photoURL || localStorage.getItem('profilePic');
+        const profilePic = user.photoURL || localStorage.getItem(`profilePic_${user.uid}`);
         if (profilePic) {
             userAvatar.innerHTML = `<img src="${profilePic}" class="w-full h-full rounded-full object-cover">`;
         } else {
@@ -1494,7 +1608,6 @@
         }
         userAvatar.title = `Welcome, ${userName}`;
 
-        // Populate and set up user menu
         const userMenu = document.getElementById('user-menu');
         document.getElementById('menu-username').textContent = userName;
         document.getElementById('menu-user-email').textContent = userEmail;
@@ -1515,9 +1628,8 @@
             const reader = new FileReader();
             reader.onload = (event) => {
                 const base64Image = event.target.result;
-                // Note: Changing pic for Firebase users would require updating their profile
-                // For now, we'll keep it simple and use localStorage for both
-                localStorage.setItem('profilePic', base64Image);
+                // Save picture specific to the user's ID
+                localStorage.setItem(`profilePic_${user.uid}`, base64Image);
                 userAvatar.innerHTML = `<img src="${base64Image}" class="w-full h-full rounded-full object-cover">`;
                 userMenu.classList.add('hidden');
             };
@@ -1525,16 +1637,10 @@
         });
 
         logoutBtn.addEventListener('click', () => {
-            if (auth.currentUser) { // If it's a Firebase user
-                auth.signOut().then(() => {
-                    localStorage.removeItem('profilePic'); // Also clear custom pic
-                    window.location.reload();
-                });
-            } else { // If it's a localStorage user
-                localStorage.removeItem('userData');
-                localStorage.removeItem('profilePic');
+            auth.signOut().then(() => {
+                localStorage.removeItem(`profilePic_${user.uid}`);
                 window.location.reload();
-            }
+            });
         });
         
         document.addEventListener('click', (e) => {
@@ -1544,37 +1650,63 @@
         });
     }
 
-    // --- NEW: Main Authentication Check ---
+    // --- Main Authentication Check (Simplified & Fixed) ---
     document.addEventListener('DOMContentLoaded', () => {
         auth.onAuthStateChanged(firebaseUser => {
             if (firebaseUser) {
-                // Case 1: A Firebase user is logged in.
+                // User is logged in via Firebase
                 setupUserUI(firebaseUser);
             } else {
-                // Case 2: No Firebase user. Check for a localStorage (Google) user.
-                const localUserData = JSON.parse(localStorage.getItem('userData'));
-                if (localUserData) {
-                    setupUserUI(localUserData);
-                } else {
-                    // Case 3: No user is logged in at all.
-                    // Set up the redirector for logged-out users.
-                    document.addEventListener('click', (e) => {
-                        const link = e.target.closest('a');
-                        if (link && link.href) {
-                            const targetUrl = new URL(link.href);
-                            const targetPage = targetUrl.pathname.split('/').pop();
-                            const isInternalNav = link.hostname === window.location.hostname;
-                            const allowedWhenLoggedOut = ['signup.html', 'index.html', '', 'login.html'];
-                            
-                            if (isInternalNav && !allowedWhenLoggedOut.includes(targetPage) && !link.href.includes('#')) {
-                                e.preventDefault();
-                                window.location.href = 'signup.html';
-                            }
+                // User is not logged in.
+                // Set up the redirector for logged-out users.
+                document.addEventListener('click', (e) => {
+                    const link = e.target.closest('a');
+                    if (link && link.href) {
+                        const targetUrl = new URL(link.href);
+                        const targetPage = targetUrl.pathname.split('/').pop();
+                        const isInternalNav = link.hostname === window.location.hostname;
+                        const allowedWhenLoggedOut = ['signup.html', 'index.html', '', 'login.html'];
+                        
+                        if (isInternalNav && !allowedWhenLoggedOut.includes(targetPage) && !link.href.includes('#')) {
+                            e.preventDefault();
+                            alert('Please sign up or log in to access this page.');
+                            window.location.href = 'signup.html';
                         }
-                    }, true); 
-                }
+                    }
+                }, true); 
             }
         });
+        
+        // --- NEW: Flash Sale Countdown Timer ---
+        function startCountdown() {
+            // Set the date for the end of the sale (e.g., 3 days from now)
+            const saleEndDate = new Date();
+            saleEndDate.setDate(saleEndDate.getDate() + 3);
+
+            const timer = setInterval(function() {
+                const now = new Date().getTime();
+                const distance = saleEndDate - now;
+
+                // Time calculations
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                // Update the HTML
+                document.getElementById('flash-days').innerText = String(days).padStart(2, '0');
+                document.getElementById('flash-hours').innerText = String(hours).padStart(2, '0');
+                document.getElementById('flash-mins').innerText = String(minutes).padStart(2, '0');
+                document.getElementById('flash-secs').innerText = String(seconds).padStart(2, '0');
+
+                // If the countdown is over
+                if (distance < 0) {
+                    clearInterval(timer);
+                    document.getElementById('countdown-timer').innerHTML = '<p class="text-2xl font-bold text-red-500">SALE ENDED</p>';
+                }
+            }, 1000);
+        }
+        startCountdown();
 
         // --- Slideshow Functionality ---
         const slideshowContainer = document.getElementById('hero-slideshow');
@@ -1619,37 +1751,15 @@
     });
 
     // --- ALL OTHER PAGE FUNCTIONALITY REMAINS THE SAME ---
-
-    // Initialize EmailJS
     emailjs.init('__S5AyIeoL526kGwQ');
-
-    // Mobile Menu Toggle
     const hamburger = document.getElementById('hamburger');
     const mobileMenu = document.getElementById('mobile-menu');
     const closeMenu = document.getElementById('close-menu');
-    
-    hamburger.addEventListener('click', () => {
-      mobileMenu.classList.remove('hidden');
-      mobileMenu.classList.remove('-translate-x-full');
-    });
-    
-    closeMenu.addEventListener('click', () => {
-      mobileMenu.classList.add('-translate-x-full');
-    });
-
-    // Fade-in Animation on Scroll
+    hamburger.addEventListener('click', () => { mobileMenu.classList.remove('hidden'); mobileMenu.classList.remove('-translate-x-full'); });
+    closeMenu.addEventListener('click', () => { mobileMenu.classList.add('-translate-x-full'); });
     const fadeIns = document.querySelectorAll('.fade-in');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.1 });
-    
+    const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); } }); }, { threshold: 0.1 });
     fadeIns.forEach(element => observer.observe(element));
-
-    // Contact Form Submission
     document.getElementById('contact-form').addEventListener('submit', function(event) {
       event.preventDefault();
       const name = document.getElementById('name').value.trim();
@@ -1657,72 +1767,23 @@
       const subject = document.getElementById('subject').value.trim();
       const message = document.getElementById('message').value.trim();
       const status = document.getElementById('form-status');
-      
       document.querySelectorAll('.error').forEach(el => el.classList.add('hidden'));
       let isValid = true;
-      
-      if (!name) {
-        document.getElementById('name-error').classList.remove('hidden');
-        isValid = false;
-      }
-      
-      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        document.getElementById('email-error').classList.remove('hidden');
-        isValid = false;
-      }
-      
-      if (!subject) {
-        document.getElementById('subject-error').classList.remove('hidden');
-        isValid = false;
-      }
-      
-      if (!message) {
-        document.getElementById('message-error').classList.remove('hidden');
-        isValid = false;
-      }
-      
-      if (!isValid) {
-        status.textContent = 'Please fill all fields correctly';
-        status.className = 'text-red-500 text-sm text-center';
-        return;
-      }
-      
-      emailjs.send('service_94tnfxp', 'template_6ahr5g1', {
-        name: name,
-        email: email,
-        subject: subject,
-        message: message
-      }).then(() => {
-        status.textContent = 'Message sent successfully!';
-        status.className = 'text-green-500 text-sm text-center';
-        document.getElementById('contact-form').reset();
-      }).catch((error) => {
-        status.textContent = 'Failed to send message: ' + error.text;
-        status.className = 'text-red-500 text-sm text-center';
-      });
+      if (!name) { document.getElementById('name-error').classList.remove('hidden'); isValid = false; }
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { document.getElementById('email-error').classList.remove('hidden'); isValid = false; }
+      if (!subject) { document.getElementById('subject-error').classList.remove('hidden'); isValid = false; }
+      if (!message) { document.getElementById('message-error').classList.remove('hidden'); isValid = false; }
+      if (!isValid) { status.textContent = 'Please fill all fields correctly'; status.className = 'text-red-500 text-sm text-center'; return; }
+      emailjs.send('service_94tnfxp', 'template_6ahr5g1', { name: name, email: email, subject: subject, message: message })
+      .then(() => { status.textContent = 'Message sent successfully!'; status.className = 'text-green-500 text-sm text-center'; this.reset(); })
+      .catch((error) => { status.textContent = 'Failed to send message: ' + error.text; status.className = 'text-red-500 text-sm text-center'; });
     });
-
-    // WhatsApp Widget Functionality
     const whatsappBubble = document.getElementById('whatsapp-bubble');
     const whatsappChatBox = document.getElementById('whatsapp-chat-box');
     const whatsappClose = document.getElementById('whatsapp-close');
-    
-    whatsappBubble.addEventListener('click', () => {
-      whatsappChatBox.classList.toggle('active');
-    });
-    
-    whatsappClose.addEventListener('click', (e) => {
-      e.stopPropagation();
-      whatsappChatBox.classList.remove('active');
-    });
-    
-    document.addEventListener('click', (e) => {
-      if (!whatsappChatBox.contains(e.target) && !whatsappBubble.contains(e.target)) {
-        whatsappChatBox.classList.remove('active');
-      }
-    });
-
-    // --- HYBRID Chatbot Functionality (Hugging Face for Chat + Puter for Images) ---
+    whatsappBubble.addEventListener('click', () => { whatsappChatBox.classList.toggle('active'); });
+    whatsappClose.addEventListener('click', (e) => { e.stopPropagation(); whatsappChatBox.classList.remove('active'); });
+    document.addEventListener('click', (e) => { if (!whatsappChatBox.contains(e.target) && !whatsappBubble.contains(e.target)) { whatsappChatBox.classList.remove('active'); } });
     const chatbotContainer = document.getElementById('chatbot-container');
     const chatbotHeader = document.getElementById('chatbot-header');
     const chatbotBody = document.getElementById('chatbot-body');
@@ -1732,205 +1793,20 @@
     const chatbotToggleBtn = document.getElementById('chatbot-toggle-btn');
     const chatbotIcon = document.getElementById('chatbot-icon');
     const clearChatBtn = document.getElementById('clear-chat-btn');
-    
-    // API Configuration
     const HUGGINGFACE_API_KEY = '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';
     const HUGGINGFACE_API_URL = 'https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2';
-    
     let isChatbotOpen = false;
     let conversationHistory = [];
-    let puter; // To hold the Puter instance
-
-    function initializeConversation() {
-      // History is now built dynamically.
-      conversationHistory = [];
-      addMessage('bot', `Hello! I'm OdysseyAI. I can answer your questions or generate an image for you. Just type <code>/generate</code> followed by a description! 😊`);
-    }
-
-    function toggleChatbot() {
-      isChatbotOpen = !isChatbotOpen;
-      if (isChatbotOpen) {
-        chatbotBody.classList.remove('hidden');
-        chatbotContainer.classList.add('open');
-        chatbotIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>`;
-      } else {
-        chatbotBody.classList.add('hidden');
-        chatbotContainer.classList.remove('open');
-        chatbotIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>`;
-      }
-    }
-
-    function addMessage(role, content) {
-      const messageContainer = document.createElement('div');
-      messageContainer.className = `message-container ${role}-message-container`;
-      const avatar = document.createElement('div');
-      avatar.className = `avatar ${role === 'user' ? 'user-avatar-icon' : 'bot-avatar'}`;
-      if (role === 'bot') {
-        avatar.innerHTML = `<img src="favicon.png" alt="Bot" class="w-6 h-6 p-0.5">`;
-      } else {
-        avatar.innerHTML = `<i class="fas fa-user text-white text-sm"></i>`;
-      }
-      const messageContent = document.createElement('div');
-      messageContent.className = `message-content ${role}-message`;
-      messageContent.innerHTML = content;
-      messageContainer.appendChild(avatar);
-      messageContainer.appendChild(messageContent);
-      chatbotMessages.appendChild(messageContainer);
-      chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-    }
-
-    function showTypingIndicator() {
-      const typingDiv = document.createElement('div');
-      typingDiv.className = 'message-container bot-message-container';
-      typingDiv.id = 'typing-indicator';
-      typingDiv.innerHTML = `
-        <div class="avatar bot-avatar"><img src="favicon.png" alt="Bot" class="w-6 h-6 p-0.5"></div>
-        <div class="message-content bot-message"><div class="typing-indicator flex items-center p-2">
-            <span class="w-2 h-2 bg-white rounded-full mx-1" style="animation: bounce 1s infinite;"></span>
-            <span class="w-2 h-2 bg-white rounded-full mx-1" style="animation: bounce 1s infinite; animation-delay: 0.2s;"></span>
-            <span class="w-2 h-2 bg-white rounded-full mx-1" style="animation: bounce 1s infinite; animation-delay: 0.4s;"></span>
-        </div></div>`;
-      chatbotMessages.appendChild(typingDiv);
-      chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-    }
-
-    function hideTypingIndicator() {
-      const typingIndicator = document.getElementById('typing-indicator');
-      if (typingIndicator) typingIndicator.remove();
-    }
-
-    async function handleUserMessage() {
-        const userInput = chatbotInput.value.trim();
-        if (!userInput) return;
-        addMessage('user', userInput);
-        chatbotInput.value = '';
-        if (userInput.toLowerCase().startsWith('/generate') || userInput.toLowerCase().startsWith('/image')) {
-            const prompt = userInput.substring(userInput.indexOf(' ')).trim();
-            await generateImage(prompt);
-        } else {
-            await sendMessageToAI(userInput);
-        }
-    }
-
-    async function sendMessageToAI(message) {
-      // Add the user's plain message to our history
-      conversationHistory.push({ role: "user", content: message });
-      showTypingIndicator();
-
-      // Prepare payload for Hugging Face Conversational API
-      const pastUserInputs = conversationHistory
-        .filter(msg => msg.role === 'user')
-        .map(msg => msg.content);
-      const generatedResponses = conversationHistory
-        .filter(msg => msg.role === 'assistant')
-        .map(msg => msg.content);
-        
-      // The most recent user message is the primary input
-      const currentUserInput = pastUserInputs.pop() || "";
-
-      // Add system prompt to the first message to give context to the AI
-      let textToSend = currentUserInput;
-      if (conversationHistory.filter(m => m.role === 'user').length === 1) {
-          const systemPrompt = "You are a friendly and professional AI assistant for 'Gaming Odyssey,' a premier gaming platform. Your name is OdysseyAI. You are an expert in gaming. Keep responses concise and helpful. You do not generate images; if asked, direct the user to use the /generate command. ";
-          textToSend = systemPrompt + "USER: " + currentUserInput + " ASSISTANT:";
-      }
-
-      try {
-        const response = await fetch(HUGGINGFACE_API_URL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${HUGGINGFACE_API_KEY}`
-          },
-          body: JSON.stringify({
-            inputs: {
-              past_user_inputs: pastUserInputs,
-              generated_responses: generatedResponses,
-              text: textToSend
-            },
-            parameters: {
-              max_new_tokens: 250,
-              repetition_penalty: 1.1,
-              return_full_text: false,
-            }
-          })
-        });
-
-        hideTypingIndicator();
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          try {
-            const errorData = JSON.parse(errorText);
-            console.error('Hugging Face API Error:', errorData);
-            if (errorData.error && errorData.error.includes("is currently loading")) {
-              addMessage('bot', `The AI model is warming up. Please wait about ${Math.round(errorData.estimated_time)} seconds and try again. 😊`);
-            } else {
-              throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
-            }
-          } catch (e) {
-             throw new Error(`HTTP error! status: ${response.status}. Response: ${errorText}`);
-          }
-          conversationHistory.pop(); // Remove failed message from history
-          return;
-        }
-
-        const data = await response.json();
-        const aiResponse = data[0].generated_text.trim();
-
-        // Add AI response to history and UI
-        conversationHistory.push({ role: "assistant", content: aiResponse });
-        addMessage('bot', aiResponse);
-
-      } catch (error) {
-        console.error('Error:', error);
-        hideTypingIndicator();
-        addMessage('bot', "Sorry, I'm having trouble connecting to the AI assistant right now. Please try again later.");
-        conversationHistory.pop(); // Remove failed message from history
-      }
-    }
-
-    async function generateImage(prompt) {
-        if (!prompt) {
-            addMessage('bot', "Please provide a description after `/generate`.");
-            return;
-        }
-        showTypingIndicator();
-        try {
-            // Initialize Puter on first use
-            if (!puter) {
-                puter = new Puter();
-            }
-            
-            // Check if user is logged in, if not, prompt them
-            if (!(await puter.auth.isLoggedIn())) {
-                hideTypingIndicator();
-                addMessage('bot', "You need to log in to Puter to generate images. A popup should appear.");
-                await puter.auth.login();
-                showTypingIndicator(); // Show again after login attempt
-            }
-
-            const image = await puter.ai.imagine(prompt);
-            hideTypingIndicator();
-            
-            const imageUrl = await image.url();
-            
-            addMessage('bot', `<p>Here's your image for: "<em>${prompt}</em>"</p><img src="${imageUrl}" class="generated-image" alt="Generated image of ${prompt}">`);
-            conversationHistory.push({ role: "assistant", content: `[Generated an image for: "${prompt}"]`});
-
-        } catch (error) {
-            console.error('Puter Image Generation Error:', error);
-            hideTypingIndicator();
-            addMessage('bot', "Sorry, image generation failed. Please ensure you are logged in and try again.");
-        }
-    }
-
-
-    function clearChat() {
-      chatbotMessages.innerHTML = '';
-      initializeConversation();
-    }
-
+    let puter;
+    function initializeConversation() { conversationHistory = []; addMessage('bot', `Hello! I'm OdysseyAI. I can answer your questions or generate an image for you. Just type <code>/generate</code> followed by a description! 😊`); }
+    function toggleChatbot() { isChatbotOpen = !isChatbotOpen; if (isChatbotOpen) { chatbotBody.classList.remove('hidden'); chatbotContainer.classList.add('open'); chatbotIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>`; } else { chatbotBody.classList.add('hidden'); chatbotContainer.classList.remove('open'); chatbotIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>`; } }
+    function addMessage(role, content) { const m = document.createElement('div'); m.className = `message-container ${role}-message-container`; const a = document.createElement('div'); a.className = `avatar ${role === 'user' ? 'user-avatar-icon' : 'bot-avatar'}`; if (role === 'bot') { a.innerHTML = `<img src="favicon.png" alt="Bot" class="w-6 h-6 p-0.5">`; } else { a.innerHTML = `<i class="fas fa-user text-white text-sm"></i>`; } const c = document.createElement('div'); c.className = `message-content ${role}-message`; c.innerHTML = content; m.appendChild(a); m.appendChild(c); chatbotMessages.appendChild(m); chatbotMessages.scrollTop = chatbotMessages.scrollHeight; }
+    function showTypingIndicator() { const t = document.createElement('div'); t.className = 'message-container bot-message-container'; t.id = 'typing-indicator'; t.innerHTML = `<div class="avatar bot-avatar"><img src="favicon.png" alt="Bot" class="w-6 h-6 p-0.5"></div><div class="message-content bot-message"><div class="typing-indicator flex items-center p-2"><span class="w-2 h-2 bg-white rounded-full mx-1" style="animation: bounce 1s infinite;"></span><span class="w-2 h-2 bg-white rounded-full mx-1" style="animation: bounce 1s infinite; animation-delay: 0.2s;"></span><span class="w-2 h-2 bg-white rounded-full mx-1" style="animation: bounce 1s infinite; animation-delay: 0.4s;"></span></div></div>`; chatbotMessages.appendChild(t); chatbotMessages.scrollTop = chatbotMessages.scrollHeight; }
+    function hideTypingIndicator() { const t = document.getElementById('typing-indicator'); if (t) t.remove(); }
+    async function handleUserMessage() { const i = chatbotInput.value.trim(); if (!i) return; addMessage('user', i); chatbotInput.value = ''; if (i.toLowerCase().startsWith('/generate') || i.toLowerCase().startsWith('/image')) { const p = i.substring(i.indexOf(' ')).trim(); await generateImage(p); } else { await sendMessageToAI(i); } }
+    async function sendMessageToAI(message) { conversationHistory.push({ role: "user", content: message }); showTypingIndicator(); const u = conversationHistory.filter(m => m.role === 'user').map(m => m.content); const g = conversationHistory.filter(m => m.role === 'assistant').map(m => m.content); const c = u.pop() || ""; let t = c; if (conversationHistory.filter(m => m.role === 'user').length === 1) { const s = "You are a friendly and professional AI assistant for 'Gaming Odyssey,' a premier gaming platform. Your name is OdysseyAI. You are an expert in gaming. Keep responses concise and helpful. You do not generate images; if asked, direct the user to use the /generate command. "; t = s + "USER: " + c + " ASSISTANT:"; } try { const r = await fetch(HUGGINGFACE_API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${HUGGINGFACE_API_KEY}` }, body: JSON.stringify({ inputs: { past_user_inputs: u, generated_responses: g, text: t }, parameters: { max_new_tokens: 250, repetition_penalty: 1.1, return_full_text: false, } }) }); hideTypingIndicator(); if (!r.ok) { const e = await r.text(); try { const d = JSON.parse(e); console.error('Hugging Face API Error:', d); if (d.error && d.error.includes("is currently loading")) { addMessage('bot', `The AI model is warming up. Please wait about ${Math.round(d.estimated_time)} seconds and try again. 😊`); } else { throw new Error(d.error || `HTTP error! status: ${r.status}`); } } catch (x) { throw new Error(`HTTP error! status: ${r.status}. Response: ${e}`); } conversationHistory.pop(); return; } const d = await r.json(); const a = d[0].generated_text.trim(); conversationHistory.push({ role: "assistant", content: a }); addMessage('bot', a); } catch (e) { console.error('Error:', e); hideTypingIndicator(); addMessage('bot', "Sorry, I'm having trouble connecting to the AI assistant right now. Please try again later."); conversationHistory.pop(); } }
+    async function generateImage(prompt) { if (!prompt) { addMessage('bot', "Please provide a description after `/generate`."); return; } showTypingIndicator(); try { if (!puter) { puter = new Puter(); } if (!(await puter.auth.isLoggedIn())) { hideTypingIndicator(); addMessage('bot', "You need to log in to Puter to generate images. A popup should appear."); await puter.auth.login(); showTypingIndicator(); } const i = await puter.ai.imagine(prompt); hideTypingIndicator(); const u = await i.url(); addMessage('bot', `<p>Here's your image for: "<em>${prompt}</em>"</p><img src="${u}" class="generated-image" alt="Generated image of ${prompt}">`); conversationHistory.push({ role: "assistant", content: `[Generated an image for: "${prompt}"]`}); } catch (e) { console.error('Puter Image Generation Error:', e); hideTypingIndicator(); addMessage('bot', "Sorry, image generation failed. Please ensure you are logged in and try again."); } }
+    function clearChat() { chatbotMessages.innerHTML = ''; initializeConversation(); }
     chatbotSendBtn.addEventListener('click', handleUserMessage);
     chatbotInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleUserMessage(); });
     clearChatBtn.addEventListener('click', clearChat);
@@ -1942,5 +1818,3 @@
   </script>
 </body>
 </html>
-
-
