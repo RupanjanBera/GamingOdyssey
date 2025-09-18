@@ -9,6 +9,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css"/>
+
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
@@ -77,6 +79,27 @@
       width: 100%;
       transition: all 0.3s ease;
     }
+    /* MODIFIED: Styling for intl-tel-input */
+    .iti { width: 100%; }
+    .iti__input {
+        background: rgba(15, 23, 42, 0.8) !important;
+        color: var(--light) !important;
+        border: 1px solid var(--mid) !important;
+        border-radius: 0.5rem !important;
+        padding: 0.75rem 0.75rem 0.75rem 56px !important; /* Adjust padding for flag */
+        width: 100% !important;
+        transition: all 0.3s ease !important;
+        height: 46px; /* Set a fixed height */
+    }
+    .iti__input:focus {
+        outline: none !important;
+        border-color: var(--primary) !important;
+        box-shadow: 0 0 10px rgba(59, 130, 246, 0.3) !important;
+    }
+    .iti__country-list { background-color: var(--mid); border-color: var(--primary); }
+    .iti__dial-code { color: #94a3b8; }
+    .iti__country:hover, .iti__country.iti__highlight { background-color: rgba(59, 130, 246, 0.2); }
+
     .input-field:focus {
       outline: none;
       border-color: var(--primary);
@@ -201,10 +224,7 @@
 
         <div id="phone-auth-container" class="hidden">
             <div id="phone-input-section" class="space-y-6">
-                <div class="input-group">
-                    <i class="fas fa-phone-alt input-icon"></i>
-                    <input type="tel" id="phone-number" name="phone-number" placeholder="Phone (e.g. +16505551234)" required class="input-field" />
-                </div>
+                <input type="tel" id="phone-number" name="phone-number" required />
                 <button id="send-otp-btn" class="submit-btn w-full">Send OTP</button>
             </div>
             <div id="otp-input-section" class="hidden space-y-6">
@@ -231,6 +251,8 @@
   <div id="gsi_btn_container" style="display: none;"></div>
   <div id="recaptcha-container"></div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
+
 <script>
     // --- Firebase Configuration ---
     const firebaseConfig = {
@@ -241,6 +263,21 @@
     };
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
+    
+    // ADDED: Initialize intl-tel-input
+    const phoneNumberInput = document.querySelector("#phone-number");
+    const iti = window.intlTelInput(phoneNumberInput, {
+        initialCountry: "auto", // Automatically select country based on user's IP
+        geoIpLookup: function(success, failure) {
+            fetch("https://ipapi.co/json")
+                .then(res => res.json())
+                .then(data => success(data.country_code))
+                .catch(failure);
+        },
+        separateDialCode: true,
+        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js", // for formatting/validation
+    });
+
 
     // --- 1. Google OAuth (Unified with Firebase) ---
     function handleCredentialResponse(response) {
@@ -261,7 +298,6 @@
     }
 
     window.onload = function () {
-      // Initialize Google Sign-In
       google.accounts.id.initialize({
         client_id: '964191300629-ri9d35rqf4p0tgshv4k8u31r5rptmf9m.apps.googleusercontent.com',
         callback: handleCredentialResponse
@@ -271,16 +307,8 @@
         { theme: 'outline', size: 'large' }
       );
       
-      // --- 3. Phone (SMS) Authentication Setup ---
-      // UPDATED: Initialize reCAPTCHA verifier
       window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-        'size': 'invisible',
-        'callback': (response) => {
-          // This callback is for a solved reCAPTCHA, usually needed for visible widgets
-        },
-        'expired-callback': () => {
-          // Response expired. Ask user to solve reCAPTCHA again.
-        }
+        'size': 'invisible'
       });
     };
 
@@ -337,19 +365,22 @@
 
     const sendOtpBtn = document.getElementById('send-otp-btn');
     const verifyOtpBtn = document.getElementById('verify-otp-btn');
-    const phoneNumberInput = document.getElementById('phone-number');
     const otpCodeInput = document.getElementById('otp-code');
     const phoneAuthFormStatus = document.getElementById('form-status');
     const phoneSection = document.getElementById('phone-input-section');
     const otpSection = document.getElementById('otp-input-section');
 
     sendOtpBtn.addEventListener('click', () => {
-        const phoneNumber = phoneNumberInput.value;
-        if (!phoneNumber) {
-            phoneAuthFormStatus.textContent = "Please enter a phone number.";
+        // MODIFIED: Get the full phone number from the library instance
+        const phoneNumber = iti.getNumber();
+        
+        // MODIFIED: Use the library's validation
+        if (!iti.isValidNumber()) {
+            phoneAuthFormStatus.textContent = "Please enter a valid phone number.";
             phoneAuthFormStatus.className = 'error text-center';
             return;
         }
+
         const appVerifier = window.recaptchaVerifier;
         
         phoneAuthFormStatus.textContent = "Sending OTP...";
@@ -366,7 +397,6 @@
                 console.error("SMS Error:", error);
                 phoneAuthFormStatus.textContent = `Error sending OTP. Please check the number and try again.`;
                 phoneAuthFormStatus.className = 'error text-center';
-                // Reset the reCAPTCHA on error
                 window.recaptchaVerifier.render().then((widgetId) => {
                     grecaptcha.reset(widgetId);
                 });
