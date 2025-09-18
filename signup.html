@@ -30,34 +30,13 @@
       background-attachment: fixed;
     }
     .tech-font { font-family: 'Orbitron', sans-serif; }
-    .sidebar {
-      background: linear-gradient(180deg, var(--mid) 0%, var(--dark) 100%);
-      box-shadow: 4px 0 15px rgba(59, 130, 246, 0.1);
-    }
-    .nav-link {
-      position: relative; transition: all 0.3s ease;
-    }
-    .nav-link::after {
-      content: ''; position: absolute; width: 0; height: 2px;
-      bottom: -4px; left: 0;
-      background: linear-gradient(to right, var(--primary), var(--secondary));
-      transition: width 0.3s ease;
-    }
-    .nav-link:hover::after { width: 100%; }
-    
     .form-container {
       background: rgba(30, 41, 59, 0.6);
       backdrop-filter: blur(10px);
       border: 1px solid rgba(59, 130, 246, 0.3);
       border-radius: 1rem;
       box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-      transition: all 0.3s ease;
     }
-     .form-container:hover {
-        border-color: rgba(217, 70, 239, 0.4);
-        box-shadow: 0 0 25px rgba(217, 70, 239, 0.2);
-    }
-    
     .input-group { position: relative; }
     .input-icon {
       position: absolute;
@@ -65,7 +44,6 @@
       top: 50%;
       transform: translateY(-50%);
       color: #94A3B8;
-      transition: color 0.3s ease;
     }
     .input-field {
       background: rgba(15, 23, 42, 0.8);
@@ -82,9 +60,6 @@
       border-color: var(--primary);
       box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
     }
-    .input-field:focus ~ .input-icon { color: var(--primary); }
-
-    /* --- MODIFIED: Professional styles for intl-tel-input --- */
     .iti { display: block; }
     .iti__input {
       background: rgba(15, 23, 42, 0.8) !important;
@@ -104,16 +79,10 @@
     .iti__country-list {
       background-color: var(--mid) !important;
       border-color: var(--primary) !important;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.2) !important;
     }
     .iti__dial-code { color: #94A3B8; }
     .iti__country:hover, .iti__country.iti__highlight {
       background-color: rgba(59, 130, 246, 0.2) !important;
-    }
-
-    .password-toggle {
-      position: absolute; right: 1rem; top: 50%;
-      transform: translateY(-50%); cursor: pointer; color: #94A3B8;
     }
     .submit-btn {
       background: linear-gradient(90deg, var(--primary), var(--secondary));
@@ -122,45 +91,20 @@
       box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
       border: none;
     }
-    .submit-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 6px 20px rgba(217, 70, 239, 0.3);
+    .submit-btn:hover { transform: translateY(-3px); }
+    .submit-btn:disabled {
+        background: var(--mid);
+        cursor: not-allowed;
+        box-shadow: none;
     }
-    
     .google-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.75rem;
-      width: 100%;
-      padding: 0.75rem 1.5rem;
-      border-radius: 0.5rem;
-      font-weight: 600;
-      color: var(--light);
-      background: var(--mid);
-      border: 1px solid var(--mid);
-      transition: all 0.3s ease;
-      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      gap: 0.75rem; width: 100%; padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem; font-weight: 600; color: var(--light);
+      background: var(--mid); border: 1px solid var(--mid);
+      transition: all 0.3s ease; cursor: pointer;
     }
-    .google-btn:hover {
-      border-color: var(--primary);
-      box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
-      transform: translateY(-3px);
-    }
-    .google-btn img { width: 1.25rem; height: 1.25rem; }
-
-    .divider {
-      display: flex; align-items: center; text-align: center;
-      color: #64748B; margin: 1.5rem 0; font-size: 0.875rem;
-    }
-    .divider::before, .divider::after {
-      content: ''; flex: 1; border-bottom: 1px solid #334155;
-    }
-    .divider:not(:empty)::before { margin-right: .75em; }
-    .divider:not(:empty)::after { margin-left: .75em; }
-    
-    .error { color: #F87171; font-size: 0.875rem; margin-top: 0.25rem; }
-    .success { color: #4ADE80; font-size: 0.875rem; margin-top: 0.25rem; }
+    .google-btn:hover { border-color: var(--primary); }
     .hidden { display: none; }
   </style>
 </head>
@@ -196,64 +140,12 @@
             <p class="text-slate-400 mt-2">Join the ultimate gaming hub.</p>
         </div>
 
-        <div id="main-signup-methods">
-            <form id="signup-form" class="space-y-4">
-                <button type="button" id="custom-google-btn" class="google-btn">
-                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google icon">
-                    <span>Sign up with Google</span>
-                </button>
-                <div class="divider">OR</div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="input-group">
-                        <i class="fas fa-user input-icon"></i>
-                        <input type="text" id="first-name" name="first-name" placeholder="First Name" required class="input-field" />
-                    </div>
-                    <div class="input-group">
-                        <i class="fas fa-user input-icon" style="opacity: 0;"></i><input type="text" id="last-name" name="last-name" placeholder="Last Name" required class="input-field pl-4" />
-                    </div>
-                </div>
-                <div class="input-group">
-                    <i class="fas fa-envelope input-icon"></i>
-                    <input type="email" id="email" name="email" placeholder="Email Address" required class="input-field" />
-                </div>
-                <div class="input-group">
-                    <i class="fas fa-lock input-icon"></i>
-                    <input type="password" id="password" name="password" placeholder="Password (min. 8 characters)" required class="input-field" />
-                    <i class="fas fa-eye-slash password-toggle" id="toggle-password"></i>
-                </div>
-                <div class="pt-2">
-                    <button type="submit" class="submit-btn w-full">Create Account</button>
-                </div>
-            </form>
-            <div class="divider">OR</div>
-            <button id="show-phone-signup-btn" class="google-btn">
-                <i class="fas fa-phone-alt mr-2"></i>
-                <span>Sign up with Phone</span>
-            </button>
-        </div>
-        
-        <div id="phone-auth-container" class="hidden">
-            <div id="phone-input-section" class="space-y-6">
-                <div class="input-group">
-                    <input type="tel" id="phone-number" name="phone-number" required />
-                </div>
-                <button id="send-otp-btn" class="submit-btn w-full">Send OTP</button>
+        <div id="auth-form-container">
             </div>
-            <div id="otp-input-section" class="hidden space-y-6">
-                <div class="input-group">
-                    <i class="fas fa-key input-icon"></i>
-                    <input type="text" id="otp-code" name="otp-code" placeholder="Enter 6-digit OTP" required class="input-field" />
-                </div>
-                <button id="verify-otp-btn" class="submit-btn w-full">Verify & Sign Up</button>
-            </div>
-            <div class="text-center text-sm mt-6">
-                <a href="#" id="back-to-email-btn" class="text-slate-400 hover:text-[var(--primary)] transition-colors">Back to other sign up methods</a>
-            </div>
-        </div>
 
         <p id="form-status" class="mt-4 text-center"></p>
 
-        <div id="login-link-container" class="text-center text-slate-400 text-sm mt-6">
+        <div class="text-center text-slate-400 text-sm mt-6">
             Already have an account? <a href="login.html" class="text-[var(--primary)] hover:underline font-semibold">Log In</a>
         </div>
       </div>
@@ -261,11 +153,9 @@
   </main>
   
   <div id="gsi_btn_container" style="display: none;"></div>
-  <div id="recaptcha-container"></div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
 
 <script>
-    // --- Firebase & intl-tel-input Setup ---
     const firebaseConfig = {
       apiKey:"AIzaSyDA218WauVZNgqeMgiR_5H6TLYQB5HXZkY",
       authDomain: "gamingodyssey-2e642.firebaseapp.com",
@@ -274,162 +164,171 @@
     };
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
+    
+    const authFormContainer = document.getElementById('auth-form-container');
+    let iti;
+    let recaptchaVerifier;
 
-    const phoneNumberInput = document.querySelector("#phone-number");
-    const iti = window.intlTelInput(phoneNumberInput, {
-        initialCountry: "auto",
-        geoIpLookup: function(success, failure) {
-            fetch("https://ipapi.co/json")
-                .then(res => res.json())
-                .then(data => success(data.country_code))
-                .catch(failure);
-        },
-        separateDialCode: true,
-        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js",
-    });
+    // --- TEMPLATE RENDERERS ---
 
-    // --- Google OAuth ---
-    function handleCredentialResponse(response) {
-      const formStatus = document.getElementById('form-status');
-      const id_token = response.credential;
-      const credential = firebase.auth.GoogleAuthProvider.credential(id_token);
-      auth.signInWithCredential(credential)
-        .then(() => {
-          formStatus.textContent = 'Signed in successfully! Redirecting...';
-          formStatus.className = 'success text-center';
-          setTimeout(() => { window.location.href = 'index.html'; }, 1500);
-        })
-        .catch((error) => {
-          formStatus.textContent = error.message;
-          formStatus.className = 'error text-center';
-        });
+    function renderEmailForm() {
+        authFormContainer.innerHTML = `
+            <form id="signup-form" class="space-y-4">
+                <button type="button" id="custom-google-btn" class="google-btn">
+                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google icon">
+                    <span>Sign up with Google</span>
+                </button>
+                <div class="flex items-center text-center text-slate-400 text-sm"><span class="flex-1 border-b border-slate-700"></span><span class="px-3">OR</span><span class="flex-1 border-b border-slate-700"></span></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="input-group"><i class="fas fa-user input-icon"></i><input type="text" id="first-name" placeholder="First Name" required class="input-field" /></div>
+                    <div class="input-group"><input type="text" id="last-name" placeholder="Last Name" required class="input-field pl-4" /></div>
+                </div>
+                <div class="input-group"><i class="fas fa-envelope input-icon"></i><input type="email" id="email" placeholder="Email Address" required class="input-field" /></div>
+                <div class="input-group"><i class="fas fa-lock input-icon"></i><input type="password" id="password" placeholder="Password (min. 8 characters)" required class="input-field" /></div>
+                <div class="text-center text-sm"><a href="#" id="show-phone-signup-btn" class="text-slate-400 hover:text-[var(--primary)] transition-colors">Sign up with Phone Instead</a></div>
+                <div class="pt-2"><button type="submit" class="submit-btn w-full">Create Account</button></div>
+            </form>
+        `;
+        addEmailFormListeners();
     }
 
-    // --- Window Onload ---
-    window.onload = function () {
-      google.accounts.id.initialize({
-        client_id: '964191300629-ri9d35rqf4p0tgshv4k8u31r5rptmf9m.apps.googleusercontent.com',
-        callback: handleCredentialResponse
-      });
-      google.accounts.id.renderButton( document.getElementById('gsi_btn_container'), { theme: 'outline', size: 'large' });
-      window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', { 'size': 'invisible' });
-    };
+    function renderPhoneForm() {
+        authFormContainer.innerHTML = `
+            <div id="phone-signup-section" class="space-y-6">
+                <h3 class="text-xl font-bold text-center text-white">Sign Up with Phone</h3>
+                <p class="text-slate-400 text-center text-sm -mt-4">Enter your number to receive a verification code.</p>
+                <div class="input-group"><input type="tel" id="phone-number" required /></div>
+                <div id="recaptcha-container" class="my-4 flex justify-center"></div>
+                <button id="send-otp-btn" class="submit-btn w-full" disabled>Send OTP</button>
+                <div class="text-center text-sm"><a href="#" id="back-to-email-btn" class="text-slate-400 hover:text-[var(--primary)] transition-colors">or Sign up with Email</a></div>
+            </div>
+        `;
+        addPhoneFormListeners();
+    }
 
-    // --- Event Listeners ---
-    document.getElementById('custom-google-btn').addEventListener('click', () => {
+    function renderOtpForm() {
+        authFormContainer.innerHTML = `
+            <div id="otp-section" class="space-y-6">
+                 <h3 class="text-xl font-bold text-center text-white">Enter OTP</h3>
+                 <p class="text-slate-400 text-center text-sm -mt-4">We've sent a 6-digit code to your phone.</p>
+                <div class="input-group"><i class="fas fa-key input-icon"></i><input type="text" id="otp-code" placeholder="6-Digit Code" required class="input-field" /></div>
+                <button id="verify-otp-btn" class="submit-btn w-full">Verify & Sign Up</button>
+            </div>
+        `;
+        document.getElementById('verify-otp-btn').addEventListener('click', verifyOtp);
+    }
+
+    // --- EVENT LISTENER ATTACHMENT ---
+
+    function addEmailFormListeners() {
+        document.getElementById('signup-form').addEventListener('submit', handleEmailSignup);
+        document.getElementById('custom-google-btn').addEventListener('click', handleGoogleLogin);
+        document.getElementById('show-phone-signup-btn').addEventListener('click', (e) => { e.preventDefault(); renderPhoneForm(); });
+    }
+
+    function addPhoneFormListeners() {
+        const phoneNumberInput = document.querySelector("#phone-number");
+        iti = window.intlTelInput(phoneNumberInput, {
+            initialCountry: "auto",
+            geoIpLookup: (success) => fetch("https://ipapi.co/json").then(res => res.json()).then(data => success(data.country_code)),
+            separateDialCode: true,
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js",
+        });
+        recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+            'size': 'normal',
+            'callback': () => { document.getElementById('send-otp-btn').disabled = false; },
+            'expired-callback': () => { document.getElementById('send-otp-btn').disabled = true; }
+        });
+        recaptchaVerifier.render();
+        document.getElementById('send-otp-btn').addEventListener('click', sendOtp);
+        document.getElementById('back-to-email-btn').addEventListener('click', (e) => { e.preventDefault(); renderEmailForm(); });
+    }
+    
+    // --- AUTHENTICATION LOGIC ---
+
+    function handleGoogleLogin() {
         const googleButton = document.querySelector('#gsi_btn_container div[role=button]');
-        if (googleButton) { googleButton.click(); }
-    });
+        if (googleButton) googleButton.click();
+    }
 
-    document.getElementById('signup-form').addEventListener('submit', function(event) {
+    function handleEmailSignup(event) {
         event.preventDefault();
         const firstName = document.getElementById('first-name').value.trim();
         const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value;
-        const formStatus = document.getElementById('form-status');
-        formStatus.textContent = 'Creating account...';
-        formStatus.className = 'text-slate-400 text-center';
         if (!firstName || !email || !password) {
-            formStatus.textContent = 'Please fill out all fields.';
-            formStatus.className = 'error text-center';
+            updateStatus('Please fill out all fields.', 'error');
             return;
         }
+        updateStatus('Creating account...', 'loading');
         auth.createUserWithEmailAndPassword(email, password)
-          .then((userCredential) => userCredential.user.updateProfile({ displayName: firstName }))
-          .then(() => {
-            formStatus.textContent = 'Account created! Redirecting...';
-            formStatus.className = 'success text-center';
-            setTimeout(() => { window.location.href = 'index.html'; }, 2000);
-          })
-          .catch((error) => {
-            let msg = "An error occurred. Please try again.";
-            if (error.code == 'auth/email-already-in-use') msg = 'An account with this email already exists.';
-            else if (error.code == 'auth/weak-password') msg = 'Password is too weak. Please use at least 6 characters.';
-            formStatus.textContent = msg;
-            formStatus.className = 'error text-center';
+          .then(cred => cred.user.updateProfile({ displayName: firstName }))
+          .then(() => redirectHome('Account created!'))
+          .catch(err => {
+              let msg = 'An error occurred. Please try again.';
+              if (err.code == 'auth/email-already-in-use') msg = 'An account with this email already exists.';
+              if (err.code == 'auth/weak-password') msg = 'Password is too weak (min. 6 characters).';
+              updateStatus(msg, 'error');
           });
-    });
+    }
 
-    // --- Phone Auth Logic & UI Toggle ---
-    const mainSignupMethods = document.getElementById('main-signup-methods');
-    const phoneAuthContainer = document.getElementById('phone-auth-container');
-    const showPhoneSignupBtn = document.getElementById('show-phone-signup-btn');
-    const backToEmailBtn = document.getElementById('back-to-email-btn');
-
-    showPhoneSignupBtn.addEventListener('click', () => {
-        mainSignupMethods.classList.add('hidden');
-        phoneAuthContainer.classList.remove('hidden');
-        document.getElementById('login-link-container').classList.add('hidden');
-    });
-
-    backToEmailBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        mainSignupMethods.classList.remove('hidden');
-        phoneAuthContainer.classList.add('hidden');
-        document.getElementById('login-link-container').classList.remove('hidden');
-        document.getElementById('form-status').textContent = '';
-    });
-
-    const sendOtpBtn = document.getElementById('send-otp-btn');
-    const verifyOtpBtn = document.getElementById('verify-otp-btn');
-    const otpCodeInput = document.getElementById('otp-code');
-    const phoneAuthFormStatus = document.getElementById('form-status');
-    const phoneSection = document.getElementById('phone-input-section');
-    const otpSection = document.getElementById('otp-input-section');
-
-    sendOtpBtn.addEventListener('click', () => {
+    function sendOtp() {
         const phoneNumber = iti.getNumber();
         if (!iti.isValidNumber()) {
-            phoneAuthFormStatus.textContent = "Please enter a valid phone number.";
-            phoneAuthFormStatus.className = 'error text-center';
+            updateStatus("Please enter a valid phone number.", "error");
             return;
         }
-        const appVerifier = window.recaptchaVerifier;
-        phoneAuthFormStatus.textContent = "Sending OTP...";
-        phoneAuthFormStatus.className = 'text-slate-400 text-center';
-        auth.signInWithPhoneNumber(phoneNumber, appVerifier)
-            .then((confirmationResult) => {
-                window.confirmationResult = confirmationResult;
-                phoneAuthFormStatus.textContent = "OTP sent successfully!";
-                phoneAuthFormStatus.className = 'success text-center';
-                phoneSection.classList.add('hidden');
-                otpSection.classList.remove('hidden');
-            }).catch((error) => {
-                console.error("SMS Error:", error);
-                phoneAuthFormStatus.textContent = `Error sending OTP. Please check the number and try again.`;
-                phoneAuthFormStatus.className = 'error text-center';
-                window.recaptchaVerifier.render().then((widgetId) => { grecaptcha.reset(widgetId); });
+        updateStatus("Sending OTP...", "loading");
+        auth.signInWithPhoneNumber(phoneNumber, recaptchaVerifier)
+            .then(res => {
+                window.confirmationResult = res;
+                updateStatus("OTP sent successfully!", "success");
+                renderOtpForm();
+            }).catch(err => {
+                updateStatus(`Error sending OTP. Please try again.`, "error");
+                grecaptcha.reset();
             });
-    });
+    }
 
-    verifyOtpBtn.addEventListener('click', () => {
-        const code = otpCodeInput.value;
+    function verifyOtp() {
+        const code = document.getElementById('otp-code').value;
         if (!code) {
-            phoneAuthFormStatus.textContent = "Please enter the OTP.";
-            phoneAuthFormStatus.className = 'error text-center';
+            updateStatus("Please enter the OTP.", "error");
             return;
         }
-        phoneAuthFormStatus.textContent = "Verifying...";
-        phoneAuthFormStatus.className = 'text-slate-400 text-center';
-        window.confirmationResult.confirm(code).then(() => {
-            phoneAuthFormStatus.textContent = 'Phone number verified! Redirecting...';
-            phoneAuthFormStatus.className = 'success text-center';
-            setTimeout(() => { window.location.href = 'index.html'; }, 2000);
-        }).catch(() => {
-            phoneAuthFormStatus.textContent = 'Invalid OTP. Please try again.';
-            phoneAuthFormStatus.className = 'error text-center';
-        });
-    });
+        updateStatus("Verifying...", "loading");
+        window.confirmationResult.confirm(code)
+            .then(() => redirectHome('Phone number verified!'))
+            .catch(() => updateStatus('Invalid OTP. Please try again.', "error"));
+    }
 
-    // --- Password Toggle Utility ---
-    const togglePassword = document.getElementById('toggle-password');
-    const passwordInput = document.getElementById('password');
-    togglePassword.addEventListener('click', () => {
-        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-        passwordInput.setAttribute('type', type);
-        togglePassword.classList.toggle('fa-eye');
-        togglePassword.classList.toggle('fa-eye-slash');
-    });
+    // --- UTILITY FUNCTIONS ---
+
+    function updateStatus(message, type) {
+        const statusEl = document.getElementById('form-status');
+        statusEl.textContent = message;
+        if (type === 'error') statusEl.className = 'error text-center';
+        else if (type === 'success') statusEl.className = 'success text-center';
+        else statusEl.className = 'text-slate-400 text-center';
+    }
+
+    function redirectHome(message) {
+        updateStatus(message + ' Redirecting...', 'success');
+        setTimeout(() => { window.location.href = 'index.html'; }, 1500);
+    }
+
+    // --- INITIALIZATION ---
+    window.onload = function () {
+      google.accounts.id.initialize({
+        client_id: '964191300629-ri9d35rqf4p0tgshv4k8u31r5rptmf9m.apps.googleusercontent.com',
+        callback: (res) => {
+          const cred = firebase.auth.GoogleAuthProvider.credential(res.credential);
+          auth.signInWithCredential(cred).then(() => redirectHome('Signed up successfully!'));
+        }
+      });
+      google.accounts.id.renderButton(document.getElementById('gsi_btn_container'), { theme: 'outline', size: 'large' });
+      renderEmailForm();
+    };
 </script>
 </body>
 </html>
