@@ -134,6 +134,7 @@
     
     .error { color: #F87171; font-size: 0.875rem; margin-top: 0.5rem; }
     .success { color: #4ADE80; font-size: 1rem; margin-top: 0.5rem; }
+    .hidden { display: none; }
   </style>
 </head>
 <body class="min-h-screen flex flex-col md:flex-row">
@@ -168,46 +169,67 @@
             <p class="text-slate-400 mt-2">Log in to continue your odyssey.</p>
         </div>
 
-        <form id="login-form" class="space-y-6">
-          
-          <button type="button" id="custom-google-btn" class="google-btn">
-              <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google icon">
-              <span>Continue with Google</span>
-          </button>
-          
-          <div class="divider">OR</div>
-          
-          <div class="input-group">
-            <i class="fas fa-envelope input-icon"></i>
-            <input type="email" id="email" name="email" required placeholder="Email" class="input-field" />
-          </div>
-          
-          <div class="input-group">
-            <i class="fas fa-lock input-icon"></i>
-            <input type="password" id="password" name="password" required placeholder="Password" class="input-field" />
-            <i class="fas fa-eye-slash password-toggle" id="toggle-password"></i>
-          </div>
-          
-          <div class="flex items-center justify-end text-sm">
-              <a href="forgotpass.html" class="text-slate-400 hover:text-[var(--primary)] transition-colors">Forgot Password?</a>
-          </div>
-          
-          <div class="pt-2">
-            <button type="submit" class="submit-btn w-full">
-              Log In
+        <div id="main-login-methods">
+            <form id="login-form" class="space-y-6">
+                <button type="button" id="custom-google-btn" class="google-btn">
+                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google icon">
+                    <span>Continue with Google</span>
+                </button>
+                <div class="divider">OR</div>
+                <div class="input-group">
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input type="email" id="email" name="email" required placeholder="Email" class="input-field" />
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" id="password" name="password" required placeholder="Password" class="input-field" />
+                    <i class="fas fa-eye-slash password-toggle" id="toggle-password"></i>
+                </div>
+                <div class="flex items-center justify-end text-sm">
+                    <a href="forgotpass.html" class="text-slate-400 hover:text-[var(--primary)] transition-colors">Forgot Password?</a>
+                </div>
+                <div class="pt-2">
+                    <button type="submit" class="submit-btn w-full">Log In</button>
+                </div>
+            </form>
+            <div class="divider">OR</div>
+            <button id="show-phone-login-btn" class="google-btn">
+                <i class="fas fa-phone-alt mr-2"></i>
+                <span>Continue with Phone</span>
             </button>
-            <p id="form-status" class="mt-4 text-center"></p>
-          </div>
-          
-          <div class="text-center text-slate-400">
+        </div>
+
+        <div id="phone-auth-container" class="hidden">
+            <div id="phone-input-section" class="space-y-6">
+                <div class="input-group">
+                    <i class="fas fa-phone-alt input-icon"></i>
+                    <input type="tel" id="phone-number" name="phone-number" placeholder="Phone (e.g. +16505551234)" required class="input-field" />
+                </div>
+                <button id="send-otp-btn" class="submit-btn w-full">Send OTP</button>
+            </div>
+            <div id="otp-input-section" class="hidden space-y-6">
+                <div class="input-group">
+                    <i class="fas fa-key input-icon"></i>
+                    <input type="text" id="otp-code" name="otp-code" placeholder="Enter 6-digit OTP" required class="input-field" />
+                </div>
+                <button id="verify-otp-btn" class="submit-btn w-full">Verify & Login</button>
+            </div>
+            <div class="text-center text-sm mt-6">
+                <a href="#" id="back-to-email-btn" class="text-slate-400 hover:text-[var(--primary)] transition-colors">Back to other login methods</a>
+            </div>
+        </div>
+        
+        <p id="form-status" class="mt-4 text-center"></p>
+
+        <div id="signup-link-container" class="text-center text-slate-400 mt-6">
             Don't have an account? <a href="signup.html" class="text-[var(--primary)] hover:underline font-semibold">Sign Up</a>
-          </div>
-        </form>
+        </div>
       </div>
     </div>
   </main>
   
   <div id="gsi_btn_container" style="display: none;"></div>
+  <div id="recaptcha-container"></div>
 
 <script>
     // --- Firebase Configuration ---
@@ -250,12 +272,16 @@
       );
       
       // --- 3. Phone (SMS) Authentication Setup ---
-      // FIX: Check if the reCAPTCHA container exists before initializing
-      if (document.getElementById('recaptcha-container')) {
-          window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-            'size': 'invisible'
-          });
-      }
+      // UPDATED: Initialize reCAPTCHA verifier
+      window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+        'size': 'invisible',
+        'callback': (response) => {
+          // This callback is for a solved reCAPTCHA, usually needed for visible widgets
+        },
+        'expired-callback': () => {
+          // Response expired. Ask user to solve reCAPTCHA again.
+        }
+      });
     };
 
     document.getElementById('custom-google-btn').addEventListener('click', () => {
@@ -270,18 +296,19 @@
         const password = document.getElementById('password').value;
         const statusEl = document.getElementById('form-status');
 
-        statusEl.textContent = '';
+        statusEl.textContent = 'Logging in...';
+        statusEl.className = 'text-slate-400 text-center';
         
         auth.signInWithEmailAndPassword(email, password)
           .then((userCredential) => {
-            statusEl.textContent = 'Firebase login successful! Redirecting...';
+            statusEl.textContent = 'Login successful! Redirecting...';
             statusEl.className = 'success text-center';
             setTimeout(() => { window.location.href = 'index.html'; }, 1500);
           })
           .catch((error) => {
-            let errorMessage = "Invalid credentials for Firebase account.";
+            let errorMessage = "Invalid credentials provided.";
             if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-                errorMessage = 'Invalid email or password for Firebase account.';
+                errorMessage = 'Invalid email or password.';
             }
             statusEl.textContent = errorMessage;
             statusEl.className = 'error text-center';
@@ -289,6 +316,25 @@
     });
     
     // --- 3. Phone (SMS) Authentication Logic ---
+    const mainLoginMethods = document.getElementById('main-login-methods');
+    const phoneAuthContainer = document.getElementById('phone-auth-container');
+    const showPhoneLoginBtn = document.getElementById('show-phone-login-btn');
+    const backToEmailBtn = document.getElementById('back-to-email-btn');
+
+    showPhoneLoginBtn.addEventListener('click', () => {
+        mainLoginMethods.classList.add('hidden');
+        phoneAuthContainer.classList.remove('hidden');
+        document.getElementById('signup-link-container').classList.add('hidden');
+    });
+
+    backToEmailBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        mainLoginMethods.classList.remove('hidden');
+        phoneAuthContainer.classList.add('hidden');
+        document.getElementById('signup-link-container').classList.remove('hidden');
+        document.getElementById('form-status').textContent = '';
+    });
+
     const sendOtpBtn = document.getElementById('send-otp-btn');
     const verifyOtpBtn = document.getElementById('verify-otp-btn');
     const phoneNumberInput = document.getElementById('phone-number');
@@ -297,57 +343,55 @@
     const phoneSection = document.getElementById('phone-input-section');
     const otpSection = document.getElementById('otp-input-section');
 
-    // FIX: Check if these elements exist before adding event listeners
-    if (sendOtpBtn && verifyOtpBtn && phoneSection && otpSection) {
-        sendOtpBtn.addEventListener('click', () => {
-            const phoneNumber = phoneNumberInput.value;
-            if (!phoneNumber) {
-                phoneAuthFormStatus.textContent = "Please enter a phone number.";
-                phoneAuthFormStatus.className = 'error text-center';
-                return;
-            }
-            const appVerifier = window.recaptchaVerifier;
-            
-            phoneAuthFormStatus.textContent = "Sending OTP...";
-            phoneAuthFormStatus.className = 'text-slate-400 text-center';
+    sendOtpBtn.addEventListener('click', () => {
+        const phoneNumber = phoneNumberInput.value;
+        if (!phoneNumber) {
+            phoneAuthFormStatus.textContent = "Please enter a phone number.";
+            phoneAuthFormStatus.className = 'error text-center';
+            return;
+        }
+        const appVerifier = window.recaptchaVerifier;
+        
+        phoneAuthFormStatus.textContent = "Sending OTP...";
+        phoneAuthFormStatus.className = 'text-slate-400 text-center';
 
-            auth.signInWithPhoneNumber(phoneNumber, appVerifier)
-                .then((confirmationResult) => {
-                    window.confirmationResult = confirmationResult;
-                    phoneAuthFormStatus.textContent = "OTP sent successfully!";
-                    phoneAuthFormStatus.className = 'success text-center';
-                    phoneSection.classList.add('hidden');
-                    otpSection.classList.remove('hidden');
-                }).catch((error) => {
-                    console.error("SMS Error:", error);
-                    phoneAuthFormStatus.textContent = `Error: ${error.message}`;
-                    phoneAuthFormStatus.className = 'error text-center';
-                    recaptchaVerifier.render().then((widgetId) => {
-                        grecaptcha.reset(widgetId);
-                    });
-                });
-        });
-
-        verifyOtpBtn.addEventListener('click', () => {
-            const code = otpCodeInput.value;
-            if (!code) {
-                phoneAuthFormStatus.textContent = "Please enter the OTP.";
-                phoneAuthFormStatus.className = 'error text-center';
-                return;
-            }
-            phoneAuthFormStatus.textContent = "Verifying...";
-            phoneAuthFormStatus.className = 'text-slate-400 text-center';
-
-            window.confirmationResult.confirm(code).then((result) => {
-                phoneAuthFormStatus.textContent = 'Phone number verified! Redirecting...';
+        auth.signInWithPhoneNumber(phoneNumber, appVerifier)
+            .then((confirmationResult) => {
+                window.confirmationResult = confirmationResult;
+                phoneAuthFormStatus.textContent = "OTP sent successfully!";
                 phoneAuthFormStatus.className = 'success text-center';
-                setTimeout(() => { window.location.href = 'index.html'; }, 2000);
+                phoneSection.classList.add('hidden');
+                otpSection.classList.remove('hidden');
             }).catch((error) => {
-                phoneAuthFormStatus.textContent = 'Invalid OTP. Please try again.';
+                console.error("SMS Error:", error);
+                phoneAuthFormStatus.textContent = `Error sending OTP. Please check the number and try again.`;
                 phoneAuthFormStatus.className = 'error text-center';
+                // Reset the reCAPTCHA on error
+                window.recaptchaVerifier.render().then((widgetId) => {
+                    grecaptcha.reset(widgetId);
+                });
             });
+    });
+
+    verifyOtpBtn.addEventListener('click', () => {
+        const code = otpCodeInput.value;
+        if (!code) {
+            phoneAuthFormStatus.textContent = "Please enter the OTP.";
+            phoneAuthFormStatus.className = 'error text-center';
+            return;
+        }
+        phoneAuthFormStatus.textContent = "Verifying...";
+        phoneAuthFormStatus.className = 'text-slate-400 text-center';
+
+        window.confirmationResult.confirm(code).then((result) => {
+            phoneAuthFormStatus.textContent = 'Phone number verified! Redirecting...';
+            phoneAuthFormStatus.className = 'success text-center';
+            setTimeout(() => { window.location.href = 'index.html'; }, 2000);
+        }).catch((error) => {
+            phoneAuthFormStatus.textContent = 'Invalid OTP. Please try again.';
+            phoneAuthFormStatus.className = 'error text-center';
         });
-    }
+    });
 
     // --- Password Toggle Utility ---
     const togglePassword = document.getElementById('toggle-password');
@@ -358,7 +402,6 @@
         togglePassword.classList.toggle('fa-eye');
         togglePassword.classList.toggle('fa-eye-slash');
     });
-  </script>
+</script>
 </body>
 </html>
-
