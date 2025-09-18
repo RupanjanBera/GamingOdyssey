@@ -8,9 +8,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css"/>
+
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
     :root {
@@ -30,6 +31,21 @@
       background-attachment: fixed;
     }
     .tech-font { font-family: 'Orbitron', sans-serif; }
+    .sidebar {
+      background: linear-gradient(180deg, var(--mid) 0%, var(--dark) 100%);
+      box-shadow: 4px 0 15px rgba(59, 130, 246, 0.1);
+    }
+    .nav-link {
+      position: relative; transition: all 0.3s ease;
+    }
+    .nav-link::after {
+      content: ''; position: absolute; width: 0; height: 2px;
+      bottom: -4px; left: 0;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover::after { width: 100%; }
+    
     .form-container {
       background: rgba(30, 41, 59, 0.6);
       backdrop-filter: blur(10px);
@@ -38,6 +54,11 @@
       box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
       transition: all 0.3s ease;
     }
+    .form-container:hover {
+        border-color: rgba(217, 70, 239, 0.4);
+        box-shadow: 0 0 25px rgba(217, 70, 239, 0.2);
+    }
+    
     .input-group { position: relative; }
     .input-icon {
       position: absolute;
@@ -45,6 +66,7 @@
       top: 50%;
       transform: translateY(-50%);
       color: #94A3B8;
+      transition: color 0.3s ease;
     }
     .input-field {
       background: rgba(15, 23, 42, 0.8);
@@ -54,36 +76,34 @@
       padding: 0.75rem 0.75rem 0.75rem 3rem;
       width: 100%;
       transition: all 0.3s ease;
-      height: 48px;
     }
     .input-field:focus {
       outline: none;
       border-color: var(--primary);
       box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
     }
-    .iti { display: block; }
-    .iti__input {
-      background: rgba(15, 23, 42, 0.8) !important;
-      color: var(--light) !important;
-      border: 1px solid var(--mid) !important;
-      border-radius: 0.5rem !important;
-      padding: 0.75rem 0.75rem 0.75rem 58px !important;
-      width: 100% !important;
-      transition: all 0.3s ease !important;
-      height: 48px !important;
+    .input-field:focus ~ .input-icon { color: var(--primary); }
+
+    .country-code-select {
+        background: rgba(15, 23, 42, 0.8);
+        color: var(--light);
+        border: 1px solid var(--mid);
+        border-right: none;
+        border-radius: 0.5rem 0 0 0.5rem;
+        padding: 0.75rem;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
     }
-    .iti__input:focus {
-      outline: none !important;
-      border-color: var(--primary) !important;
-      box-shadow: 0 0 10px rgba(59, 130, 246, 0.3) !important;
+    .country-code-select:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
     }
-    .iti__country-list {
-      background-color: var(--mid) !important;
-      border-color: var(--primary) !important;
-    }
-    .iti__dial-code { color: #94A3B8; }
-    .iti__country:hover, .iti__country.iti__highlight {
-      background-color: rgba(59, 130, 246, 0.2) !important;
+
+    .password-toggle {
+      position: absolute; right: 1rem; top: 50%;
+      transform: translateY(-50%); cursor: pointer; color: #94A3B8;
     }
     .submit-btn {
       background: linear-gradient(90deg, var(--primary), var(--secondary));
@@ -91,29 +111,38 @@
       border-radius: 0.5rem; transition: all 0.3s ease;
       box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
       border: none;
+      cursor: pointer;
     }
     .submit-btn:hover {
       transform: translateY(-3px);
       box-shadow: 0 6px 20px rgba(217, 70, 239, 0.3);
     }
-    /* ADDED: Disabled state for button */
-    .submit-btn:disabled {
-        background: var(--mid);
-        cursor: not-allowed;
-        box-shadow: none;
-        transform: none;
-    }
+    
     .google-btn {
-      display: flex; align-items: center; justify-content: center;
-      gap: 0.75rem; width: 100%; padding: 0.75rem 1.5rem;
-      border-radius: 0.5rem; font-weight: 600; color: var(--light);
-      background: var(--mid); border: 1px solid var(--mid);
-      transition: all 0.3s ease; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 0.75rem; width: 100%; padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem; font-weight: 600; color: var(--light); background: var(--mid);
+      border: 1px solid var(--mid); transition: all 0.3s ease; cursor: pointer;
     }
     .google-btn:hover {
       border-color: var(--primary);
       box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+      transform: translateY(-3px);
     }
+    .google-btn img { width: 1.25rem; height: 1.25rem; }
+
+    .divider {
+      display: flex; align-items: center; text-align: center; color: #64748B; margin: 1.5rem 0; font-size: 0.875rem;
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1; border-bottom: 1px solid #334155;
+    }
+    .divider:not(:empty)::before { margin-right: .75em; }
+    .divider:not(:empty)::after { margin-left: .75em; }
+    
+    .error { color: #F87171; font-size: 0.875rem; text-align: center; }
+    .success { color: #4ADE80; font-size: 0.875rem; text-align: center; }
+    .info { color: #94A3B8; font-size: 0.875rem; text-align: center; }
+
     .hidden { display: none; }
   </style>
 </head>
@@ -149,11 +178,61 @@
             <p class="text-slate-400 mt-2">Log in to continue your odyssey.</p>
         </div>
 
-        <div id="auth-form-container">
-            </div>
-        
-        <p id="form-status" class="mt-4 text-center"></p>
+        <div class="space-y-4">
+            <button type="button" id="custom-google-btn" class="google-btn">
+                <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google icon">
+                <span>Continue with Google</span>
+            </button>
+            <div class="divider">OR</div>
+        </div>
 
+        <div id="phone-auth-section" class="space-y-4">
+            <div id="phone-input-section">
+                <div class="flex">
+                    <select id="country-code" name="country-code" class="country-code-select">
+                        <option value="+91" selected>IN +91</option>
+                        <option value="+1">US +1</option>
+                        <option value="+44">UK +44</option>
+                        <option value="+61">AU +61</option>
+                    </select>
+                    <div class="input-group flex-1">
+                        <i class="fas fa-phone input-icon"></i>
+                        <input type="tel" id="phone-number" name="phone-number" placeholder="Phone Number" class="input-field rounded-l-none" style="padding-left: 3rem;"/>
+                    </div>
+                </div>
+                <button type="button" id="send-otp-btn" class="submit-btn w-full mt-4">Send OTP</button>
+            </div>
+            <div id="otp-input-section" class="hidden">
+                <div class="input-group">
+                    <i class="fas fa-key input-icon"></i>
+                    <input type="text" id="otp-code" name="otp-code" placeholder="Enter 6-digit OTP" class="input-field" />
+                </div>
+                <button type="button" id="verify-otp-btn" class="submit-btn w-full mt-4">Verify & Log In</button>
+            </div>
+             <p id="phone-form-status" class="mt-2"></p>
+        </div>
+
+        <div class="divider">OR</div>
+
+        <form id="login-form" class="space-y-4">
+          <div class="input-group">
+            <i class="fas fa-envelope input-icon"></i>
+            <input type="email" id="email" name="email" required placeholder="Email" class="input-field" />
+          </div>
+          <div class="input-group">
+            <i class="fas fa-lock input-icon"></i>
+            <input type="password" id="password" name="password" required placeholder="Password" class="input-field" />
+            <i class="fas fa-eye-slash password-toggle" id="toggle-password"></i>
+          </div>
+          <div class="flex items-center justify-end text-sm">
+              <a href="forgotpass.html" class="text-slate-400 hover:text-[var(--primary)] transition-colors">Forgot Password?</a>
+          </div>
+          <div class="pt-1">
+            <button type="submit" class="submit-btn w-full">Log In with Email</button>
+            <p id="email-form-status" class="mt-2"></p>
+          </div>
+        </form>
+        
         <div class="text-center text-slate-400 mt-6">
             Don't have an account? <a href="signup.html" class="text-[var(--primary)] hover:underline font-semibold">Sign Up</a>
         </div>
@@ -162,9 +241,10 @@
   </main>
   
   <div id="gsi_btn_container" style="display: none;"></div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
+  <div id="recaptcha-container"></div>
 
 <script>
+    // --- Firebase Configuration ---
     const firebaseConfig = {
       apiKey:"AIzaSyDA218WauVZNgqeMgiR_5H6TLYQB5HXZkY",
       authDomain: "gamingodyssey-2e642.firebaseapp.com",
@@ -174,197 +254,143 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
-    const authFormContainer = document.getElementById('auth-form-container');
-    let iti; // To hold intl-tel-input instance
-    let recaptchaVerifier; // To hold reCAPTCHA instance
+    // --- Google OAuth ---
+    function handleCredentialResponse(response) {
+      const statusEl = document.getElementById('email-form-status');
+      const id_token = response.credential;
+      const credential = firebase.auth.GoogleAuthProvider.credential(id_token);
 
-    // --- TEMPLATE RENDERERS ---
-
-    function renderEmailForm() {
-        authFormContainer.innerHTML = `
-            <form id="login-form" class="space-y-6">
-                <button type="button" id="custom-google-btn" class="google-btn">
-                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google icon">
-                    <span>Continue with Google</span>
-                </button>
-                <div class="flex items-center text-center text-slate-400 text-sm">
-                    <span class="flex-1 border-b border-slate-700"></span>
-                    <span class="px-3">OR</span>
-                    <span class="flex-1 border-b border-slate-700"></span>
-                </div>
-                <div class="input-group">
-                    <i class="fas fa-envelope input-icon"></i>
-                    <input type="email" id="email" name="email" required placeholder="Email" class="input-field" />
-                </div>
-                <div class="input-group">
-                    <i class="fas fa-lock input-icon"></i>
-                    <input type="password" id="password" name="password" required placeholder="Password" class="input-field" />
-                </div>
-                <div class="flex items-center justify-end text-sm">
-                    <a href="#" id="show-phone-login-btn" class="text-slate-400 hover:text-[var(--primary)] transition-colors">Login with Phone Instead</a>
-                </div>
-                <div class="pt-2">
-                    <button type="submit" class="submit-btn w-full">Log In</button>
-                </div>
-            </form>
-        `;
-        addEmailFormListeners();
-    }
-
-    function renderPhoneForm() {
-        authFormContainer.innerHTML = `
-            <div id="phone-login-section" class="space-y-6">
-                <h3 class="text-xl font-bold text-center text-white">Login with Phone</h3>
-                <p class="text-slate-400 text-center text-sm -mt-4">Enter your number to receive a verification code.</p>
-                <div class="input-group">
-                    <input type="tel" id="phone-number" name="phone-number" required />
-                </div>
-                <div id="recaptcha-container" class="my-4 flex justify-center"></div>
-                <button id="send-otp-btn" class="submit-btn w-full" disabled>Send OTP</button>
-                <div class="text-center text-sm">
-                    <a href="#" id="back-to-email-btn" class="text-slate-400 hover:text-[var(--primary)] transition-colors">or Login with Email</a>
-                </div>
-            </div>
-        `;
-        addPhoneFormListeners();
-    }
-
-    function renderOtpForm() {
-        authFormContainer.innerHTML = `
-            <div id="otp-section" class="space-y-6">
-                 <h3 class="text-xl font-bold text-center text-white">Enter OTP</h3>
-                 <p class="text-slate-400 text-center text-sm -mt-4">We've sent a 6-digit code to your phone.</p>
-                <div class="input-group">
-                    <i class="fas fa-key input-icon"></i>
-                    <input type="text" id="otp-code" name="otp-code" placeholder="6-Digit Code" required class="input-field" />
-                </div>
-                <button id="verify-otp-btn" class="submit-btn w-full">Verify & Login</button>
-            </div>
-        `;
-        document.getElementById('verify-otp-btn').addEventListener('click', verifyOtp);
-    }
-
-    // --- EVENT LISTENER ATTACHMENT ---
-
-    function addEmailFormListeners() {
-        document.getElementById('login-form').addEventListener('submit', handleEmailLogin);
-        document.getElementById('custom-google-btn').addEventListener('click', handleGoogleLogin);
-        document.getElementById('show-phone-login-btn').addEventListener('click', (e) => {
-            e.preventDefault();
-            renderPhoneForm();
+      auth.signInWithCredential(credential)
+        .then(() => {
+          statusEl.textContent = 'Signed in successfully! Redirecting...';
+          statusEl.className = 'success';
+          setTimeout(() => { window.location.href = 'index.html'; }, 1500);
+        })
+        .catch((error) => {
+          statusEl.textContent = error.message;
+          statusEl.className = 'error';
         });
     }
 
-    function addPhoneFormListeners() {
-        const phoneNumberInput = document.querySelector("#phone-number");
-        iti = window.intlTelInput(phoneNumberInput, {
-            initialCountry: "auto",
-            geoIpLookup: (success) => fetch("https://ipapi.co/json").then(res => res.json()).then(data => success(data.country_code)),
-            separateDialCode: true,
-            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js",
-        });
+    window.onload = function () {
+      // Initialize Google Sign-In
+      google.accounts.id.initialize({
+        client_id: '964191300629-ri9d35rqf4p0tgshv4k8u31r5rptmf9m.apps.googleusercontent.com',
+        callback: handleCredentialResponse
+      });
+      google.accounts.id.renderButton(
+        document.getElementById('gsi_btn_container'), 
+        { theme: 'outline', size: 'large' }
+      );
+      
+      // Initialize reCAPTCHA Verifier
+      window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+        'size': 'invisible'
+      });
+    };
 
-        // MODIFIED: Setup for VISIBLE reCAPTCHA
-        recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-            'size': 'normal',
-            'callback': (response) => {
-                // reCAPTCHA solved, enable the button.
-                document.getElementById('send-otp-btn').disabled = false;
-            },
-            'expired-callback': () => {
-                // Response expired. Disable button.
-                document.getElementById('send-otp-btn').disabled = true;
-            }
-        });
-        recaptchaVerifier.render(); // Render the visible widget
-
-        document.getElementById('send-otp-btn').addEventListener('click', sendOtp);
-        document.getElementById('back-to-email-btn').addEventListener('click', (e) => {
-            e.preventDefault();
-            renderEmailForm();
-        });
-    }
-
-    // --- AUTHENTICATION LOGIC ---
-
-    function handleGoogleLogin() {
+    document.getElementById('custom-google-btn').addEventListener('click', () => {
         const googleButton = document.querySelector('#gsi_btn_container div[role=button]');
-        if (googleButton) googleButton.click();
-    }
+        if (googleButton) { googleButton.click(); }
+    });
 
-    function handleEmailLogin(event) {
+    // --- Email/Password Login ---
+    document.getElementById('login-form').addEventListener('submit', function(event) {
         event.preventDefault();
         const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value;
-        const statusEl = document.getElementById('form-status');
-        statusEl.textContent = 'Logging in...';
-        statusEl.className = 'text-slate-400 text-center';
-        auth.signInWithEmailAndPassword(email, password)
-          .then(() => redirectHome('Login successful!'))
-          .catch(err => updateStatus('Invalid email or password.', 'error'));
-    }
+        const statusEl = document.getElementById('email-form-status');
 
-    function sendOtp() {
-        const phoneNumber = iti.getNumber();
-        if (!iti.isValidNumber()) {
-            updateStatus("Please enter a valid phone number.", "error");
+        statusEl.textContent = '';
+        
+        auth.signInWithEmailAndPassword(email, password)
+          .then(() => {
+            statusEl.textContent = 'Login successful! Redirecting...';
+            statusEl.className = 'success';
+            setTimeout(() => { window.location.href = 'index.html'; }, 1500);
+          })
+          .catch((error) => {
+            let errorMessage = "Invalid credentials provided.";
+            if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                errorMessage = 'Invalid email or password.';
+            }
+            statusEl.textContent = errorMessage;
+            statusEl.className = 'error';
+          });
+    });
+    
+    // --- Phone (SMS) Authentication ---
+    const sendOtpBtn = document.getElementById('send-otp-btn');
+    const verifyOtpBtn = document.getElementById('verify-otp-btn');
+    const phoneNumberInput = document.getElementById('phone-number');
+    const countryCodeSelect = document.getElementById('country-code');
+    const otpCodeInput = document.getElementById('otp-code');
+    const phoneStatusEl = document.getElementById('phone-form-status');
+    const phoneSection = document.getElementById('phone-input-section');
+    const otpSection = document.getElementById('otp-input-section');
+
+    sendOtpBtn.addEventListener('click', () => {
+        const countryCode = countryCodeSelect.value;
+        const phoneNumber = phoneNumberInput.value.trim();
+
+        if (!phoneNumber || !/^\d{10}$/.test(phoneNumber)) { // Basic 10-digit validation
+            phoneStatusEl.textContent = "Please enter a valid 10-digit phone number.";
+            phoneStatusEl.className = 'error';
             return;
         }
-        updateStatus("Sending OTP...", "loading");
-        auth.signInWithPhoneNumber(phoneNumber, recaptchaVerifier)
+        const fullPhoneNumber = countryCode + phoneNumber;
+        const appVerifier = window.recaptchaVerifier;
+        
+        phoneStatusEl.textContent = "Sending OTP...";
+        phoneStatusEl.className = 'info';
+
+        auth.signInWithPhoneNumber(fullPhoneNumber, appVerifier)
             .then((confirmationResult) => {
                 window.confirmationResult = confirmationResult;
-                updateStatus("OTP sent successfully!", "success");
-                renderOtpForm();
+                phoneStatusEl.textContent = "OTP sent successfully!";
+                phoneStatusEl.className = 'success';
+                phoneSection.classList.add('hidden');
+                otpSection.classList.remove('hidden');
             }).catch((error) => {
                 console.error("SMS Error:", error);
-                updateStatus(`Error sending OTP. Please try again.`, "error");
-                // Reset reCAPTCHA on error
-                grecaptcha.reset();
+                phoneStatusEl.textContent = `Error: ${error.message}`;
+                phoneStatusEl.className = 'error';
+                // Reset reCAPTCHA if it fails
+                window.recaptchaVerifier.render().then((widgetId) => {
+                    grecaptcha.reset(widgetId);
+                });
             });
-    }
+    });
 
-    function verifyOtp() {
-        const code = document.getElementById('otp-code').value;
-        if (!code) {
-            updateStatus("Please enter the OTP.", "error");
+    verifyOtpBtn.addEventListener('click', () => {
+        const code = otpCodeInput.value.trim();
+        if (!code || code.length !== 6) {
+            phoneStatusEl.textContent = "Please enter the 6-digit OTP.";
+            phoneStatusEl.className = 'error';
             return;
         }
-        updateStatus("Verifying...", "loading");
-        window.confirmationResult.confirm(code)
-            .then(() => redirectHome('Phone number verified!'))
-            .catch(() => updateStatus('Invalid OTP. Please try again.', "error"));
-    }
-    
-    // --- UTILITY FUNCTIONS ---
+        phoneStatusEl.textContent = "Verifying...";
+        phoneStatusEl.className = 'info';
 
-    function updateStatus(message, type) {
-        const statusEl = document.getElementById('form-status');
-        statusEl.textContent = message;
-        if (type === 'error') statusEl.className = 'error text-center';
-        else if (type === 'success') statusEl.className = 'success text-center';
-        else statusEl.className = 'text-slate-400 text-center';
-    }
+        window.confirmationResult.confirm(code).then(() => {
+            phoneStatusEl.textContent = 'Phone number verified! Redirecting...';
+            phoneStatusEl.className = 'success';
+            setTimeout(() => { window.location.href = 'index.html'; }, 2000);
+        }).catch(() => {
+            phoneStatusEl.textContent = 'Invalid OTP. Please try again.';
+            phoneStatusEl.className = 'error';
+        });
+    });
 
-    function redirectHome(message) {
-        updateStatus(message + ' Redirecting...', 'success');
-        setTimeout(() => { window.location.href = 'index.html'; }, 1500);
-    }
-
-    // --- INITIALIZATION ---
-    window.onload = function () {
-      google.accounts.id.initialize({
-        client_id: '964191300629-ri9d35rqf4p0tgshv4k8u31r5rptmf9m.apps.googleusercontent.com',
-        callback: (res) => {
-          const cred = firebase.auth.GoogleAuthProvider.credential(res.credential);
-          auth.signInWithCredential(cred).then(() => redirectHome('Signed in successfully!'));
-        }
-      });
-      google.accounts.id.renderButton(document.getElementById('gsi_btn_container'), { theme: 'outline', size: 'large' });
-      
-      // Start with the email form
-      renderEmailForm();
-    };
-</script>
+    // --- Password Toggle Utility ---
+    const togglePassword = document.getElementById('toggle-password');
+    const passwordInput = document.getElementById('password');
+    togglePassword.addEventListener('click', () => {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        togglePassword.classList.toggle('fa-eye');
+        togglePassword.classList.toggle('fa-eye-slash');
+    });
+  </script>
 </body>
 </html>
