@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GamingOdyssey Users Database</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js for graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- date-fns for better date formatting -->
+    <script src="https://cdn.jsdelivr.net/npm/date-fns@2.29.3/cdn.min.js"></script>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a; /* bg-slate-900 */
+        }
+        /* Custom scrollbar for a modern look */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb {
+            background: #4f46e5; /* bg-indigo-600 */
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover { background: #6366f1; /* bg-indigo-500 */ }
+
+        /* Glassmorphism effect class */
+        .glass-card {
+            background: rgba(30, 41, 59, 0.5); /* bg-slate-800 with opacity */
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(51, 65, 85, 0.5); /* border-slate-700 with opacity */
+        }
+        
+        /* Custom styles for Chart.js tooltips */
+        .chartjs-tooltip {
+            background: rgba(15, 23, 42, 0.8) !important;
+            border: 1px solid #334155 !important;
+        }
+    </style>
+</head>
+<body class="text-slate-200">
+
+    <!-- Password Protection Modal -->
+    <div id="password-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md flex items-center justify-center z-50 transition-opacity duration-300">
+        <div class="bg-slate-800/50 p-8 rounded-2xl shadow-2xl border border-slate-700 w-full max-w-sm transform transition-all scale-95 opacity-0" id="password-box">
+            <div class="text-center mb-6">
+                 <h1 class="text-3xl font-bold text-white mb-2 tracking-tight">GamingOdyssey</h1>
+                 <p class="text-slate-400">Users Database</p>
+            </div>
+            <form id="password-form">
+                <div class="mb-4 relative">
+                    <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    <input type="password" id="password" placeholder="Enter Access Code" class="w-full pl-10 pr-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
+                </div>
+                <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-indigo-500 transition-all duration-300 transform hover:scale-105">
+                    Access Dashboard
+                </button>
+                <p id="error-message" class="text-red-400 text-center mt-4 text-sm h-5"></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Dashboard Content (Initially Hidden) -->
+    <main id="dashboard-content" class="hidden p-4 sm:p-6 lg:p-8 opacity-0 transition-opacity duration-500">
+        <div class="max-w-screen-2xl mx-auto">
+            <!-- Header -->
+            <header class="mb-8 flex justify-between items-center">
+                <div>
+                    <h1 class="text-4xl font-extrabold text-white tracking-tight">Users Database</h1>
+                    <p class="text-slate-400 mt-1">Real-time analytics for GamingOdyssey.</p>
+                </div>
+            </header>
+
+            <!-- Loading Indicator -->
+             <div id="loading-indicator" class="flex flex-col items-center justify-center py-24">
+                <div role="status" class="h-12 w-12 animate-spin rounded-full border-4 border-solid border-indigo-500 border-r-transparent"></div>
+                <p class="mt-4 text-lg font-medium text-slate-300">Connecting to Firebase & Fetching Data...</p>
+            </div>
+
+            <!-- Dashboard Grid -->
+            <div id="dashboard-grid" class="hidden">
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="glass-card p-6 rounded-2xl flex items-center space-x-4">
+                        <div class="bg-indigo-600/20 p-3 rounded-lg"><svg class="w-6 h-6 text-indigo-400" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+                        <div><p class="text-sm text-slate-400">Total Users</p><p id="total-users" class="text-2xl font-bold text-white">0</p></div>
+                    </div>
+                    <div class="glass-card p-6 rounded-2xl flex items-center space-x-4">
+                        <div class="bg-emerald-600/20 p-3 rounded-lg"><svg class="w-6 h-6 text-emerald-400" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></div>
+                        <div><p class="text-sm text-slate-400">New Users (Today)</p><p id="new-today" class="text-2xl font-bold text-white">0</p></div>
+                    </div>
+                    <div class="glass-card p-6 rounded-2xl flex items-center space-x-4">
+                        <div class="bg-sky-600/20 p-3 rounded-lg"><svg class="w-6 h-6 text-sky-400" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 6v6l4 2"/></svg></div>
+                        <div><p class="text-sm text-slate-400">Active Users (Today)</p><p id="active-today" class="text-2xl font-bold text-white">0</p></div>
+                    </div>
+                    <div class="glass-card p-6 rounded-2xl flex items-center space-x-4">
+                        <div class="bg-amber-600/20 p-3 rounded-lg"><svg class="w-6 h-6 text-amber-400" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20"/><path d="M12 2v20"/></svg></div>
+                        <div><p class="text-sm text-slate-400">Avg. Daily Signups</p><p id="avg-daily" class="text-2xl font-bold text-white">0</p></div>
+                    </div>
+                </div>
+
+                <!-- Charts -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                    <div class="lg:col-span-2 glass-card p-6 rounded-2xl"><h3 class="font-semibold text-white mb-4">Weekly Signups</h3><div class="h-80"><canvas id="weeklySignupsChart"></canvas></div></div>
+                    <div class="glass-card p-6 rounded-2xl"><h3 class="font-semibold text-white mb-4">Users by Provider</h3><div class="h-80"><canvas id="providerChart"></canvas></div></div>
+                </div>
+
+                <!-- Users Table -->
+                <div class="glass-card rounded-2xl">
+                    <div class="p-6 border-b border-slate-700 flex justify-between items-center">
+                        <h3 class="font-semibold text-white">All Users</h3>
+                        <input type="text" id="search-users" placeholder="Search by email or UID..." class="w-full max-w-xs px-4 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left text-slate-300">
+                            <thead class="text-xs text-slate-400 uppercase bg-slate-700/50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">Identifier</th>
+                                    <th scope="col" class="px-6 py-3">Provider</th>
+                                    <th scope="col" class="px-6 py-3">Date Created</th>
+                                    <th scope="col" class="px-6 py-3">Last Sign-In</th>
+                                    <th scope="col" class="px-6 py-3">User UID</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-table-body"></tbody>
+                        </table>
+                    </div>
+                     <div id="no-results" class="text-center py-12 text-slate-400 hidden"><p>No users found matching your search.</p></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        // --- Firebase SDKs ---
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        
+        // --- IMPORTANT: PASTE YOUR FIREBASE CONFIG HERE ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyDA218WauVZNgqeMgiR_5H6TLYQB5HXZkY",
+            authDomain: "gamingodyssey-2e642.firebaseapp.com",
+            databaseURL: "https://gamingodyssey-2e642-default-rtdb.firebaseio.com",
+            projectId: "gamingodyssey-2e642",
+            storageBucket: "gamingodyssey-2e642.firebasestorage.app",
+            messagingSenderId: "964191300629",
+            appId: "1:964191300629:web:4be869d43fd0afeb00321c",
+            measurementId: "G-VS888VHFJJ"
+        };
+
+        // --- PASSWORD PROTECTION ---
+        const CORRECT_PASSWORD = "gaming2025";
+        const passwordForm = document.getElementById('password-form');
+        const passwordInput = document.getElementById('password');
+        const errorMessage = document.getElementById('error-message');
+        const passwordModal = document.getElementById('password-modal');
+        const dashboardContent = document.getElementById('dashboard-content');
+        const passwordBox = document.getElementById('password-box');
+
+        // Animate password box on load
+        window.onload = () => {
+             passwordBox.classList.remove('scale-95', 'opacity-0');
+        };
+
+        passwordForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (passwordInput.value === CORRECT_PASSWORD) {
+                passwordModal.classList.add('opacity-0', 'pointer-events-none');
+                dashboardContent.classList.remove('hidden');
+                setTimeout(() => dashboardContent.classList.remove('opacity-0'), 50); // Fade in
+                initializeAppAndFetchData();
+            } else {
+                errorMessage.textContent = 'Incorrect Access Code.';
+                passwordBox.classList.add('animate-shake');
+                setTimeout(() => {
+                    errorMessage.textContent = '';
+                    passwordBox.classList.remove('animate-shake');
+                }, 3000);
+            }
+        });
+        
+        // Add a simple shake animation
+        const style = document.createElement('style');
+        style.innerHTML = `@keyframes shake {
+            0%, 100% { transform: translateX(0); } 
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        } .animate-shake { animation: shake 0.5s ease-in-out; }`;
+        document.head.appendChild(style);
+
+        let allUsersData = []; // Store fetched users globally for searching
+
+        async function initializeAppAndFetchData() {
+            try {
+                const app = initializeApp(firebaseConfig);
+                const db = getFirestore(app);
+                
+                // IMPORTANT: This dashboard relies on you saving user data to a Firestore collection named 'users'
+                // when a user signs up. This is because Firebase Auth data cannot be listed directly from the client-side for security.
+                // Each document in the 'users' collection should be named with the user's UID.
+                // The document should contain fields like: email, providerData, metadata.creationTime, metadata.lastSignInTime.
+                
+                const users = await fetchAllUsersFromFirestore(db);
+                allUsersData = users; // Store for filtering
+                if (users.length > 0) {
+                    processAndDisplayData(users);
+                } else {
+                     document.getElementById('loading-indicator').innerHTML = `<p class="text-amber-400 text-center">No user data found in the 'users' Firestore collection.<br>Please ensure you are saving user auth data to Firestore upon signup.</p>`;
+                }
+
+            } catch (error) {
+                console.error("Firebase Initialization/Fetch Error:", error);
+                document.getElementById('loading-indicator').innerHTML = `<p class="text-red-400">Error connecting to Firebase. Check console for details.</p>`;
+            }
+        }
+
+        async function fetchAllUsersFromFirestore(db) {
+            const usersCol = collection(db, 'users');
+            const userSnapshot = await getDocs(usersCol);
+            return userSnapshot.docs.map(doc => {
+                 const data = doc.data();
+                 return {
+                    uid: doc.id,
+                    identifier: data.email || data.phoneNumber || 'N/A',
+                    providerData: data.providerData || [{ providerId: 'unknown' }],
+                    creationTime: new Date(data.metadata?.creationTime || data.creationTime),
+                    lastSignInTime: new Date(data.metadata?.lastSignInTime || data.lastSignInTime),
+                 };
+            });
+        }
+        
+        function processAndDisplayData(users) {
+            document.getElementById('loading-indicator').classList.add('hidden');
+            document.getElementById('dashboard-grid').classList.remove('hidden');
+            
+            updateStatCards(users);
+            renderCharts(users);
+            populateUserTable(users);
+        }
+        
+        function updateStatCards(users) {
+            const now = new Date();
+            const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+            const newToday = users.filter(u => u.creationTime >= todayStart).length;
+            const activeToday = users.filter(u => u.lastSignInTime >= todayStart).length;
+            
+            const firstUserDate = users.reduce((oldest, user) => user.creationTime < oldest ? user.creationTime : oldest, new Date());
+            const daysSinceFirstUser = (now - firstUserDate) / (1000 * 60 * 60 * 24);
+            const avgDaily = daysSinceFirstUser > 0 ? (users.length / daysSinceFirstUser).toFixed(1) : users.length;
+
+            document.getElementById('total-users').textContent = users.length;
+            document.getElementById('new-today').textContent = newToday;
+            document.getElementById('active-today').textContent = activeToday;
+            document.getElementById('avg-daily').textContent = avgDaily;
+        }
+
+        function renderCharts(users) {
+            // Weekly Signups Chart
+            const weeklyLabels = [...Array(7)].map((_, i) => {
+                const d = new Date();
+                d.setDate(d.getDate() - i);
+                return d.toLocaleDateString('en-US', { weekday: 'short' });
+            }).reverse();
+
+            const weeklyData = [...Array(7)].fill(0);
+            users.forEach(user => {
+                const diffDays = Math.floor((new Date() - user.creationTime) / (1000 * 60 * 60 * 24));
+                if (diffDays < 7) {
+                    weeklyData[6 - diffDays]++;
+                }
+            });
+
+            const weeklyCtx = document.getElementById('weeklySignupsChart').getContext('2d');
+            new Chart(weeklyCtx, {
+                type: 'bar',
+                data: {
+                    labels: weeklyLabels,
+                    datasets: [{
+                        label: 'New Users',
+                        data: weeklyData,
+                        backgroundColor: 'rgba(99, 102, 241, 0.6)',
+                        borderColor: 'rgba(129, 140, 248, 1)',
+                        borderWidth: 2,
+                        borderRadius: 5,
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: 'rgba(255, 255, 255, 0.1)' }, ticks: { color: '#9ca3af', precision: 0 } },
+                        x: { grid: { display: false }, ticks: { color: '#9ca3af' } }
+                    }
+                }
+            });
+            
+            // Provider Chart
+            const providerCounts = users.reduce((acc, user) => {
+                const provider = (user.providerData[0]?.providerId.replace('.com', '') || 'email').replace('password', 'email');
+                const cleanProvider = provider.charAt(0).toUpperCase() + provider.slice(1);
+                acc[cleanProvider] = (acc[cleanProvider] || 0) + 1;
+                return acc;
+            }, {});
+
+            const providerCtx = document.getElementById('providerChart').getContext('2d');
+            new Chart(providerCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(providerCounts),
+                    datasets: [{
+                        data: Object.values(providerCounts),
+                        backgroundColor: ['#4f46e5', '#10b981', '#0ea5e9', '#f59e0b', '#ec4899'],
+                        borderColor: '#0f172a',
+                        borderWidth: 4,
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom', labels: { color: '#d1d5db', boxWidth: 12, padding: 20 } } }
+                }
+            });
+        }
+        
+        function getProviderIcon(providerId) {
+            const id = providerId.toLowerCase();
+            if (id.includes('google')) return `<svg ...>...</svg>`; // Placeholder for real SVG icon
+            if (id.includes('phone')) return `<svg ...>...</svg>`;
+            return `<svg ...>...</svg>`;
+        }
+        
+        function populateUserTable(users) {
+            const tableBody = document.getElementById('users-table-body');
+            const noResultsDiv = document.getElementById('no-results');
+            tableBody.innerHTML = '';
+            
+            if (users.length === 0) {
+                noResultsDiv.classList.remove('hidden');
+                return;
+            }
+            noResultsDiv.classList.add('hidden');
+
+            users.sort((a, b) => b.creationTime - a.creationTime).forEach(user => {
+                const provider = (user.providerData[0]?.providerId.replace('.com', '') || 'email');
+                const row = `
+                    <tr class="border-b border-slate-700 hover:bg-slate-800/50">
+                        <td class="px-6 py-4 font-medium text-white">${user.identifier}</td>
+                        <td class="px-6 py-4">
+                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full capitalize 
+                                ${provider.includes('google') ? 'bg-red-900/50 text-red-300' :
+                                  provider.includes('phone') ? 'bg-sky-900/50 text-sky-300' :
+                                  'bg-slate-600 text-slate-200'}">
+                                ${provider}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4">${user.creationTime.toLocaleDateString()}</td>
+                        <td class="px-6 py-4" title="${user.lastSignInTime.toLocaleString()}">${dateFns.formatDistanceToNow(user.lastSignInTime, { addSuffix: true })}</td>
+                        <td class="px-6 py-4 font-mono text-xs text-slate-400">${user.uid}</td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+        }
+        
+        // Search functionality
+        document.getElementById('search-users').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const filteredUsers = allUsersData.filter(user => 
+                user.identifier.toLowerCase().includes(searchTerm) ||
+                user.uid.toLowerCase().includes(searchTerm)
+            );
+            populateUserTable(filteredUsers);
+        });
+
+    </script>
+</body>
+</html>
