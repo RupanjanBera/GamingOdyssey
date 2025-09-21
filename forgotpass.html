@@ -261,7 +261,7 @@
       </form>
       
       <!-- Gemini Help Assistant Button -->
-      <div id="help-button-container" class="text-center pt-6 opacity-0 transition-opacity duration-500">
+      <div id="help-button-container" class="text-center pt-6 transition-opacity duration-500">
           <button id="open-help-modal" class="text-sm text-slate-400 hover:text-white transition">
               ✨ Need Help? Chat with our Assistant
           </button>
@@ -375,7 +375,6 @@
                 btnText.textContent = 'Email Sent!';
                 emailInput.disabled = true;
                 submitBtn.classList.remove('loading');
-                document.getElementById('help-button-container').style.opacity = '1';
               })
               .catch((error) => {
                 let errorMessage = 'An error occurred. Please try again.';
@@ -392,7 +391,6 @@
                 }
                 submitBtn.disabled = false;
                 submitBtn.classList.remove('loading');
-                document.getElementById('help-button-container').style.opacity = '1';
               });
         }, 1000);
     });
