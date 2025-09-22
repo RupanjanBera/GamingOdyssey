@@ -1687,10 +1687,10 @@
     const clearChatBtn = document.getElementById('clear-chat-btn');
     
     const GEMINI_API_KEY = 'AIzaSyCiq8Zn-EArkq0BKRwwvvVrf7an037rx_o';
-    let isChatbotOpen = false;
+    let isChatbotOpen = true;
     let chat;
 
-    const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+    const genAI = new GoogleGenerativeAI(AIzaSyB9SJ9_g-sMTsGlrckgQgZqzrc0HRubFdk);
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
     function initializeConversation() {
@@ -1839,3 +1839,4 @@
   </script>
 </body>
 </html>
+
