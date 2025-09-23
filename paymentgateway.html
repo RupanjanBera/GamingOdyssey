@@ -397,40 +397,64 @@
         }
       });
       
-      // --- UPIGATEWAY FRONTEND SIMULATION ---
-      function payWithUPIGateway() {
+      // --- UPIGATEWAY FRONTEND LIVE TEST ---
+      async function payWithUPIGateway() {
           // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-          // !! SECURITY WARNING: FOR TESTING ONLY.                                   !!
+          // !! SECURITY WARNING: FOR LIVE TESTING ONLY.                              !!
           // !! Never expose your API key in frontend code in a real application.     !!
           // !! This logic MUST be moved to a secure backend server for production.   !!
           // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
           const apiKey = '790fbff9-61fc-4e0d-b8d0-d1ee2a2bf8cf';
           const transactionId = 'TXN_TEST_' + Date.now();
           const amount = finalOrder.total.toFixed(2);
+          
+          // This is a hypothetical API endpoint for UPIGateway.
+          // You would need to replace this with the actual endpoint from their documentation.
+          const apiEndpoint = 'https://api.upigateway.com/v1/create_payment';
 
-          console.log("--- SIMULATING UPIGateway API CALL (FRONTEND TEST) ---");
+          console.log("--- MAKING LIVE UPIGateway API CALL (FRONTEND TEST) ---");
+          console.log("Endpoint:", apiEndpoint);
           console.log("API Key:", apiKey);
           console.log("Amount:", amount);
-          console.log("Transaction ID:", transactionId);
-          console.log("This is a test. No real payment is being processed.");
+          console.log("This is a live test. A real payment might be processed if the API key is valid.");
           console.log("-----------------------------------------------------");
 
-          // Simulate network delay for API call
-          setTimeout(() => {
-              // Simulate a successful response from the gateway
-              const isPaymentSuccessful = true; 
-              
-              if (isPaymentSuccessful) {
-                  console.log("Simulated UPIGateway payment successful!");
+          try {
+              // This is a fetch call to a real server. It will likely fail due to CORS
+              // policies on the server side, unless UPIGateway explicitly allows
+              // requests from browser clients (which is uncommon for payment APIs).
+              const response = await fetch(apiEndpoint, {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                      'X-API-Key': apiKey // Common way to send API keys, check UPIGateway docs
+                  },
+                  body: JSON.stringify({
+                      transactionId: transactionId,
+                      amount: amount,
+                      merchantName: 'Gaming Odyssey',
+                      callbackUrl: window.location.origin + '/thankyou.html' // URL for gateway to redirect to
+                  })
+              });
+
+              if (response.ok) {
+                  const responseData = await response.json();
+                  console.log("Live UPIGateway API response:", responseData);
+                  // In a real scenario, the response might contain a payment link to redirect the user to.
+                  console.log("Live UPIGateway payment initiated successfully!");
                   processPayment(); // Proceed with order confirmation
               } else {
-                  console.error("Simulated UPIGateway payment failed.");
-                  alert("Your UPI payment failed (Test Simulation). Please try again.");
-                  confirmBtn.disabled = false;
-                  document.getElementById('btn-text').classList.remove('hidden');
-                  document.getElementById('btn-loader').classList.add('hidden');
+                  // Handle HTTP errors like 401 Unauthorized, 400 Bad Request etc.
+                  const errorData = await response.text();
+                  throw new Error(`API call failed with status ${response.status}: ${errorData}`);
               }
-          }, 2000); // 2-second delay
+          } catch (error) {
+              console.error("Live UPIGateway API call failed:", error);
+              alert(`Your UPI payment failed (Live Test). Error: ${error.message}. Please check the console for details.`);
+              confirmBtn.disabled = false;
+              document.getElementById('btn-text').classList.remove('hidden');
+              document.getElementById('btn-loader').classList.add('hidden');
+          }
       }
 
       // --- CORE LOGIC (AFTER PAYMENT) ---
