@@ -9,6 +9,13 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://www.paypal.com/sdk/js?client-id=Abj4GKhw0aoqQes156AfApLm2wN5PAF5ncEUA_M-Dtzaj22yUzczA7tzf5LrsP7ufTj2ERxhUIEscsRF&currency=USD"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+  
+  <!-- === START: FIREBASE SDKs === -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <!-- === END: FIREBASE SDKs === -->
+
   <style>
     :root {
       --primary-color: #3B82F6;
@@ -115,21 +122,26 @@
     }
     #payment-method-selector {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 0.75rem;
     }
-    .email-status {
+    .verification-status {
       margin-top: 0.5rem;
       font-size: 0.875rem;
       display: flex;
       align-items: center;
       gap: 0.5rem;
     }
-    .email-verified { color: #10B981; }
-    .email-not-verified { color: #EF4444; }
-    .verification-code-container {
-      margin-top: 0.5rem;
+    .status-success { color: #10B981; }
+    .status-error { color: #EF4444; }
+    .otp-container {
+      margin-top: 1rem;
       display: none;
+    }
+    @media (min-width: 1024px) {
+      #payment-method-selector {
+        grid-template-columns: repeat(4, 1fr);
+      }
     }
   </style>
 </head>
@@ -160,48 +172,66 @@
         <div>
           <div class="bg-card-background rounded-lg p-6 shadow-xl space-y-6">
             <div>
-              <h2 class="text-xl font-bold mb-4">1. Contact Information</h2>
-              <label for="customer-email" class="block text-sm font-medium text-slate-300 mb-1">Email Address</label>
-              <div class="flex gap-2">
-                <input type="email" id="customer-email" name="customer-email" placeholder="you@example.com" required class="input-field w-full p-3 rounded-md">
-                <button type="button" id="verify-email-btn" class="bg-primary-color text-white px-4 rounded-md hover:bg-blue-600 transition">Verify</button>
+              <h2 class="text-xl font-bold mb-4">1. Contact & Verification</h2>
+              
+              <!-- START: UPDATED VERIFICATION SECTION -->
+              <div class="space-y-4">
+                <div>
+                  <label for="customer-email" class="block text-sm font-medium text-slate-300 mb-1">Email Address</label>
+                  <input type="email" id="customer-email" name="customer-email" placeholder="you@example.com" required class="input-field w-full p-3 rounded-md">
+                </div>
+                <div>
+                  <label for="customer-phone" class="block text-sm font-medium text-slate-300 mb-1">Phone Number (with country code)</label>
+                  <input type="tel" id="customer-phone" name="customer-phone" placeholder="+919876543210" required class="input-field w-full p-3 rounded-md">
+                </div>
+                <button type="button" id="send-otp-btn" class="submit-btn w-full py-3">Send Verification Code</button>
               </div>
-              <div id="email-status" class="email-status hidden">
-                <i class="fas fa-check-circle email-verified hidden"></i>
-                <i class="fas fa-times-circle email-not-verified hidden"></i>
-                <span id="email-status-text"></span>
-              </div>
-              <div id="verification-code-container" class="verification-code-container">
-                <label for="verification-code" class="block text-sm font-medium text-slate-300 mb-1 mt-2">Verification Code</label>
+              
+              <div id="otp-container" class="otp-container">
+                <label for="otp-input" class="block text-sm font-medium text-slate-300 mb-1">Enter OTP</label>
                 <div class="flex gap-2">
-                  <input type="text" id="verification-code" placeholder="Enter code sent to your email" class="input-field w-full p-3 rounded-md">
-                  <button type="button" id="confirm-code-btn" class="bg-primary-color text-white px-4 rounded-md hover:bg-blue-600 transition">Confirm</button>
+                  <input type="text" id="otp-input" placeholder="Enter 6-digit code" class="input-field w-full p-3 rounded-md">
+                  <button type="button" id="verify-otp-btn" class="bg-primary-color text-white px-4 rounded-md hover:bg-blue-600 transition">Verify</button>
                 </div>
               </div>
+
+              <div id="verification-status" class="verification-status hidden">
+                  <i id="status-icon" class="fas"></i>
+                  <span id="verification-status-text"></span>
+              </div>
+              <!-- END: UPDATED VERIFICATION SECTION -->
+
             </div>
             
-            <div>
+            <div id="payment-section" class="hidden">
               <h2 class="text-xl font-bold mb-4">2. Payment Method</h2>
               <div id="payment-method-selector" class="mb-4">
-                <div class="payment-tab active" data-payment="UPI"><i class="fas fa-mobile-alt text-xl mb-2"></i><span>UPI</span></div>
+                <div class="payment-tab active" data-payment="Card"><i class="fas fa-credit-card text-xl mb-2"></i><span> Card</span></div>
                 <div class="payment-tab" data-payment="PayPal"><i class="fab fa-paypal text-xl mb-2"></i><span> PayPal</span></div>
+                <div class="payment-tab" data-payment="UPI"><i class="fas fa-qrcode text-xl mb-2"></i><span> UPI</span></div>
                 <div class="payment-tab" data-payment="Cash on Delivery"><i class="fas fa-money-bill-wave text-xl mb-2"></i><span> COD</span></div>
               </div>
-            </div>
             
-            <div id="payment-details-container">
-              <div id="UPI-container" class="text-center">
-                 <p class="text-slate-300 p-4 bg-slate-900/50 rounded-md">Payment will be initiated with UPIGateway after clicking 'Confirm & Pay'.</p>
+              <div id="payment-details-container">
+                <div id="Card-container" class="space-y-4">
+                  <h3 class="font-semibold text-lg">Enter Card Details</h3>
+                  <input type="text" placeholder="Card Number" class="input-field w-full p-3 rounded-md" id="card-number">
+                  <div class="grid grid-cols-2 gap-4">
+                    <input type="text" placeholder="MM / YY" class="input-field w-full p-3 rounded-md" id="card-expiry">
+                    <input type="text" placeholder="CVV" class="input-field w-full p-3 rounded-md" id="card-cvv">
+                  </div>
+                </div>
+                <div id="PayPal-container" class="hidden text-center"><div id="paypal-button-container"></div></div>
+                <div id="UPI-container" class="hidden text-center"><div id="upi-qr-code" class="mx-auto bg-white p-2 rounded-lg w-48 h-48 mb-4"></div><p>Scan to pay with any UPI app.</p></div>
+                <div id="Cash_on_Delivery-container" class="hidden text-center"><p class="text-slate-300 p-4 bg-slate-900/50 rounded-md">You will pay with cash upon delivery.</p></div>
               </div>
-              <div id="PayPal-container" class="hidden text-center"><div id="paypal-button-container"></div></div>
-              <div id="Cash_on_Delivery-container" class="hidden text-center"><p class="text-slate-300 p-4 bg-slate-900/50 rounded-md">You will pay with cash upon delivery.</p></div>
-            </div>
 
-            <div class="pt-4">
-              <button type="button" id="confirm-payment-btn" class="submit-btn w-full py-3 text-lg" disabled>
-                <span id="btn-text">Confirm & Pay</span>
-                <span id="btn-loader" class="hidden"><i class="fas fa-spinner fa-spin mr-2"></i>Processing...</span>
-              </button>
+              <div class="pt-4">
+                <button type="button" id="confirm-payment-btn" class="submit-btn w-full py-3 text-lg">
+                  <span id="btn-text">Confirm & Pay</span>
+                  <span id="btn-loader" class="hidden"><i class="fas fa-spinner fa-spin mr-2"></i>Processing...</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -226,6 +256,8 @@
       </div>
     </div>
   </main>
+  
+  <div id="recaptcha-container" style="position: fixed; bottom: 0; right: 0;"></div>
 
   <!-- Confirmation Modal -->
   <div class="confirmation-modal" id="confirmation-modal">
@@ -243,30 +275,50 @@
   <!-- Footer -->
   <footer class="bg-card-background py-6 px-4 mt-8">
     <div class="container mx-auto text-center">
-      <p class="text-slate-400 text-sm">© 2025 Gaming Odyssey. All rights reserved.</p>
+      <p class="text-slate-400 text-sm">© 2023 Gaming Odyssey. All rights reserved.</p>
     </div>
   </footer>
 
   <script>
+    // === START: FIREBASE CONFIGURATION ===
+    const firebaseConfig = {
+      apiKey: "AIzaSyDA218WauVZNgqeMgiR_5H6TLYQB5HXZkY",
+      authDomain: "gamingodyssey-2e642.firebaseapp.com",
+      databaseURL: "https://gamingodyssey-2e642-default-rtdb.firebaseio.com",
+      projectId: "gamingodyssey-2e642",
+      storageBucket: "gamingodyssey-2e642.appspot.com", // Corrected storageBucket URL
+      messagingSenderId: "964191300629",
+      appId: "1:964191300629:web:4be869d43fd0afeb00321c",
+      measurementId: "G-VS888VHFJJ"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    // === END: FIREBASE CONFIGURATION ===
+
+
     document.addEventListener('DOMContentLoaded', () => {
       // --- ELEMENT REFERENCES & STATE ---
       const finalOrder = JSON.parse(localStorage.getItem('finalOrder'));
       const confirmBtn = document.getElementById('confirm-payment-btn');
       const confirmationModal = document.getElementById('confirmation-modal');
       const continueButton = document.getElementById('continue-to-thankyou');
-      const emailInput = document.getElementById('customer-email');
-      const verifyEmailBtn = document.getElementById('verify-email-btn');
-      const emailStatus = document.getElementById('email-status');
-      const emailStatusText = document.getElementById('email-status-text');
-      const emailVerifiedIcon = document.querySelector('.email-verified');
-      const emailNotVerifiedIcon = document.querySelector('.email-not-verified');
-      const verificationCodeContainer = document.getElementById('verification-code-container');
-      const verificationCodeInput = document.getElementById('verification-code');
-      const confirmCodeBtn = document.getElementById('confirm-code-btn');
       
-      let selectedPaymentMethod = 'UPI';
-      let isEmailVerified = false;
-      let verificationCode = '';
+      const emailInput = document.getElementById('customer-email');
+      const phoneInput = document.getElementById('customer-phone');
+      const sendOtpBtn = document.getElementById('send-otp-btn');
+      const otpContainer = document.getElementById('otp-container');
+      const otpInput = document.getElementById('otp-input');
+      const verifyOtpBtn = document.getElementById('verify-otp-btn');
+      
+      const verificationStatus = document.getElementById('verification-status');
+      const verificationStatusText = document.getElementById('verification-status-text');
+      const statusIcon = document.getElementById('status-icon');
+      const paymentSection = document.getElementById('payment-section');
+      
+      let selectedPaymentMethod = 'Card';
+      let isVerified = false;
+      let confirmationResult = null;
 
       // --- INITIAL CHECK ---
       if (!finalOrder) {
@@ -279,7 +331,7 @@
         `;
         return;
       }
-
+      
       // --- RENDER FUNCTIONS ---
       function renderOrderSummary() {
         const container = document.getElementById('order-summary-items');
@@ -311,61 +363,107 @@
         `;
       }
 
-      // --- EMAIL VERIFICATION ---
-      function verifyEmail() {
+      // --- PHONE VERIFICATION LOGIC ---
+      function setupRecaptcha() {
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+            'size': 'invisible',
+            'callback': (response) => {
+                // reCAPTCHA solved, allow signInWithPhoneNumber.
+            }
+        });
+      }
+      
+      function sendOtp() {
         const email = emailInput.value.trim();
-        if (!email || !isValidEmail(email)) {
-          showEmailStatus('Please enter a valid email address', false);
-          return;
+        const phone = phoneInput.value.trim();
+
+        if (!isValidEmail(email)) {
+            showVerificationStatus('Please enter a valid email address.', false);
+            return;
         }
-        verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
-        showEmailStatus('Verification code sent to your email', true);
-        verificationCodeContainer.style.display = 'block';
-        console.log(`Verification code for ${email}: ${verificationCode}`);
-        setTimeout(() => {
-          verificationCodeInput.value = verificationCode;
-          alert(`For demo purposes, the verification code is: ${verificationCode}`);
-        }, 1000);
+        if (!phone) {
+            showVerificationStatus('Please enter your phone number.', false);
+            return;
+        }
+
+        sendOtpBtn.disabled = true;
+        sendOtpBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
+        const appVerifier = window.recaptchaVerifier;
+        auth.signInWithPhoneNumber(phone, appVerifier)
+            .then((result) => {
+                confirmationResult = result;
+                showVerificationStatus('OTP sent successfully! Please check your SMS.', true);
+                otpContainer.style.display = 'block';
+                sendOtpBtn.style.display = 'none';
+            })
+            .catch((error) => {
+                console.error("Error sending OTP:", error);
+                let errorMessage = "Failed to send OTP. Please check the number or try again.";
+                if (error.code === 'auth/invalid-phone-number') {
+                    errorMessage = "Invalid phone number format. Please include the country code (e.g., +91).";
+                }
+                 if (error.code === 'auth/too-many-requests') {
+                    errorMessage = "Too many requests. Please try again later.";
+                }
+                showVerificationStatus(errorMessage, false);
+                sendOtpBtn.disabled = false;
+                sendOtpBtn.innerHTML = 'Send Verification Code';
+            });
       }
       
-      function confirmVerificationCode() {
-        if (verificationCodeInput.value === verificationCode) {
-          showEmailStatus('Email verified successfully', true);
-          isEmailVerified = true;
-          updateConfirmButtonState();
-          verificationCodeContainer.style.display = 'none';
-        } else {
-          showEmailStatus('Invalid verification code', false);
-        }
+      function verifyOtp() {
+          const code = otpInput.value.trim();
+          if (!code || code.length !== 6) {
+              showVerificationStatus('Please enter a valid 6-digit OTP.', false);
+              return;
+          }
+
+          verifyOtpBtn.disabled = true;
+          verifyOtpBtn.textContent = '...';
+
+          confirmationResult.confirm(code)
+              .then((result) => {
+                  const user = result.user;
+                  isVerified = true;
+                  showVerificationStatus('Verification successful! You can now proceed to payment.', true);
+                  otpContainer.style.display = 'none';
+                  document.getElementById('send-otp-btn').style.display = 'none';
+                  paymentSection.style.display = 'block';
+                  // Disable contact fields
+                  emailInput.disabled = true;
+                  phoneInput.disabled = true;
+
+              })
+              .catch((error) => {
+                  console.error("Error verifying OTP:", error);
+                  showVerificationStatus('Invalid OTP. Please try again.', false);
+                  verifyOtpBtn.disabled = false;
+                  verifyOtpBtn.textContent = 'Verify';
+              });
       }
-      
+
       function isValidEmail(email) {
-        const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(String(email).toLowerCase());
       }
       
-      function showEmailStatus(message, isSuccess) {
-        emailStatus.classList.remove('hidden');
-        emailStatusText.textContent = message;
-        emailVerifiedIcon.classList.toggle('hidden', !isSuccess);
-        emailNotVerifiedIcon.classList.toggle('hidden', isSuccess);
-        emailStatusText.className = isSuccess ? 'email-verified' : 'email-not-verified';
+      function showVerificationStatus(message, isSuccess) {
+        verificationStatus.classList.remove('hidden');
+        verificationStatusText.textContent = message;
+        
+        if (isSuccess) {
+          statusIcon.className = 'fas fa-check-circle status-success';
+          verificationStatusText.className = 'status-success';
+        } else {
+          statusIcon.className = 'fas fa-times-circle status-error';
+          verificationStatusText.className = 'status-error';
+        }
       }
       
-      function updateConfirmButtonState() {
-        confirmBtn.disabled = !isEmailVerified;
-      }
-
       // --- EVENT LISTENERS ---
-      emailInput.addEventListener('input', () => {
-        isEmailVerified = false;
-        updateConfirmButtonState();
-        emailStatus.classList.add('hidden');
-        verificationCodeContainer.style.display = 'none';
-      });
-      
-      verifyEmailBtn.addEventListener('click', verifyEmail);
-      confirmCodeBtn.addEventListener('click', confirmVerificationCode);
+      sendOtpBtn.addEventListener('click', sendOtp);
+      verifyOtpBtn.addEventListener('click', verifyOtp);
       
       document.querySelectorAll('.payment-tab').forEach(tab => {
         tab.addEventListener('click', () => {
@@ -380,87 +478,31 @@
         });
       });
       
-      confirmBtn.addEventListener('click', () => {
-        if (!isEmailVerified) {
-          alert('Please verify your email address before proceeding.');
-          return;
+      confirmBtn.addEventListener('click', (e) => {
+        if (!isVerified) return; // Should not happen as button is inside hidden section
+        
+        if (selectedPaymentMethod === 'Card') {
+          const cardNumber = document.getElementById('card-number').value;
+          const cardExpiry = document.getElementById('card-expiry').value;
+          const cardCvv = document.getElementById('card-cvv').value;
+          if (!cardNumber || !cardExpiry || !cardCvv) {
+            alert('Please fill in all card details.');
+            return;
+          }
         }
         
         confirmBtn.disabled = true;
         document.getElementById('btn-text').classList.add('hidden');
         document.getElementById('btn-loader').classList.remove('hidden');
         
-        if (selectedPaymentMethod === 'UPI') {
-            payWithUPIGateway();
-        } else { // For COD
-            setTimeout(processPayment, 1500);
-        }
+        setTimeout(() => { processPayment(); }, 1500);
       });
       
-      // --- UPIGATEWAY FRONTEND LIVE TEST ---
-      async function payWithUPIGateway() {
-          // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-          // !! SECURITY WARNING: FOR LIVE TESTING ONLY.                              !!
-          // !! Never expose your API key in frontend code in a real application.     !!
-          // !! This logic MUST be moved to a secure backend server for production.   !!
-          // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-          const apiKey = '790fbff9-61fc-4e0d-b8d0-d1ee2a2bf8cf';
-          const transactionId = 'TXN_TEST_' + Date.now();
-          const amount = finalOrder.total.toFixed(2);
-          
-          // This is a hypothetical API endpoint for UPIGateway.
-          // You would need to replace this with the actual endpoint from their documentation.
-          const apiEndpoint = 'https://api.upigateway.com/v1/create_payment';
-
-          console.log("--- MAKING LIVE UPIGateway API CALL (FRONTEND TEST) ---");
-          console.log("Endpoint:", apiEndpoint);
-          console.log("API Key:", apiKey);
-          console.log("Amount:", amount);
-          console.log("This is a live test. A real payment might be processed if the API key is valid.");
-          console.log("-----------------------------------------------------");
-
-          try {
-              // This is a fetch call to a real server. It will likely fail due to CORS
-              // policies on the server side, unless UPIGateway explicitly allows
-              // requests from browser clients (which is uncommon for payment APIs).
-              const response = await fetch(apiEndpoint, {
-                  method: 'POST',
-                  headers: {
-                      'Content-Type': 'application/json',
-                      'X-API-Key': apiKey // Common way to send API keys, check UPIGateway docs
-                  },
-                  body: JSON.stringify({
-                      transactionId: transactionId,
-                      amount: amount,
-                      merchantName: 'Gaming Odyssey',
-                      callbackUrl: window.location.origin + '/thankyou.html' // URL for gateway to redirect to
-                  })
-              });
-
-              if (response.ok) {
-                  const responseData = await response.json();
-                  console.log("Live UPIGateway API response:", responseData);
-                  // In a real scenario, the response might contain a payment link to redirect the user to.
-                  console.log("Live UPIGateway payment initiated successfully!");
-                  processPayment(); // Proceed with order confirmation
-              } else {
-                  // Handle HTTP errors like 401 Unauthorized, 400 Bad Request etc.
-                  const errorData = await response.text();
-                  throw new Error(`API call failed with status ${response.status}: ${errorData}`);
-              }
-          } catch (error) {
-              console.error("Live UPIGateway API call failed:", error);
-              alert(`Your UPI payment failed (Live Test). Error: ${error.message}. Please check the console for details.`);
-              confirmBtn.disabled = false;
-              document.getElementById('btn-text').classList.remove('hidden');
-              document.getElementById('btn-loader').classList.add('hidden');
-          }
-      }
-
-      // --- CORE LOGIC (AFTER PAYMENT) ---
+      // --- CORE LOGIC ---
       function processPayment() {
         finalOrder.paymentMethod = selectedPaymentMethod;
-        finalOrder.customerEmail = document.getElementById('customer-email').value;
+        finalOrder.customerEmail = emailInput.value;
+        finalOrder.customerPhone = phoneInput.value; // Add phone number
         finalOrder.orderId = 'ORD-' + Math.floor(10000 + Math.random() * 90000);
         finalOrder.status = 'pending';
         finalOrder.timestamp = new Date().toISOString();
@@ -482,46 +524,69 @@
       }
       
       function sendEmail(orderData) {
-        // This function uses FormSubmit.co, which is a free service that works without a backend.
         const formData = new FormData();
+        
         formData.append('_subject', `New Order Received! - ${orderData.orderId}`);
         formData.append('_next', `${window.location.origin}/thankyou.html?orderId=${orderData.orderId}`);
         formData.append('_template', 'table');
-        formData.append('email', orderData.customerEmail);
+        formData.append('email', orderData.customerEmail); // For autoresponse
         
+        // Autoresponse message remains the same...
         const customerMessage = `
-          <!DOCTYPE html>
-          <html>
-          <body>
-            <h1>Thank You for Your Order, ${orderData.shippingAddress.name}!</h1>
-            <p>We've received your order #${orderData.orderId} and it is now being processed.</p>
-          </body>
-          </html>`;
+          <!DOCTYPE html><html><head><style>body{font-family:Arial,sans-serif;line-height:1.6;color:#333}.header{background:linear-gradient(90deg,#3B82F6,#8B5CF6);padding:20px;text-align:center;color:#fff}.content{padding:20px}.order-details{background:#f9f9f9;padding:15px;border-radius:5px;margin:15px 0}.item{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #eee}.footer{background:#f0f0f0;padding:15px;text-align:center;font-size:14px;color:#666}.highlight{color:#3B82F6;font-weight:700}</style></head><body><div class=header><h1>Thank You for Your Order!</h1><p>Your gaming adventure is about to begin</p></div><div class=content><p>Hello ${orderData.shippingAddress.name},</p><p>Thank you for shopping with <span class=highlight>Gaming Odyssey</span>. We're excited to let you know that we've received your order and it's now being processed.</p><div class=order-details><h2>Order Details</h2><p><strong>Order ID:</strong> ${orderData.orderId}</p><p><strong>Order Date:</strong> ${new Date(orderData.timestamp).toLocaleString()}</p><p><strong>Total Amount:</strong> $${orderData.total.toFixed(2)}</p><p><strong>Payment Method:</strong> ${orderData.paymentMethod}</p></div><h2>Items Ordered</h2>${orderData.items.map(item=>`<div class=item><div>${item.name} (Qty: ${item.quantity})</div><div>$${(item.price*item.quantity).toFixed(2)}</div></div>`).join('')}<h2>Shipping Address</h2><p>${orderData.shippingAddress.name}<br>${orderData.shippingAddress.addressLine1}<br>${orderData.shippingAddress.city}, ${orderData.shippingAddress.state} ${orderData.shippingAddress.zip}<br>${orderData.shippingAddress.country}<br>Phone: ${orderData.shippingAddress.phone}</p><p>We'll notify you when your order ships. If you have any questions, please contact our support team at support@gamingodyssey.in.</p><p>Happy Gaming,<br>The Gaming Odyssey Team</p></div><div class=footer><p>© 2023 Gaming Odyssey. All rights reserved.</p><p>This is an automated message, please do not reply to this email.</p></div></body></html>`;
         
         formData.append('_autoresponse', customerMessage);
+        formData.append('_autoresponseSubject', 'Thank you for your order with Gaming Odyssey!');
         
-        // Add more order details for your own notification email
+        // Main email content for the seller
         formData.append('Order ID', orderData.orderId);
+        formData.append('Customer Email', orderData.customerEmail);
+        formData.append('Customer Phone', orderData.customerPhone); // <-- ADDED PHONE NUMBER
         formData.append('Total Amount', `$${orderData.total.toFixed(2)}`);
+        formData.append('Payment Method', orderData.paymentMethod);
+        formData.append('Order Date', new Date(orderData.timestamp).toLocaleString());
         
-        fetch('https://formsubmit.co/ajax/your-email@example.com', { // <-- IMPORTANT: Change this to your actual email address
+        const itemsSummary = orderData.items.map(item => 
+          `${item.name} (Qty: ${item.quantity}) - $${(item.price * item.quantity).toFixed(2)}`
+        ).join('\n');
+        formData.append('Items Ordered', itemsSummary);
+        
+        const addr = orderData.shippingAddress;
+        const shippingSummary = `
+          ${addr.name}
+          ${addr.addressLine1}
+          ${addr.city}, ${addr.state} ${addr.zip}
+          ${addr.country}
+          Phone: ${addr.phone}
+        `;
+        formData.append('Shipping Address', shippingSummary);
+        
+        fetch('https://formsubmit.co/ajax/support@gamingodyssey.in', {
           method: 'POST',
           body: formData
         })
         .then(response => response.json())
-        .then(data => console.log('Email sent successfully via FormSubmit'))
+        .then(data => console.log('Email sent successfully:', data))
         .catch(error => console.error('Error sending email:', error));
       }
 
       // --- INITIALIZATIONS ---
       renderOrderSummary();
       renderShippingDetails();
+      setupRecaptcha();
       
-      // Initialize PayPal
+      const upiCanvas = document.createElement('canvas');
+      QRCode.toCanvas(upiCanvas, `upi://pay?pa=your-upi-id@oksbi&pn=GamingOdyssey&am=${finalOrder.total.toFixed(2)}`, { width: 180 }, (error) => {
+        if (error) console.error(error);
+        const qrContainer = document.getElementById('upi-qr-code');
+        qrContainer.innerHTML = ''; 
+        qrContainer.appendChild(upiCanvas);
+      });
+
       paypal.Buttons({
         onClick: (data, actions) => {
-          if (!isEmailVerified) {
-            alert('Please verify your email address before proceeding with PayPal.');
+          if (!isVerified) {
+            alert('Please complete the phone verification before proceeding with PayPal.');
             return actions.reject();
           }
           return actions.resolve();
