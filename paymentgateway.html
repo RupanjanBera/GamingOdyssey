@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://www.paypal.com/sdk/js?client-id=Abj4GKhw0aoqQes156AfApLm2wN5PAF5ncEUA_M-Dtzaj22yUzczA7tzf5LrsP7ufTj2ERxhUIEscsRF&currency=USD"></script>
-  <script src="https://cdn.upigateway.com/sdk.js"></script>
   <style>
     :root {
       --primary-color: #3B82F6;
@@ -119,11 +118,6 @@
       grid-template-columns: repeat(3, 1fr);
       gap: 0.75rem;
     }
-    .email-verification {
-      display: flex;
-      gap: 0.5rem;
-      margin-top: 0.5rem;
-    }
     .email-status {
       margin-top: 0.5rem;
       font-size: 0.875rem;
@@ -131,12 +125,8 @@
       align-items: center;
       gap: 0.5rem;
     }
-    .email-verified {
-      color: #10B981;
-    }
-    .email-not-verified {
-      color: #EF4444;
-    }
+    .email-verified { color: #10B981; }
+    .email-not-verified { color: #EF4444; }
     .verification-code-container {
       margin-top: 0.5rem;
       display: none;
@@ -144,6 +134,7 @@
   </style>
 </head>
 <body>
+  <!-- Header -->
   <header class="bg-card-background py-4 px-6 shadow-lg">
     <div class="container mx-auto flex justify-between items-center">
       <div class="flex items-center">
@@ -156,6 +147,7 @@
     </div>
   </header>
 
+  <!-- Main Content -->
   <main class="flex-grow container mx-auto px-4 py-8 md:py-12">
     <div class="max-w-5xl mx-auto">
       <div class="text-center mb-8 md:mb-12">
@@ -164,6 +156,7 @@
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
+        <!-- Payment Form -->
         <div>
           <div class="bg-card-background rounded-lg p-6 shadow-xl space-y-6">
             <div>
@@ -190,7 +183,7 @@
             <div>
               <h2 class="text-xl font-bold mb-4">2. Payment Method</h2>
               <div id="payment-method-selector" class="mb-4">
-                <div class="payment-tab active" data-payment="UPI"><i class="fas fa-qrcode text-xl mb-2"></i><span> UPI</span></div>
+                <div class="payment-tab active" data-payment="UPI"><i class="fas fa-mobile-alt text-xl mb-2"></i><span>UPI</span></div>
                 <div class="payment-tab" data-payment="PayPal"><i class="fab fa-paypal text-xl mb-2"></i><span> PayPal</span></div>
                 <div class="payment-tab" data-payment="Cash on Delivery"><i class="fas fa-money-bill-wave text-xl mb-2"></i><span> COD</span></div>
               </div>
@@ -198,7 +191,7 @@
             
             <div id="payment-details-container">
               <div id="UPI-container" class="text-center">
-                <p class="text-slate-300 p-4 bg-slate-900/50 rounded-md">You will be prompted to complete the payment on your UPI app after clicking 'Confirm & Pay'.</p>
+                 <p class="text-slate-300 p-4 bg-slate-900/50 rounded-md">Payment will be initiated with UPIGateway after clicking 'Confirm & Pay'.</p>
               </div>
               <div id="PayPal-container" class="hidden text-center"><div id="paypal-button-container"></div></div>
               <div id="Cash_on_Delivery-container" class="hidden text-center"><p class="text-slate-300 p-4 bg-slate-900/50 rounded-md">You will pay with cash upon delivery.</p></div>
@@ -213,6 +206,7 @@
           </div>
         </div>
 
+        <!-- Order Summary -->
         <div>
           <div class="bg-card-background rounded-lg p-6 h-fit lg:sticky lg:top-8 shadow-xl">
             <h2 class="text-xl font-bold border-b border-card-border pb-4 mb-4">Order Summary</h2>
@@ -233,6 +227,7 @@
     </div>
   </main>
 
+  <!-- Confirmation Modal -->
   <div class="confirmation-modal" id="confirmation-modal">
     <div class="modal-content">
       <div class="w-16 h-16 mx-auto bg-green-500/10 rounded-full flex items-center justify-center mb-4">
@@ -245,9 +240,10 @@
     </div>
   </div>
 
+  <!-- Footer -->
   <footer class="bg-card-background py-6 px-4 mt-8">
     <div class="container mx-auto text-center">
-      <p class="text-slate-400 text-sm">© 2023 Gaming Odyssey. All rights reserved.</p>
+      <p class="text-slate-400 text-sm">© 2025 Gaming Odyssey. All rights reserved.</p>
     </div>
   </footer>
 
@@ -344,7 +340,7 @@
       }
       
       function isValidEmail(email) {
-        const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[09]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(String(email).toLowerCase());
       }
       
@@ -384,7 +380,7 @@
         });
       });
       
-      confirmBtn.addEventListener('click', (e) => {
+      confirmBtn.addEventListener('click', () => {
         if (!isEmailVerified) {
           alert('Please verify your email address before proceeding.');
           return;
@@ -396,40 +392,48 @@
         
         if (selectedPaymentMethod === 'UPI') {
             payWithUPIGateway();
-        } else { // For COD or other future methods
+        } else { // For COD
             setTimeout(processPayment, 1500);
         }
       });
       
-      // --- UPI GATEWAY INTEGRATION (SIMULATED) ---
+      // --- UPIGATEWAY FRONTEND SIMULATION ---
       function payWithUPIGateway() {
+          // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+          // !! SECURITY WARNING: FOR TESTING ONLY.                                   !!
+          // !! Never expose your API key in frontend code in a real application.     !!
+          // !! This logic MUST be moved to a secure backend server for production.   !!
+          // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
           const apiKey = '790fbff9-61fc-4e0d-b8d0-d1ee2a2bf8cf';
-          const transactionId = 'TXN' + Date.now();
+          const transactionId = 'TXN_TEST_' + Date.now();
           const amount = finalOrder.total.toFixed(2);
 
-          console.log("Initiating UPIGateway Payment...");
+          console.log("--- SIMULATING UPIGateway API CALL (FRONTEND TEST) ---");
           console.log("API Key:", apiKey);
           console.log("Amount:", amount);
           console.log("Transaction ID:", transactionId);
+          console.log("This is a test. No real payment is being processed.");
+          console.log("-----------------------------------------------------");
 
-          // This is a simulation of calling the UPIGateway SDK.
-          // In a real scenario, you might call something like: UPIGateway.pay({ apiKey, amount, ... })
+          // Simulate network delay for API call
           setTimeout(() => {
-              const isPaymentSuccessful = true; // Simulate a successful payment
+              // Simulate a successful response from the gateway
+              const isPaymentSuccessful = true; 
+              
               if (isPaymentSuccessful) {
-                  console.log("UPIGateway payment successful!");
+                  console.log("Simulated UPIGateway payment successful!");
                   processPayment(); // Proceed with order confirmation
               } else {
-                  console.error("UPIGateway payment failed.");
-                  alert("Your UPI payment failed. Please try again.");
+                  console.error("Simulated UPIGateway payment failed.");
+                  alert("Your UPI payment failed (Test Simulation). Please try again.");
                   confirmBtn.disabled = false;
                   document.getElementById('btn-text').classList.remove('hidden');
                   document.getElementById('btn-loader').classList.add('hidden');
               }
-          }, 2000); // Simulate network delay
+          }, 2000); // 2-second delay
       }
 
-      // --- CORE LOGIC ---
+      // --- CORE LOGIC (AFTER PAYMENT) ---
       function processPayment() {
         finalOrder.paymentMethod = selectedPaymentMethod;
         finalOrder.customerEmail = document.getElementById('customer-email').value;
@@ -454,6 +458,7 @@
       }
       
       function sendEmail(orderData) {
+        // This function uses FormSubmit.co, which is a free service that works without a backend.
         const formData = new FormData();
         formData.append('_subject', `New Order Received! - ${orderData.orderId}`);
         formData.append('_next', `${window.location.origin}/thankyou.html?orderId=${orderData.orderId}`);
@@ -461,59 +466,26 @@
         formData.append('email', orderData.customerEmail);
         
         const customerMessage = `
-<!DOCTYPE html>
-<html>
-<head>
-  <style>
-    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-    .header { background: linear-gradient(90deg, #3B82F6, #8B5CF6); padding: 20px; text-align: center; color: white; }
-    .content { padding: 20px; }
-    .order-details { background: #f9f9f9; padding: 15px; border-radius: 5px; margin: 15px 0; }
-    .item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
-    .footer { background: #f0f0f0; padding: 15px; text-align: center; font-size: 14px; color: #666; }
-    .highlight { color: #3B82F6; font-weight: bold; }
-  </style>
-</head>
-<body>
-  <div class="header"><h1>Thank You for Your Order!</h1><p>Your gaming adventure is about to begin</p></div>
-  <div class="content">
-    <p>Hello ${orderData.shippingAddress.name},</p>
-    <p>Thank you for shopping with <span class="highlight">Gaming Odyssey</span>. We've received your order and it's now being processed.</p>
-    <div class="order-details">
-      <h2>Order Details</h2>
-      <p><strong>Order ID:</strong> ${orderData.orderId}</p>
-      <p><strong>Order Date:</strong> ${new Date(orderData.timestamp).toLocaleString()}</p>
-      <p><strong>Total Amount:</strong> $${orderData.total.toFixed(2)}</p>
-      <p><strong>Payment Method:</strong> ${orderData.paymentMethod}</p>
-    </div>
-    <h2>Items Ordered</h2>
-    ${orderData.items.map(item => `<div class="item"><div>${item.name} (Qty: ${item.quantity})</div><div>$${(item.price * item.quantity).toFixed(2)}</div></div>`).join('')}
-    <h2>Shipping Address</h2>
-    <p>${orderData.shippingAddress.name}<br>${orderData.shippingAddress.addressLine1}<br>${orderData.shippingAddress.city}, ${orderData.shippingAddress.state} ${orderData.shippingAddress.zip}<br>${orderData.shippingAddress.country}<br>Phone: ${orderData.shippingAddress.phone}</p>
-    <p>We'll notify you when your order ships. If you have any questions, please contact our support team at support@gamingodyssey.in.</p>
-    <p>Happy Gaming,<br>The Gaming Odyssey Team</p>
-  </div>
-  <div class="footer"><p>© 2023 Gaming Odyssey. All rights reserved.</p><p>This is an automated message, please do not reply to this email.</p></div>
-</body>
-</html>`;
+          <!DOCTYPE html>
+          <html>
+          <body>
+            <h1>Thank You for Your Order, ${orderData.shippingAddress.name}!</h1>
+            <p>We've received your order #${orderData.orderId} and it is now being processed.</p>
+          </body>
+          </html>`;
         
         formData.append('_autoresponse', customerMessage);
-        formData.append('Order ID', orderData.orderId);
-        formData.append('Customer Email', orderData.customerEmail);
-        formData.append('Total Amount', `$${orderData.total.toFixed(2)}`);
-        formData.append('Payment Method', orderData.paymentMethod);
-        const itemsSummary = orderData.items.map(item => `${item.name} (Qty: ${item.quantity}) - $${(item.price * item.quantity).toFixed(2)}`).join('\n');
-        formData.append('Items Ordered', itemsSummary);
-        const addr = orderData.shippingAddress;
-        const shippingSummary = `${addr.name}\n${addr.addressLine1}\n${addr.city}, ${addr.state} ${addr.zip}\n${addr.country}\nPhone: ${addr.phone}`;
-        formData.append('Shipping Address', shippingSummary);
         
-        fetch('https://formsubmit.co/ajax/support@gamingodyssey.in', {
+        // Add more order details for your own notification email
+        formData.append('Order ID', orderData.orderId);
+        formData.append('Total Amount', `$${orderData.total.toFixed(2)}`);
+        
+        fetch('https://formsubmit.co/ajax/your-email@example.com', { // <-- IMPORTANT: Change this to your actual email address
           method: 'POST',
           body: formData
         })
         .then(response => response.json())
-        .then(data => console.log('Email sent successfully'))
+        .then(data => console.log('Email sent successfully via FormSubmit'))
         .catch(error => console.error('Error sending email:', error));
       }
 
