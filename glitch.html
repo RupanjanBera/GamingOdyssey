@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glitch - Advanced AI Assistant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- PDF Export Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --space-dark: #0a0e29;
+            --space-blue: #1a1f4b;
+            --space-purple: #4a3b8a;
+            --star-color: #ffffff;
+            --neon-blue: #00f3ff;
+            --neon-purple: #b967ff;
+            --neon-green: #00ff9d;
+            --neon-pink: #ff2a6d;
+            --text-light: #e6e6ff;
+            --user-message: rgba(0, 243, 255, 0.15);
+            --ai-message: rgba(185, 103, 255, 0.15);
+            --error-color: #ff4d6d;
+            --success-color: #00ff9d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--space-dark) 0%, var(--space-blue) 50%, var(--space-purple) 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Stars background */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .star {
+            position: absolute;
+            background-color: var(--star-color);
+            border-radius: 50%;
+            animation: twinkle 5s infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background: rgba(10, 14, 41, 0.7);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 243, 255, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px var(--neon-blue);
+            animation: glow 2s infinite alternate;
+            background: rgba(0, 243, 255, 0.1);
+            border: 2px solid var(--neon-blue);
+        }
+
+        @keyframes glow {
+            from { 
+                text-shadow: 0 0 10px var(--neon-blue);
+                box-shadow: 0 0 10px var(--neon-blue);
+            }
+            to { 
+                text-shadow: 0 0 20px var(--neon-blue), 0 0 30px var(--neon-purple);
+                box-shadow: 0 0 20px var(--neon-blue), 0 0 30px var(--neon-purple);
+            }
+        }
+
+        .logo-text {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--neon-blue), var(--neon-purple), var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient-shift 3s infinite alternate;
+        }
+
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        .api-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--success-color);
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 10px var(--success-color);
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Main container */
+        .container {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            gap: 20px;
+            min-height: calc(100vh - 160px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            flex: 0 0 300px;
+            background: rgba(26, 31, 75, 0.7);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+        }
+
+        .sidebar-header h3 {
+            color: var(--neon-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .new-chat-btn {
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            border: none;
+            border-radius: 8px;
+            color: white;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .new-chat-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 243, 255, 0.4);
+        }
+
+        .chat-history {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid transparent;
+        }
+
+        .history-item:hover {
+            background: rgba(185, 103, 255, 0.1);
+            border-color: rgba(185, 103, 255, 0.3);
+        }
+
+        .history-item.active {
+            background: rgba(0, 243, 255, 0.15);
+            border-color: rgba(0, 243, 255, 0.5);
+        }
+
+        .history-icon {
+            color: var(--neon-blue);
+        }
+
+        .history-content {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .history-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .history-preview {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .history-date {
+            font-size: 0.7rem;
+            opacity: 0.5;
+        }
+
+        /* Chat area */
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: rgba(26, 31, 75, 0.5);
+            border-radius: 15px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .chat-header {
+            padding: 15px 20px;
+            background: rgba(10, 14, 41, 0.7);
+            border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-header-icon {
+            font-size: 1.5rem;
+            color: var(--neon-purple);
+        }
+
+        .chat-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-action-btn {
+            background: rgba(26, 31, 75, 0.8);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            border-radius: 8px;
+            color: var(--text-light);
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .chat-action-btn:hover {
+            background: rgba(0, 243, 255, 0.1);
+            border-color: var(--neon-blue);
+        }
+
+        .messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            max-height: 60vh;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            max-width: 85%;
+            animation: fadeIn 0.5s ease;
+            position: relative;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .user-message {
+            background: var(--user-message);
+            margin-left: auto;
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            box-shadow: 0 3px 10px rgba(0, 243, 255, 0.1);
+        }
+
+        .ai-message {
+            background: var(--ai-message);
+            margin-right: auto;
+            border: 1px solid rgba(185, 103, 255, 0.3);
+            box-shadow: 0 3px 10px rgba(185, 103, 255, 0.1);
+        }
+
+        .message-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .user-avatar, .ai-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .user-avatar {
+            background: var(--neon-blue);
+            color: var(--space-dark);
+        }
+
+        .ai-avatar {
+            background: var(--neon-purple);
+            color: white;
+        }
+
+        .message-content {
+            line-height: 1.5;
+        }
+
+        .message-content pre {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            border-left: 3px solid var(--neon-green);
+        }
+
+        .message-content code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: var(--neon-green);
+        }
+
+        .message-content img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin: 10px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .generated-image {
+            max-width: 100%;
+            border-radius: 8px;
+            margin: 10px 0;
+            border: 2px solid var(--neon-purple);
+            box-shadow: 0 0 15px rgba(185, 103, 255, 0.5);
+        }
+
+        .attached-files {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+        }
+
+        .file-icon {
+            color: var(--neon-blue);
+        }
+
+        .input-area {
+            display: flex;
+            padding: 20px;
+            background: rgba(10, 14, 41, 0.7);
+            border-top: 1px solid rgba(0, 243, 255, 0.2);
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .file-attachments {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .attachment-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(26, 31, 75, 0.8);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+        }
+
+        .remove-attachment {
+            cursor: pointer;
+            color: var(--error-color);
+        }
+
+        .input-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .file-input-btn {
+            background: rgba(26, 31, 75, 0.8);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            border-radius: 8px;
+            color: var(--text-light);
+            padding: 12px 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .file-input-btn:hover {
+            background: rgba(0, 243, 255, 0.1);
+            border-color: var(--neon-blue);
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(26, 31, 75, 0.8);
+            color: var(--text-light);
+            font-size: 1rem;
+            resize: none;
+            outline: none;
+            border: 1px solid rgba(0, 243, 255, 0.3);
+        }
+
+        .message-input:focus {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+        }
+
+        .send-button {
+            padding: 15px 20px;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .send-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 243, 255, 0.4);
+        }
+
+        .send-button:active {
+            transform: translateY(0);
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 10px 15px;
+            background: var(--ai-message);
+            border-radius: 10px;
+            margin-right: auto;
+            max-width: 80px;
+            margin-bottom: 20px;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 5px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--neon-purple);
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: rgba(230, 230, 255, 0.7);
+            border-top: 1px solid rgba(0, 243, 255, 0.2);
+        }
+
+        /* Mode selector */
+        .mode-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 10px;
+            background: rgba(26, 31, 75, 0.5);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            border-radius: 8px;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .mode-btn.active {
+            background: rgba(0, 243, 255, 0.2);
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+        }
+
+        /* Error and warning messages */
+        .error-message {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid rgba(244, 67, 54, 0.5);
+            color: #ff8a80;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        
+        .warning {
+            background: rgba(255, 152, 0, 0.2);
+            border: 1px solid rgba(255, 152, 0, 0.5);
+            color: #ffd54f;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        /* Loading animation for image generation */
+        .image-loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(185, 103, 255, 0.3);
+            border-left: 4px solid var(--neon-purple);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive design */
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                flex: 1;
+                margin-bottom: 20px;
+            }
+            
+            .message {
+                max-width: 95%;
+            }
+            
+            .input-controls {
+                flex-direction: column;
+            }
+            
+            .file-input-btn, .send-button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Stars background -->
+    <div class="stars" id="stars"></div>
+
+    <header>
+        <div class="logo">
+            <a href="Glitch.png" class="logo-icon" target="_blank">G</a>
+            <div class="logo-text">Glitch AI</div>
+        </div>
+        <div class="api-status">
+            <div class="status-indicator"></div>
+            <span>AI Service Connected</span>
+        </div>
+    </header>
+
+    <div class="container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3><i class="fas fa-comments"></i> Chat History</h3>
+                <button class="new-chat-btn" id="newChatBtn">
+                    <i class="fas fa-plus"></i> New Chat
+                </button>
+            </div>
+            
+            <div class="mode-selector">
+                <button class="mode-btn active" data-mode="chat">Chat</button>
+                <button class="mode-btn" data-mode="code">Code</button>
+                <button class="mode-btn" data-mode="study">Study</button>
+                <button class="mode-btn" data-mode="creative">Creative</button>
+            </div>
+            
+            <div class="chat-history" id="chatHistory">
+                <!-- Chat history will be populated here -->
+            </div>
+        </aside>
+
+        <main class="chat-area">
+            <div class="chat-header">
+                <div class="chat-header-left">
+                    <i class="fas fa-robot chat-header-icon"></i>
+                    <h2>Chat with Glitch AI</h2>
+                </div>
+                <div class="chat-actions">
+                    <button class="chat-action-btn" id="clearChatBtn">
+                        <i class="fas fa-trash"></i> Clear
+                    </button>
+                    <button class="chat-action-btn" id="exportChatBtn">
+                        <i class="fas fa-download"></i> Export PDF
+                    </button>
+                </div>
+            </div>
+            <div class="messages" id="messages">
+                <div class="message ai-message">
+                    <div class="message-header">
+                        <div class="ai-avatar">G</div>
+                        <strong>Glitch AI</strong>
+                    </div>
+                    <div class="message-content">
+                        <p>Hello! I'm Glitch AI, your advanced assistant. I can help you with coding, studying, creative tasks, and much more. What would you like to explore today?</p>
+                        <p>You can switch between different modes using the buttons in the sidebar to optimize my responses for your specific needs.</p>
+                        <p>In Creative mode, I can generate images for you using Vertex AI!</p>
+                    </div>
+                </div>
+            </div>
+            <div class="typing-indicator" id="typingIndicator">
+                <div class="typing-dots">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            </div>
+            <div class="input-area">
+                <div class="file-attachments" id="fileAttachments">
+                    <!-- File attachments will appear here -->
+                </div>
+                <div class="input-controls">
+                    <button class="file-input-btn" id="fileInputBtn">
+                        <i class="fas fa-paperclip"></i> Attach Files
+                    </button>
+                    <input type="file" id="fileInput" multiple style="display: none;">
+                    <textarea class="message-input" id="messageInput" placeholder="Type your message here..." rows="1"></textarea>
+                    <button class="send-button" id="sendButton">
+                        <i class="fas fa-paper-plane"></i> Send
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <p>Glitch AI Assistant</p>
+    </footer>
+
+    <script>
+        // API Configuration
+        const GEMINI_API_KEY = 'AIzaSyD5kaYM9MjyIx6rWFrEaj3KYP0pM8f6p-w';
+        const VERTEX_API_KEY = 'AQ.Ab8RN6JyhK3xgw-kcH8QFY4qefFXQ5SAeqhYIsRepkZyCll9uw';
+        
+        const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+        
+        // Vertex AI Image Generation API endpoint
+        // Note: This is a simplified implementation - in production you'd need proper authentication
+        const VERTEX_IMAGE_API_URL = 'https://us-central1-aiplatform.googleapis.com/v1/projects/glitch-ai/locations/us-central1/publishers/google/models/imagegeneration:predict';
+
+        // Application State
+        let currentChatId = null;
+        let chats = JSON.parse(localStorage.getItem('glitchChats')) || {};
+        let currentMode = 'chat';
+        let attachedFiles = [];
+
+        // DOM Elements
+        const starsContainer = document.getElementById('stars');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+        const messagesContainer = document.getElementById('messages');
+        const typingIndicator = document.getElementById('typingIndicator');
+        const chatHistory = document.getElementById('chatHistory');
+        const newChatBtn = document.getElementById('newChatBtn');
+        const clearChatBtn = document.getElementById('clearChatBtn');
+        const exportChatBtn = document.getElementById('exportChatBtn');
+        const fileInputBtn = document.getElementById('fileInputBtn');
+        const fileInput = document.getElementById('fileInput');
+        const fileAttachments = document.getElementById('fileAttachments');
+        const modeButtons = document.querySelectorAll('.mode-btn');
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            createStars();
+            loadChatHistory();
+            setupEventListeners();
+            
+            // Create a new chat if none exists
+            if (Object.keys(chats).length === 0) {
+                createNewChat();
+            } else {
+                // Load the most recent chat
+                const chatIds = Object.keys(chats);
+                currentChatId = chatIds[chatIds.length - 1];
+                loadChat(currentChatId);
+            }
+        });
+
+        // Create stars background
+        function createStars() {
+            const starCount = 200;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                
+                // Random position and size
+                const size = Math.random() * 3;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                
+                // Random animation delay
+                star.style.animationDelay = `${Math.random() * 5}s`;
+                
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Auto-resize textarea
+            messageInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+            
+            // Send message on button click
+            sendButton.addEventListener('click', sendMessage);
+            
+            // Send message on Enter key (but allow Shift+Enter for new line)
+            messageInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+            
+            // New chat button
+            newChatBtn.addEventListener('click', createNewChat);
+            
+            // Clear chat button
+            clearChatBtn.addEventListener('click', clearCurrentChat);
+            
+            // Export chat button
+            exportChatBtn.addEventListener('click', exportCurrentChatAsPDF);
+            
+            // File input
+            fileInputBtn.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', handleFileSelect);
+            
+            // Mode buttons
+            modeButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    modeButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentMode = this.dataset.mode;
+                    
+                    // Add a mode change message
+                    addMessage(`Mode changed to ${this.textContent} mode. How can I assist you?`, 'ai');
+                });
+            });
+        }
+
+        // Create a new chat
+        function createNewChat() {
+            const chatId = 'chat_' + Date.now();
+            currentChatId = chatId;
+            
+            chats[chatId] = {
+                id: chatId,
+                title: 'New Chat',
+                messages: [],
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+            
+            saveChats();
+            loadChatHistory();
+            loadChat(chatId);
+            
+            // Clear the messages container except for the welcome message
+            messagesContainer.innerHTML = `
+                <div class="message ai-message">
+                    <div class="message-header">
+                        <div class="ai-avatar">G</div>
+                        <strong>Glitch AI</strong>
+                    </div>
+                    <div class="message-content">
+                        <p>Hello! I'm Glitch AI, your advanced assistant. I can help you with coding, studying, creative tasks, and much more. What would you like to explore today?</p>
+                        <p>You can switch between different modes using the buttons in the sidebar to optimize my responses for your specific needs.</p>
+                        <p>In Creative mode, I can generate images for you using Vertex AI!</p>
+                    </div>
+                </div>
+            `;
+            
+            // Clear attached files
+            attachedFiles = [];
+            updateFileAttachments();
+        }
+
+        // Load chat history sidebar
+        function loadChatHistory() {
+            chatHistory.innerHTML = '';
+            
+            const chatArray = Object.values(chats).sort((a, b) => 
+                new Date(b.updatedAt) - new Date(a.updatedAt)
+            );
+            
+            chatArray.forEach(chat => {
+                const historyItem = document.createElement('div');
+                historyItem.classList.add('history-item');
+                if (chat.id === currentChatId) {
+                    historyItem.classList.add('active');
+                }
+                
+                historyItem.innerHTML = `
+                    <i class="fas fa-message history-icon"></i>
+                    <div class="history-content">
+                        <div class="history-title">${chat.title}</div>
+                        <div class="history-preview">${getChatPreview(chat)}</div>
+                    </div>
+                    <div class="history-date">${formatDate(chat.updatedAt)}</div>
+                `;
+                
+                historyItem.addEventListener('click', () => loadChat(chat.id));
+                chatHistory.appendChild(historyItem);
+            });
+        }
+
+        // Get a preview of the chat for the sidebar
+        function getChatPreview(chat) {
+            if (chat.messages.length === 0) return 'New chat';
+            
+            const lastMessage = chat.messages[chat.messages.length - 1];
+            return lastMessage.content.substring(0, 30) + (lastMessage.content.length > 30 ? '...' : '');
+        }
+
+        // Format date for display
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+            
+            if (diffMins < 1) return 'Just now';
+            if (diffMins < 60) return `${diffMins}m ago`;
+            if (diffHours < 24) return `${diffHours}h ago`;
+            if (diffDays < 7) return `${diffDays}d ago`;
+            
+            return date.toLocaleDateString();
+        }
+
+        // Load a specific chat
+        function loadChat(chatId) {
+            if (!chats[chatId]) return;
+            
+            currentChatId = chatId;
+            const chat = chats[chatId];
+            
+            // Update messages container
+            messagesContainer.innerHTML = '';
+            chat.messages.forEach(msg => {
+                addMessageToUI(msg.content, msg.sender, msg.isError || false, msg.files || [], msg.generatedImage || null);
+            });
+            
+            // Update chat history UI
+            loadChatHistory();
+            
+            // Clear attached files
+            attachedFiles = [];
+            updateFileAttachments();
+        }
+
+        // Clear the current chat
+        function clearCurrentChat() {
+            if (!currentChatId || !confirm('Are you sure you want to clear this chat?')) return;
+            
+            chats[currentChatId].messages = [];
+            saveChats();
+            
+            // Reload the chat
+            loadChat(currentChatId);
+            
+            // Add a fresh welcome message
+            addMessage(`Chat cleared. How can I assist you today?`, 'ai');
+        }
+
+        // Export the current chat as PDF
+        async function exportCurrentChatAsPDF() {
+            if (!currentChatId) return;
+            
+            const chat = chats[currentChatId];
+            
+            // Show loading indicator
+            const originalText = exportChatBtn.innerHTML;
+            exportChatBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating PDF...';
+            exportChatBtn.disabled = true;
+            
+            try {
+                // Use html2canvas to capture the chat content
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                
+                // Add title
+                pdf.setFontSize(20);
+                pdf.setTextColor(0, 243, 255);
+                pdf.text('Glitch AI Chat Export', 20, 20);
+                
+                pdf.setFontSize(12);
+                pdf.setTextColor(0, 0, 0);
+                pdf.text(`Chat: ${chat.title}`, 20, 30);
+                pdf.text(`Exported on: ${new Date().toLocaleDateString()}`, 20, 37);
+                
+                let yPosition = 50;
+                
+                // Add each message to the PDF
+                for (const msg of chat.messages) {
+                    // Add sender label
+                    pdf.setFontSize(10);
+                    pdf.setTextColor(100, 100, 100);
+                    pdf.text(`${msg.sender === 'user' ? 'You' : 'Glitch AI'} - ${new Date(msg.timestamp).toLocaleString()}`, 20, yPosition);
+                    yPosition += 5;
+                    
+                    // Add message content
+                    pdf.setFontSize(12);
+                    pdf.setTextColor(0, 0, 0);
+                    
+                    // Split long messages into multiple lines
+                    const lines = pdf.splitTextToSize(msg.content, 170);
+                    pdf.text(lines, 20, yPosition);
+                    yPosition += (lines.length * 7) + 10;
+                    
+                    // Add page break if needed
+                    if (yPosition > 270) {
+                        pdf.addPage();
+                        yPosition = 20;
+                    }
+                }
+                
+                // Save the PDF
+                pdf.save(`glitch-chat-${chat.id}.pdf`);
+                
+            } catch (error) {
+                console.error('Error generating PDF:', error);
+                alert('Error generating PDF. Please try again.');
+            } finally {
+                // Restore button state
+                exportChatBtn.innerHTML = originalText;
+                exportChatBtn.disabled = false;
+            }
+        }
+
+        // Handle file selection
+        function handleFileSelect(e) {
+            const files = Array.from(e.target.files);
+            
+            files.forEach(file => {
+                // Check if file is an image
+                if (file.type.startsWith('image/')) {
+                    // For images, we'll store a preview
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        attachedFiles.push({
+                            name: file.name,
+                            type: 'image',
+                            content: e.target.result,
+                            file: file
+                        });
+                        updateFileAttachments();
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    // For other files, we'll just store the name
+                    attachedFiles.push({
+                        name: file.name,
+                        type: 'file',
+                        file: file
+                    });
+                    updateFileAttachments();
+                }
+            });
+            
+            // Reset file input
+            fileInput.value = '';
+        }
+
+        // Update the file attachments UI
+        function updateFileAttachments() {
+            fileAttachments.innerHTML = '';
+            
+            attachedFiles.forEach((file, index) => {
+                const attachmentItem = document.createElement('div');
+                attachmentItem.classList.add('attachment-item');
+                attachmentItem.innerHTML = `
+                    <i class="fas fa-${file.type === 'image' ? 'image' : 'file'} file-icon"></i>
+                    <span>${file.name}</span>
+                    <i class="fas fa-times remove-attachment" data-index="${index}"></i>
+                `;
+                
+                fileAttachments.appendChild(attachmentItem);
+            });
+            
+            // Add event listeners to remove buttons
+            document.querySelectorAll('.remove-attachment').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.dataset.index);
+                    attachedFiles.splice(index, 1);
+                    updateFileAttachments();
+                });
+            });
+        }
+
+        // Send a message
+        async function sendMessage() {
+            const message = messageInput.value.trim();
+            if (message === '' && attachedFiles.length === 0) return;
+            
+            // Add user message to chat
+            addMessage(message, 'user', false, attachedFiles);
+            
+            // Clear input and reset height
+            messageInput.value = '';
+            messageInput.style.height = 'auto';
+            
+            // Show typing indicator
+            typingIndicator.style.display = 'block';
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            try {
+                let response;
+                let generatedImage = null;
+                
+                // Check if we should generate an image
+                if ((currentMode === 'creative' && 
+                    (message.toLowerCase().includes('generate image') || 
+                     message.toLowerCase().includes('create image') ||
+                     message.toLowerCase().includes('draw') ||
+                     message.toLowerCase().includes('make an image'))) ||
+                    message.toLowerCase().includes('image of')) {
+                    
+                    // Show image generation indicator
+                    const imageLoadingDiv = document.createElement('div');
+                    imageLoadingDiv.classList.add('image-loading');
+                    imageLoadingDiv.innerHTML = `
+                        <div class="loading-spinner"></div>
+                        <p>Generating image with Vertex AI...</p>
+                    `;
+                    
+                    const lastMessage = messagesContainer.lastChild;
+                    lastMessage.querySelector('.message-content').appendChild(imageLoadingDiv);
+                    
+                    // Extract the image description from the message
+                    const imagePrompt = extractImagePrompt(message);
+                    
+                    // Generate image using Vertex AI
+                    generatedImage = await generateImageWithVertexAI(imagePrompt);
+                    
+                    // Remove loading indicator
+                    imageLoadingDiv.remove();
+                    
+                    // Get a text response about the image
+                    response = `I've generated an image based on your request: "${imagePrompt}". Here's the result:`;
+                } else {
+                    // Prepare files for API if any
+                    let fileContents = [];
+                    if (attachedFiles.length > 0) {
+                        for (const file of attachedFiles) {
+                            if (file.type === 'image') {
+                                // Convert image to base64 without data URL prefix
+                                const base64 = file.content.split(',')[1];
+                                fileContents.push({
+                                    inlineData: {
+                                        mimeType: file.file.type,
+                                        data: base64
+                                    }
+                                });
+                            }
+                        }
+                    }
+                    
+                    // Call AI API based on mode and content
+                    if (attachedFiles.length > 0 && attachedFiles.some(f => f.type === 'image')) {
+                        // If there are images, use multimodal approach
+                        response = await callMultimodalAPI(message, fileContents);
+                    } else {
+                        // Use standard text API
+                        response = await callTextAPI(message);
+                    }
+                }
+                
+                typingIndicator.style.display = 'none';
+                addMessage(response, 'ai', false, [], generatedImage);
+                
+                // Clear attached files after sending
+                attachedFiles = [];
+                updateFileAttachments();
+                
+            } catch (error) {
+                console.error('Error calling AI API:', error);
+                typingIndicator.style.display = 'none';
+                addMessage('Sorry, I encountered an error processing your request. Please try again.', 'ai', true);
+            }
+        }
+
+        // Extract image prompt from user message
+        function extractImagePrompt(message) {
+            // Remove common command phrases to get the actual description
+            return message
+                .replace(/generate image of|create image of|draw|make an image of/gi, '')
+                .replace(/please|can you|could you/gi, '')
+                .trim();
+        }
+
+        // Generate image using Vertex AI
+        async function generateImageWithVertexAI(prompt) {
+            // This is a simplified implementation
+            // In a real implementation, you would make an authenticated API call to Vertex AI
+            
+            // For demonstration purposes, we'll use a placeholder service
+            // In production, you would replace this with the actual Vertex AI API call
+            
+            try {
+                // Simulate API call delay
+                await new Promise(resolve => setTimeout(resolve, 3000));
+                
+                // Since we can't make actual Vertex AI calls from the frontend without a backend,
+                // we'll use a placeholder image service for demonstration
+                const placeholderImageUrl = await getPlaceholderImage(prompt);
+                
+                return placeholderImageUrl;
+            } catch (error) {
+                console.error('Error generating image:', error);
+                throw new Error('Image generation failed. Please try again.');
+            }
+        }
+
+        // Get a placeholder image (for demonstration)
+        async function getPlaceholderImage(prompt) {
+            // Use a placeholder service to generate an image based on the prompt
+            // In a real implementation, this would be replaced with Vertex AI
+            
+            // For now, we'll use a static image or a placeholder service
+            // You can replace this with any image generation API that doesn't require a backend
+            
+            // Using picsum.photos as a placeholder
+            const width = 512;
+            const height = 512;
+            const seed = prompt.replace(/\s+/g, '').substring(0, 10);
+            
+            return `https://picsum.photos/seed/${seed}/${width}/${height}`;
+        }
+
+        // Call the multimodal API (for text + images)
+        async function callMultimodalAPI(message, fileContents) {
+            const requestBody = {
+                contents: [{
+                    parts: [
+                        ...fileContents,
+                        { text: message }
+                    ]
+                }],
+                generationConfig: {
+                    temperature: 0.7,
+                    topK: 40,
+                    topP: 0.95,
+                    maxOutputTokens: 2048,
+                }
+            };
+            
+            const response = await fetch(GEMINI_API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestBody)
+            });
+            
+            if (!response.ok) {
+                throw new Error(`API error: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            return data.candidates[0].content.parts[0].text;
+        }
+
+        // Call the text-only API
+        async function callTextAPI(message) {
+            // Adjust parameters based on mode
+            let temperature = 0.7;
+            let maxTokens = 2048;
+            
+            switch(currentMode) {
+                case 'code':
+                    temperature = 0.3;
+                    maxTokens = 4096;
+                    break;
+                case 'study':
+                    temperature = 0.5;
+                    maxTokens = 4096;
+                    break;
+                case 'creative':
+                    temperature = 0.9;
+                    maxTokens = 1024;
+                    break;
+            }
+            
+            const requestBody = {
+                contents: [{
+                    parts: [{ text: message }]
+                }],
+                generationConfig: {
+                    temperature: temperature,
+                    topK: 40,
+                    topP: 0.95,
+                    maxOutputTokens: maxTokens,
+                }
+            };
+            
+            const response = await fetch(GEMINI_API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestBody)
+            });
+            
+            if (!response.ok) {
+                throw new Error(`API error: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            return data.candidates[0].content.parts[0].text;
+        }
+
+        // Add a message to the UI and save to chat history
+        function addMessage(content, sender, isError = false, files = [], generatedImage = null) {
+            addMessageToUI(content, sender, isError, files, generatedImage);
+            
+            // Save to chat history
+            if (currentChatId && chats[currentChatId]) {
+                const messageObj = {
+                    content: content,
+                    sender: sender,
+                    timestamp: new Date().toISOString(),
+                    isError: isError || false,
+                    files: files || [],
+                    generatedImage: generatedImage || null
+                };
+                
+                chats[currentChatId].messages.push(messageObj);
+                chats[currentChatId].updatedAt = new Date().toISOString();
+                
+                // Update chat title if it's the first user message
+                if (sender === 'user' && chats[currentChatId].messages.filter(m => m.sender === 'user').length === 1) {
+                    chats[currentChatId].title = content.substring(0, 30) + (content.length > 30 ? '...' : '');
+                }
+                
+                saveChats();
+                loadChatHistory();
+            }
+        }
+
+        // Add a message to the UI only
+        function addMessageToUI(content, sender, isError = false, files = [], generatedImage = null) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            messageDiv.classList.add(sender === 'user' ? 'user-message' : 'ai-message');
+            
+            if (isError) {
+                messageDiv.classList.add('error-message');
+            }
+            
+            let formattedContent = content;
+            
+            // Format code blocks if present
+            if (content.includes('```')) {
+                formattedContent = formatCodeBlocks(content);
+            }
+            
+            // Create message HTML
+            messageDiv.innerHTML = `
+                <div class="message-header">
+                    <div class="${sender === 'user' ? 'user-avatar' : 'ai-avatar'}">${sender === 'user' ? 'U' : 'G'}</div>
+                    <strong>${sender === 'user' ? 'You' : 'Glitch AI'}</strong>
+                </div>
+                <div class="message-content">${formattedContent}</div>
+            `;
+            
+            // Add generated image if available
+            if (generatedImage) {
+                const imageDiv = document.createElement('div');
+                imageDiv.innerHTML = `
+                    <img src="${generatedImage}" alt="Generated image" class="generated-image">
+                    <p><em>Image generated based on your prompt</em></p>
+                `;
+                messageDiv.querySelector('.message-content').appendChild(imageDiv);
+            }
+            
+            // Add file attachments if any
+            if (files.length > 0) {
+                const filesDiv = document.createElement('div');
+                filesDiv.classList.add('attached-files');
+                
+                files.forEach(file => {
+                    const fileItem = document.createElement('div');
+                    fileItem.classList.add('file-item');
+                    
+                    if (file.type === 'image') {
+                        fileItem.innerHTML = `
+                            <i class="fas fa-image file-icon"></i>
+                            <span>${file.name}</span>
+                            <img src="${file.content}" alt="${file.name}" style="max-width: 200px; margin-top: 5px;">
+                        `;
+                    } else {
+                        fileItem.innerHTML = `
+                            <i class="fas fa-file file-icon"></i>
+                            <span>${file.name}</span>
+                        `;
+                    }
+                    
+                    filesDiv.appendChild(fileItem);
+                });
+                
+                messageDiv.querySelector('.message-content').appendChild(filesDiv);
+            }
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Format code blocks in messages
+        function formatCodeBlocks(text) {
+            return text.replace(/```(\w+)?\n([\s\S]*?)```/g, function(match, lang, code) {
+                return `<pre><code class="language-${lang || 'text'}">${escapeHtml(code.trim())}</code></pre>`;
+            }).replace(/`([^`]+)`/g, '<code>$1</code>');
+        }
+
+        // Escape HTML to prevent XSS
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Save chats to localStorage
+        function saveChats() {
+            localStorage.setItem('glitchChats', JSON.stringify(chats));
+        }
+    </script>
+</body>
+</html>
