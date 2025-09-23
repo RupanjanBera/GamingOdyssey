@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://www.paypal.com/sdk/js?client-id=Abj4GKhw0aoqQes156AfApLm2wN5PAF5ncEUA_M-Dtzaj22yUzczA7tzf5LrsP7ufTj2ERxhUIEscsRF&currency=USD"></script>
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+  <script src="https://cdn.upigateway.com/sdk.js"></script>
   <style>
     :root {
       --primary-color: #3B82F6;
@@ -116,7 +116,7 @@
     }
     #payment-method-selector {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 0.75rem;
     }
     .email-verification {
@@ -141,15 +141,9 @@
       margin-top: 0.5rem;
       display: none;
     }
-    @media (min-width: 1024px) {
-      #payment-method-selector {
-        grid-template-columns: repeat(4, 1fr);
-      }
-    }
   </style>
 </head>
 <body>
-  <!-- Header -->
   <header class="bg-card-background py-4 px-6 shadow-lg">
     <div class="container mx-auto flex justify-between items-center">
       <div class="flex items-center">
@@ -162,7 +156,6 @@
     </div>
   </header>
 
-  <!-- Main Content -->
   <main class="flex-grow container mx-auto px-4 py-8 md:py-12">
     <div class="max-w-5xl mx-auto">
       <div class="text-center mb-8 md:mb-12">
@@ -171,7 +164,6 @@
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
-        <!-- Payment Form -->
         <div>
           <div class="bg-card-background rounded-lg p-6 shadow-xl space-y-6">
             <div>
@@ -198,24 +190,17 @@
             <div>
               <h2 class="text-xl font-bold mb-4">2. Payment Method</h2>
               <div id="payment-method-selector" class="mb-4">
-                <div class="payment-tab active" data-payment="Card"><i class="fas fa-credit-card text-xl mb-2"></i><span> Card</span></div>
+                <div class="payment-tab active" data-payment="UPI"><i class="fas fa-qrcode text-xl mb-2"></i><span> UPI</span></div>
                 <div class="payment-tab" data-payment="PayPal"><i class="fab fa-paypal text-xl mb-2"></i><span> PayPal</span></div>
-                <div class="payment-tab" data-payment="UPI"><i class="fas fa-qrcode text-xl mb-2"></i><span> UPI</span></div>
                 <div class="payment-tab" data-payment="Cash on Delivery"><i class="fas fa-money-bill-wave text-xl mb-2"></i><span> COD</span></div>
               </div>
             </div>
             
             <div id="payment-details-container">
-              <div id="Card-container" class="space-y-4">
-                <h3 class="font-semibold text-lg">Enter Card Details</h3>
-                <input type="text" placeholder="Card Number" class="input-field w-full p-3 rounded-md" id="card-number">
-                <div class="grid grid-cols-2 gap-4">
-                  <input type="text" placeholder="MM / YY" class="input-field w-full p-3 rounded-md" id="card-expiry">
-                  <input type="text" placeholder="CVV" class="input-field w-full p-3 rounded-md" id="card-cvv">
-                </div>
+              <div id="UPI-container" class="text-center">
+                <p class="text-slate-300 p-4 bg-slate-900/50 rounded-md">You will be prompted to complete the payment on your UPI app after clicking 'Confirm & Pay'.</p>
               </div>
               <div id="PayPal-container" class="hidden text-center"><div id="paypal-button-container"></div></div>
-              <div id="UPI-container" class="hidden text-center"><div id="upi-qr-code" class="mx-auto bg-white p-2 rounded-lg w-48 h-48 mb-4"></div><p>Scan to pay with any UPI app.</p></div>
               <div id="Cash_on_Delivery-container" class="hidden text-center"><p class="text-slate-300 p-4 bg-slate-900/50 rounded-md">You will pay with cash upon delivery.</p></div>
             </div>
 
@@ -228,7 +213,6 @@
           </div>
         </div>
 
-        <!-- Order Summary -->
         <div>
           <div class="bg-card-background rounded-lg p-6 h-fit lg:sticky lg:top-8 shadow-xl">
             <h2 class="text-xl font-bold border-b border-card-border pb-4 mb-4">Order Summary</h2>
@@ -249,7 +233,6 @@
     </div>
   </main>
 
-  <!-- Confirmation Modal -->
   <div class="confirmation-modal" id="confirmation-modal">
     <div class="modal-content">
       <div class="w-16 h-16 mx-auto bg-green-500/10 rounded-full flex items-center justify-center mb-4">
@@ -262,7 +245,6 @@
     </div>
   </div>
 
-  <!-- Footer -->
   <footer class="bg-card-background py-6 px-4 mt-8">
     <div class="container mx-auto text-center">
       <p class="text-slate-400 text-sm">© 2023 Gaming Odyssey. All rights reserved.</p>
@@ -286,7 +268,7 @@
       const verificationCodeInput = document.getElementById('verification-code');
       const confirmCodeBtn = document.getElementById('confirm-code-btn');
       
-      let selectedPaymentMethod = 'Card';
+      let selectedPaymentMethod = 'UPI';
       let isEmailVerified = false;
       let verificationCode = '';
 
@@ -336,26 +318,14 @@
       // --- EMAIL VERIFICATION ---
       function verifyEmail() {
         const email = emailInput.value.trim();
-        
-        if (!email) {
-          showEmailStatus('Please enter an email address', false);
-          return;
-        }
-        
-        if (!isValidEmail(email)) {
+        if (!email || !isValidEmail(email)) {
           showEmailStatus('Please enter a valid email address', false);
           return;
         }
-        
-        // Generate and send verification code
         verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
         showEmailStatus('Verification code sent to your email', true);
         verificationCodeContainer.style.display = 'block';
-        
-        // In a real app, you would send this code to the user's email
         console.log(`Verification code for ${email}: ${verificationCode}`);
-        
-        // For demo purposes, we'll auto-fill the code
         setTimeout(() => {
           verificationCodeInput.value = verificationCode;
           alert(`For demo purposes, the verification code is: ${verificationCode}`);
@@ -381,16 +351,9 @@
       function showEmailStatus(message, isSuccess) {
         emailStatus.classList.remove('hidden');
         emailStatusText.textContent = message;
-        
-        if (isSuccess) {
-          emailVerifiedIcon.classList.remove('hidden');
-          emailNotVerifiedIcon.classList.add('hidden');
-          emailStatusText.className = 'email-verified';
-        } else {
-          emailVerifiedIcon.classList.add('hidden');
-          emailNotVerifiedIcon.classList.remove('hidden');
-          emailStatusText.className = 'email-not-verified';
-        }
+        emailVerifiedIcon.classList.toggle('hidden', !isSuccess);
+        emailNotVerifiedIcon.classList.toggle('hidden', isSuccess);
+        emailStatusText.className = isSuccess ? 'email-verified' : 'email-not-verified';
       }
       
       function updateConfirmButtonState() {
@@ -422,65 +385,69 @@
       });
       
       confirmBtn.addEventListener('click', (e) => {
-        if (selectedPaymentMethod === 'PayPal') {
-          e.preventDefault(); 
-          alert('Please use the PayPal button to complete your purchase.');
-          return;
-        }
-        
         if (!isEmailVerified) {
           alert('Please verify your email address before proceeding.');
           return;
-        }
-        
-        // Validate card details if paying by card
-        if (selectedPaymentMethod === 'Card') {
-          const cardNumber = document.getElementById('card-number').value;
-          const cardExpiry = document.getElementById('card-expiry').value;
-          const cardCvv = document.getElementById('card-cvv').value;
-          
-          if (!cardNumber || !cardExpiry || !cardCvv) {
-            alert('Please fill in all card details.');
-            return;
-          }
         }
         
         confirmBtn.disabled = true;
         document.getElementById('btn-text').classList.add('hidden');
         document.getElementById('btn-loader').classList.remove('hidden');
         
-        // Process the payment
-        setTimeout(() => {
-          processPayment();
-        }, 1500);
+        if (selectedPaymentMethod === 'UPI') {
+            payWithUPIGateway();
+        } else { // For COD or other future methods
+            setTimeout(processPayment, 1500);
+        }
       });
       
+      // --- UPI GATEWAY INTEGRATION (SIMULATED) ---
+      function payWithUPIGateway() {
+          const apiKey = '790fbff9-61fc-4e0d-b8d0-d1ee2a2bf8cf';
+          const transactionId = 'TXN' + Date.now();
+          const amount = finalOrder.total.toFixed(2);
+
+          console.log("Initiating UPIGateway Payment...");
+          console.log("API Key:", apiKey);
+          console.log("Amount:", amount);
+          console.log("Transaction ID:", transactionId);
+
+          // This is a simulation of calling the UPIGateway SDK.
+          // In a real scenario, you might call something like: UPIGateway.pay({ apiKey, amount, ... })
+          setTimeout(() => {
+              const isPaymentSuccessful = true; // Simulate a successful payment
+              if (isPaymentSuccessful) {
+                  console.log("UPIGateway payment successful!");
+                  processPayment(); // Proceed with order confirmation
+              } else {
+                  console.error("UPIGateway payment failed.");
+                  alert("Your UPI payment failed. Please try again.");
+                  confirmBtn.disabled = false;
+                  document.getElementById('btn-text').classList.remove('hidden');
+                  document.getElementById('btn-loader').classList.add('hidden');
+              }
+          }, 2000); // Simulate network delay
+      }
+
       // --- CORE LOGIC ---
       function processPayment() {
-        // Prepare order data
         finalOrder.paymentMethod = selectedPaymentMethod;
         finalOrder.customerEmail = document.getElementById('customer-email').value;
         finalOrder.orderId = 'ORD-' + Math.floor(10000 + Math.random() * 90000);
         finalOrder.status = 'pending';
         finalOrder.timestamp = new Date().toISOString();
         
-        // Save to orders in localStorage (for database.html)
         let allOrders = JSON.parse(localStorage.getItem('orders')) || [];
         allOrders.push(finalOrder);
         localStorage.setItem('orders', JSON.stringify(allOrders));
         localStorage.setItem('lastOrder', JSON.stringify(finalOrder));
         
-        // Send email via FormSubmit
         sendEmail(finalOrder);
         
-        // Show confirmation modal
         document.getElementById('modal-order-id').textContent = finalOrder.orderId;
         confirmationModal.classList.add('active');
-        
-        // Set up the continue button
         continueButton.href = `thankyou.html?orderId=${finalOrder.orderId}`;
         
-        // Clean up
         localStorage.removeItem('finalOrder');
         localStorage.removeItem('cart');
         localStorage.removeItem('buyNowProduct');
@@ -488,16 +455,11 @@
       
       function sendEmail(orderData) {
         const formData = new FormData();
-        
-        // Add all order details to form data
         formData.append('_subject', `New Order Received! - ${orderData.orderId}`);
         formData.append('_next', `${window.location.origin}/thankyou.html?orderId=${orderData.orderId}`);
         formData.append('_template', 'table');
-        
-        // Add customer email for autoresponse - MUST be named "email" for FormSubmit
         formData.append('email', orderData.customerEmail);
         
-        // Create autoresponse message
         const customerMessage = `
 <!DOCTYPE html>
 <html>
@@ -513,15 +475,10 @@
   </style>
 </head>
 <body>
-  <div class="header">
-    <h1>Thank You for Your Order!</h1>
-    <p>Your gaming adventure is about to begin</p>
-  </div>
-  
+  <div class="header"><h1>Thank You for Your Order!</h1><p>Your gaming adventure is about to begin</p></div>
   <div class="content">
     <p>Hello ${orderData.shippingAddress.name},</p>
-    <p>Thank you for shopping with <span class="highlight">Gaming Odyssey</span>. We're excited to let you know that we've received your order and it's now being processed.</p>
-    
+    <p>Thank you for shopping with <span class="highlight">Gaming Odyssey</span>. We've received your order and it's now being processed.</p>
     <div class="order-details">
       <h2>Order Details</h2>
       <p><strong>Order ID:</strong> ${orderData.orderId}</p>
@@ -529,64 +486,28 @@
       <p><strong>Total Amount:</strong> $${orderData.total.toFixed(2)}</p>
       <p><strong>Payment Method:</strong> ${orderData.paymentMethod}</p>
     </div>
-    
     <h2>Items Ordered</h2>
-    ${orderData.items.map(item => `
-      <div class="item">
-        <div>${item.name} (Qty: ${item.quantity})</div>
-        <div>$${(item.price * item.quantity).toFixed(2)}</div>
-      </div>
-    `).join('')}
-    
+    ${orderData.items.map(item => `<div class="item"><div>${item.name} (Qty: ${item.quantity})</div><div>$${(item.price * item.quantity).toFixed(2)}</div></div>`).join('')}
     <h2>Shipping Address</h2>
-    <p>
-      ${orderData.shippingAddress.name}<br>
-      ${orderData.shippingAddress.addressLine1}<br>
-      ${orderData.shippingAddress.city}, ${orderData.shippingAddress.state} ${orderData.shippingAddress.zip}<br>
-      ${orderData.shippingAddress.country}<br>
-      Phone: ${orderData.shippingAddress.phone}
-    </p>
-    
+    <p>${orderData.shippingAddress.name}<br>${orderData.shippingAddress.addressLine1}<br>${orderData.shippingAddress.city}, ${orderData.shippingAddress.state} ${orderData.shippingAddress.zip}<br>${orderData.shippingAddress.country}<br>Phone: ${orderData.shippingAddress.phone}</p>
     <p>We'll notify you when your order ships. If you have any questions, please contact our support team at support@gamingodyssey.in.</p>
-    
     <p>Happy Gaming,<br>The Gaming Odyssey Team</p>
   </div>
-  
-  <div class="footer">
-    <p>© 2023 Gaming Odyssey. All rights reserved.</p>
-    <p>This is an automated message, please do not reply to this email.</p>
-  </div>
+  <div class="footer"><p>© 2023 Gaming Odyssey. All rights reserved.</p><p>This is an automated message, please do not reply to this email.</p></div>
 </body>
-</html>
-        `;
+</html>`;
         
         formData.append('_autoresponse', customerMessage);
-        formData.append('_autoresponseSubject', 'Thank you for your order with Gaming Odyssey!');
-        
         formData.append('Order ID', orderData.orderId);
         formData.append('Customer Email', orderData.customerEmail);
         formData.append('Total Amount', `$${orderData.total.toFixed(2)}`);
         formData.append('Payment Method', orderData.paymentMethod);
-        formData.append('Order Date', new Date(orderData.timestamp).toLocaleString());
-        
-        // Format items
-        const itemsSummary = orderData.items.map(item => 
-          `${item.name} (Qty: ${item.quantity}) - $${(item.price * item.quantity).toFixed(2)}`
-        ).join('\n');
+        const itemsSummary = orderData.items.map(item => `${item.name} (Qty: ${item.quantity}) - $${(item.price * item.quantity).toFixed(2)}`).join('\n');
         formData.append('Items Ordered', itemsSummary);
-        
-        // Format shipping address
         const addr = orderData.shippingAddress;
-        const shippingSummary = `
-          ${addr.name}
-          ${addr.addressLine1}
-          ${addr.city}, ${addr.state} ${addr.zip}
-          ${addr.country}
-          Phone: ${addr.phone}
-        `;
+        const shippingSummary = `${addr.name}\n${addr.addressLine1}\n${addr.city}, ${addr.state} ${addr.zip}\n${addr.country}\nPhone: ${addr.phone}`;
         formData.append('Shipping Address', shippingSummary);
         
-        // Send to FormSubmit
         fetch('https://formsubmit.co/ajax/support@gamingodyssey.in', {
           method: 'POST',
           body: formData
@@ -600,15 +521,6 @@
       renderOrderSummary();
       renderShippingDetails();
       
-      // Initialize UPI QR Code
-      const upiCanvas = document.createElement('canvas');
-      QRCode.toCanvas(upiCanvas, `upi://pay?pa=your-upi-id@oksbi&pn=GamingOdyssey&am=${finalOrder.total.toFixed(2)}`, { width: 180 }, (error) => {
-        if (error) console.error(error);
-        const qrContainer = document.getElementById('upi-qr-code');
-        qrContainer.innerHTML = ''; 
-        qrContainer.appendChild(upiCanvas);
-      });
-
       // Initialize PayPal
       paypal.Buttons({
         onClick: (data, actions) => {
@@ -628,4 +540,3 @@
   </script>
 </body>
 </html>
-
