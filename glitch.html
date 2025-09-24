@@ -734,7 +734,7 @@
 
     <header>
         <div class="logo">
-            <img src="Glitch.png" alt="Glitch Logo" class="logo-icon">
+            <img src="glitch.png" alt="Glitch Logo" class="logo-icon">
             <div class="logo-text">Glitch AI</div>
         </div>
         <div class="api-status">
@@ -823,15 +823,19 @@
     </footer>
 
     <script>
-        // API Configuration (Replace with your own keys if needed)
-        const GEMINI_API_KEY = 'YOUR_GEMINI_API_KEY';
+        // --- KEY CHANGES HERE ---
+        // 1. API Key is now integrated.
+        const GEMINI_API_KEY = 'AIzaSyArZWsOfU8wla2cVcc-IluhRiva9KUYzFs';
+        
+        // 2. Using the correct, working URL for the gemini-1.5-flash model.
         const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+        // ------------------------
 
         // Application State
         let currentChatId = null;
         let chats = JSON.parse(localStorage.getItem('glitchChats')) || {};
         let currentMode = 'chat';
-        let isWebSearchActive = false; // NEW: State for web search
+        let isWebSearchActive = false;
         let attachedFiles = [];
 
         // DOM Elements
@@ -848,7 +852,7 @@
         const fileInput = document.getElementById('fileInput');
         const fileAttachments = document.getElementById('fileAttachments');
         const modeButtons = document.querySelectorAll('.mode-btn');
-        const webSearchBtn = document.getElementById('webSearchBtn'); // NEW: Web search button element
+        const webSearchBtn = document.getElementById('webSearchBtn');
         const chatTitle = document.getElementById('chatTitle');
 
         // Initialize the application
@@ -905,7 +909,6 @@
             fileInputBtn.addEventListener('click', () => fileInput.click());
             fileInput.addEventListener('change', handleFileSelect);
 
-            // NEW: Event listener for web search toggle
             webSearchBtn.addEventListener('click', () => {
                 isWebSearchActive = !isWebSearchActive;
                 webSearchBtn.classList.toggle('active', isWebSearchActive);
@@ -958,7 +961,6 @@
                 historyItem.style.animationDelay = `${index * 0.05}s`;
                 if (chat.id === currentChatId) historyItem.classList.add('active');
                 
-                // CHANGE: Added delete button
                 historyItem.innerHTML = `
                     <i class="fas fa-comment-dots history-icon"></i>
                     <div class="history-content">
@@ -974,7 +976,6 @@
                 chatHistory.appendChild(historyItem);
             });
 
-            // NEW: Add event listeners for delete buttons
             document.querySelectorAll('.delete-chat-btn').forEach(button => {
                 button.addEventListener('click', function(e) {
                     e.stopPropagation();
@@ -984,7 +985,6 @@
             });
         }
         
-        // NEW: Function to delete a chat
         function deleteChat(chatIdToDelete) {
             if (confirm(`Are you sure you want to delete "${chats[chatIdToDelete].title}"?`)) {
                 delete chats[chatIdToDelete];
@@ -1064,7 +1064,6 @@
             }
         }
         
-        // CHANGE: Improved file handling for all types
         function handleFileSelect(e) {
             const files = Array.from(e.target.files);
             files.forEach(file => {
@@ -1073,11 +1072,11 @@
                     attachedFiles.push({
                         name: file.name,
                         mimeType: file.type,
-                        content: event.target.result // This will be the Data URL
+                        content: event.target.result
                     });
                     updateFileAttachments();
                 };
-                reader.readAsDataURL(file); // Read file as Data URL
+                reader.readAsDataURL(file);
             });
             fileInput.value = '';
         }
@@ -1108,7 +1107,6 @@
             let message = messageInput.value.trim();
             if (message === '' && attachedFiles.length === 0) return;
             
-            // NEW: Add web search prefix if active
             if (isWebSearchActive) {
                 message = `Using web search, find the latest information about: ${message}`;
             }
@@ -1133,23 +1131,20 @@
             }
         }
 
-        // CHANGE: Unified API call function
         async function callGeminiAPI(message, files) {
-            if (!GEMINI_API_KEY || GEMINI_API_KEY === 'AIzaSyArZWsOfU8wla2cVcc-IluhRiva9KUYzFs') {
-                throw new Error("Gemini API Key is not set. Please add your key in the script section.");
+            if (!GEMINI_API_KEY) {
+                throw new Error("Gemini API Key is not set.");
             }
 
             const parts = [];
-            // Add text part
             if (message) {
                 parts.push({ text: message });
             }
-            // Add file parts
             for (const file of files) {
                 parts.push({
                     inlineData: {
                         mimeType: file.mimeType,
-                        data: file.content.split(',')[1] // Extract base64 part from Data URL
+                        data: file.content.split(',')[1]
                     }
                 });
             }
@@ -1231,16 +1226,12 @@
         }
 
         function formatCodeBlocks(text) {
-            // First, escape HTML to prevent XSS from the text content itself
             let escapedText = escapeHtml(text);
             
-            // Then, replace markdown for code blocks and inline code with HTML tags
             escapedText = escapedText.replace(/```(\w+)?\n([\s\S]*?)```/g, function(match, lang, code) {
-                // The 'code' part is already escaped, so it's safe to put inside <pre><code>
                 return `<pre><code class="language-${lang || 'text'}">${code.trim()}</code></pre>`;
             }).replace(/`([^`]+)`/g, '<code>$1</code>');
             
-            // Finally, replace newlines with <br> for proper formatting, but not inside <pre> tags
             return escapedText.replace(/(<pre[\s\S]*?<\/pre>)|(\n)/g, (match, pre, newline) => pre ? pre : (newline ? '<br>' : ''));
         }
         
