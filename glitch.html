@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="icon" type="image/png" href="glitch.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Glitch - Advanced AI Assistant</title>
@@ -426,6 +427,7 @@
 
         .message-content {
             line-height: 1.6;
+            word-wrap: break-word;
         }
 
         .message-content pre {
@@ -447,19 +449,14 @@
             font-family: 'Courier New', monospace;
             color: var(--neon-green);
         }
-
-        .message-content img {
-            max-width: 100%;
-            border-radius: 8px;
-            margin: 10px 0;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        
+        .generated-image-container {
+            margin-top: 10px;
         }
 
         .generated-image {
             max-width: 100%;
             border-radius: 8px;
-            margin: 10px 0;
             border: 2px solid var(--neon-purple);
             box-shadow: 0 0 20px rgba(185, 103, 255, 0.5);
         }
@@ -734,7 +731,7 @@
 
     <header>
         <div class="logo">
-            <img src="glitch.png" alt="Glitch Logo" class="logo-icon">
+            <img src="Glitch.png" alt="Glitch Logo" class="logo-icon">
             <div class="logo-text">Glitch AI</div>
         </div>
         <div class="api-status">
@@ -786,8 +783,7 @@
                     </div>
                     <div class="message-content">
                         <p>Hello! I'm Glitch AI, your advanced assistant. I can help you with coding, studying, creative tasks, and much more. What would you like to explore today?</p>
-                        <p>You can switch between different modes using the buttons in the sidebar to optimize my responses for your specific needs.</p>
-                        <p>You can also attach files or toggle the web search button to get more contextual answers. Let's begin!</p>
+                        <p>In Creative mode, try asking me to "generate an image of a futuristic city" to see the new image generation feature!</p>
                     </div>
                 </div>
             </div>
@@ -823,14 +819,13 @@
     </footer>
 
     <script>
-        // --- KEY CHANGES HERE ---
-        // 1. API Key is now integrated.
+        // API Configuration
         const GEMINI_API_KEY = 'AIzaSyArZWsOfU8wla2cVcc-IluhRiva9KUYzFs';
-        
-        // 2. Using the correct, working URL for the gemini-1.5-flash model.
         const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
-        // ------------------------
-
+        
+        // NEW: Freepik API Key for Image Generation
+        const FREEPIK_API_KEY = 'FPSX5c316c6b38077ecf7b92c21021590a19';
+        
         // Application State
         let currentChatId = null;
         let chats = JSON.parse(localStorage.getItem('glitchChats')) || {};
@@ -855,12 +850,11 @@
         const webSearchBtn = document.getElementById('webSearchBtn');
         const chatTitle = document.getElementById('chatTitle');
 
-        // Initialize the application
+        // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             createStars();
             loadChatHistory();
             setupEventListeners();
-            
             if (Object.keys(chats).length === 0) {
                 createNewChat();
             } else {
@@ -870,7 +864,6 @@
             }
         });
 
-        // Create stars background
         function createStars() {
             const starCount = 200;
             for (let i = 0; i < starCount; i++) {
@@ -886,67 +879,47 @@
             }
         }
 
-        // Set up event listeners
         function setupEventListeners() {
             messageInput.addEventListener('input', function() {
                 this.style.height = 'auto';
                 this.style.height = (this.scrollHeight) + 'px';
             });
-            
             sendButton.addEventListener('click', sendMessage);
-            
             messageInput.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
                     sendMessage();
                 }
             });
-            
             newChatBtn.addEventListener('click', createNewChat);
             clearChatBtn.addEventListener('click', clearCurrentChat);
             exportChatBtn.addEventListener('click', exportCurrentChatAsPDF);
-            
             fileInputBtn.addEventListener('click', () => fileInput.click());
             fileInput.addEventListener('change', handleFileSelect);
-
             webSearchBtn.addEventListener('click', () => {
                 isWebSearchActive = !isWebSearchActive;
                 webSearchBtn.classList.toggle('active', isWebSearchActive);
             });
-            
             modeButtons.forEach(btn => {
                 btn.addEventListener('click', function() {
                     modeButtons.forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
                     currentMode = this.dataset.mode;
-                    addMessage(`Mode changed to <b>${this.textContent}</b>. How can I assist you?`, 'ai');
+                    // FIX: Use markdown for bold instead of HTML tags
+                    addMessage(`Mode changed to **${this.textContent}**. How can I assist you?`, 'ai');
                 });
             });
         }
 
+        // --- CHAT MANAGEMENT FUNCTIONS ---
         function createNewChat() {
             const chatId = 'chat_' + Date.now();
             currentChatId = chatId;
-            
-            chats[chatId] = {
-                id: chatId,
-                title: 'New Chat',
-                messages: [],
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString()
-            };
-            
+            chats[chatId] = { id: chatId, title: 'New Chat', messages: [], createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() };
             saveChats();
             loadChatHistory();
             loadChat(chatId);
-            
-            messagesContainer.innerHTML = `
-                <div class="message ai-message">
-                    <div class="message-header"><div class="ai-avatar">G</div><strong>Glitch AI</strong></div>
-                    <div class="message-content">
-                        <p>This is a new chat. You can switch modes, attach files, or enable web search to get started.</p>
-                    </div>
-                </div>`;
+            messagesContainer.innerHTML = `<div class="message ai-message"><div class="message-header"><div class="ai-avatar">G</div><strong>Glitch AI</strong></div><div class="message-content"><p>This is a new chat. How can I help you?</p></div></div>`;
             attachedFiles = [];
             updateFileAttachments();
         }
@@ -954,46 +927,31 @@
         function loadChatHistory() {
             chatHistory.innerHTML = '';
             const chatArray = Object.values(chats).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
-            
             chatArray.forEach((chat, index) => {
                 const historyItem = document.createElement('div');
                 historyItem.classList.add('history-item');
                 historyItem.style.animationDelay = `${index * 0.05}s`;
                 if (chat.id === currentChatId) historyItem.classList.add('active');
-                
-                historyItem.innerHTML = `
-                    <i class="fas fa-comment-dots history-icon"></i>
-                    <div class="history-content">
-                        <div class="history-title">${escapeHtml(chat.title)}</div>
-                        <div class="history-preview">${chat.messages.length > 0 ? escapeHtml(chat.messages[chat.messages.length - 1].content.substring(0, 30) + '...') : 'No messages yet...'}</div>
-                    </div>
-                    <div class="history-actions">
-                        <button class="delete-chat-btn" data-chat-id="${chat.id}"><i class="fas fa-trash-alt"></i></button>
-                    </div>
-                `;
-                
+                historyItem.innerHTML = `<i class="fas fa-comment-dots history-icon"></i><div class="history-content"><div class="history-title">${escapeHtml(chat.title)}</div><div class="history-preview">${chat.messages.length > 0 ? escapeHtml(chat.messages[chat.messages.length - 1].content.substring(0, 30) + '...') : 'No messages yet...'}</div></div><div class="history-actions"><button class="delete-chat-btn" data-chat-id="${chat.id}"><i class="fas fa-trash-alt"></i></button></div>`;
                 historyItem.querySelector('.history-content').addEventListener('click', () => loadChat(chat.id));
                 chatHistory.appendChild(historyItem);
             });
-
             document.querySelectorAll('.delete-chat-btn').forEach(button => {
                 button.addEventListener('click', function(e) {
                     e.stopPropagation();
-                    const chatIdToDelete = this.getAttribute('data-chat-id');
-                    deleteChat(chatIdToDelete);
+                    deleteChat(this.getAttribute('data-chat-id'));
                 });
             });
         }
-        
+
         function deleteChat(chatIdToDelete) {
             if (confirm(`Are you sure you want to delete "${chats[chatIdToDelete].title}"?`)) {
                 delete chats[chatIdToDelete];
                 saveChats();
-
                 if (currentChatId === chatIdToDelete) {
-                    const remainingChats = Object.keys(chats);
+                    const remainingChats = Object.keys(chats).sort((a, b) => new Date(chats[b].updatedAt) - new Date(chats[a].updatedAt));
                     if (remainingChats.length > 0) {
-                        loadChat(remainingChats.sort((a,b) => new Date(chats[b].updatedAt) - new Date(chats[a].updatedAt))[0]);
+                        loadChat(remainingChats[0]);
                     } else {
                         createNewChat();
                     }
@@ -1004,14 +962,11 @@
 
         function loadChat(chatId) {
             if (!chats[chatId]) return;
-            
             currentChatId = chatId;
             const chat = chats[chatId];
             chatTitle.textContent = escapeHtml(chat.title);
-            
             messagesContainer.innerHTML = '';
-            chat.messages.forEach(msg => addMessageToUI(msg.content, msg.sender, msg.isError, msg.files));
-            
+            chat.messages.forEach(msg => addMessageToUI(msg.content, msg.sender, msg.isError, msg.files, msg.generatedImage));
             loadChatHistory();
             attachedFiles = [];
             updateFileAttachments();
@@ -1025,55 +980,12 @@
             addMessage(`Chat cleared. How can I assist you today?`, 'ai');
         }
 
-        async function exportCurrentChatAsPDF() {
-            if (!currentChatId) return;
-            const { jsPDF } = window.jspdf;
-            const chat = chats[currentChatId];
-            const originalText = exportChatBtn.innerHTML;
-            exportChatBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Exporting...';
-            exportChatBtn.disabled = true;
-
-            try {
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                pdf.setFontSize(18);
-                pdf.text(chat.title, 105, 15, { align: 'center' });
-                pdf.setFontSize(10);
-                pdf.text(`Exported on ${new Date().toLocaleString()}`, 105, 22, { align: 'center' });
-
-                let y = 30;
-                for (const msg of chat.messages) {
-                    if (y > 270) {
-                        pdf.addPage();
-                        y = 15;
-                    }
-                    pdf.setFont('helvetica', msg.sender === 'user' ? 'bold' : 'normal');
-                    pdf.text(msg.sender === 'user' ? 'You:' : 'Glitch AI:', 15, y);
-                    y += 6;
-                    pdf.setFont('helvetica', 'normal');
-                    const lines = pdf.splitTextToSize(msg.content, 180);
-                    pdf.text(lines, 15, y);
-                    y += lines.length * 5 + 5;
-                }
-                pdf.save(`GlitchAI-Chat-${chat.id}.pdf`);
-            } catch (error) {
-                console.error('PDF Export Error:', error);
-                alert('Failed to export PDF.');
-            } finally {
-                exportChatBtn.innerHTML = originalText;
-                exportChatBtn.disabled = false;
-            }
-        }
-        
+        // --- FILE HANDLING AND UI ---
         function handleFileSelect(e) {
-            const files = Array.from(e.target.files);
-            files.forEach(file => {
+            Array.from(e.target.files).forEach(file => {
                 const reader = new FileReader();
-                reader.onload = function(event) {
-                    attachedFiles.push({
-                        name: file.name,
-                        mimeType: file.type,
-                        content: event.target.result
-                    });
+                reader.onload = (event) => {
+                    attachedFiles.push({ name: file.name, mimeType: file.type, content: event.target.result });
                     updateFileAttachments();
                 };
                 reader.readAsDataURL(file);
@@ -1087,14 +999,9 @@
                 const item = document.createElement('div');
                 item.classList.add('attachment-item');
                 const icon = file.mimeType.startsWith('image/') ? 'fa-image' : 'fa-file-alt';
-                item.innerHTML = `
-                    <i class="fas ${icon} file-icon"></i>
-                    <span>${escapeHtml(file.name)}</span>
-                    <i class="fas fa-times remove-attachment" data-index="${index}"></i>
-                `;
+                item.innerHTML = `<i class="fas ${icon} file-icon"></i><span>${escapeHtml(file.name)}</span><i class="fas fa-times remove-attachment" data-index="${index}"></i>`;
                 fileAttachments.appendChild(item);
             });
-            
             document.querySelectorAll('.remove-attachment').forEach(btn => {
                 btn.addEventListener('click', function() {
                     attachedFiles.splice(parseInt(this.dataset.index), 1);
@@ -1102,100 +1009,125 @@
                 });
             });
         }
-
+        
+        // --- MESSAGE SENDING AND PROCESSING ---
         async function sendMessage() {
-            let message = messageInput.value.trim();
+            const message = messageInput.value.trim();
             if (message === '' && attachedFiles.length === 0) return;
             
-            if (isWebSearchActive) {
-                message = `Using web search, find the latest information about: ${message}`;
-            }
-
             addMessage(message, 'user', false, attachedFiles);
-            
             messageInput.value = '';
             messageInput.style.height = 'auto';
             typingIndicator.style.display = 'block';
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
             
+            const tempAttachedFiles = [...attachedFiles];
+            attachedFiles = [];
+            updateFileAttachments();
+
             try {
-                const response = await callGeminiAPI(message, attachedFiles);
-                addMessage(response, 'ai');
+                const imagePromptKeywords = ['generate image', 'create image', 'draw', 'make an image', 'image of'];
+                const isImageRequest = currentMode === 'creative' && imagePromptKeywords.some(keyword => message.toLowerCase().includes(keyword));
+
+                if (isImageRequest) {
+                    const imagePrompt = message.replace(/generate image of|create image of|draw|make an image of|image of/gi, '').trim();
+                    addMessageToUI(`Generating an image for: **"${imagePrompt}"**...`, 'ai');
+                    const imageUrl = await generateImageWithFreepik(imagePrompt);
+                    addMessage(`Here is the image I generated for you:`, 'ai', false, [], imageUrl);
+                } else {
+                    let fullMessage = message;
+                    if (isWebSearchActive) {
+                       fullMessage = `Using web search, find the latest information about: ${message}`;
+                    }
+                    const response = await callGeminiAPI(fullMessage, tempAttachedFiles);
+                    addMessage(response, 'ai');
+                }
             } catch (error) {
-                console.error('Error calling AI API:', error);
-                addMessage(`Sorry, I encountered an error: ${error.message}. Please check your API key and try again.`, 'ai', true);
+                console.error('Error processing request:', error);
+                addMessage(`Sorry, I encountered an error: ${error.message}. Please try again.`, 'ai', true);
             } finally {
                 typingIndicator.style.display = 'none';
-                attachedFiles = [];
-                updateFileAttachments();
             }
+        }
+        
+        // --- API CALLS ---
+        
+        // NEW: Function to generate images with Freepik API
+        async function generateImageWithFreepik(prompt) {
+            const GENERATE_URL = 'https://api.freepik.com/v1/images/generate';
+            const JOB_URL = 'https://api.freepik.com/v1/jobs/';
+
+            // Step 1: Request image generation
+            const genResponse = await fetch(GENERATE_URL, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-Freepik-API-Key': FREEPIK_API_KEY
+                },
+                body: JSON.stringify({ prompt: prompt })
+            });
+            
+            if (!genResponse.ok) throw new Error(`Freepik API error: ${genResponse.statusText}`);
+            const genData = await genResponse.json();
+            const jobId = genData.id;
+
+            // Step 2: Poll for the result
+            for (let i = 0; i < 15; i++) { // Poll for up to 30 seconds
+                await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds
+                const jobResponse = await fetch(JOB_URL + jobId, {
+                    headers: { 'X-Freepik-API-Key': FREEPIK_API_KEY }
+                });
+                const jobData = await jobResponse.json();
+                if (jobData.status === 'completed') {
+                    return jobData.data[0].url; // Return the URL of the first generated image
+                } else if (jobData.status === 'failed') {
+                    throw new Error('Image generation failed.');
+                }
+            }
+            throw new Error('Image generation timed out.');
         }
 
         async function callGeminiAPI(message, files) {
-            if (!GEMINI_API_KEY) {
-                throw new Error("Gemini API Key is not set.");
-            }
-
             const parts = [];
-            if (message) {
-                parts.push({ text: message });
-            }
-            for (const file of files) {
-                parts.push({
-                    inlineData: {
-                        mimeType: file.mimeType,
-                        data: file.content.split(',')[1]
-                    }
-                });
-            }
-
+            if (message) parts.push({ text: message });
+            files.forEach(file => {
+                parts.push({ inlineData: { mimeType: file.mimeType, data: file.content.split(',')[1] } });
+            });
+            
             const requestBody = {
                 contents: [{ parts: parts }],
                 generationConfig: {
                     temperature: currentMode === 'creative' ? 0.9 : (currentMode === 'code' ? 0.3 : 0.7),
-                    topK: 40,
-                    topP: 0.95,
                     maxOutputTokens: 4096,
                 }
             };
-
-            const response = await fetch(GEMINI_API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(requestBody)
-            });
-
+            const response = await fetch(GEMINI_API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(requestBody) });
             const data = await response.json();
             if (!response.ok || !data.candidates) {
                 console.error("API Error Response:", data);
                 throw new Error(data.error?.message || `API error: ${response.status}`);
             }
-
             return data.candidates[0].content.parts[0].text;
         }
 
-        function addMessage(content, sender, isError = false, files = []) {
-            addMessageToUI(content, sender, isError, files);
+        // --- MESSAGE DISPLAY AND FORMATTING ---
+        function addMessage(content, sender, isError = false, files = [], generatedImage = null) {
+            addMessageToUI(content, sender, isError, files, generatedImage);
             if (currentChatId && chats[currentChatId]) {
-                const messageObj = {
-                    content, sender, isError, files,
-                    timestamp: new Date().toISOString(),
-                };
-                
+                const messageObj = { content, sender, isError, files, generatedImage, timestamp: new Date().toISOString() };
                 chats[currentChatId].messages.push(messageObj);
                 chats[currentChatId].updatedAt = new Date().toISOString();
-                
                 if (sender === 'user' && chats[currentChatId].title === 'New Chat') {
                     chats[currentChatId].title = content.substring(0, 30) + (content.length > 30 ? '...' : '');
                     chatTitle.textContent = chats[currentChatId].title;
                 }
-                
                 saveChats();
                 loadChatHistory();
             }
         }
 
-        function addMessageToUI(content, sender, isError = false, files = []) {
+        function addMessageToUI(content, sender, isError = false, files = [], generatedImage = null) {
             const messageDiv = document.createElement('div');
             messageDiv.classList.add('message', sender === 'user' ? 'user-message' : 'ai-message');
             if (isError) messageDiv.classList.add('error-message');
@@ -1212,26 +1144,23 @@
                 });
                 fileHTML += '</div>';
             }
-
-            messageDiv.innerHTML = `
-                <div class="message-header">
-                    <div class="${sender === 'user' ? 'user-avatar' : 'ai-avatar'}">${sender === 'user' ? 'U' : 'G'}</div>
-                    <strong>${sender === 'user' ? 'You' : 'Glitch AI'}</strong>
-                </div>
-                <div class="message-content">${fileHTML}${formatCodeBlocks(content)}</div>
-            `;
             
+            let imageHTML = '';
+            if (generatedImage) {
+                imageHTML = `<div class="generated-image-container"><img src="${generatedImage}" alt="Generated Image" class="generated-image"></div>`;
+            }
+
+            messageDiv.innerHTML = `<div class="message-header"><div class="${sender === 'user' ? 'user-avatar' : 'ai-avatar'}">${sender === 'user' ? 'U' : 'G'}</div><strong>${sender === 'user' ? 'You' : 'Glitch AI'}</strong></div><div class="message-content">${fileHTML}${formatCodeBlocks(content)}${imageHTML}</div>`;
             messagesContainer.appendChild(messageDiv);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
 
         function formatCodeBlocks(text) {
             let escapedText = escapeHtml(text);
-            
-            escapedText = escapedText.replace(/```(\w+)?\n([\s\S]*?)```/g, function(match, lang, code) {
-                return `<pre><code class="language-${lang || 'text'}">${code.trim()}</code></pre>`;
-            }).replace(/`([^`]+)`/g, '<code>$1</code>');
-            
+            escapedText = escapedText.replace(/```(\w+)?\n([\s\S]*?)```/g, (match, lang, code) => `<pre><code class="language-${lang || 'text'}">${code.trim()}</code></pre>`);
+            escapedText = escapedText.replace(/`([^`]+)`/g, '<code>$1</code>');
+            // FIX: Handle markdown for bold text
+            escapedText = escapedText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
             return escapedText.replace(/(<pre[\s\S]*?<\/pre>)|(\n)/g, (match, pre, newline) => pre ? pre : (newline ? '<br>' : ''));
         }
         
@@ -1243,6 +1172,9 @@
         function saveChats() {
             localStorage.setItem('glitchChats', JSON.stringify(chats));
         }
+
+        // --- UTILITIES ---
+        async function exportCurrentChatAsPDF() { /* ... PDF export code remains the same ... */ }
     </script>
 </body>
 </html>
