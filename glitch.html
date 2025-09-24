@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Glitch - Advanced AI Assistant</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- PDF Export Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
@@ -30,6 +29,20 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            scrollbar-width: thin;
+            scrollbar-color: var(--neon-blue) var(--space-dark);
+        }
+        
+        *::-webkit-scrollbar {
+            width: 8px;
+        }
+        *::-webkit-scrollbar-track {
+            background: var(--space-dark);
+        }
+        *::-webkit-scrollbar-thumb {
+            background-color: var(--neon-blue);
+            border-radius: 10px;
+            border: 2px solid var(--space-dark);
         }
 
         body {
@@ -48,6 +61,12 @@
             width: 100%;
             height: 100%;
             z-index: -1;
+            animation: move-stars 120s linear infinite;
+        }
+
+        @keyframes move-stars {
+            from { background-position: 0 0; }
+            to { background-position: -10000px 5000px; }
         }
 
         .star {
@@ -58,8 +77,8 @@
         }
 
         @keyframes twinkle {
-            0%, 100% { opacity: 0.2; }
-            50% { opacity: 1; }
+            0%, 100% { opacity: 0.2; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
         }
 
         /* Header */
@@ -71,7 +90,10 @@
             background: rgba(10, 14, 41, 0.7);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(0, 243, 255, 0.3);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
 
         .logo {
@@ -84,24 +106,17 @@
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            color: var(--neon-blue);
-            text-shadow: 0 0 10px var(--neon-blue);
+            object-fit: cover;
             animation: glow 2s infinite alternate;
-            background: rgba(0, 243, 255, 0.1);
             border: 2px solid var(--neon-blue);
+            background: var(--space-dark); /* Fallback bg color */
         }
 
         @keyframes glow {
             from { 
-                text-shadow: 0 0 10px var(--neon-blue);
                 box-shadow: 0 0 10px var(--neon-blue);
             }
             to { 
-                text-shadow: 0 0 20px var(--neon-blue), 0 0 30px var(--neon-purple);
                 box-shadow: 0 0 20px var(--neon-blue), 0 0 30px var(--neon-purple);
             }
         }
@@ -111,8 +126,10 @@
             font-weight: 700;
             background: linear-gradient(to right, var(--neon-blue), var(--neon-purple), var(--neon-pink));
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: gradient-shift 3s infinite alternate;
+            animation: gradient-shift 5s infinite alternate;
+            background-size: 200% 200%;
         }
 
         @keyframes gradient-shift {
@@ -145,11 +162,17 @@
         /* Main container */
         .container {
             display: flex;
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
             padding: 20px;
             gap: 20px;
             min-height: calc(100vh - 160px);
+            animation: container-glow 4s infinite alternate;
+        }
+        
+        @keyframes container-glow {
+            from { border-color: rgba(0, 243, 255, 0.1); }
+            to { border-color: rgba(185, 103, 255, 0.2); }
         }
 
         /* Sidebar */
@@ -160,9 +183,10 @@
             padding: 20px;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(0, 243, 255, 0.2);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
             display: flex;
             flex-direction: column;
+            transition: all 0.3s ease;
         }
 
         .sidebar-header {
@@ -196,8 +220,8 @@
         }
 
         .new-chat-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 243, 255, 0.4);
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 243, 255, 0.4);
         }
 
         .chat-history {
@@ -215,6 +239,13 @@
             align-items: center;
             gap: 10px;
             border: 1px solid transparent;
+            animation: slideIn 0.5s ease forwards;
+            opacity: 0;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
 
         .history-item:hover {
@@ -251,10 +282,26 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+        
+        .history-actions {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
 
-        .history-date {
-            font-size: 0.7rem;
-            opacity: 0.5;
+        .delete-chat-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 77, 109, 0.6);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            padding: 5px;
+        }
+
+        .delete-chat-btn:hover {
+            color: var(--error-color);
+            transform: scale(1.2);
         }
 
         /* Chat area */
@@ -267,7 +314,7 @@
             overflow: hidden;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(0, 243, 255, 0.2);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
 
         .chat-header {
@@ -312,6 +359,7 @@
         .chat-action-btn:hover {
             background: rgba(0, 243, 255, 0.1);
             border-color: var(--neon-blue);
+            transform: translateY(-2px);
         }
 
         .messages {
@@ -326,27 +374,27 @@
             padding: 15px;
             border-radius: 10px;
             max-width: 85%;
-            animation: fadeIn 0.5s ease;
+            animation: fadeIn 0.5s ease-out;
             position: relative;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .user-message {
             background: var(--user-message);
             margin-left: auto;
             border: 1px solid rgba(0, 243, 255, 0.3);
-            box-shadow: 0 3px 10px rgba(0, 243, 255, 0.1);
+            box-shadow: 0 3px 15px rgba(0, 243, 255, 0.1);
         }
 
         .ai-message {
             background: var(--ai-message);
             margin-right: auto;
             border: 1px solid rgba(185, 103, 255, 0.3);
-            box-shadow: 0 3px 10px rgba(185, 103, 255, 0.1);
+            box-shadow: 0 3px 15px rgba(185, 103, 255, 0.1);
         }
 
         .message-header {
@@ -377,18 +425,19 @@
         }
 
         .message-content {
-            line-height: 1.5;
+            line-height: 1.6;
         }
 
         .message-content pre {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 10px;
-            border-radius: 5px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 15px;
+            border-radius: 8px;
             overflow-x: auto;
             margin: 10px 0;
             font-family: 'Courier New', monospace;
             white-space: pre-wrap;
-            border-left: 3px solid var(--neon-green);
+            border-left: 4px solid var(--neon-green);
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
         }
 
         .message-content code {
@@ -404,7 +453,7 @@
             border-radius: 8px;
             margin: 10px 0;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
         }
 
         .generated-image {
@@ -412,7 +461,7 @@
             border-radius: 8px;
             margin: 10px 0;
             border: 2px solid var(--neon-purple);
-            box-shadow: 0 0 15px rgba(185, 103, 255, 0.5);
+            box-shadow: 0 0 20px rgba(185, 103, 255, 0.5);
         }
 
         .attached-files {
@@ -425,11 +474,11 @@
         .file-item {
             display: flex;
             align-items: center;
-            gap: 5px;
-            background: rgba(0, 0, 0, 0.2);
-            padding: 5px 10px;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px 12px;
             border-radius: 5px;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
         }
 
         .file-icon {
@@ -457,13 +506,19 @@
             gap: 5px;
             background: rgba(26, 31, 75, 0.8);
             padding: 5px 10px;
-            border-radius: 5px;
+            border-radius: 20px;
             font-size: 0.8rem;
+            animation: fadeIn 0.3s;
         }
 
         .remove-attachment {
             cursor: pointer;
             color: var(--error-color);
+            transition: transform 0.2s;
+        }
+        
+        .remove-attachment:hover {
+            transform: scale(1.2);
         }
 
         .input-controls {
@@ -471,7 +526,7 @@
             gap: 10px;
         }
 
-        .file-input-btn {
+        .input-btn {
             background: rgba(26, 31, 75, 0.8);
             border: 1px solid rgba(0, 243, 255, 0.3);
             border-radius: 8px;
@@ -484,9 +539,15 @@
             gap: 5px;
         }
 
-        .file-input-btn:hover {
+        .input-btn:hover {
             background: rgba(0, 243, 255, 0.1);
             border-color: var(--neon-blue);
+        }
+        
+        .input-btn.active {
+            background: rgba(0, 243, 255, 0.2);
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
         }
 
         .message-input {
@@ -500,11 +561,12 @@
             resize: none;
             outline: none;
             border: 1px solid rgba(0, 243, 255, 0.3);
+            transition: all 0.3s;
         }
 
         .message-input:focus {
             border-color: var(--neon-blue);
-            box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
         }
 
         .send-button {
@@ -523,7 +585,7 @@
 
         .send-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 243, 255, 0.4);
+            box-shadow: 0 5px 20px rgba(0, 243, 255, 0.4);
         }
 
         .send-button:active {
@@ -573,7 +635,8 @@
 
         /* Mode selector */
         .mode-selector {
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 10px;
             margin-bottom: 15px;
         }
@@ -602,9 +665,6 @@
             background: rgba(244, 67, 54, 0.2);
             border: 1px solid rgba(244, 67, 54, 0.5);
             color: #ff8a80;
-            padding: 10px;
-            border-radius: 5px;
-            margin-top: 10px;
         }
         
         .warning {
@@ -648,34 +708,33 @@
             .container {
                 flex-direction: column;
             }
-            
             .sidebar {
                 flex: 1;
                 margin-bottom: 20px;
+                max-width: 100%;
             }
-            
             .message {
                 max-width: 95%;
             }
-            
             .input-controls {
                 flex-direction: column;
             }
-            
-            .file-input-btn, .send-button {
+            .input-btn, .send-button {
                 width: 100%;
                 justify-content: center;
+            }
+            .logo-text {
+                display: none;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Stars background -->
     <div class="stars" id="stars"></div>
 
     <header>
         <div class="logo">
-            <a href="Glitch.png" class="logo-icon" target="_blank">G</a>
+            <img src="Glitch.png" alt="Glitch Logo" class="logo-icon">
             <div class="logo-text">Glitch AI</div>
         </div>
         <div class="api-status">
@@ -701,15 +760,14 @@
             </div>
             
             <div class="chat-history" id="chatHistory">
-                <!-- Chat history will be populated here -->
-            </div>
+                </div>
         </aside>
 
         <main class="chat-area">
             <div class="chat-header">
                 <div class="chat-header-left">
                     <i class="fas fa-robot chat-header-icon"></i>
-                    <h2>Chat with Glitch AI</h2>
+                    <h2 id="chatTitle">Chat with Glitch AI</h2>
                 </div>
                 <div class="chat-actions">
                     <button class="chat-action-btn" id="clearChatBtn">
@@ -729,7 +787,7 @@
                     <div class="message-content">
                         <p>Hello! I'm Glitch AI, your advanced assistant. I can help you with coding, studying, creative tasks, and much more. What would you like to explore today?</p>
                         <p>You can switch between different modes using the buttons in the sidebar to optimize my responses for your specific needs.</p>
-                        <p>In Creative mode, I can generate images for you!</p>
+                        <p>You can also attach files or toggle the web search button to get more contextual answers. Let's begin!</p>
                     </div>
                 </div>
             </div>
@@ -742,11 +800,13 @@
             </div>
             <div class="input-area">
                 <div class="file-attachments" id="fileAttachments">
-                    <!-- File attachments will appear here -->
-                </div>
+                    </div>
                 <div class="input-controls">
-                    <button class="file-input-btn" id="fileInputBtn">
+                    <button class="input-btn" id="fileInputBtn">
                         <i class="fas fa-paperclip"></i> Attach Files
+                    </button>
+                    <button class="input-btn" id="webSearchBtn">
+                        <i class="fas fa-globe"></i> Web Search
                     </button>
                     <input type="file" id="fileInput" multiple style="display: none;">
                     <textarea class="message-input" id="messageInput" placeholder="Type your message here..." rows="1"></textarea>
@@ -763,20 +823,15 @@
     </footer>
 
     <script>
-        // API Configuration
-        const GEMINI_API_KEY = 'AIzaSyD5kaYM9MjyIx6rWFrEaj3KYP0pM8f6p-w';
-        const VERTEX_API_KEY = 'AQ.Ab8RN6JyhK3xgw-kcH8QFY4qefFXQ5SAeqhYIsRepkZyCll9uw';
-        
+        // API Configuration (Replace with your own keys if needed)
+        const GEMINI_API_KEY = 'YOUR_GEMINI_API_KEY';
         const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
-        
-        // Vertex AI Image Generation API endpoint
-        // Note: This is a simplified implementation - in production you'd need proper authentication
-        const VERTEX_IMAGE_API_URL = 'https://us-central1-aiplatform.googleapis.com/v1/projects/glitch-ai/locations/us-central1/publishers/google/models/imagegeneration:predict';
 
         // Application State
         let currentChatId = null;
         let chats = JSON.parse(localStorage.getItem('glitchChats')) || {};
         let currentMode = 'chat';
+        let isWebSearchActive = false; // NEW: State for web search
         let attachedFiles = [];
 
         // DOM Elements
@@ -793,6 +848,8 @@
         const fileInput = document.getElementById('fileInput');
         const fileAttachments = document.getElementById('fileAttachments');
         const modeButtons = document.querySelectorAll('.mode-btn');
+        const webSearchBtn = document.getElementById('webSearchBtn'); // NEW: Web search button element
+        const chatTitle = document.getElementById('chatTitle');
 
         // Initialize the application
         document.addEventListener('DOMContentLoaded', function() {
@@ -800,13 +857,11 @@
             loadChatHistory();
             setupEventListeners();
             
-            // Create a new chat if none exists
             if (Object.keys(chats).length === 0) {
                 createNewChat();
             } else {
-                // Load the most recent chat
-                const chatIds = Object.keys(chats);
-                currentChatId = chatIds[chatIds.length - 1];
+                const chatIds = Object.keys(chats).sort((a, b) => new Date(chats[b].updatedAt) - new Date(chats[a].updatedAt));
+                currentChatId = chatIds[0];
                 loadChat(currentChatId);
             }
         });
@@ -814,37 +869,28 @@
         // Create stars background
         function createStars() {
             const starCount = 200;
-            
             for (let i = 0; i < starCount; i++) {
                 const star = document.createElement('div');
                 star.classList.add('star');
-                
-                // Random position and size
                 const size = Math.random() * 3;
                 star.style.width = `${size}px`;
                 star.style.height = `${size}px`;
                 star.style.left = `${Math.random() * 100}%`;
                 star.style.top = `${Math.random() * 100}%`;
-                
-                // Random animation delay
                 star.style.animationDelay = `${Math.random() * 5}s`;
-                
                 starsContainer.appendChild(star);
             }
         }
 
         // Set up event listeners
         function setupEventListeners() {
-            // Auto-resize textarea
             messageInput.addEventListener('input', function() {
                 this.style.height = 'auto';
                 this.style.height = (this.scrollHeight) + 'px';
             });
             
-            // Send message on button click
             sendButton.addEventListener('click', sendMessage);
             
-            // Send message on Enter key (but allow Shift+Enter for new line)
             messageInput.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
@@ -852,33 +898,29 @@
                 }
             });
             
-            // New chat button
             newChatBtn.addEventListener('click', createNewChat);
-            
-            // Clear chat button
             clearChatBtn.addEventListener('click', clearCurrentChat);
-            
-            // Export chat button
             exportChatBtn.addEventListener('click', exportCurrentChatAsPDF);
             
-            // File input
             fileInputBtn.addEventListener('click', () => fileInput.click());
             fileInput.addEventListener('change', handleFileSelect);
+
+            // NEW: Event listener for web search toggle
+            webSearchBtn.addEventListener('click', () => {
+                isWebSearchActive = !isWebSearchActive;
+                webSearchBtn.classList.toggle('active', isWebSearchActive);
+            });
             
-            // Mode buttons
             modeButtons.forEach(btn => {
                 btn.addEventListener('click', function() {
                     modeButtons.forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
                     currentMode = this.dataset.mode;
-                    
-                    // Add a mode change message
-                    addMessage(`Mode changed to ${this.textContent} mode. How can I assist you?`, 'ai');
+                    addMessage(`Mode changed to <b>${this.textContent}</b>. How can I assist you?`, 'ai');
                 });
             });
         }
 
-        // Create a new chat
         function createNewChat() {
             const chatId = 'chat_' + Date.now();
             currentChatId = chatId;
@@ -895,483 +937,262 @@
             loadChatHistory();
             loadChat(chatId);
             
-            // Clear the messages container except for the welcome message
             messagesContainer.innerHTML = `
                 <div class="message ai-message">
-                    <div class="message-header">
-                        <div class="ai-avatar">G</div>
-                        <strong>Glitch AI</strong>
-                    </div>
+                    <div class="message-header"><div class="ai-avatar">G</div><strong>Glitch AI</strong></div>
                     <div class="message-content">
-                        <p>Hello! I'm Glitch AI, your advanced assistant. I can help you with coding, studying, creative tasks, and much more. What would you like to explore today?</p>
-                        <p>You can switch between different modes using the buttons in the sidebar to optimize my responses for your specific needs.</p>
-                        <p>In Creative mode, I can generate images for you using Vertex AI!</p>
+                        <p>This is a new chat. You can switch modes, attach files, or enable web search to get started.</p>
                     </div>
-                </div>
-            `;
-            
-            // Clear attached files
+                </div>`;
             attachedFiles = [];
             updateFileAttachments();
         }
 
-        // Load chat history sidebar
         function loadChatHistory() {
             chatHistory.innerHTML = '';
+            const chatArray = Object.values(chats).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
             
-            const chatArray = Object.values(chats).sort((a, b) => 
-                new Date(b.updatedAt) - new Date(a.updatedAt)
-            );
-            
-            chatArray.forEach(chat => {
+            chatArray.forEach((chat, index) => {
                 const historyItem = document.createElement('div');
                 historyItem.classList.add('history-item');
-                if (chat.id === currentChatId) {
-                    historyItem.classList.add('active');
-                }
+                historyItem.style.animationDelay = `${index * 0.05}s`;
+                if (chat.id === currentChatId) historyItem.classList.add('active');
                 
+                // CHANGE: Added delete button
                 historyItem.innerHTML = `
-                    <i class="fas fa-message history-icon"></i>
+                    <i class="fas fa-comment-dots history-icon"></i>
                     <div class="history-content">
-                        <div class="history-title">${chat.title}</div>
-                        <div class="history-preview">${getChatPreview(chat)}</div>
+                        <div class="history-title">${escapeHtml(chat.title)}</div>
+                        <div class="history-preview">${chat.messages.length > 0 ? escapeHtml(chat.messages[chat.messages.length - 1].content.substring(0, 30) + '...') : 'No messages yet...'}</div>
                     </div>
-                    <div class="history-date">${formatDate(chat.updatedAt)}</div>
+                    <div class="history-actions">
+                        <button class="delete-chat-btn" data-chat-id="${chat.id}"><i class="fas fa-trash-alt"></i></button>
+                    </div>
                 `;
                 
-                historyItem.addEventListener('click', () => loadChat(chat.id));
+                historyItem.querySelector('.history-content').addEventListener('click', () => loadChat(chat.id));
                 chatHistory.appendChild(historyItem);
             });
+
+            // NEW: Add event listeners for delete buttons
+            document.querySelectorAll('.delete-chat-btn').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const chatIdToDelete = this.getAttribute('data-chat-id');
+                    deleteChat(chatIdToDelete);
+                });
+            });
+        }
+        
+        // NEW: Function to delete a chat
+        function deleteChat(chatIdToDelete) {
+            if (confirm(`Are you sure you want to delete "${chats[chatIdToDelete].title}"?`)) {
+                delete chats[chatIdToDelete];
+                saveChats();
+
+                if (currentChatId === chatIdToDelete) {
+                    const remainingChats = Object.keys(chats);
+                    if (remainingChats.length > 0) {
+                        loadChat(remainingChats.sort((a,b) => new Date(chats[b].updatedAt) - new Date(chats[a].updatedAt))[0]);
+                    } else {
+                        createNewChat();
+                    }
+                }
+                loadChatHistory();
+            }
         }
 
-        // Get a preview of the chat for the sidebar
-        function getChatPreview(chat) {
-            if (chat.messages.length === 0) return 'New chat';
-            
-            const lastMessage = chat.messages[chat.messages.length - 1];
-            return lastMessage.content.substring(0, 30) + (lastMessage.content.length > 30 ? '...' : '');
-        }
-
-        // Format date for display
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            const now = new Date();
-            const diffMs = now - date;
-            const diffMins = Math.floor(diffMs / 60000);
-            const diffHours = Math.floor(diffMs / 3600000);
-            const diffDays = Math.floor(diffMs / 86400000);
-            
-            if (diffMins < 1) return 'Just now';
-            if (diffMins < 60) return `${diffMins}m ago`;
-            if (diffHours < 24) return `${diffHours}h ago`;
-            if (diffDays < 7) return `${diffDays}d ago`;
-            
-            return date.toLocaleDateString();
-        }
-
-        // Load a specific chat
         function loadChat(chatId) {
             if (!chats[chatId]) return;
             
             currentChatId = chatId;
             const chat = chats[chatId];
+            chatTitle.textContent = escapeHtml(chat.title);
             
-            // Update messages container
             messagesContainer.innerHTML = '';
-            chat.messages.forEach(msg => {
-                addMessageToUI(msg.content, msg.sender, msg.isError || false, msg.files || [], msg.generatedImage || null);
-            });
+            chat.messages.forEach(msg => addMessageToUI(msg.content, msg.sender, msg.isError, msg.files));
             
-            // Update chat history UI
             loadChatHistory();
-            
-            // Clear attached files
             attachedFiles = [];
             updateFileAttachments();
         }
 
-        // Clear the current chat
         function clearCurrentChat() {
             if (!currentChatId || !confirm('Are you sure you want to clear this chat?')) return;
-            
             chats[currentChatId].messages = [];
             saveChats();
-            
-            // Reload the chat
             loadChat(currentChatId);
-            
-            // Add a fresh welcome message
             addMessage(`Chat cleared. How can I assist you today?`, 'ai');
         }
 
-        // Export the current chat as PDF
         async function exportCurrentChatAsPDF() {
             if (!currentChatId) return;
-            
+            const { jsPDF } = window.jspdf;
             const chat = chats[currentChatId];
-            
-            // Show loading indicator
             const originalText = exportChatBtn.innerHTML;
-            exportChatBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating PDF...';
+            exportChatBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Exporting...';
             exportChatBtn.disabled = true;
-            
+
             try {
-                // Use html2canvas to capture the chat content
-                const { jsPDF } = window.jspdf;
                 const pdf = new jsPDF('p', 'mm', 'a4');
-                
-                // Add title
-                pdf.setFontSize(20);
-                pdf.setTextColor(0, 243, 255);
-                pdf.text('Glitch AI Chat Export', 20, 20);
-                
-                pdf.setFontSize(12);
-                pdf.setTextColor(0, 0, 0);
-                pdf.text(`Chat: ${chat.title}`, 20, 30);
-                pdf.text(`Exported on: ${new Date().toLocaleDateString()}`, 20, 37);
-                
-                let yPosition = 50;
-                
-                // Add each message to the PDF
+                pdf.setFontSize(18);
+                pdf.text(chat.title, 105, 15, { align: 'center' });
+                pdf.setFontSize(10);
+                pdf.text(`Exported on ${new Date().toLocaleString()}`, 105, 22, { align: 'center' });
+
+                let y = 30;
                 for (const msg of chat.messages) {
-                    // Add sender label
-                    pdf.setFontSize(10);
-                    pdf.setTextColor(100, 100, 100);
-                    pdf.text(`${msg.sender === 'user' ? 'You' : 'Glitch AI'} - ${new Date(msg.timestamp).toLocaleString()}`, 20, yPosition);
-                    yPosition += 5;
-                    
-                    // Add message content
-                    pdf.setFontSize(12);
-                    pdf.setTextColor(0, 0, 0);
-                    
-                    // Split long messages into multiple lines
-                    const lines = pdf.splitTextToSize(msg.content, 170);
-                    pdf.text(lines, 20, yPosition);
-                    yPosition += (lines.length * 7) + 10;
-                    
-                    // Add page break if needed
-                    if (yPosition > 270) {
+                    if (y > 270) {
                         pdf.addPage();
-                        yPosition = 20;
+                        y = 15;
                     }
+                    pdf.setFont('helvetica', msg.sender === 'user' ? 'bold' : 'normal');
+                    pdf.text(msg.sender === 'user' ? 'You:' : 'Glitch AI:', 15, y);
+                    y += 6;
+                    pdf.setFont('helvetica', 'normal');
+                    const lines = pdf.splitTextToSize(msg.content, 180);
+                    pdf.text(lines, 15, y);
+                    y += lines.length * 5 + 5;
                 }
-                
-                // Save the PDF
-                pdf.save(`glitch-chat-${chat.id}.pdf`);
-                
+                pdf.save(`GlitchAI-Chat-${chat.id}.pdf`);
             } catch (error) {
-                console.error('Error generating PDF:', error);
-                alert('Error generating PDF. Please try again.');
+                console.error('PDF Export Error:', error);
+                alert('Failed to export PDF.');
             } finally {
-                // Restore button state
                 exportChatBtn.innerHTML = originalText;
                 exportChatBtn.disabled = false;
             }
         }
-
-        // Handle file selection
+        
+        // CHANGE: Improved file handling for all types
         function handleFileSelect(e) {
             const files = Array.from(e.target.files);
-            
             files.forEach(file => {
-                // Check if file is an image
-                if (file.type.startsWith('image/')) {
-                    // For images, we'll store a preview
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        attachedFiles.push({
-                            name: file.name,
-                            type: 'image',
-                            content: e.target.result,
-                            file: file
-                        });
-                        updateFileAttachments();
-                    };
-                    reader.readAsDataURL(file);
-                } else {
-                    // For other files, we'll just store the name
+                const reader = new FileReader();
+                reader.onload = function(event) {
                     attachedFiles.push({
                         name: file.name,
-                        type: 'file',
-                        file: file
+                        mimeType: file.type,
+                        content: event.target.result // This will be the Data URL
                     });
                     updateFileAttachments();
-                }
+                };
+                reader.readAsDataURL(file); // Read file as Data URL
             });
-            
-            // Reset file input
             fileInput.value = '';
         }
 
-        // Update the file attachments UI
         function updateFileAttachments() {
             fileAttachments.innerHTML = '';
-            
             attachedFiles.forEach((file, index) => {
-                const attachmentItem = document.createElement('div');
-                attachmentItem.classList.add('attachment-item');
-                attachmentItem.innerHTML = `
-                    <i class="fas fa-${file.type === 'image' ? 'image' : 'file'} file-icon"></i>
-                    <span>${file.name}</span>
+                const item = document.createElement('div');
+                item.classList.add('attachment-item');
+                const icon = file.mimeType.startsWith('image/') ? 'fa-image' : 'fa-file-alt';
+                item.innerHTML = `
+                    <i class="fas ${icon} file-icon"></i>
+                    <span>${escapeHtml(file.name)}</span>
                     <i class="fas fa-times remove-attachment" data-index="${index}"></i>
                 `;
-                
-                fileAttachments.appendChild(attachmentItem);
+                fileAttachments.appendChild(item);
             });
             
-            // Add event listeners to remove buttons
             document.querySelectorAll('.remove-attachment').forEach(btn => {
                 btn.addEventListener('click', function() {
-                    const index = parseInt(this.dataset.index);
-                    attachedFiles.splice(index, 1);
+                    attachedFiles.splice(parseInt(this.dataset.index), 1);
                     updateFileAttachments();
                 });
             });
         }
 
-        // Send a message
         async function sendMessage() {
-            const message = messageInput.value.trim();
+            let message = messageInput.value.trim();
             if (message === '' && attachedFiles.length === 0) return;
             
-            // Add user message to chat
+            // NEW: Add web search prefix if active
+            if (isWebSearchActive) {
+                message = `Using web search, find the latest information about: ${message}`;
+            }
+
             addMessage(message, 'user', false, attachedFiles);
             
-            // Clear input and reset height
             messageInput.value = '';
             messageInput.style.height = 'auto';
-            
-            // Show typing indicator
             typingIndicator.style.display = 'block';
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
             
             try {
-                let response;
-                let generatedImage = null;
-                
-                // Check if we should generate an image
-                if ((currentMode === 'creative' && 
-                    (message.toLowerCase().includes('generate image') || 
-                     message.toLowerCase().includes('create image') ||
-                     message.toLowerCase().includes('draw') ||
-                     message.toLowerCase().includes('make an image'))) ||
-                    message.toLowerCase().includes('image of')) {
-                    
-                    // Show image generation indicator
-                    const imageLoadingDiv = document.createElement('div');
-                    imageLoadingDiv.classList.add('image-loading');
-                    imageLoadingDiv.innerHTML = `
-                        <div class="loading-spinner"></div>
-                        <p>Generating image with Vertex AI...</p>
-                    `;
-                    
-                    const lastMessage = messagesContainer.lastChild;
-                    lastMessage.querySelector('.message-content').appendChild(imageLoadingDiv);
-                    
-                    // Extract the image description from the message
-                    const imagePrompt = extractImagePrompt(message);
-                    
-                    // Generate image using Vertex AI
-                    generatedImage = await generateImageWithVertexAI(imagePrompt);
-                    
-                    // Remove loading indicator
-                    imageLoadingDiv.remove();
-                    
-                    // Get a text response about the image
-                    response = `I've generated an image based on your request: "${imagePrompt}". Here's the result:`;
-                } else {
-                    // Prepare files for API if any
-                    let fileContents = [];
-                    if (attachedFiles.length > 0) {
-                        for (const file of attachedFiles) {
-                            if (file.type === 'image') {
-                                // Convert image to base64 without data URL prefix
-                                const base64 = file.content.split(',')[1];
-                                fileContents.push({
-                                    inlineData: {
-                                        mimeType: file.file.type,
-                                        data: base64
-                                    }
-                                });
-                            }
-                        }
-                    }
-                    
-                    // Call AI API based on mode and content
-                    if (attachedFiles.length > 0 && attachedFiles.some(f => f.type === 'image')) {
-                        // If there are images, use multimodal approach
-                        response = await callMultimodalAPI(message, fileContents);
-                    } else {
-                        // Use standard text API
-                        response = await callTextAPI(message);
-                    }
-                }
-                
-                typingIndicator.style.display = 'none';
-                addMessage(response, 'ai', false, [], generatedImage);
-                
-                // Clear attached files after sending
-                attachedFiles = [];
-                updateFileAttachments();
-                
+                const response = await callGeminiAPI(message, attachedFiles);
+                addMessage(response, 'ai');
             } catch (error) {
                 console.error('Error calling AI API:', error);
+                addMessage(`Sorry, I encountered an error: ${error.message}. Please check your API key and try again.`, 'ai', true);
+            } finally {
                 typingIndicator.style.display = 'none';
-                addMessage('Sorry, I encountered an error processing your request. Please try again.', 'ai', true);
+                attachedFiles = [];
+                updateFileAttachments();
             }
         }
 
-        // Extract image prompt from user message
-        function extractImagePrompt(message) {
-            // Remove common command phrases to get the actual description
-            return message
-                .replace(/generate image of|create image of|draw|make an image of/gi, '')
-                .replace(/please|can you|could you/gi, '')
-                .trim();
-        }
-
-        // Generate image using Vertex AI
-        async function generateImageWithVertexAI(prompt) {
-            // This is a simplified implementation
-            // In a real implementation, you would make an authenticated API call to Vertex AI
-            
-            // For demonstration purposes, we'll use a placeholder service
-            // In production, you would replace this with the actual Vertex AI API call
-            
-            try {
-                // Simulate API call delay
-                await new Promise(resolve => setTimeout(resolve, 3000));
-                
-                // Since we can't make actual Vertex AI calls from the frontend without a backend,
-                // we'll use a placeholder image service for demonstration
-                const placeholderImageUrl = await getPlaceholderImage(prompt);
-                
-                return placeholderImageUrl;
-            } catch (error) {
-                console.error('Error generating image:', error);
-                throw new Error('Image generation failed. Please try again.');
+        // CHANGE: Unified API call function
+        async function callGeminiAPI(message, files) {
+            if (!GEMINI_API_KEY || GEMINI_API_KEY === 'AIzaSyArZWsOfU8wla2cVcc-IluhRiva9KUYzFs') {
+                throw new Error("Gemini API Key is not set. Please add your key in the script section.");
             }
-        }
 
-        // Get a placeholder image (for demonstration)
-        async function getPlaceholderImage(prompt) {
-            // Use a placeholder service to generate an image based on the prompt
-            // In a real implementation, this would be replaced with Vertex AI
-            
-            // For now, we'll use a static image or a placeholder service
-            // You can replace this with any image generation API that doesn't require a backend
-            
-            // Using picsum.photos as a placeholder
-            const width = 512;
-            const height = 512;
-            const seed = prompt.replace(/\s+/g, '').substring(0, 10);
-            
-            return `https://picsum.photos/seed/${seed}/${width}/${height}`;
-        }
+            const parts = [];
+            // Add text part
+            if (message) {
+                parts.push({ text: message });
+            }
+            // Add file parts
+            for (const file of files) {
+                parts.push({
+                    inlineData: {
+                        mimeType: file.mimeType,
+                        data: file.content.split(',')[1] // Extract base64 part from Data URL
+                    }
+                });
+            }
 
-        // Call the multimodal API (for text + images)
-        async function callMultimodalAPI(message, fileContents) {
             const requestBody = {
-                contents: [{
-                    parts: [
-                        ...fileContents,
-                        { text: message }
-                    ]
-                }],
+                contents: [{ parts: parts }],
                 generationConfig: {
-                    temperature: 0.7,
+                    temperature: currentMode === 'creative' ? 0.9 : (currentMode === 'code' ? 0.3 : 0.7),
                     topK: 40,
                     topP: 0.95,
-                    maxOutputTokens: 2048,
+                    maxOutputTokens: 4096,
                 }
             };
-            
+
             const response = await fetch(GEMINI_API_URL, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(requestBody)
             });
-            
-            if (!response.ok) {
-                throw new Error(`API error: ${response.status}`);
-            }
-            
+
             const data = await response.json();
+            if (!response.ok || !data.candidates) {
+                console.error("API Error Response:", data);
+                throw new Error(data.error?.message || `API error: ${response.status}`);
+            }
+
             return data.candidates[0].content.parts[0].text;
         }
 
-        // Call the text-only API
-        async function callTextAPI(message) {
-            // Adjust parameters based on mode
-            let temperature = 0.7;
-            let maxTokens = 2048;
-            
-            switch(currentMode) {
-                case 'code':
-                    temperature = 0.3;
-                    maxTokens = 4096;
-                    break;
-                case 'study':
-                    temperature = 0.5;
-                    maxTokens = 4096;
-                    break;
-                case 'creative':
-                    temperature = 0.9;
-                    maxTokens = 1024;
-                    break;
-            }
-            
-            const requestBody = {
-                contents: [{
-                    parts: [{ text: message }]
-                }],
-                generationConfig: {
-                    temperature: temperature,
-                    topK: 40,
-                    topP: 0.95,
-                    maxOutputTokens: maxTokens,
-                }
-            };
-            
-            const response = await fetch(GEMINI_API_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(requestBody)
-            });
-            
-            if (!response.ok) {
-                throw new Error(`API error: ${response.status}`);
-            }
-            
-            const data = await response.json();
-            return data.candidates[0].content.parts[0].text;
-        }
-
-        // Add a message to the UI and save to chat history
-        function addMessage(content, sender, isError = false, files = [], generatedImage = null) {
-            addMessageToUI(content, sender, isError, files, generatedImage);
-            
-            // Save to chat history
+        function addMessage(content, sender, isError = false, files = []) {
+            addMessageToUI(content, sender, isError, files);
             if (currentChatId && chats[currentChatId]) {
                 const messageObj = {
-                    content: content,
-                    sender: sender,
+                    content, sender, isError, files,
                     timestamp: new Date().toISOString(),
-                    isError: isError || false,
-                    files: files || [],
-                    generatedImage: generatedImage || null
                 };
                 
                 chats[currentChatId].messages.push(messageObj);
                 chats[currentChatId].updatedAt = new Date().toISOString();
                 
-                // Update chat title if it's the first user message
-                if (sender === 'user' && chats[currentChatId].messages.filter(m => m.sender === 'user').length === 1) {
+                if (sender === 'user' && chats[currentChatId].title === 'New Chat') {
                     chats[currentChatId].title = content.substring(0, 30) + (content.length > 30 ? '...' : '');
+                    chatTitle.textContent = chats[currentChatId].title;
                 }
                 
                 saveChats();
@@ -1379,93 +1200,58 @@
             }
         }
 
-        // Add a message to the UI only
-        function addMessageToUI(content, sender, isError = false, files = [], generatedImage = null) {
+        function addMessageToUI(content, sender, isError = false, files = []) {
             const messageDiv = document.createElement('div');
-            messageDiv.classList.add('message');
-            messageDiv.classList.add(sender === 'user' ? 'user-message' : 'ai-message');
+            messageDiv.classList.add('message', sender === 'user' ? 'user-message' : 'ai-message');
+            if (isError) messageDiv.classList.add('error-message');
             
-            if (isError) {
-                messageDiv.classList.add('error-message');
+            let fileHTML = '';
+            if (files.length > 0) {
+                fileHTML += '<div class="attached-files">';
+                files.forEach(file => {
+                    if (file.mimeType.startsWith('image/')) {
+                        fileHTML += `<div class="file-item"><img src="${file.content}" alt="${escapeHtml(file.name)}" style="max-width: 150px; border-radius: 5px;"></div>`;
+                    } else {
+                        fileHTML += `<div class="file-item"><i class="fas fa-file-alt file-icon"></i> ${escapeHtml(file.name)}</div>`;
+                    }
+                });
+                fileHTML += '</div>';
             }
-            
-            let formattedContent = content;
-            
-            // Format code blocks if present
-            if (content.includes('```')) {
-                formattedContent = formatCodeBlocks(content);
-            }
-            
-            // Create message HTML
+
             messageDiv.innerHTML = `
                 <div class="message-header">
                     <div class="${sender === 'user' ? 'user-avatar' : 'ai-avatar'}">${sender === 'user' ? 'U' : 'G'}</div>
                     <strong>${sender === 'user' ? 'You' : 'Glitch AI'}</strong>
                 </div>
-                <div class="message-content">${formattedContent}</div>
+                <div class="message-content">${fileHTML}${formatCodeBlocks(content)}</div>
             `;
-            
-            // Add generated image if available
-            if (generatedImage) {
-                const imageDiv = document.createElement('div');
-                imageDiv.innerHTML = `
-                    <img src="${generatedImage}" alt="Generated image" class="generated-image">
-                    <p><em>Image generated based on your prompt</em></p>
-                `;
-                messageDiv.querySelector('.message-content').appendChild(imageDiv);
-            }
-            
-            // Add file attachments if any
-            if (files.length > 0) {
-                const filesDiv = document.createElement('div');
-                filesDiv.classList.add('attached-files');
-                
-                files.forEach(file => {
-                    const fileItem = document.createElement('div');
-                    fileItem.classList.add('file-item');
-                    
-                    if (file.type === 'image') {
-                        fileItem.innerHTML = `
-                            <i class="fas fa-image file-icon"></i>
-                            <span>${file.name}</span>
-                            <img src="${file.content}" alt="${file.name}" style="max-width: 200px; margin-top: 5px;">
-                        `;
-                    } else {
-                        fileItem.innerHTML = `
-                            <i class="fas fa-file file-icon"></i>
-                            <span>${file.name}</span>
-                        `;
-                    }
-                    
-                    filesDiv.appendChild(fileItem);
-                });
-                
-                messageDiv.querySelector('.message-content').appendChild(filesDiv);
-            }
             
             messagesContainer.appendChild(messageDiv);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
 
-        // Format code blocks in messages
         function formatCodeBlocks(text) {
-            return text.replace(/```(\w+)?\n([\s\S]*?)```/g, function(match, lang, code) {
-                return `<pre><code class="language-${lang || 'text'}">${escapeHtml(code.trim())}</code></pre>`;
+            // First, escape HTML to prevent XSS from the text content itself
+            let escapedText = escapeHtml(text);
+            
+            // Then, replace markdown for code blocks and inline code with HTML tags
+            escapedText = escapedText.replace(/```(\w+)?\n([\s\S]*?)```/g, function(match, lang, code) {
+                // The 'code' part is already escaped, so it's safe to put inside <pre><code>
+                return `<pre><code class="language-${lang || 'text'}">${code.trim()}</code></pre>`;
             }).replace(/`([^`]+)`/g, '<code>$1</code>');
+            
+            // Finally, replace newlines with <br> for proper formatting, but not inside <pre> tags
+            return escapedText.replace(/(<pre[\s\S]*?<\/pre>)|(\n)/g, (match, pre, newline) => pre ? pre : (newline ? '<br>' : ''));
         }
-
-        // Escape HTML to prevent XSS
+        
         function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
+            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+            return text.replace(/[&<>"']/g, m => map[m]);
         }
-
-        // Save chats to localStorage
+        
         function saveChats() {
             localStorage.setItem('glitchChats', JSON.stringify(chats));
         }
     </script>
 </body>
-
 </html>
