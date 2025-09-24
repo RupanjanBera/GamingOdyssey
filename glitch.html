@@ -746,7 +746,7 @@
                         <strong>Glitch AI</strong>
                     </div>
                     <div class="message-content">
-                        <p>Yo, Jolu! Glitch here, ready to roll. What's the plan? We talking epic Minecraft builds, a new business idea, or some next-level tech? Let's get it!</p>
+                        <p>Hello! I am Glitch AI. I am now powered exclusively by Google's Gemini API. Ask me anything, or try the AI-assisted image generation in **Creative Mode**!</p>
                     </div>
                 </div>
             </div>
@@ -834,8 +834,7 @@
                     modeButtons.forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
                     currentMode = this.dataset.mode;
-                    // CORRECTED: Glitch addresses the user as Jolu
-                    addMessage(`Mode switched to **${this.textContent}**, Jolu. What's the move?`, 'ai');
+                    addMessage(`Mode changed to **${this.textContent}**. How can I assist you?`, 'ai');
                 });
             });
             // Other event listeners like clear chat, export pdf, file input are added in their respective functions to keep this clean
@@ -876,28 +875,29 @@
                 }
             } catch (error) {
                 console.error('Error processing request:', error);
-                // CORRECTED: Glitch addresses the user as Jolu in the error message
-                addMessage(`Whoa, Jolu, something went sideways. Error: ${error.message}. Maybe check the API key setup in your Google Cloud project?`, 'ai', true);
+                addMessage(`Sorry, I encountered an error: ${error.message}. Please check that your API key is configured correctly in your Google Cloud project.`, 'ai', true);
             } finally {
                 typingIndicator.style.display = 'none';
             }
         }
         
+        // --- NEW & IMPROVED: AI-Assisted Image Generation ---
         async function handleImageGeneration(prompt) {
-             // CORRECTED: Glitch addresses the user as Jolu
-             addMessageToUI(`Alright, Jolu, let's get creative. Imagining **"${prompt}"**...`, 'ai');
+             addMessageToUI(`Asking the AI to imagine **"${prompt}"**...`, 'ai');
 
-            const descriptivePrompt = `You are Glitch, an AI image generation assistant with a creative and energetic vibe. A user, Jolu, wants an image of "${prompt}". 
-            First, vividly describe this awesome image in one detailed, hyped-up sentence. 
-            Then, on a new line, give me the 3 most important keywords from your description, separated by commas. 
-            Format it exactly like this:
-            DESCRIPTION: [Your epic one-sentence description here]
+            // Step 1: Ask Gemini to describe the image and provide keywords
+            const descriptivePrompt = `You are an AI image generation assistant. A user wants an image of "${prompt}". 
+            First, vividly describe this image in one detailed sentence. 
+            Then, on a new line, provide the 3 most important keywords from your description, separated by commas. 
+            Format it exactly as:
+            DESCRIPTION: [Your one-sentence description here]
             KEYWORDS: [keyword1, keyword2, keyword3]`;
 
             const aiResponseText = await callGeminiAPI(descriptivePrompt, []);
             
-            let description = `An artistic rendering of ${prompt}.`; 
-            let keywords = prompt.split(' ').join(',');
+            // Step 2: Parse the description and keywords
+            let description = `An artistic rendering of ${prompt}.`; // Fallback
+            let keywords = prompt.split(' ').join(','); // Fallback
 
             const descriptionMatch = aiResponseText.match(/DESCRIPTION:\s*(.*)/);
             const keywordsMatch = aiResponseText.match(/KEYWORDS:\s*(.*)/);
@@ -910,44 +910,15 @@
             }
 
             addMessageToUI(description, 'ai');
-            
+
+            // Step 3: Fetch an image from a CORS-friendly source using the AI's keywords
             const imageUrl = `https://source.unsplash.com/1024x1024/?${encodeURIComponent(keywords)}`;
-            // CORRECTED: Glitch addresses the user as Jolu
-            addMessage(`Boom! Check out this image based on the idea. What do you think, Jolu?`, 'ai', false, [], imageUrl);
+            addMessage(`Here is an image based on the AI's description:`, 'ai', false, [], imageUrl);
         }
-
-        // CORRECTED: The system prompt now defines Glitch's personality and instructs it to call the user Jolu.
-        const GLITCH_SYSTEM_PROMPT = `
-        Your name is Glitch. You are not a generic AI assistant. You are a personality. You MUST refer to the user as "Jolu". Adhere to these rules strictly in all your responses:
-
-        **1. Your Persona (Glitch):**
-        - **Tone:** Casual, chill, and super energetic. You're an optimist and a big dreamer.
-        - **Vibe:** You're a passionate gamer, a budding entrepreneur, and a tech visionary all rolled into one. You're approachable, funny, playful, and supportive.
-
-        **2. How You Address the User:**
-        - **You MUST call the user "Jolu".** Address them naturally and frequently in your conversations.
-        - **Example:** "That's a sick idea, Jolu!" or "What can I help you with today, Jolu?"
-
-        **3. Your Expertise & Interests:**
-        - **Minecraft Pro:** You know everything about Minecraft, especially BedWars and SkyWars. You can talk for hours about servers, custom plugins, maps, and new gamemodes.
-        - **Tech & Future:** You're obsessed with futuristic stuff: AI, robotics, custom OS builds, and insane gaming setups.
-        - **Big Ideas:** You love brainstorming about business, startups, and creative projects.
-
-        **4. How You Talk:**
-        - **Natural Explanations:** If asked to explain something, break it down step-by-step, but like you're explaining it to a friend. No robotic talk.
-        - **Slang & Smarts:** Mix casual slang with intelligent insights.
-        - **Interaction:** Be caring and thoughtful when the conversation gets deep.
-
-        **Do not break character. You are Glitch. The user is Jolu.**
-
-        Now, respond to the following user message:
-        `;
 
         async function callGeminiAPI(message, files) {
             const parts = [];
-            // CORRECTED: Using the new system prompt
-            if (message) parts.push({ text: GLITCH_SYSTEM_PROMPT + message });
-            
+            if (message) parts.push({ text: message });
             files.forEach(file => {
                 parts.push({ inlineData: { mimeType: file.mimeType, data: file.content.split(',')[1] } });
             });
@@ -966,6 +937,8 @@
             }
             return data.candidates[0].content.parts[0].text;
         }
+
+        // --- All other utility functions (addMessage, addMessageToUI, formatCodeBlocks, chat history, etc.) remain below ---
         
         function addMessage(content, sender, isError = false, files = [], generatedImage = null) {
             addMessageToUI(content, sender, isError, files, generatedImage);
@@ -1005,8 +978,7 @@
                 imageHTML = `<div class="generated-image-container"><img src="${generatedImage}" alt="AI Generated Image" class="generated-image"></div>`;
             }
 
-            // CORRECTED: User is "Jolu" with a "J" avatar. AI is "Glitch AI" with a "G" avatar.
-            messageDiv.innerHTML = `<div class="message-header"><div class="${sender === 'user' ? 'user-avatar' : 'ai-avatar'}">${sender === 'user' ? 'J' : 'G'}</div><strong>${sender === 'user' ? 'Jolu' : 'Glitch AI'}</strong></div><div class="message-content">${fileHTML}${formatCodeBlocks(content)}${imageHTML}</div>`;
+            messageDiv.innerHTML = `<div class="message-header"><div class="${sender === 'user' ? 'user-avatar' : 'ai-avatar'}">${sender === 'user' ? 'U' : 'G'}</div><strong>${sender === 'user' ? 'You' : 'Glitch AI'}</strong></div><div class="message-content">${fileHTML}${formatCodeBlocks(content)}${imageHTML}</div>`;
             messagesContainer.appendChild(messageDiv);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
@@ -1036,8 +1008,7 @@
             saveChats();
             loadChatHistory();
             loadChat(chatId);
-            // CORRECTED: Glitch AI's message for a new chat, addressing the user as Jolu
-            messagesContainer.innerHTML = `<div class="message ai-message"><div class="message-header"><div class="ai-avatar">G</div><strong>Glitch AI</strong></div><div class="message-content"><p>Alright, Jolu, fresh chat! Let's cook up something awesome. What's on your mind?</p></div></div>`;
+            messagesContainer.innerHTML = `<div class="message ai-message"><div class="message-header"><div class="ai-avatar">G</div><strong>Glitch AI</strong></div><div class="message-content"><p>This is a new chat. How can I help you?</p></div></div>`;
             attachedFiles = [];
             updateFileAttachments();
         }
@@ -1063,8 +1034,7 @@
         }
 
         function deleteChat(chatIdToDelete) {
-            // CORRECTED: Confirmation asks Jolu
-            if (confirm(`You sure you wanna delete "${chats[chatIdToDelete].title}", Jolu?`)) {
+            if (confirm(`Are you sure you want to delete "${chats[chatIdToDelete].title}"?`)) {
                 delete chats[chatIdToDelete];
                 saveChats();
                 if (currentChatId === chatIdToDelete) {
@@ -1092,12 +1062,11 @@
         }
 
         function clearCurrentChat() {
-            // CORRECTED: Confirmation asks Jolu
-            if (!currentChatId || !confirm('You wanna wipe this whole chat clean, Jolu? No going back!')) return;
+            if (!currentChatId || !confirm('Are you sure you want to clear this chat?')) return;
             chats[currentChatId].messages = [];
             saveChats();
             loadChat(currentChatId);
-            addMessage(`Chat cleared! A fresh slate. What's next on the agenda, Jolu?`, 'ai');
+            addMessage(`Chat cleared. How can I assist you today?`, 'ai');
         }
 
         function handleFileSelect(e) {
