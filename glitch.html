@@ -47,22 +47,24 @@
         input:checked + .slider { background-color: var(--neon-blue); }
         input:checked + .slider:before { transform: translateX(20px); }
         .container { display: flex; max-width: 1800px; margin: 0 auto; padding: 20px; gap: 20px; min-height: calc(100vh - 140px); }
-        .sidebar { flex: 0 0 320px; background: var(--bg-glass-light); border-radius: 15px; padding: 20px; backdrop-filter: blur(12px); border: 1px solid var(--border-color); box-shadow: 0 8px 32px 0 var(--shadow-color); display: flex; flex-direction: column; }
-        .sidebar-header { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--border-color); }
+        .sidebar { flex: 0 0 320px; background: var(--bg-glass-light); border-radius: 15px; padding: 20px; backdrop-filter: blur(12px); border: 1px solid var(--border-color); box-shadow: 0 8px 32px 0 var(--shadow-color); display: flex; flex-direction: column; gap: 15px; }
+        .sidebar-header { padding-bottom: 10px; border-bottom: 1px solid var(--border-color); }
         .shine-btn { width: 100%; background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple)); border: none; border-radius: 8px; color: white; padding: 12px 18px; cursor: pointer; transition: all 0.3s; font-size: 1rem; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 8px; position: relative; overflow: hidden; }
         .shine-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 163, 255, 0.4); }
         .shine-btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent); transform: skewX(-30deg); transition: left 0.7s ease-in-out; }
         .shine-btn:hover::before { left: 150%; }
-        .ai-selector, .mode-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .ai-option, .mode-btn { padding: 10px; background: transparent; border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-light); cursor: pointer; transition: all 0.3s; text-align: center; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .ai-option:hover, .mode-btn:hover { border-color: var(--neon-blue); background-color: var(--user-message-bg); }
-        .ai-option.active { border-color: var(--neon-blue); box-shadow: 0 0 15px rgba(0, 163, 255, 0.4); }
-        .ai-option.plex.active { border-color: var(--neon-orange); box-shadow: 0 0 15px rgba(255, 123, 37, 0.4); }
-        .mode-btn.active { border-color: var(--neon-blue); box-shadow: 0 0 15px rgba(0, 163, 255, 0.4); }
-        .chat-history { flex: 1; overflow-y: auto; }
-        .history-item { padding: 12px; margin-bottom: 8px; border-radius: 8px; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 10px; border: 1px solid transparent; }
-        .history-item:hover { background: var(--ai-message-bg); border-color: var(--neon-purple); }
-        .history-item.active { background: var(--user-message-bg); border-color: var(--neon-blue); }
+        .sidebar-heading { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin: 10px 0 10px 5px; }
+        .ai-selector, .mode-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .ai-option, .mode-btn { padding: 10px; background: var(--space-blue); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-light); cursor: pointer; transition: all 0.3s ease; text-align: center; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .ai-option:hover, .mode-btn:hover { border-color: var(--neon-blue); background-color: var(--user-message-bg); transform: scale(1.03); }
+        .ai-option.active, .mode-btn.active { background: var(--user-message-bg); border-color: var(--neon-blue); box-shadow: 0 0 15px rgba(0, 163, 255, 0.4); color: var(--text-light); }
+        .ai-option.plex.active { background: var(--plex-message-bg); border-color: var(--neon-orange); box-shadow: 0 0 15px rgba(255, 123, 37, 0.4); }
+        .chat-history { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 5px; }
+        .history-item { padding: 12px 12px 12px 20px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 10px; border: 1px solid transparent; position: relative; overflow: hidden; }
+        .history-item::before { content: ''; position: absolute; left: 0; top: 0; width: 4px; height: 100%; background: var(--neon-purple); transform: translateX(-100%); transition: transform 0.3s ease; }
+        .history-item:hover { background: var(--ai-message-bg); }
+        .history-item.active { background: var(--user-message-bg); }
+        .history-item.active::before { transform: translateX(0); }
         .history-content { flex: 1; overflow: hidden; }
         .history-title { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .delete-chat-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; transition: all 0.3s; font-size: 0.9rem; padding: 5px; }
@@ -70,8 +72,9 @@
         .main-content { flex: 1; display: flex; gap: 20px; }
         .chat-area { flex: 1; display: flex; flex-direction: column; background: var(--bg-glass-light); border-radius: 15px; overflow: hidden; backdrop-filter: blur(12px); border: 1px solid var(--border-color); box-shadow: 0 8px 32px 0 var(--shadow-color); position: relative; }
         .chat-area::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 0; background: linear-gradient(45deg, var(--space-blue), var(--space-purple), var(--neon-blue), var(--space-dark)); background-size: 400% 400%; animation: gradient-flow 15s ease infinite; opacity: 0.6; }
+        #constellation-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.7; }
         @keyframes gradient-flow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        .chat-header, .messages, .input-area, .stop-generating-btn { position: relative; z-index: 1; }
+        .chat-header, .messages, .input-area, .stop-generating-btn { position: relative; z-index: 2; }
         .chat-header { padding: 15px 25px; background: var(--bg-glass-dark); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; }
         .chat-actions { display: flex; gap: 10px; }
         .chat-action-btn { background: transparent; border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-muted); padding: 8px 12px; cursor: pointer; transition: all 0.3s; font-size: 0.9rem; }
@@ -189,21 +192,29 @@
             <div class="sidebar-header">
                 <button class="shine-btn" id="newChatBtn"><i class="fas fa-plus"></i> New Chat</button>
             </div>
-            <div class="ai-selector">
-                <div class="ai-option active" data-ai="zhoros"><i class="fas fa-brain"></i> Glitch Zhoros</div>
-                <div class="ai-option plex" data-ai="plex"><i class="fas fa-bolt"></i> Glitch Plex</div>
+            <div>
+                <h4 class="sidebar-heading">Models</h4>
+                <div class="ai-selector">
+                    <div class="ai-option active" data-ai="zhoros"><i class="fas fa-brain"></i> Glitch Zhoros</div>
+                    <div class="ai-option plex" data-ai="plex"><i class="fas fa-bolt"></i> Glitch Plex</div>
+                </div>
             </div>
-            <div class="mode-selector">
-                <button class="mode-btn active" data-mode="chat">Chat</button>
-                <button class="mode-btn" data-mode="code">Code</button>
-                <button class="mode-btn" data-mode="study">Study</button>
-                <button class="mode-btn" data-mode="creative">Creative</button>
+            <div>
+                 <h4 class="sidebar-heading">Modes</h4>
+                <div class="mode-selector">
+                    <button class="mode-btn active" data-mode="chat">Chat</button>
+                    <button class="mode-btn" data-mode="code">Code</button>
+                    <button class="mode-btn" data-mode="study">Study</button>
+                    <button class="mode-btn" data-mode="creative">Creative</button>
+                </div>
             </div>
+             <h4 class="sidebar-heading">History</h4>
             <div class="chat-history" id="chatHistory"></div>
         </aside>
 
         <main class="main-content">
             <div class="chat-area">
+                <canvas id="constellation-canvas"></canvas>
                 <div class="chat-header">
                     <h2 id="chatTitle">Chat with Glitch AI</h2>
                     <div class="chat-actions">
@@ -251,10 +262,7 @@
         const GEMINI_API_KEY = 'AIzaSyArZWsOfU8wla2cVcc-IluhRiva9KUYzFs'; // WARNING: For development only. Use a backend proxy in production.
 
         let currentChatId = null; let chats = {}; let currentMode = 'chat'; let currentAI = 'zhoros'; let isWebSearchActive = false; let attachedFiles = []; let isGenerating = false; let abortController = new AbortController(); 
-        
-        // --- Sound System Variables ---
-        let isAudioUnlocked = false;
-        let lastTypingSoundTime = 0;
+        let isAudioUnlocked = false; let lastTypingSoundTime = 0;
         
         const messageInput = document.getElementById('messageInput'); const sendButton = document.getElementById('sendButton'); const messagesContainer = document.getElementById('messages'); const chatHistory = document.getElementById('chatHistory'); const newChatBtn = document.getElementById('newChatBtn'); const modeButtons = document.querySelectorAll('.mode-btn'); const aiOptions = document.querySelectorAll('.ai-option'); const webSearchBtn = document.getElementById('webSearchBtn'); const chatTitle = document.getElementById('chatTitle'); const fileInput = document.getElementById('fileInput'); const stopGeneratingBtn = document.getElementById('stopGeneratingBtn'); const themeCheckbox = document.getElementById('theme-checkbox');
         const previewArea = document.getElementById('previewArea'); const previewFrame = document.getElementById('preview-frame');
@@ -271,41 +279,39 @@
         document.addEventListener('DOMContentLoaded', () => {
             const splashScreen = document.getElementById('splash-screen');
             if (splashScreen) { setTimeout(() => { splashScreen.classList.add('hidden'); }, 3800); }
-            loadChatsFromStorage(); setupEventListeners();
+            initConstellationAnimation();
+            loadChatsFromStorage(); 
+            setupEventListeners();
             const isDarkMode = localStorage.getItem('glitchTheme') !== 'light';
             document.body.classList.toggle('light-mode', !isDarkMode); themeCheckbox.checked = isDarkMode;
             if (Object.keys(chats).length === 0) { createNewChat(); } else { const latestChatId = Object.keys(chats).sort((a, b) => new Date(chats[b].updatedAt) - new Date(chats[a].updatedAt))[0]; loadChat(latestChatId); }
             loadChatHistory();
         });
         
-        // --- Sound System Functions ---
         function initializeAudio() {
             if (isAudioUnlocked) return;
             isAudioUnlocked = true;
-            // Play a silent sound to unlock AudioContext, a common practice for browsers.
             const silentSound = new Audio("data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=");
             silentSound.play().catch(e => {});
-            // Play the 'glitch' sound as a one-time startup sound.
             playSound(sounds.glitch, { volume: 0.5 });
         }
 
         function playSound(soundElement, options = {}) {
-            // Sound can only play after the user has interacted with the page once.
             if (soundElement && isAudioUnlocked) {
                 soundElement.currentTime = 0;
                 soundElement.volume = options.volume || 1.0;
-                soundElement.play().catch(e => { /* Ignore play errors, especially on rapid firing */ });
+                soundElement.play().catch(e => {});
             }
         }
 
         function setupEventListeners() {
-            // A one-time listener to unlock audio on the first user interaction.
             document.addEventListener('mousedown', initializeAudio, { once: true });
             document.addEventListener('keydown', initializeAudio, { once: true });
 
             messageInput.addEventListener('keydown', e => {
+                initializeAudio(); // This ensures audio is unlocked on the very first keystroke.
                 const now = Date.now();
-                if (now - lastTypingSoundTime > 120) { // Throttle to prevent sound spam
+                if (now - lastTypingSoundTime > 120) {
                     playSound(sounds.typing, { volume: 0.7 });
                     lastTypingSoundTime = now;
                 }
@@ -322,6 +328,8 @@
             });
         }
         
+        function initConstellationAnimation() { const canvas = document.getElementById('constellation-canvas'); if (!canvas) return; const ctx = canvas.getContext('2d'); let particles = []; const particleCount = 70; const maxDistance = 100; function resizeCanvas() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; } resizeCanvas(); window.addEventListener('resize', resizeCanvas); for (let i = 0; i < particleCount; i++) { particles.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, vx: Math.random() * 0.5 - 0.25, vy: Math.random() * 0.5 - 0.25 }); } function draw() { if (!ctx) return; ctx.clearRect(0, 0, canvas.width, canvas.height); const color = document.body.classList.contains('light-mode') ? 'rgba(0, 163, 255, 0.4)' : 'rgba(0, 163, 255, 0.3)'; ctx.fillStyle = color; ctx.strokeStyle = color; particles.forEach(p => { ctx.beginPath(); ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2); ctx.fill(); p.x += p.vx; p.y += p.vy; if (p.x < 0 || p.x > canvas.width) p.vx *= -1; if (p.y < 0 || p.y > canvas.height) p.vy *= -1; }); for (let i = 0; i < particles.length; i++) { for (let j = i + 1; j < particles.length; j++) { const dist = Math.sqrt(Math.pow(particles[i].x - particles[j].x, 2) + Math.pow(particles[i].y - particles[j].y, 2)); if (dist < maxDistance) { ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.lineWidth = 1 - dist / maxDistance; ctx.stroke(); } } } requestAnimationFrame(draw); } draw(); }
+
         async function sendMessage() {
             const messageText = messageInput.value.trim();
             if ((messageText === '' && attachedFiles.length === 0) || isGenerating) return;
