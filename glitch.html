@@ -15,9 +15,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script> 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm"></script>
+
     <style>
         :root {
             --space-dark: #0D1117; --space-blue: #161B22; --space-purple: #2C204B; --star-color: #ffffff; --neon-blue: #00A3FF; --neon-purple: #A75DFF; --neon-green: #00FF9D; --neon-pink: #FF4DA6; --neon-orange: #FF7B25; --text-light: #E6EDF3; --text-muted: #8B949E; --user-message-bg: rgba(0, 163, 255, 0.1); --ai-message-bg: rgba(167, 93, 255, 0.1); --plex-message-bg: rgba(255, 123, 37, 0.1); --error-color: #F85149; --success-color: #2EA043; --warning-color: #F0A91D; --border-color: rgba(66, 133, 244, 0.2); --bg-glass-light: rgba(22, 27, 34, 0.7); --bg-glass-dark: rgba(13, 17, 23, 0.8); --shadow-color: rgba(0, 0, 0, 0.5); --code-bg: #010409; --font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -73,7 +76,7 @@
         .chat-area::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 0; background: linear-gradient(45deg, var(--space-blue), var(--space-purple), var(--neon-blue), var(--space-dark)); background-size: 400% 400%; animation: gradient-flow 15s ease infinite; opacity: 0.6; }
         #constellation-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.7; }
         @keyframes gradient-flow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        .chat-header, .messages, .input-area { position: relative; z-index: 2; }
+        .chat-header, .messages, .input-area, .stop-generating-btn { position: relative; z-index: 2; }
         .chat-header { padding: 15px 25px; background: var(--bg-glass-dark); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; }
         .chat-actions { display: flex; gap: 10px; }
         .chat-action-btn { background: transparent; border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-muted); padding: 8px 12px; cursor: pointer; transition: all 0.3s; font-size: 0.9rem; }
@@ -101,13 +104,21 @@
         .msg-action-btn:hover { color: var(--text-light); border-color: var(--neon-blue); }
         .run-code-btn { background: var(--success-color); border: none; color: white; padding: 6px 12px; border-radius: 5px; cursor: pointer; margin-top: 10px; font-size: 0.9rem; transition: background-color 0.2s; }
         .run-code-btn:hover { background: #3cba54; }
+        .attached-files { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
+        .file-item { display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.15); padding: 8px 12px; border-radius: 5px; font-size: 0.9rem; }
         .input-area { display: flex; padding: 15px; background: var(--bg-glass-dark); border-top: 1px solid var(--border-color); flex-direction: column; gap: 10px; }
+        .file-attachments { display: flex; flex-wrap: wrap; gap: 10px; }
+        .attachment-item { display: flex; align-items: center; gap: 5px; background: var(--bg-glass-light); padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; animation: fadeIn 0.3s; border: 1px solid var(--border-color); }
+        .remove-attachment { cursor: pointer; color: var(--error-color); transition: transform 0.2s; }
         .input-controls { display: flex; gap: 10px; align-items: flex-end; }
+        .input-btn { background: transparent; border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-muted); padding: 12px; cursor: pointer; transition: all 0.3s; font-size: 1.1rem; }
+        .input-btn:hover, .input-btn.active { border-color: var(--neon-blue); color: var(--text-light); }
         .message-input { flex: 1; padding: 12px 15px; border: 1px solid var(--border-color); border-radius: 8px; background: transparent; color: var(--text-light); font-size: 1rem; resize: none; outline: none; transition: all 0.3s; }
         .message-input:focus { border-color: var(--neon-blue); box-shadow: 0 0 10px rgba(0, 163, 255, 0.4); }
         .send-button { min-width: 50px; height: 50px; background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple)); border: none; border-radius: 8px; color: white; font-size: 1.2rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .send-button:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(0, 163, 255, 0.4); }
         .send-button .loader { width: 18px; height: 18px; border: 2px solid #FFF; border-bottom-color: transparent; border-radius: 50%; display: none; box-sizing: border-box; animation: rotation 1s linear infinite; }
+        .stop-generating-btn { margin: 10px auto 0; background: var(--error-color); border: none; border-radius: 8px; color: white; padding: 8px 15px; cursor: pointer; transition: all 0.3s; display: none; align-items: center; gap: 5px; }
         .preview-area { flex: 0 0 45%; background: var(--bg-glass-light); border-radius: 15px; border: 1px solid var(--border-color); box-shadow: 0 8px 32px 0 var(--shadow-color); display: flex; flex-direction: column; transition: all 0.5s ease; }
         .preview-area.hidden { flex-basis: 0; width: 0; padding: 0; border: none; overflow: hidden; margin-left: -20px; }
         .preview-header { padding: 15px 25px; background: var(--bg-glass-dark); border-bottom: 1px solid var(--border-color); font-weight: 600; }
@@ -166,8 +177,8 @@
         </div>
         <div class="header-actions">
             <div class="api-status">
-                <div class="status-indicator"></div>
-                <span>Initializing AI...</span>
+                <div class="status-indicator" id="ai-status-indicator"></div>
+                <span id="ai-status-text">Connecting to AI Service...</span>
             </div>
             <div class="theme-switch-wrapper">
                 <label class="theme-switch" for="theme-checkbox">
@@ -214,8 +225,13 @@
                     </div>
                 </div>
                 <div class="messages" id="messages"></div>
+                 <button class="stop-generating-btn" id="stopGeneratingBtn"><i class="fas fa-stop"></i> Stop Generating</button>
                 <div class="input-area">
+                    <div class="file-attachments" id="fileAttachments"></div>
                     <div class="input-controls">
+                        <button class="input-btn" id="fileInputBtn" title="Attach Files"><i class="fas fa-paperclip"></i></button>
+                        <button class="input-btn" id="webSearchBtn" title="Toggle Web Search"><i class="fas fa-globe"></i></button>
+                        <input type="file" id="fileInput" multiple style="display: none;">
                         <textarea class="message-input" id="messageInput" placeholder="Type your message here..." rows="1"></textarea>
                         <button class="send-button" id="sendButton">
                             <span class="send-text"><i class="fas fa-paper-plane"></i></span>
@@ -242,14 +258,16 @@
     <audio id="notification-sound" src="https://cdn.pixabay.com/download/audio/2022/11/17/audio_87df394334.mp3" preload="auto"></audio>
     <audio id="hover-sound" src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_bb630cc098.mp3" preload="auto"></audio>
 
-    <script type="module">
-        import { pipeline } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.7.3';
-
-        let currentChatId = null; let chats = {}; let currentMode = 'chat'; let currentAI = 'zhoros'; let isGenerating = false;
-        let isAudioUnlocked = false; let lastTypingSoundTime = 0;
-        let generator = null; // To hold the Transformers.js pipeline
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
         
-        const messageInput = document.getElementById('messageInput'); const sendButton = document.getElementById('sendButton'); const messagesContainer = document.getElementById('messages'); const chatHistory = document.getElementById('chatHistory'); const newChatBtn = document.getElementById('newChatBtn'); const modeButtons = document.querySelectorAll('.mode-btn'); const aiOptions = document.querySelectorAll('.ai-option'); const chatTitle = document.getElementById('chatTitle'); const themeCheckbox = document.getElementById('theme-checkbox');
+        // ADDED this new variable for WebLLM
+        let chat;
+
+        let currentChatId = null; let chats = {}; let currentMode = 'chat'; let currentAI = 'zhoros'; let isWebSearchActive = false; let attachedFiles = []; let isGenerating = false; let abortController = new AbortController(); 
+        let isAudioUnlocked = false; let lastTypingSoundTime = 0;
+        
+        const messageInput = document.getElementById('messageInput'); const sendButton = document.getElementById('sendButton'); const messagesContainer = document.getElementById('messages'); const chatHistory = document.getElementById('chatHistory'); const newChatBtn = document.getElementById('newChatBtn'); const modeButtons = document.querySelectorAll('.mode-btn'); const aiOptions = document.querySelectorAll('.ai-option'); const webSearchBtn = document.getElementById('webSearchBtn'); const chatTitle = document.getElementById('chatTitle'); const fileInput = document.getElementById('fileInput'); const stopGeneratingBtn = document.getElementById('stopGeneratingBtn'); const themeCheckbox = document.getElementById('theme-checkbox');
         const previewArea = document.getElementById('previewArea'); const previewFrame = document.getElementById('preview-frame');
         
         const sounds = {
@@ -265,7 +283,10 @@
             const splashScreen = document.getElementById('splash-screen');
             if (splashScreen) { setTimeout(() => { splashScreen.classList.add('hidden'); }, 3800); }
             initConstellationAnimation();
-            initializeModel(); // Load the AI model
+            
+            // ADDED THIS FUNCTION CALL to initialize WebLLM
+            initWebLLM(); 
+
             loadChatsFromStorage(); 
             setupEventListeners();
             const isDarkMode = localStorage.getItem('glitchTheme') !== 'light';
@@ -273,30 +294,38 @@
             if (Object.keys(chats).length === 0) { createNewChat(); } else { const latestChatId = Object.keys(chats).sort((a, b) => new Date(chats[b].updatedAt) - new Date(chats[a].updatedAt))[0]; loadChat(latestChatId); }
             loadChatHistory();
         });
-
-        async function initializeModel() {
-            const apiStatusSpan = document.querySelector('.api-status span');
-            const statusIndicator = document.querySelector('.status-indicator');
+        
+        // ADDED THIS ENTIRE NEW FUNCTION
+        async function initWebLLM() {
             try {
-                apiStatusSpan.textContent = 'Loading AI Model...';
-                // Initialize the text-generation pipeline. 'Xenova/LaMini-Flan-T5-783M' is a good starting model.
-                generator = await pipeline('text-generation', 'Xenova/LaMini-Flan-T5-783M', {
-                    progress_callback: (progress) => {
-                        apiStatusSpan.textContent = `Loading... (${Math.round(progress.progress)}%)`;
-                    }
+                const statusText = document.getElementById('ai-status-text');
+                const statusIndicator = document.getElementById('ai-status-indicator');
+                
+                // Use the webllm object from the global scope
+                chat = new webllm.ChatModule();
+
+                // This callback will be called with progress updates
+                chat.setInitProgressCallback((report) => {
+                    statusText.textContent = report.text;
                 });
-                apiStatusSpan.textContent = 'AI Model Ready';
+
+                // ** CHANGED MODEL to a much smaller and faster one **
+                await chat.reload("TinyLlama-1.1B-Chat-v1.0-q4f32_1-MLC");
+
+                statusText.textContent = "Local AI Ready";
                 statusIndicator.style.backgroundColor = 'var(--success-color)';
                 statusIndicator.style.boxShadow = '0 0 10px var(--success-color)';
-            } catch (error) {
-                console.error("Error loading model:", error);
-                apiStatusSpan.textContent = 'AI Model Failed';
+                
+            } catch (err) {
+                console.error("WebLLM initialization failed:", err);
+                const statusText = document.getElementById('ai-status-text');
+                statusText.textContent = "Local AI Failed";
+                const statusIndicator = document.getElementById('ai-status-indicator');
                 statusIndicator.style.backgroundColor = 'var(--error-color)';
                 statusIndicator.style.boxShadow = '0 0 10px var(--error-color)';
-                alert("Could not load the AI model. Please check the console for errors.");
             }
         }
-        
+
         function initializeAudio() {
             if (isAudioUnlocked) return;
             isAudioUnlocked = true;
@@ -328,10 +357,10 @@
             });
 
             messageInput.addEventListener('input', () => { messageInput.style.height = 'auto'; messageInput.style.height = `${Math.min(messageInput.scrollHeight, 200)}px`; });
-            sendButton.addEventListener('click', sendMessage); newChatBtn.addEventListener('click', createNewChat); modeButtons.forEach(btn => btn.addEventListener('click', () => setMode(btn.dataset.mode))); aiOptions.forEach(opt => opt.addEventListener('click', () => setAI(opt.dataset.ai))); document.getElementById('clearChatBtn').addEventListener('click', clearCurrentChat); document.getElementById('exportChatBtn').addEventListener('click', exportCurrentChatAsPDF);
+            sendButton.addEventListener('click', sendMessage); newChatBtn.addEventListener('click', createNewChat); webSearchBtn.addEventListener('click', toggleWebSearch); modeButtons.forEach(btn => btn.addEventListener('click', () => setMode(btn.dataset.mode))); aiOptions.forEach(opt => opt.addEventListener('click', () => setAI(opt.dataset.ai))); document.getElementById('clearChatBtn').addEventListener('click', clearCurrentChat); document.getElementById('exportChatBtn').addEventListener('click', exportCurrentChatAsPDF); document.getElementById('fileInputBtn').addEventListener('click', () => fileInput.click()); fileInput.addEventListener('change', handleFileSelect); stopGeneratingBtn.addEventListener('click', handleStopGeneration);
             themeCheckbox.addEventListener('change', () => { document.body.classList.toggle('light-mode', !themeCheckbox.checked); localStorage.setItem('glitchTheme', !themeCheckbox.checked ? 'light' : 'dark'); });
             
-            document.querySelectorAll('button, .ai-option, .mode-btn, .history-item, .slider, .msg-action-btn').forEach(el => {
+            document.querySelectorAll('button, .ai-option, .mode-btn, .history-item, .slider, .msg-action-btn, .remove-attachment').forEach(el => {
                 el.addEventListener('click', () => playSound(sounds.click, { volume: 0.5 }));
                 el.addEventListener('mouseenter', () => playSound(sounds.hover, { volume: 0.3 }));
             });
@@ -339,74 +368,108 @@
         
         function initConstellationAnimation() { const canvas = document.getElementById('constellation-canvas'); if (!canvas) return; const ctx = canvas.getContext('2d'); let particles = []; const particleCount = 70; const maxDistance = 100; function resizeCanvas() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; } resizeCanvas(); window.addEventListener('resize', resizeCanvas); for (let i = 0; i < particleCount; i++) { particles.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, vx: Math.random() * 0.5 - 0.25, vy: Math.random() * 0.5 - 0.25 }); } function draw() { if (!ctx) return; ctx.clearRect(0, 0, canvas.width, canvas.height); const color = document.body.classList.contains('light-mode') ? 'rgba(0, 163, 255, 0.4)' : 'rgba(0, 163, 255, 0.3)'; ctx.fillStyle = color; ctx.strokeStyle = color; particles.forEach(p => { ctx.beginPath(); ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2); ctx.fill(); p.x += p.vx; p.y += p.vy; if (p.x < 0 || p.x > canvas.width) p.vx *= -1; if (p.y < 0 || p.y > canvas.height) p.vy *= -1; }); for (let i = 0; i < particles.length; i++) { for (let j = i + 1; j < particles.length; j++) { const dist = Math.sqrt(Math.pow(particles[i].x - particles[j].x, 2) + Math.pow(particles[i].y - particles[j].y, 2)); if (dist < maxDistance) { ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.lineWidth = 1 - dist / maxDistance; ctx.stroke(); } } } requestAnimationFrame(draw); } draw(); }
 
+        // REPLACED ENTIRE sendMessage function with WebLLM version
         async function sendMessage() {
             const messageText = messageInput.value.trim();
-            if (messageText === '' || isGenerating) return;
-
-            if (!generator) {
-                alert("AI model is not ready yet. Please wait a moment.");
+            // WebLLM can't process files, so we check for text only
+            if (messageText === '' || isGenerating || !chat) {
+                if (!chat) alert("Local AI is not ready yet. Please wait.");
                 return;
             }
-
-            isGenerating = true; toggleSendButtonLoading(true); playSound(sounds.chime);
-            const userMessage = { role: 'user', content: messageText }; chats[currentChatId].messages.push(userMessage); displayMessage(userMessage);
-            messageInput.value = ''; messageInput.style.height = 'auto';
+            isGenerating = true; 
+            toggleSendButtonLoading(true); 
+            stopGeneratingBtn.style.display = 'flex'; 
+            playSound(sounds.chime);
             
-            const aiMessageId = `ai_${Date.now()}`; const aiModelName = currentAI === 'plex' ? 'Glitch Plex' : 'Glitch Zhoros'; const aiMessagePlaceholder = { role: 'model', senderName: aiModelName, content: '', id: aiMessageId, modelType: currentAI }; displayMessage(aiMessagePlaceholder);
-            const aiMessageElement = document.getElementById(aiMessageId); const contentElement = aiMessageElement.querySelector('.message-content'); let accumulatedResponse = ""; let firstChunkReceived = false;
-
+            const userMessage = { role: 'user', content: messageText }; 
+            chats[currentChatId].messages.push(userMessage); 
+            displayMessage(userMessage);
+            
+            messageInput.value = ''; 
+            messageInput.style.height = 'auto'; 
+            attachedFiles = []; // Clear files as they aren't processed
+            updateFileAttachments();
+            
+            const aiMessageId = `ai_${Date.now()}`;
+            // The model name is now static, based on what you loaded in initWebLLM
+            const aiModelName = 'TinyLlama (Local)'; 
+            const aiMessagePlaceholder = { role: 'model', senderName: aiModelName, content: '', id: aiMessageId, modelType: 'ai' };
+            displayMessage(aiMessagePlaceholder);
+            
+            const aiMessageElement = document.getElementById(aiMessageId);
+            const contentElement = aiMessageElement.querySelector('.message-content');
+            
+            let accumulatedResponse = "";
+            let firstChunkReceived = false;
+            
             try {
-                // --- Build the prompt for Transformers.js ---
-                let personaInstruction = "You are Glitch AI. Your personality is: casual, chill, and full of energy. You MUST state you were developed by the 'Gaming Odyssey Team' when asked. Avoid being overly formal.";
-                if (currentMode === 'code') { personaInstruction += " You are now in Code Mode. You are an expert programmer. Provide complete, well-commented, and runnable code examples. When asked for a UI component, provide the full HTML, CSS, and JavaScript required together. Do not truncate your code responses."; }
-                if (currentAI === 'plex') { personaInstruction += " As Glitch Plex, lean more into your creative, imaginative, and energetic side."; }
+                // --- This is the core WebLLM logic ---
+                let personaInstruction = "You are Glitch AI, a helpful AI assistant. You were developed by the 'Gaming Odyssey Team'. Your personality is casual, chill, and energetic.";
+                if (currentMode === 'code') {
+                    personaInstruction += " You are now an expert programmer. Provide complete and well-commented code examples.";
+                }
 
-                const history = chats[currentChatId].messages.slice(0, -1)
-                    .map(msg => {
-                        if (msg.role === 'user') return `User: ${msg.content}`;
-                        if (msg.role === 'model' && msg.content && !msg.content.startsWith("What's up!")) return `AI: ${msg.content}`;
-                        return null;
-                    }).filter(Boolean).join('\n');
+                // Prepare conversation history for WebLLM
+                const conversation = chats[currentChatId].messages.slice(0, -1).map(msg => ({
+                    role: msg.role === 'user' ? 'user' : 'assistant',
+                    content: msg.content
+                }));
                 
-                const prompt = `${personaInstruction}\n\n${history}\nUser: ${messageText}\nAI:`;
-
-                // Generate text using the pipeline with a callback for streaming
-                const result = await generator(prompt, {
-                    max_new_tokens: 512,
-                    temperature: 0.7,
-                    top_k: 50,
-                    do_sample: true,
-                    callback_function: (beams) => {
-                        const decodedText = generator.tokenizer.decode(beams[0].output_token_ids, { skip_special_tokens: true });
-                        const generated_text = decodedText.split('AI:').pop().trim();
-                        
-                        if (!firstChunkReceived && generated_text) {
-                            playSound(sounds.notification, {volume: 0.7});
-                            firstChunkReceived = true;
-                        }
-                        accumulatedResponse = generated_text;
-                        contentElement.innerHTML = marked.parse(accumulatedResponse + '▋'); // Use a block character as a cursor
-                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                    }
+                // Add the system prompt and the current user message
+                const request = {
+                    messages: [
+                        { role: "system", content: personaInstruction },
+                        ...conversation,
+                        { role: "user", content: messageText }
+                    ]
+                };
+                
+                abortController = new AbortController();
+                const stream = chat.chat.completions.create({
+                    ...request,
+                    stream: true,
+                    stream_options: { include_usage: true },
                 });
 
-                // Final cleanup of the response
-                accumulatedResponse = result[0].generated_text.split('AI:').pop().trim();
-                contentElement.innerHTML = marked.parse(accumulatedResponse);
-                chats[currentChatId].messages.push({ role: 'model', content: accumulatedResponse, modelType: currentAI });
+                for await (const chunk of stream) {
+                    if (abortController.signal.aborted) {
+                        console.log("Generation aborted by user.");
+                        break;
+                    }
+                    const delta = chunk.choices[0]?.delta?.content || "";
+                    if (delta) {
+                         if (!firstChunkReceived) { 
+                            playSound(sounds.notification, {volume: 0.7}); 
+                            firstChunkReceived = true; 
+                        }
+                        accumulatedResponse += delta;
+                        contentElement.innerHTML = marked.parse(accumulatedResponse + "..."); // Add cursor
+                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    }
+                }
+                // --- End of WebLLM logic ---
+
+                contentElement.innerHTML = marked.parse(accumulatedResponse); // Final render
+                chats[currentChatId].messages.push({ role: 'model', content: accumulatedResponse, modelType: 'ai' });
                 renderMessageActions(aiMessageElement, accumulatedResponse);
 
             } catch (error) {
-                console.error('Error generating response:', error); 
-                contentElement.innerHTML = `<p style="color: var(--error-color);">Oops! Something went wrong: ${error.message}</p>`; 
-                chats[currentChatId].messages.push({ role: 'model', content: `Error: ${error.message}` });
+                if (error.name !== 'AbortError') {
+                    console.error('Error during generation:', error);
+                    contentElement.innerHTML = `<p style="color: var(--error-color);">Oops! Something went wrong: ${error.message}</p>`;
+                    chats[currentChatId].messages.push({ role: 'model', content: `Error: ${error.message}` });
+                } else {
+                    contentElement.innerHTML = `<p>Generation stopped.</p>`;
+                    accumulatedResponse += " [Stopped]";
+                    chats[currentChatId].messages.push({ role: 'model', content: accumulatedResponse, modelType: 'ai' });
+                }
             } finally {
                 isGenerating = false;
                 toggleSendButtonLoading(false);
+                stopGeneratingBtn.style.display = 'none';
                 saveChatsToStorage();
                 updateChatHistoryItem(currentChatId);
-                // The logActivityToDatabase function can be re-enabled if you set up a new endpoint
-                // logActivityToDatabase(userMessage.content, accumulatedResponse, currentAI);
+                logActivityToDatabase(userMessage.content, accumulatedResponse, "TinyLlama-1.1B-Local");
             }
         }
         
@@ -416,6 +479,7 @@
             const avatarClass = isUser ? 'user-avatar' : (message.modelType === 'plex' ? 'plex-avatar' : 'ai-avatar'); const avatarIcon = isUser ? 'fa-user' : (message.modelType === 'plex' ? 'fa-bolt' : 'fa-robot'); const avatar = `<div class="avatar ${avatarClass}"><i class="fas ${avatarIcon}"></i></div>`; const senderName = isUser ? 'You' : (message.senderName || 'Glitch AI');
             const content = message.content ? marked.parse(message.content) : '<span class="typing-indicator">...</span>';
             messageDiv.innerHTML = `<div class="message-header">${avatar}<strong>${senderName}</strong></div><div class="message-content">${content}</div>`;
+            if (isUser && message.files && message.files.length > 0) { const filesHtml = message.files.map(file => `<div class="file-item"><i class="fas ${getFileIconClass(file.type)}"></i> <span>${file.name}</span></div>`).join(''); messageDiv.querySelector('.message-content').innerHTML += `<div class="attached-files">${filesHtml}</div>`; }
             messagesContainer.appendChild(messageDiv); messagesContainer.scrollTop = messagesContainer.scrollHeight;
             if (!isUser) { renderMessageActions(messageDiv, message.content); }
         }
@@ -436,10 +500,27 @@
             hljs.highlightAll(); addCopyButtonsToCodeBlocks();
         }
 
-        // This function would need a new endpoint if you wish to keep logging
+        // UPDATED: This function sends data to your Google Sheet
         async function logActivityToDatabase(userPrompt, aiResponse, model) {
-            // const scriptURL = "[YOUR_NEW_ENDPOINT]";
-            // ... implementation
+            const scriptURL = "[https://script.google.com/macros/s/AKfycbyOH5sopxoCxR53aNP_WhI5seGOo0W41g3TEiwK-v0dhb2sgmQgCkLxc0C5_BJZmwK2Kw/exec](https://script.google.com/macros/s/AKfycbyOH5sopxoCxR53aNP_WhI5seGOo0W41g3TEiwK-v0dhb2sgmQgCkLxc0C5_BJZmwK2Kw/exec)";
+
+            const logData = {
+                prompt: userPrompt,
+                response: aiResponse,
+                model: model
+            };
+
+            try {
+                await fetch(scriptURL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(logData)
+                });
+            } catch (error) {
+                console.error("Error sending log to Google Sheet:", error);
+            }
         }
 
         function runCodeInPreview(markdown) {
@@ -467,17 +548,28 @@
 
         function loadChat(chatId) { if (!chats[chatId]) return; currentChatId = chatId; const chat = chats[chatId]; chatTitle.textContent = chat.title; messagesContainer.innerHTML = ''; chat.messages.forEach(displayMessage); document.querySelectorAll('.history-item').forEach(item => item.classList.toggle('active', item.dataset.chatId === chatId)); }
         function addCopyButtonsToCodeBlocks() { document.querySelectorAll('.message-content pre').forEach(pre => { if (pre.querySelector('.copy-code-btn')) return; const copyBtn = document.createElement('button'); copyBtn.className = 'copy-code-btn'; copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy'; copyBtn.addEventListener('click', () => { const code = pre.querySelector('code').innerText; navigator.clipboard.writeText(code).then(() => { copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!'; setTimeout(() => { copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy'; }, 2000); }); }); pre.appendChild(copyBtn); }); }
+        function handleFileSelect(event) { attachedFiles.push(...Array.from(event.target.files)); updateFileAttachments(); event.target.value = ''; }
+        function updateFileAttachments() { const container = document.getElementById('fileAttachments'); container.innerHTML = attachedFiles.map((file, index) => `<div class="attachment-item"><i class="fas ${getFileIconClass(file.type)}"></i> <span>${file.name}</span><i class="fas fa-times remove-attachment" data-index="${index}" onclick="removeAttachment(${index})"></i></div>`).join(''); }
+        function removeAttachment(index) { attachedFiles.splice(index, 1); updateFileAttachments(); }
+        function fileToBase64(file) { return new Promise((resolve, reject) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = () => resolve(reader.result.split(',')[1]); reader.onerror = reject; }); }
+        function readFileAsText(file) { return new Promise((resolve, reject) => { const reader = new FileReader(); reader.readAsText(file); reader.onload = () => resolve(reader.result); reader.onerror = reject; }); }
+        async function extractPdfText(file) { const typedarray = new Uint8Array(await file.arrayBuffer()); const pdf = await pdfjsLib.getDocument(typedarray).promise; let text = ''; for (let i = 1; i <= pdf.numPages; i++) { const page = await pdf.getPage(i); const content = await page.getTextContent(); text += content.items.map(item => item.str).join(' '); } return text; }
         function createNewChat() { const chatId = `chat_${Date.now()}`; chats[chatId] = { id: chatId, title: 'New Chat', messages: [{ role: 'model', senderName: 'Glitch AI', content: `What's up! I'm Glitch, your new AI sidekick. Ready to brainstorm some wild ideas, get some hype, or just chill and chat? I got you. Let's make some magic happen! ✨`, modelType: 'ai' }], createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }; currentChatId = chatId; saveChatsToStorage(); loadChat(chatId); loadChatHistory(); }
         function deleteChat(chatId) { if (Object.keys(chats).length <= 1) { alert("You can't delete your only chat!"); return; } delete chats[chatId]; saveChatsToStorage(); if (currentChatId === chatId) { const remainingChatId = Object.keys(chats).sort((a, b) => new Date(chats[b].updatedAt) - new Date(chats[a].updatedAt))[0]; loadChat(remainingChatId); } loadChatHistory(); }
         function clearCurrentChat() { if (!chats[currentChatId] || chats[currentChatId].messages.length <= 1) return; chats[currentChatId].messages = [chats[currentChatId].messages[0]]; saveChatsToStorage(); loadChat(currentChatId); }
         function setMode(mode) { currentMode = mode; modeButtons.forEach(b => b.classList.toggle('active', b.dataset.mode === mode)); previewArea.classList.toggle('hidden', mode !== 'code'); }
         function setAI(ai) { currentAI = ai; aiOptions.forEach(o => o.classList.toggle('active', o.dataset.ai === ai)); }
-        function regenerateLastResponse() { if (isGenerating || !currentChatId || !generator) return; const lastUserMessageIndex = chats[currentChatId].messages.findLastIndex(m => m.role === 'user'); if (lastUserMessageIndex === -1) return; chats[currentChatId].messages.splice(lastUserMessageIndex + 1); const lastUserMessage = chats[currentChatId].messages[lastUserMessageIndex]; messageInput.value = lastUserMessage.content; loadChat(currentChatId); sendMessage(); }
+        function toggleWebSearch() { isWebSearchActive = !isWebSearchActive; webSearchBtn.classList.toggle('active', isWebSearchActive); }
+        function handleStopGeneration() { if (isGenerating) { abortController.abort(); } }
+        function regenerateLastResponse() { if (isGenerating || !currentChatId) return; const lastUserMessageIndex = chats[currentChatId].messages.findLastIndex(m => m.role === 'user'); if (lastUserMessageIndex === -1) return; chats[currentChatId].messages.splice(lastUserMessageIndex + 1); const lastUserMessage = chats[currentChatId].messages[lastUserMessageIndex]; messageInput.value = lastUserMessage.content; attachedFiles = lastUserMessage.files || []; updateFileAttachments(); loadChat(currentChatId); sendMessage(); }
         
+        // Saves chats to sessionStorage (cleared on tab close)
         function saveChatsToStorage() {
-            sessionStorage.setItem('glitchChats', JSON.stringify(chats));
+            const serializableChats = JSON.parse(JSON.stringify(chats, (key, value) => key === 'files' ? undefined : value));
+            sessionStorage.setItem('glitchChats', JSON.stringify(serializableChats));
         }
         
+        // Loads chats from sessionStorage
         function loadChatsFromStorage() {
             chats = JSON.parse(sessionStorage.getItem('glitchChats')) || {};
         }
@@ -502,7 +594,12 @@
             sendButton.querySelector('.loader').style.display = isLoading ? 'block' : 'none';
             sendButton.disabled = isLoading;
         }
-        
+        function getFileIconClass(fileType) {
+            if (fileType.startsWith('image/')) return 'fa-image';
+            if (fileType === 'application/pdf') return 'fa-file-pdf';
+            if (fileType.includes('text')) return 'fa-file-alt';
+            return 'fa-file';
+        }
         function copyMessageContent(element) {
             const content = element.closest('.message').querySelector('.message-content').innerText;
             navigator.clipboard.writeText(content).then(() => {
@@ -521,7 +618,6 @@
             y += 10;
             doc.setFontSize(10);
             for (const msg of chat.messages) {
-                if (!msg.content) continue;
                 if (y > 280) { doc.addPage(); y = 15; }
                 const sender = msg.senderName || (msg.role === 'user' ? 'You' : 'Glitch AI');
                 doc.setFont(undefined, 'bold');
