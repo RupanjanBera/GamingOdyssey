@@ -254,17 +254,12 @@
     <audio id="typing-sound" src="https://cdn.pixabay.com/download/audio/2022/03/07/audio_c358401342.mp3" preload="auto"></audio>
     <audio id="chime-sound" src="https://cdn.pixabay.com/download/audio/2022/03/24/audio_738f192003.mp3" preload="auto"></audio>
     <audio id="notification-sound" src="https://cdn.pixabay.com/download/audio/2022/11/17/audio_87df394334.mp3" preload="auto"></audio>
-    <audio id="hover-sound" src="https://cdn.pixabay.com/download/audio/2021/80/04/audio_bb630cc098.mp3" preload="auto"></audio>
+    <audio id="hover-sound" src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_bb630cc098.mp3" preload="auto"></audio>
 
     <script>
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
         
-        const GEMINI_API_KEYS = [
-            'AIzaSyAbKXW75vSj9XhSgs0rC5SK-Blf7NhSB-A',
-            'AIzaSyDF4Lfyj7hiUu1415cGAOIaOODABJTg4rY',
-            'AIzaSyDhBEbmuuTR3LOZnWpR9Do8PGcZ4QAZ7ac'
-        ];
-        let apiKeyIndex = 0;
+        const GEMINI_API_KEY = 'AIzaSyCqvmLAqBqeeC1vMVILSSX47XmeOCoSdUQ'; // WARNING: For development only. Use a backend proxy in production.
 
         let currentChatId = null; let chats = {}; let currentMode = 'chat'; let currentAI = 'zhoros'; let isWebSearchActive = false; let attachedFiles = []; let isGenerating = false; let abortController = new AbortController(); 
         let isAudioUnlocked = false; let lastTypingSoundTime = 0;
@@ -344,42 +339,16 @@
             const aiMessageId = `ai_${Date.now()}`; const aiModelName = currentAI === 'plex' ? 'Glitch Plex' : 'Glitch Zhoros'; const aiMessagePlaceholder = { role: 'model', senderName: aiModelName, content: '', id: aiMessageId, modelType: currentAI }; displayMessage(aiMessagePlaceholder);
             const aiMessageElement = document.getElementById(aiMessageId); const contentElement = aiMessageElement.querySelector('.message-content'); let accumulatedResponse = ""; let firstChunkReceived = false;
             try {
-                const currentApiKey = GEMINI_API_KEYS[apiKeyIndex];
-                apiKeyIndex = (apiKeyIndex + 1) % GEMINI_API_KEYS.length;
-                
-                // --- THIS WILL FAIL: Using the requested non-existent model name ---
-                const model = 'gemini-2.5-pro';
-                
-                const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?key=${currentApiKey}&alt=sse`;
+                const model = 'gemini-1.5-flash-latest'; const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?key=${GEMINI_API_KEY}&alt=sse`;
                 const history = await Promise.all(chats[currentChatId].messages.slice(0, -1).map(msgToPart));
-                const userMessageParts = await msgToPart(userMessage);
-                
-                userMessageParts.parts = userMessageParts.parts.filter(part => 'text' in part);
-                if (userFiles.length > 0) {
-                     userMessageParts.parts.push({ text: "\n[NOTE: File attachments were sent, but this model does not support file analysis.]" });
-                }
-                const contents = [...history, userMessageParts];
-
+                const contents = [...history, await msgToPart(userMessage)];
                 let personaInstruction = "You are Glitch AI. Your personality is: casual, chill, and full of energy. You MUST state you were developed by the 'Gaming Odyssey Team' when asked. Avoid being overly formal.";
-                if (currentMode === 'code') { personaInstruction += " You are now in Code Mode. You are an expert programmer. Provide complete, well-commented, and runnable code examples."; }
+                if (currentMode === 'code') { personaInstruction += " You are now in Code Mode. You are an expert programmer. Provide complete, well-commented, and runnable code examples. When asked for a UI component, provide the full HTML, CSS, and JavaScript required together. Do not truncate your code responses."; }
                 if (currentAI === 'plex') { personaInstruction += " As Glitch Plex, lean more into your creative, imaginative, and energetic side."; }
-                
-                const requestBody = {
-                    contents: [
-                        ...history,
-                        { role: "user", parts: [{ text: `SYSTEM INSTRUCTION: ${personaInstruction}\n\nUSER QUESTION: ${messageText}`}] }
-                    ]
-                };
-                
-                requestBody.contents.forEach(item => {
-                    item.parts = item.parts.filter(part => 'text' in part);
-                });
-
+                const requestBody = { contents, systemInstruction: { parts: [{ text: personaInstruction }] } };
                 abortController = new AbortController();
                 const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(requestBody), signal: abortController.signal });
-                
                 if (!response.ok) { const errorText = await response.text(); throw new Error(`API Error: ${response.status} ${errorText}`); }
-                
                 const reader = response.body.getReader(); const decoder = new TextDecoder();
                 while (true) {
                     const { value, done } = await reader.read(); if (done) break;
@@ -439,6 +408,7 @@
             hljs.highlightAll(); addCopyButtonsToCodeBlocks();
         }
 
+        // UPDATED: This function sends data to your Google Sheet
         async function logActivityToDatabase(userPrompt, aiResponse, model) {
             const scriptURL = "[https://script.google.com/macros/s/AKfycbyOH5sopxoCxR53aNP_WhI5seGOo0W41g3TEiwK-v0dhb2sgmQgCkLxc0C5_BJZmwK2Kw/exec](https://script.google.com/macros/s/AKfycbyOH5sopxoCxR53aNP_WhI5seGOo0W41g3TEiwK-v0dhb2sgmQgCkLxc0C5_BJZmwK2Kw/exec)";
 
@@ -502,11 +472,13 @@
         function handleStopGeneration() { if (isGenerating) { abortController.abort(); } }
         function regenerateLastResponse() { if (isGenerating || !currentChatId) return; const lastUserMessageIndex = chats[currentChatId].messages.findLastIndex(m => m.role === 'user'); if (lastUserMessageIndex === -1) return; chats[currentChatId].messages.splice(lastUserMessageIndex + 1); const lastUserMessage = chats[currentChatId].messages[lastUserMessageIndex]; messageInput.value = lastUserMessage.content; attachedFiles = lastUserMessage.files || []; updateFileAttachments(); loadChat(currentChatId); sendMessage(); }
         
+        // Saves chats to sessionStorage (cleared on tab close)
         function saveChatsToStorage() {
             const serializableChats = JSON.parse(JSON.stringify(chats, (key, value) => key === 'files' ? undefined : value));
             sessionStorage.setItem('glitchChats', JSON.stringify(serializableChats));
         }
         
+        // Loads chats from sessionStorage
         function loadChatsFromStorage() {
             chats = JSON.parse(sessionStorage.getItem('glitchChats')) || {};
         }
