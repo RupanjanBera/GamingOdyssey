@@ -1334,8 +1334,8 @@
     // --- NEW GLITCH AI WIDGET SCRIPT ---
     document.addEventListener('DOMContentLoaded', () => {
         if (!document.getElementById('glitch-ai-widget-container')) return;
-        const GEMINI_API_KEY = 'AIzaSyAbKXW75vSj9XhSgs0rC5SK-Blf7NhSB-A';
-        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:streamGenerateContent?key=${GEMINI_API_KEY}&alt=sse`;
+        const GEMINI_API_KEY = 'AIzaSyB2B3uAwFKhjflWnZYjj_XOehj--SRYQBg';
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}&alt=sse`;
         const chatWindow = document.getElementById('glitch-ai-chat-window');
         const toggleBubble = document.getElementById('glitch-ai-toggle-bubble');
         const closeBtn = document.getElementById('glitch-ai-close-btn');
@@ -1423,5 +1423,6 @@
   </script>
 </body>
 </html>
+
 
 
