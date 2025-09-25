@@ -1351,19 +1351,22 @@
         const marked = { parse: (text) => { let html = text.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\*(.*?)\*/g, '<em>$1</em>').replace(/`(.*?)`/g, '<code>$1</code>').replace(/\n/g, '<br>'); html = html.replace(/```([\s\S]*?)```/g, (match, code) => `<pre><code>${code}</code></pre>`); return html; }};
         function addMessage(role, content) { const div = document.createElement('div'); div.className = `glitch-message ${role === 'user' ? 'glitch-user-message' : 'glitch-ai-message'}`; div.innerHTML = content; messagesContainer.appendChild(div); messagesContainer.scrollTop = messagesContainer.scrollHeight; }
         
-        function sendSupportQueryToFormSubmit(query) {
-            const form = document.createElement('form');
-            form.action = 'https://formsubmit.co/support@gamingodyssey.in';
-            form.method = 'POST';
-            form.style.display = 'none';
-            form.innerHTML = `
-                <input type="hidden" name="_subject" value="New Support Query from Glitch AI">
-                <input type="hidden" name="_captcha" value="false">
-                <textarea name="query">${query}</textarea>
-            `;
-            document.body.appendChild(form);
-            form.submit();
-            document.body.removeChild(form);
+        async function sendSupportQueryToFormSubmit(query) {
+            const formSubmitUrl = 'https://formsubmit.co/support@gamingodyssey.in';
+            const formData = {
+                _subject: "New Support Query from Glitch AI",
+                _captcha: "false",
+                message: query
+            };
+            try {
+                await fetch(formSubmitUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+            } catch (error) {
+                console.error("Error submitting support query:", error);
+            }
         }
 
         async function handleSendMessage() {
