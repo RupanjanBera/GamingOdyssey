@@ -49,23 +49,6 @@
       background: linear-gradient(135deg, var(--primary), var(--secondary));
     }
     
-    .gradient-border {
-      position: relative;
-      background: var(--dark);
-    }
-    
-    .gradient-border::before {
-      content: '';
-      position: absolute;
-      top: -2px;
-      left: -2px;
-      right: -2px;
-      bottom: -2px;
-      background: linear-gradient(45deg, var(--primary), var(--secondary));
-      z-index: -1;
-      border-radius: inherit;
-    }
-    
     .holographic-effect {
       position: relative;
       overflow: hidden;
@@ -116,8 +99,13 @@
       background: linear-gradient(180deg, var(--mid) 0%, var(--dark) 100%);
       box-shadow: 4px 0 15px rgba(59, 130, 246, 0.2);
     }
+
+    /* --- Increased Sidebar Menu Item Size --- */
+    .sidebar nav a {
+        padding: 12px 10px;
+        font-size: 1.05rem;
+    }
     
-    /* --- NEW HERO BACKGROUND --- */
     .hero-bg {
         background-image: 
             linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.9)),
@@ -271,7 +259,7 @@
       font-weight: bold;
       font-size: 1.2rem;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-      z-index: 1040; /* Increased z-index */
+      z-index: 1040;
       cursor: pointer;
       transition: all 0.3s ease;
     }
@@ -424,7 +412,6 @@
       z-index: -1;
     }
     
-    /* WhatsApp Widget Styles */
     .whatsapp-widget {
       position: fixed;
       bottom: 30px;
@@ -559,7 +546,6 @@
       }
     }
 
-    /* --- SLIDESHOW STYLES --- */
     .slide {
         position: absolute;
         top: 0;
@@ -597,32 +583,35 @@
     }
     
     /* --- NEW AI SHOWCASE STYLES --- */
-    @keyframes fade-in-up {
-        from { opacity: 0; transform: translateY(15px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    .animate-fade-in-up { animation: fade-in-up 0.6s ease-out forwards; }
-
-    @keyframes typing-bounce {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-3px); }
-    }
-    .typing-dot {
-        display: inline-block;
-        width: 6px;
-        height: 6px;
-        background: #94A3B8;
-        border-radius: 50%;
-        margin: 0 1px;
-        animation: typing-bounce 1.2s infinite;
-    }
     #ai-showcase-card {
         transition: transform 0.4s ease, box-shadow 0.4s ease;
+        min-height: 180px;
     }
     #ai-showcase-card:hover {
         transform: translateY(-10px) rotateX(3deg) rotateY(-4deg);
         box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.2);
     }
+    .showcase-message {
+        opacity: 0;
+        transform: translateY(10px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .showcase-message.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    @keyframes typing-blink {
+      50% { opacity: 0; }
+    }
+    .typing-cursor {
+        display: inline-block;
+        width: 2px;
+        height: 1em;
+        background-color: #94A3B8;
+        animation: typing-blink 1s step-end infinite;
+        vertical-align: bottom;
+    }
+
     
     /* --- GLITCH AI WIDGET STYLES --- */
     #glitch-ai-widget-container {
@@ -680,12 +669,21 @@
         align-items: center;
         flex-shrink: 0;
     }
-    #glitch-ai-close-btn {
-        font-size: 24px;
-        font-weight: bold;
-        line-height: 1;
+    #glitch-ai-header-buttons button {
         background: none;
         border: none;
+        color: #94A3B8;
+        font-size: 20px;
+        cursor: pointer;
+        transition: color 0.2s;
+    }
+    #glitch-ai-header-buttons button:hover {
+        color: white;
+    }
+    #glitch-ai-close-btn {
+        font-weight: bold;
+        font-size: 24px;
+        line-height: 1;
     }
     #glitch-ai-messages {
         flex: 1;
@@ -783,7 +781,6 @@
             left: 20px;
         }
     }
-    
     @media (max-width: 640px) {
       .hero-bg h1 {
         font-size: 2.5rem;
@@ -803,7 +800,6 @@
             right: -10px;
         }
     }
-    
     @media (min-width: 641px) and (max-width: 768px) {
       .hero-bg h1 {
         font-size: 3.5rem;
@@ -818,40 +814,40 @@
         <img src="favicon.png" alt="Logo" class="w-10 h-10">
         <h1 class="text-2xl font-bold text-white leading-relaxed tech-font">GAMING ODYSSEY</h1>
       </div>
-      <nav class="mt-12 space-y-4">
-        <a href="index.html" class="flex items-center space-x-3 text-[#3B82F6] font-semibold nav-link">
+      <nav class="mt-12 space-y-2">
+        <a href="index.html" class="flex items-center space-x-3 text-[#3B82F6] font-semibold nav-link rounded-md">
           <i class="fas fa-home w-5 h-5"></i>
           <span>Home</span>
         </a>
-        <a href="store.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+        <a href="store.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link rounded-md">
           <i class="fas fa-gamepad w-5 h-5"></i>
           <span>Store</span>
         </a>
-        <a href="tournaments.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+        <a href="tournaments.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link rounded-md">
           <i class="fas fa-trophy w-5 h-5"></i>
           <span>Tournaments</span>
         </a>
-        <a href="trackorder.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+        <a href="trackorder.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link rounded-md">
           <i class="fas fa-shipping-fast w-5 h-5"></i>
           <span>Track Order</span>
         </a>
-        <a href="contactus.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+        <a href="contactus.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link rounded-md">
           <i class="fas fa-headset w-5 h-5"></i>
           <span>Contact Us</span>
         </a>
-        <a href="aboutus.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+        <a href="aboutus.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link rounded-md">
           <i class="fas fa-info-circle w-5 h-5"></i>
           <span>About Us</span>
         </a>
-        <a href="glitch.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+        <a href="glitch.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link rounded-md">
           <i class="fas fa-robot w-5 h-5"></i>
           <span>Glitch AI</span>
         </a>
-        <a href="login.html" id="login-link-desktop" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+        <a href="login.html" id="login-link-desktop" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link rounded-md">
           <i class="fas fa-sign-in-alt w-5 h-5"></i>
           <span>Login</span>
         </a>
-        <a href="signup.html" id="signup-link-desktop" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+        <a href="signup.html" id="signup-link-desktop" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link rounded-md">
           <i class="fas fa-user-plus w-5 h-5"></i>
           <span>Sign Up</span>
         </a>
@@ -953,7 +949,6 @@
     <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B] relative overflow-hidden">
       <div class="max-w-7xl mx-auto">
         <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Featured Gaming Gear</h2>
-        
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           <div class="holographic-product rounded-xl p-6 fade-in">
             <div class="price-tag">$149.99</div>
@@ -964,19 +959,12 @@
             <p class="text-[#94A3B8] text-sm mb-4">Mechanical Gaming Keyboard with Razer™ Yellow Mechanical Switches</p>
             <div class="flex justify-between items-center">
               <div class="flex text-yellow-400 text-sm">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star-half-alt"></i>
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
                 <span class="text-[#94A3B8] ml-1">(428)</span>
               </div>
-              <a href="store.html" class="text-[#3B82F6] hover:text-[#D946EF] transition">
-                <i class="fas fa-shopping-cart"></i>
-              </a>
+              <a href="store.html" class="text-[#3B82F6] hover:text-[#D946EF] transition"><i class="fas fa-shopping-cart"></i></a>
             </div>
           </div>
-          
           <div class="holographic-product rounded-xl p-6 fade-in">
             <div class="price-tag">$199.99</div>
             <div class="h-48 flex items-center justify-center mb-6">
@@ -986,19 +974,12 @@
             <p class="text-[#94A3B8] text-sm mb-4">Wireless Gaming Mouse with Chroma™ RGB</p>
             <div class="flex justify-between items-center">
               <div class="flex text-yellow-400 text-sm">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                 <span class="text-[#94A3B8] ml-1">(512)</span>
               </div>
-              <a href="store.html" class="text-[#3B82F6] hover:text-[#D946EF] transition">
-                <i class="fas fa-shopping-cart"></i>
-              </a>
+              <a href="store.html" class="text-[#3B82F6] hover:text-[#D946EF] transition"><i class="fas fa-shopping-cart"></i></a>
             </div>
           </div>
-          
           <div class="holographic-product rounded-xl p-6 fade-in">
             <div class="price-tag">$299.99</div>
             <div class="h-48 flex items-center justify-center mb-6">
@@ -1008,19 +989,12 @@
             <p class="text-[#94A3B8] text-sm mb-4">Wireless Gaming Headset with DTS Headphone:X</p>
             <div class="flex justify-between items-center">
               <div class="flex text-yellow-400 text-sm">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star-half-alt"></i>
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
                 <span class="text-[#94A3B8] ml-1">(387)</span>
               </div>
-              <a href="store.html" class="text-[#3B82F6] hover:text-[#D946EF] transition">
-                <i class="fas fa-shopping-cart"></i>
-              </a>
+              <a href="store.html" class="text-[#3B82F6] hover:text-[#D946EF] transition"><i class="fas fa-shopping-cart"></i></a>
             </div>
           </div>
-          
           <div class="holographic-product rounded-xl p-6 fade-in">
             <div class="price-tag">$249.99</div>
             <div class="h-48 flex items-center justify-center mb-6">
@@ -1030,20 +1004,13 @@
             <p class="text-[#94A3B8] text-sm mb-4">Professional USB Condenser Streaming Microphone</p>
             <div class="flex justify-between items-center">
               <div class="flex text-yellow-400 text-sm">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="far fa-star"></i>
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
                 <span class="text-[#94A3B8] ml-1">(276)</span>
               </div>
-              <a href="store.html" class="text-[#3B82F6] hover:text-[#D946EF] transition">
-                <i class="fas fa-shopping-cart"></i>
-              </a>
+              <a href="store.html" class="text-[#3B82F6] hover:text-[#D946EF] transition"><i class="fas fa-shopping-cart"></i></a>
             </div>
           </div>
         </div>
-        
         <div class="text-center mt-12">
           <a href="store.html" class="inline-block glow-button px-8 py-3 rounded-lg font-semibold text-white gradient-bg">
             View All Products <i class="fas fa-arrow-right ml-2"></i>
@@ -1055,7 +1022,6 @@
     <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A] relative overflow-hidden">
       <div class="max-w-7xl mx-auto">
         <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Upcoming Tournaments</h2>
-        
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div class="tournament-card rounded-xl overflow-hidden fade-in">
             <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Cyber Clash 2025" class="w-full h-64 object-cover">
@@ -1064,20 +1030,11 @@
                 <h3 class="text-xl font-bold text-white">Cyber Clash 2025</h3>
                 <span class="bg-[#3B82F6] text-[#0F172A] text-xs font-bold px-2 py-1 rounded">$10K Prize</span>
               </div>
-              <div class="flex items-center text-[#94A3B8] text-sm mb-4">
-                <i class="fas fa-gamepad mr-2 text-[#3B82F6]"></i>
-                <span>Valorant</span>
-              </div>
-              <div class="flex items-center text-[#94A3B8] text-sm mb-4">
-                <i class="fas fa-calendar-alt mr-2 text-[#3B82F6]"></i>
-                <span>May 15, 2025</span>
-              </div>
-              <a href="tournaments.html" class="inline-block w-full text-center bg-gradient-to-r from-[#3B82F6] to-[#D946EF] text-white py-2 rounded-lg font-medium hover:opacity-90 transition">
-                Register Now
-              </a>
+              <div class="flex items-center text-[#94A3B8] text-sm mb-4"><i class="fas fa-gamepad mr-2 text-[#3B82F6]"></i><span>Valorant</span></div>
+              <div class="flex items-center text-[#94A3B8] text-sm mb-4"><i class="fas fa-calendar-alt mr-2 text-[#3B82F6]"></i><span>May 15, 2025</span></div>
+              <a href="tournaments.html" class="inline-block w-full text-center bg-gradient-to-r from-[#3B82F6] to-[#D946EF] text-white py-2 rounded-lg font-medium hover:opacity-90 transition">Register Now</a>
             </div>
           </div>
-          
           <div class="tournament-card rounded-xl overflow-hidden fade-in">
             <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80" alt="Neon Strike" class="w-full h-64 object-cover">
             <div class="tournament-card-content p-6 absolute bottom-0 left-0 right-0">
@@ -1085,20 +1042,11 @@
                 <h3 class="text-xl font-bold text-white">Neon Strike</h3>
                 <span class="bg-[#D946EF] text-[#0F172A] text-xs font-bold px-2 py-1 rounded">$15K Prize</span>
               </div>
-              <div class="flex items-center text-[#94A3B8] text-sm mb-4">
-                <i class="fas fa-gamepad mr-2 text-[#3B82F6]"></i>
-                <span>Overwatch 2</span>
-              </div>
-              <div class="flex items-center text-[#94A3B8] text-sm mb-4">
-                <i class="fas fa-calendar-alt mr-2 text-[#3B82F6]"></i>
-                <span>June 10, 2025</span>
-              </div>
-              <a href="tournaments.html" class="inline-block w-full text-center bg-gradient-to-r from-[#3B82F6] to-[#D946EF] text-white py-2 rounded-lg font-medium hover:opacity-90 transition">
-                Register Now
-              </a>
+              <div class="flex items-center text-[#94A3B8] text-sm mb-4"><i class="fas fa-gamepad mr-2 text-[#3B82F6]"></i><span>Overwatch 2</span></div>
+              <div class="flex items-center text-[#94A3B8] text-sm mb-4"><i class="fas fa-calendar-alt mr-2 text-[#3B82F6]"></i><span>June 10, 2025</span></div>
+              <a href="tournaments.html" class="inline-block w-full text-center bg-gradient-to-r from-[#3B82F6] to-[#D946EF] text-white py-2 rounded-lg font-medium hover:opacity-90 transition">Register Now</a>
             </div>
           </div>
-          
           <div class="tournament-card rounded-xl overflow-hidden fade-in">
             <img src="https://images.unsplash.com/photo-1633613286848-e6f43bbafb8d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Odyssey League" class="w-full h-64 object-cover">
             <div class="tournament-card-content p-6 absolute bottom-0 left-0 right-0">
@@ -1106,30 +1054,19 @@
                 <h3 class="text-xl font-bold text-white">Odyssey League</h3>
                 <span class="bg-[#10B981] text-[#0F172A] text-xs font-bold px-2 py-1 rounded">$20K Prize</span>
               </div>
-              <div class="flex items-center text-[#94A3B8] text-sm mb-4">
-                <i class="fas fa-gamepad mr-2 text-[#3B82F6]"></i>
-                <span>League of Legends</span>
-              </div>
-              <div class="flex items-center text-[#94A3B8] text-sm mb-4">
-                <i class="fas fa-calendar-alt mr-2 text-[#3B82F6]"></i>
-                <span>July 5, 2025</span>
-              </div>
-              <a href="tournaments.html" class="inline-block w-full text-center bg-gradient-to-r from-[#3B82F6] to-[#D946EF] text-white py-2 rounded-lg font-medium hover:opacity-90 transition">
-                Register Now
-              </a>
+              <div class="flex items-center text-[#94A3B8] text-sm mb-4"><i class="fas fa-gamepad mr-2 text-[#3B82F6]"></i><span>League of Legends</span></div>
+              <div class="flex items-center text-[#94A3B8] text-sm mb-4"><i class="fas fa-calendar-alt mr-2 text-[#3B82F6]"></i><span>July 5, 2025</span></div>
+              <a href="tournaments.html" class="inline-block w-full text-center bg-gradient-to-r from-[#3B82F6] to-[#D946EF] text-white py-2 rounded-lg font-medium hover:opacity-90 transition">Register Now</a>
             </div>
           </div>
         </div>
-        
         <div class="text-center mt-12">
-          <a href="tournaments.html" class="inline-block glow-button px-8 py-3 rounded-lg font-semibold text-white gradient-bg">
-            View All Tournaments <i class="fas fa-arrow-right ml-2"></i>
-          </a>
+          <a href="tournaments.html" class="inline-block glow-button px-8 py-3 rounded-lg font-semibold text-white gradient-bg">View All Tournaments <i class="fas fa-arrow-right ml-2"></i></a>
         </div>
       </div>
     </section>
     
-    <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B] relative overflow-hidden">
+    <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A] relative overflow-hidden">
         <div class="max-w-7xl mx-auto">
             <div class="flex flex-col md:flex-row-reverse items-center gap-12">
                 <div class="md:w-1/2 w-full fade-in">
@@ -1137,15 +1074,10 @@
                         <div class="holographic-card-inner">
                             <div class="flex items-center gap-3 mb-4">
                                 <img src="glitch.png" alt="Glitch Logo" class="w-10 h-10 rounded-full border-2 border-[#3B82F6]">
-                                <h3 class="tech-font text-xl font-bold gradient-text">Glitch AI</h3>
+                                <h3 class="tech-font text-xl font-bold gradient-text">Glitch AI Live</h3>
                             </div>
-                            <div class="space-y-3 text-sm">
-                                <div class="p-3 rounded-lg bg-[#161B22] w-11/12 animate-fade-in-up" style="animation-delay: 0.5s;">Hey! I'm Glitch, your new AI sidekick. What's up? ✨</div>
-                                <div class="p-3 rounded-lg bg-[#3B82F6]/20 w-10/12 ml-auto animate-fade-in-up" style="animation-delay: 1.5s; text-align: right;">Write me a python script...</div>
-                                <div class="p-3 rounded-lg bg-[#161B22] w-3/4 animate-fade-in-up" style="animation-delay: 2.5s;">
-                                    <span class="typing-dot">.</span><span class="typing-dot" style="animation-delay: 0.2s;">.</span><span class="typing-dot" style="animation-delay: 0.4s;">.</span>
+                            <div id="showcase-chat-container" class="space-y-3 text-sm">
                                 </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -1155,7 +1087,7 @@
                         Unleash your creativity with Glitch, our state-of-the-art AI assistant, proudly developed by the **Gaming Odyssey Team**. Whether you need help with coding, brainstorming ideas, or just a friendly chat, Glitch is here to supercharge your workflow.
                     </p>
                     <p class="text-slate-400 mb-8">
-                        Experience seamless interaction, powerful features, and a glimpse into the future of AI.
+                        Experience seamless interaction, powerful features, and a glimpse into the future of AI. Try it out live with the widget on your screen!
                     </p>
                     <a href="glitch.html" class="glow-button px-8 py-3 rounded-lg font-semibold text-white gradient-bg flex items-center justify-center gap-3 text-lg">
                         <i class="fas fa-rocket"></i> Launch Full Experience
@@ -1165,7 +1097,7 @@
         </div>
     </section>
 
-    <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A] relative overflow-hidden">
+    <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B] relative overflow-hidden">
       <div class="max-w-7xl mx-auto">
         <div class="flex flex-col md:flex-row items-center gap-8">
           <div class="md:w-1/2 fade-in">
@@ -1183,12 +1115,8 @@
               </div>
             </div>
             <div class="flex flex-col sm:flex-row gap-4">
-              <a href="http://play.gamingodyssey.in" class="glow-button px-6 py-3 rounded-lg font-semibold text-white gradient-bg flex items-center justify-center gap-2">
-                <i class="fas fa-plug"></i> Connect Now
-              </a>
-              <a href="ranks.html" class="glow-button px-6 py-3 rounded-lg font-semibold text-white bg-[#1E293B] border border-[#3B82F6] flex items-center justify-center gap-2">
-                <i class="fas fa-crown"></i> View Ranks
-              </a>
+              <a href="http://play.gamingodyssey.in" class="glow-button px-6 py-3 rounded-lg font-semibold text-white gradient-bg flex items-center justify-center gap-2"><i class="fas fa-plug"></i> Connect Now</a>
+              <a href="ranks.html" class="glow-button px-6 py-3 rounded-lg font-semibold text-white bg-[#1E293B] border border-[#3B82F6] flex items-center justify-center gap-2"><i class="fas fa-crown"></i> View Ranks</a>
             </div>
           </div>
           <div class="md:w-1/2 fade-in">
@@ -1200,143 +1128,24 @@
       </div>
     </section>
 
-    <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B]">
+    <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A]">
       <div class="max-w-7xl mx-auto">
         <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Why Choose Gaming Odyssey?</h2>
-        
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div class="stats-item fade-in">
-            <div class="text-center p-6">
-              <div class="bg-[#3B82F6] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i class="fas fa-trophy text-2xl text-white"></i>
-              </div>
-              <h3 class="text-3xl font-bold text-white text-center mb-2">50+</h3>
-              <p class="text-[#94A3B8] text-center">Tournaments Hosted</p>
-            </div>
-          </div>
-          
-          <div class="stats-item fade-in">
-            <div class="text-center p-6">
-              <div class="bg-[#D946EF] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i class="fas fa-users text-2xl text-white"></i>
-              </div>
-              <h3 class="text-3xl font-bold text-white text-center mb-2">10K+</h3>
-              <p class="text-[#94A3B8] text-center">Active Members</p>
-            </div>
-          </div>
-          
-          <div class="stats-item fade-in">
-            <div class="text-center p-6">
-              <div class="bg-[#10B981] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i class="fas fa-gamepad text-2xl text-white"></i>
-              </div>
-              <h3 class="text-3xl font-bold text-white text-center mb-2">100+</h3>
-              <p class="text-[#94A3B8] text-center">Supported Games</p>
-            </div>
-          </div>
-          
-          <div class="stats-item fade-in">
-            <div class="text-center p-6">
-              <div class="bg-[#F59E0B] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i class="fas fa-headset text-2xl text-white"></i>
-              </div>
-              <h3 class="text-3xl font-bold text-white text-center mb-2">24/7</h3>
-              <p class="text-[#94A3B8] text-center">Customer Support</p>
-            </div>
-          </div>
+          <div class="stats-item fade-in"><div class="text-center p-6"><div class="bg-[#3B82F6] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-trophy text-2xl text-white"></i></div><h3 class="text-3xl font-bold text-white text-center mb-2">50+</h3><p class="text-[#94A3B8] text-center">Tournaments Hosted</p></div></div>
+          <div class="stats-item fade-in"><div class="text-center p-6"><div class="bg-[#D946EF] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-users text-2xl text-white"></i></div><h3 class="text-3xl font-bold text-white text-center mb-2">10K+</h3><p class="text-[#94A3B8] text-center">Active Members</p></div></div>
+          <div class="stats-item fade-in"><div class="text-center p-6"><div class="bg-[#10B981] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-gamepad text-2xl text-white"></i></div><h3 class="text-3xl font-bold text-white text-center mb-2">100+</h3><p class="text-[#94A3B8] text-center">Supported Games</p></div></div>
+          <div class="stats-item fade-in"><div class="text-center p-6"><div class="bg-[#F59E0B] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-headset text-2xl text-white"></i></div><h3 class="text-3xl font-bold text-white text-center mb-2">24/7</h3><p class="text-[#94A3B8] text-center">Customer Support</p></div></div>
         </div>
       </div>
     </section>
 
-    <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A]">
+    <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B]">
       <div class="max-w-4xl mx-auto">
         <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Contact Us</h2>
-        
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div class="fade-in">
-            <div class="holographic-effect rounded-xl p-6 h-full">
-              <h3 class="text-xl font-bold text-white mb-4">Get In Touch</h3>
-              <div class="space-y-4">
-                <div class="flex items-start">
-                  <i class="fas fa-map-marker-alt mt-1 text-[#3B82F6] mr-3"></i>
-                  <div>
-                    <h4 class="text-white font-medium">Address</h4>
-                    <p class="text-[#94A3B8] text-sm">Howrah,WEST BENGAL</p>
-                  </div>
-                </div>
-                <div class="flex items-center">
-                  <i class="fas fa-envelope text-[#3B82F6] mr-3"></i>
-                  <div>
-                    <h4 class="text-white font-medium">Email</h4>
-                    <a href="mailto:support@gamingodyssey.in" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition">support@gamingodyssey.in</a>
-                  </div>
-                </div>
-                <div class="flex items-center">
-                  <i class="fas fa-phone text-[#3B82F6] mr-3"></i>
-                  <div>
-                    <h4 class="text-white font-medium">Phone</h4>
-                    <p class="text-[#94A3B8] text-sm">+91-6289119156</p>
-                  </div>
-                </div>
-                <div class="flex items-center">
-                  <i class="fas fa-server text-[#3B82F6] mr-3"></i>
-                  <div>
-                    <h4 class="text-white font-medium">Minecraft Server</h4>
-                    <p class="text-[#94A3B8] text-sm">play.gamingodyssey.in</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="mt-8">
-                <h3 class="text-xl font-bold text-white mb-4">Follow Us</h3>
-                <div class="flex space-x-4">
-                  <a href="https://www.instagram.com/noticedveil" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#E1306C]">
-                    <i class="fab fa-instagram text-2xl"></i>
-                  </a>
-                  <a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#FF0000]">
-                    <i class="fab fa-youtube text-2xl"></i>
-                  </a>
-                  <a href="https://www.facebook.com" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#1877F2]">
-                    <i class="fab fa-facebook text-2xl"></i>
-                  </a>
-                  <a href="https://www.twitter.com" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#1DA1F2]">
-                    <i class="fab fa-twitter text-2xl"></i>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="fade-in">
-            <div class="holographic-effect rounded-xl p-6">
-              <form id="contact-form">
-                <div class="mb-5">
-                  <label for="name" class="block text-[#F1F5F9] mb-2 font-medium">Name</label>
-                  <input type="text" id="name" name="name" required placeholder="Your name" class="input-field">
-                  <p id="name-error" class="text-red-500 text-sm mt-1 hidden">Please enter your name</p>
-                </div>
-                <div class="mb-5">
-                  <label for="email" class="block text-[#F1F5F9] mb-2 font-medium">Email</label>
-                  <input type="email" id="email" name="email" required placeholder="Your email" class="input-field">
-                  <p id="email-error" class="text-red-500 text-sm mt-1 hidden">Please enter a valid email</p>
-                </div>
-                <div class="mb-5">
-                  <label for="subject" class="block text-[#F1F5F9] mb-2 font-medium">Subject</label>
-                  <input type="text" id="subject" name="subject" required placeholder="Subject" class="input-field">
-                  <p id="subject-error" class="text-red-500 text-sm mt-1 hidden">Please enter a subject</p>
-                </div>
-                <div class="mb-5">
-                  <label for="message" class="block text-[#F1F5F9] mb-2 font-medium">Message</label>
-                  <textarea id="message" name="message" rows="4" required placeholder="Your message" class="input-field"></textarea>
-                  <p id="message-error" class="text-red-500 text-sm mt-1 hidden">Please enter a message</p>
-                </div>
-                <button type="submit" class="w-full glow-button px-6 py-3 rounded-lg font-semibold text-white gradient-bg flex items-center justify-center gap-2">
-                  <i class="fas fa-paper-plane"></i> Send Message
-                </button>
-                <p id="form-status" class="mt-3 text-sm text-center"></p>
-            </form>
-            </div>
-          </div>
+          <div class="fade-in"><div class="holographic-effect rounded-xl p-6 h-full"><h3 class="text-xl font-bold text-white mb-4">Get In Touch</h3><div class="space-y-4"><div class="flex items-start"><i class="fas fa-map-marker-alt mt-1 text-[#3B82F6] mr-3"></i><div><h4 class="text-white font-medium">Address</h4><p class="text-[#94A3B8] text-sm">Howrah,WEST BENGAL</p></div></div><div class="flex items-center"><i class="fas fa-envelope text-[#3B82F6] mr-3"></i><div><h4 class="text-white font-medium">Email</h4><a href="mailto:support@gamingodyssey.in" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition">support@gamingodyssey.in</a></div></div><div class="flex items-center"><i class="fas fa-phone text-[#3B82F6] mr-3"></i><div><h4 class="text-white font-medium">Phone</h4><p class="text-[#94A3B8] text-sm">+91-6289119156</p></div></div><div class="flex items-center"><i class="fas fa-server text-[#3B82F6] mr-3"></i><div><h4 class="text-white font-medium">Minecraft Server</h4><p class="text-[#94A3B8] text-sm">play.gamingodyssey.in</p></div></div></div><div class="mt-8"><h3 class="text-xl font-bold text-white mb-4">Follow Us</h3><div class="flex space-x-4"><a href="https://www.instagram.com/noticedveil" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#E1306C]"><i class="fab fa-instagram text-2xl"></i></a><a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#FF0000]"><i class="fab fa-youtube text-2xl"></i></a><a href="https://www.facebook.com" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#1877F2]"><i class="fab fa-facebook text-2xl"></i></a><a href="https://www.twitter.com" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#1DA1F2]"><i class="fab fa-twitter text-2xl"></i></a></div></div></div></div>
+          <div class="fade-in"><div class="holographic-effect rounded-xl p-6"><form id="contact-form"><div class="mb-5"><label for="name" class="block text-[#F1F5F9] mb-2 font-medium">Name</label><input type="text" id="name" name="name" required placeholder="Your name" class="input-field"><p id="name-error" class="text-red-500 text-sm mt-1 hidden">Please enter your name</p></div><div class="mb-5"><label for="email" class="block text-[#F1F5F9] mb-2 font-medium">Email</label><input type="email" id="email" name="email" required placeholder="Your email" class="input-field"><p id="email-error" class="text-red-500 text-sm mt-1 hidden">Please enter a valid email</p></div><div class="mb-5"><label for="subject" class="block text-[#F1F5F9] mb-2 font-medium">Subject</label><input type="text" id="subject" name="subject" required placeholder="Subject" class="input-field"><p id="subject-error" class="text-red-500 text-sm mt-1 hidden">Please enter a subject</p></div><div class="mb-5"><label for="message" class="block text-[#F1F5F9] mb-2 font-medium">Message</label><textarea id="message" name="message" rows="4" required placeholder="Your message" class="input-field"></textarea><p id="message-error" class="text-red-500 text-sm mt-1 hidden">Please enter a message</p></div><button type="submit" class="w-full glow-button px-6 py-3 rounded-lg font-semibold text-white gradient-bg flex items-center justify-center gap-2"><i class="fas fa-paper-plane"></i> Send Message</button><p id="form-status" class="mt-3 text-sm text-center"></p></form></div></div>
         </div>
       </div>
     </section>
@@ -1345,131 +1154,49 @@
       <div class="max-w-7xl mx-auto">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <div class="flex items-center space-x-3 mb-4">
-              <img src="favicon.png" alt="Logo" class="w-10 h-10">
-              <h3 class="text-xl font-bold text-white tech-font">GAMING ODYSSEY</h3>
-            </div>
-            <p class="text-[#94A3B8] text-sm mb-4 leading-relaxed">
-              Where Gaming Meets Glory. Join our community of passionate gamers and elevate your gaming experience.
-            </p>
-            <div class="flex space-x-4">
-              <a href="https://www.instagram.com/noticedveil" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#E1306C]">
-                <i class="fab fa-instagram"></i>
-              </a>
-              <a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#FF0000]">
-                <i class="fab fa-youtube"></i>
-              </a>
-              <a href="https://www.facebook.com" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#1877F2]">
-                <i class="fab fa-facebook"></i>
-              </a>
-              <a href="https://www.twitter.com" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#1DA1F2]">
-                <i class="fab fa-twitter"></i>
-              </a>
-            </div>
+            <div class="flex items-center space-x-3 mb-4"><img src="favicon.png" alt="Logo" class="w-10 h-10"><h3 class="text-xl font-bold text-white tech-font">GAMING ODYSSEY</h3></div>
+            <p class="text-[#94A3B8] text-sm mb-4 leading-relaxed">Where Gaming Meets Glory. Join our community of passionate gamers and elevate your gaming experience.</p>
+            <div class="flex space-x-4"><a href="https://www.instagram.com/noticedveil" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#E1306C]"><i class="fab fa-instagram"></i></a><a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#FF0000]"><i class="fab fa-youtube"></i></a><a href="https://www.facebook.com" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#1877F2]"><i class="fab fa-facebook"></i></a><a href="https://www.twitter.com" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#1DA1F2]"><i class="fab fa-twitter"></i></a></div>
           </div>
-          
           <div>
             <h3 class="text-lg font-bold text-white mb-4">Quick Links</h3>
             <ul class="space-y-3">
-              <li>
-                <a href="index.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center">
-                  <i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Home
-                </a>
-              </li>
-              <li>
-                <a href="store.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center">
-                  <i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Store
-                </a>
-              </li>
-              <li>
-                <a href="tournaments.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center">
-                  <i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Tournaments
-                </a>
-              </li>
-              <li>
-                <a href="trackorder.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center">
-                  <i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Track Order
-                </a>
-              </li>
-              <li>
-                <a href="signup.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center">
-                  <i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Sign Up
-                </a>
-              </li>
+              <li><a href="index.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center"><i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Home</a></li>
+              <li><a href="store.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center"><i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Store</a></li>
+              <li><a href="tournaments.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center"><i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Tournaments</a></li>
+              <li><a href="trackorder.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center"><i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Track Order</a></li>
+              <li><a href="signup.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center"><i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Sign Up</a></li>
             </ul>
           </div>
-          
           <div>
             <h3 class="text-lg font-bold text-white mb-4">Support</h3>
             <ul class="space-y-3">
-              <li>
-                <a href="contactus.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center">
-                  <i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Contact Us
-                </a>
-              </li>
-              <li>
-                <a href="aboutus.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center">
-                  <i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> About Us
-                </a>
-              </li>
-              <li>
-                <a href="terms.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center">
-                  <i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Terms & Conditions
-                </a>
-              </li>
-              <li>
-                <a href="privacy.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center">
-                  <i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Privacy Policy
-                </a>
-              </li>
-              <li>
-                <a href="faq.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center">
-                  <i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> FAQ
-                </a>
-              </li>
+              <li><a href="contactus.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center"><i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Contact Us</a></li>
+              <li><a href="aboutus.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center"><i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> About Us</a></li>
+              <li><a href="terms.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center"><i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Terms & Conditions</a></li>
+              <li><a href="privacy.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center"><i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Privacy Policy</a></li>
+              <li><a href="faq.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center"><i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> FAQ</a></li>
             </ul>
           </div>
-          
           <div>
             <h3 class="text-lg font-bold text-white mb-4">Newsletter</h3>
-            <p class="text-[#94A3B8] text-sm mb-4">
-              Subscribe to our newsletter for the latest updates on tournaments, products, and special offers.
-            </p>
-            <form class="flex">
-              <input type="email" placeholder="Your email" class="input-field rounded-r-none">
-              <button type="submit" class="bg-gradient-to-r from-[#3B82F6] to-[#D946EF] text-white px-4 rounded-r-lg">
-                <i class="fas fa-paper-plane"></i>
-              </button>
-            </form>
+            <p class="text-[#94A3B8] text-sm mb-4">Subscribe to our newsletter for the latest updates on tournaments, products, and special offers.</p>
+            <form class="flex"><input type="email" placeholder="Your email" class="input-field rounded-r-none"><button type="submit" class="bg-gradient-to-r from-[#3B82F6] to-[#D946EF] text-white px-4 rounded-r-lg"><i class="fas fa-paper-plane"></i></button></form>
           </div>
         </div>
-        
-        <div class="border-t border-[#1E293B] mt-10 pt-6 text-center">
-          <p class="text-[#94A3B8] text-sm">© 2025 Gaming Odyssey. All rights reserved.</p>
-        </div>
+        <div class="border-t border-[#1E293B] mt-10 pt-6 text-center"><p class="text-[#94A3B8] text-sm">© 2025 Gaming Odyssey. All rights reserved.</p></div>
       </div>
     </footer>
   </div>
 
   <div class="whatsapp-widget">
-    <div class="whatsapp-bubble" id="whatsapp-bubble">
-      <i class="fab fa-whatsapp"></i>
-    </div>
+    <div class="whatsapp-bubble" id="whatsapp-bubble"><i class="fab fa-whatsapp"></i></div>
     <div class="whatsapp-chat-box" id="whatsapp-chat-box">
-      <button class="whatsapp-close" id="whatsapp-close">
-        <i class="fas fa-times"></i>
-      </button>
-      <div class="whatsapp-header">
-        <img src="https://cdn-icons-png.flaticon.com/512/3612/3612569.png" alt="Gaming Odyssey Logo">
-        <h3>Gaming Odyssey</h3>
-      </div>
+      <button class="whatsapp-close" id="whatsapp-close"><i class="fas fa-times"></i></button>
+      <div class="whatsapp-header"><img src="https://cdn-icons-png.flaticon.com/512/3612/3612569.png" alt="Gaming Odyssey Logo"><h3>Gaming Odyssey</h3></div>
       <div class="whatsapp-body">
-        <div class="whatsapp-message">
-          Hi 👋 Welcome to Gaming Odyssey! Need help? Chat with us on WhatsApp.
-        </div>
-        <a href="https://wa.me/916289119156" target="_blank" class="whatsapp-button">
-          <i class="fab fa-whatsapp"></i> Start Chat
-        </a>
+        <div class="whatsapp-message">Hi 👋 Welcome to Gaming Odyssey! Need help? Chat with us on WhatsApp.</div>
+        <a href="https://wa.me/916289119156" target="_blank" class="whatsapp-button"><i class="fab fa-whatsapp"></i> Start Chat</a>
       </div>
     </div>
   </div>
@@ -1481,467 +1208,215 @@
                     <img src="glitch.png" alt="Glitch Logo" class="w-8 h-8 rounded-full border border-blue-400">
                     <div>
                         <h3 class="font-bold text-white text-base">Glitch AI</h3>
-                        <div class="flex items-center gap-2">
-                            <div class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
-                            <p class="text-xs text-slate-300">Online</p>
-                        </div>
+                        <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div><p class="text-xs text-slate-300">Online</p></div>
                     </div>
                 </div>
-                <button id="glitch-ai-close-btn" class="text-slate-400 hover:text-white">&times;</button>
-            </div>
-            <div id="glitch-ai-messages">
+                <div id="glitch-ai-header-buttons" class="flex items-center gap-4">
+                    <button id="glitch-ai-clear-btn" title="Clear Chat"><i class="fas fa-sync-alt"></i></button>
+                    <button id="glitch-ai-close-btn" class="text-slate-400 hover:text-white">&times;</button>
                 </div>
+            </div>
+            <div id="glitch-ai-messages"></div>
             <div id="glitch-ai-input-area">
                  <textarea id="glitch-ai-input" placeholder="Ask Glitch anything..." rows="1"></textarea>
-                 <button id="glitch-ai-send-btn">
-                     <i class="fas fa-paper-plane"></i>
-                 </button>
+                 <button id="glitch-ai-send-btn"><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
-        <button id="glitch-ai-toggle-bubble">
-             <img src="glitch.png" alt="Glitch AI" class="w-full h-full object-cover">
-        </button>
+        <button id="glitch-ai-toggle-bubble"><img src="glitch.png" alt="Glitch AI" class="w-full h-full object-cover"></button>
     </div>
 
 
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-  
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-  <script src="https://js.puter.com/v2/"></script>
   <script>
-    // --- Firebase Configuration ---
-    const firebaseConfig = {
-      apiKey:"AIzaSyDA218WauVZNgqeMgiR_5H6TLYQB5HXZkY",
-      authDomain: "gamingodyssey-2e642.firebaseapp.com",
-      databaseURL: "https://gamingodyssey-2e642-default-rtdb.firebaseio.com",
-      projectId: "gamingodyssey-2e642",
-    };
+    // --- Firebase & Auth ---
+    const firebaseConfig = { apiKey:"AIzaSyDA218WauVZNgqeMgiR_5H6TLYQB5HXZkY", authDomain: "gamingodyssey-2e642.firebaseapp.com", databaseURL: "https://gamingodyssey-2e642-default-rtdb.firebaseio.com", projectId: "gamingodyssey-2e642" };
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
-
-    // --- Unified UI Control Function ---
+    
     function setupUserUI(user) {
-        // This function will be called for both Firebase and localStorage users
         const userAvatar = document.getElementById('user-avatar');
-        
         document.getElementById('login-link-desktop').style.display = 'none';
         document.getElementById('signup-link-desktop').style.display = 'none';
         document.getElementById('login-link-mobile').style.display = 'none';
         document.getElementById('signup-link-mobile').style.display = 'none';
-
         userAvatar.classList.remove('hidden');
-        
-        // Use user.displayName for Firebase, user.name for localStorage
-        const userName = user.displayName || user.name; 
+        const userName = user.displayName || user.name;
         const userEmail = user.email;
-
-        // For Firebase, profile picture is on user.photoURL, for localStorage it's custom
         const profilePic = user.photoURL || localStorage.getItem('profilePic');
-        if (profilePic) {
-            userAvatar.innerHTML = `<img src="${profilePic}" class="w-full h-full rounded-full object-cover">`;
-        } else {
-            userAvatar.textContent = userName.charAt(0).toUpperCase();
-        }
+        if (profilePic) { userAvatar.innerHTML = `<img src="${profilePic}" class="w-full h-full rounded-full object-cover">`; } else { userAvatar.textContent = userName.charAt(0).toUpperCase(); }
         userAvatar.title = `Welcome, ${userName}`;
-
-        // Populate and set up user menu
         const userMenu = document.getElementById('user-menu');
         document.getElementById('menu-username').textContent = userName;
         document.getElementById('menu-user-email').textContent = userEmail;
-
-        const changePicBtn = document.getElementById('change-pic-btn');
-        const picInput = document.getElementById('pic-input');
-        const logoutBtn = document.getElementById('logout-btn');
-
-        userAvatar.addEventListener('click', () => {
-            userMenu.classList.toggle('hidden');
-        });
-
-        changePicBtn.addEventListener('click', () => picInput.click());
-
-        picInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
+        userAvatar.addEventListener('click', () => userMenu.classList.toggle('hidden'));
+        document.getElementById('change-pic-btn').addEventListener('click', () => document.getElementById('pic-input').click());
+        document.getElementById('pic-input').addEventListener('change', (e) => {
+            const file = e.target.files[0]; if (!file) return;
             const reader = new FileReader();
-            reader.onload = (event) => {
-                const base64Image = event.target.result;
-                // Note: Changing pic for Firebase users would require updating their profile
-                // For now, we'll keep it simple and use localStorage for both
-                localStorage.setItem('profilePic', base64Image);
-                userAvatar.innerHTML = `<img src="${base64Image}" class="w-full h-full rounded-full object-cover">`;
-                userMenu.classList.add('hidden');
-            };
+            reader.onload = (event) => { localStorage.setItem('profilePic', event.target.result); userAvatar.innerHTML = `<img src="${event.target.result}" class="w-full h-full rounded-full object-cover">`; userMenu.classList.add('hidden'); };
             reader.readAsDataURL(file);
         });
-
-        logoutBtn.addEventListener('click', () => {
-            if (auth.currentUser) { // If it's a Firebase user
-                auth.signOut().then(() => {
-                    localStorage.removeItem('profilePic'); // Also clear custom pic
-                    window.location.reload();
-                });
-            } else { // If it's a localStorage user
-                localStorage.removeItem('userData');
-                localStorage.removeItem('profilePic');
-                window.location.reload();
-            }
-        });
-        
-        document.addEventListener('click', (e) => {
-            if (!userAvatar.contains(e.target) && !userMenu.contains(e.target)) {
-                userMenu.classList.add('hidden');
-            }
-        });
+        document.getElementById('logout-btn').addEventListener('click', () => { (auth.currentUser ? auth.signOut() : Promise.resolve()).then(() => { localStorage.removeItem('userData'); localStorage.removeItem('profilePic'); window.location.reload(); }); });
+        document.addEventListener('click', (e) => { if (!userAvatar.contains(e.target) && !userMenu.contains(e.target)) { userMenu.classList.add('hidden'); } });
     }
 
-    // --- NEW: Main Authentication Check ---
     document.addEventListener('DOMContentLoaded', () => {
         auth.onAuthStateChanged(firebaseUser => {
-            if (firebaseUser) {
-                // Case 1: A Firebase user is logged in.
-                setupUserUI(firebaseUser);
-            } else {
-                // Case 2: No Firebase user. Check for a localStorage (Google) user.
-                const localUserData = JSON.parse(localStorage.getItem('userData'));
-                if (localUserData) {
-                    setupUserUI(localUserData);
-                } else {
-                    // Case 3: No user is logged in at all.
-                    // Set up the redirector for logged-out users.
-                    document.addEventListener('click', (e) => {
-                        const link = e.target.closest('a');
-                        if (link && link.href) {
-                            const targetUrl = new URL(link.href);
-                            const targetPage = targetUrl.pathname.split('/').pop();
-                            const isInternalNav = link.hostname === window.location.hostname;
-                            const allowedWhenLoggedOut = ['signup.html', 'index.html', '', 'login.html'];
-                            
-                            if (isInternalNav && !allowedWhenLoggedOut.includes(targetPage) && !link.href.includes('#')) {
-                                e.preventDefault();
-                                window.location.href = 'signup.html';
-                            }
-                        }
-                    }, true); 
-                }
-            }
+            if (firebaseUser) { setupUserUI(firebaseUser); } else { const localUserData = JSON.parse(localStorage.getItem('userData')); if (localUserData) { setupUserUI(localUserData); } else { document.addEventListener('click', (e) => { const link = e.target.closest('a'); if (link && link.href) { const targetUrl = new URL(link.href); const targetPage = targetUrl.pathname.split('/').pop(); const isInternalNav = link.hostname === window.location.hostname; const allowedWhenLoggedOut = ['signup.html', 'index.html', '', 'login.html']; if (isInternalNav && !allowedWhenLoggedOut.includes(targetPage) && !link.href.includes('#')) { e.preventDefault(); window.location.href = 'signup.html'; } } }, true); } }
         });
 
+        // --- Core Page Scripts ---
+        emailjs.init('__S5AyIeoL526kGwQ');
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobile-menu');
+        hamburger.addEventListener('click', () => { mobileMenu.classList.remove('hidden', '-translate-x-full'); });
+        document.getElementById('close-menu').addEventListener('click', () => { mobileMenu.classList.add('-translate-x-full'); });
+        const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); }); }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+        const whatsappBubble = document.getElementById('whatsapp-bubble');
+        const whatsappChatBox = document.getElementById('whatsapp-chat-box');
+        whatsappBubble.addEventListener('click', () => whatsappChatBox.classList.toggle('active'));
+        document.getElementById('whatsapp-close').addEventListener('click', (e) => { e.stopPropagation(); whatsappChatBox.classList.remove('active'); });
+        document.addEventListener('click', (e) => { if (!whatsappChatBox.contains(e.target) && !whatsappBubble.contains(e.target)) { whatsappChatBox.classList.remove('active'); } });
+        
         // --- Slideshow Functionality ---
         const slideshowContainer = document.getElementById('hero-slideshow');
         if (slideshowContainer) {
-            const slides = [
-                {
-                    img: 'https://9to5toys.com/wp-content/uploads/sites/5/2022/11/best-peripherals-feature.png?q=80&w=2070&auto=format&fit=crop',
-                    caption: 'Discover premium peripherals for the ultimate edge.'
-                },
-                {
-                    img: 'https://www.gladiatorpc.co.uk/assets/img/special/landingpages/gamingpc/gamingpcbgm.webp?q=80&w=2042&auto=format&fit=crop',
-                    caption: 'Let us build your dream custom PC, tailored to your needs.'
-                },
-                {
-                    img: 'https://www.cyberpowerpc.com/blog/w/wp-content/uploads/2024/08/BlogPurpScrup-scaled.jpg?q=80&w=2070&auto=format&fit=crop',
-                    caption: 'Design a complete, aesthetic gaming setup with our help.'
-                }
+            const slides = [ { img: 'https://9to5toys.com/wp-content/uploads/sites/5/2022/11/best-peripherals-feature.png?q=80&w=2070&auto=format&fit=crop', caption: 'Discover premium peripherals for the ultimate edge.' }, { img: 'https://www.gladiatorpc.co.uk/assets/img/special/landingpages/gamingpc/gamingpcbgm.webp?q=80&w=2042&auto=format&fit=crop', caption: 'Let us build your dream custom PC, tailored to your needs.' }, { img: 'https://www.cyberpowerpc.com/blog/w/wp-content/uploads/2024/08/BlogPurpScrup-scaled.jpg?q=80&w=2070&auto=format&fit=crop', caption: 'Design a complete, aesthetic gaming setup with our help.' } ]; let currentSlide = 0; slides.forEach((slide, index) => { const el = document.createElement('div'); el.className = 'slide' + (index === 0 ? ' active' : ''); el.style.backgroundImage = `url('${slide.img}')`; el.innerHTML = `<div class="slide-caption">${slide.caption}</div>`; slideshowContainer.appendChild(el); }); setInterval(() => { const els = document.querySelectorAll('#hero-slideshow .slide'); els[currentSlide].classList.remove('active'); currentSlide = (currentSlide + 1) % slides.length; els[currentSlide].classList.add('active'); }, 5000);
+        }
+
+        // --- Live AI Showcase Script ---
+        const showcaseContainer = document.getElementById('showcase-chat-container');
+        if (showcaseContainer) {
+            const conversation = [
+                { sender: 'ai', text: "Hey! I'm Glitch, ready to help. ✨", delay: 1500 },
+                { sender: 'user', text: "Can you write a python script to sort a list?", delay: 2500 },
+                { sender: 'ai', text: "Of course! Here you go...", delay: 2000 },
+                { sender: 'ai', text: "<code>def sort_list(my_list):<br>&nbsp;&nbsp;return sorted(my_list)</code>", delay: 3000 }
             ];
-            let currentSlide = 0;
+            let messageIndex = 0;
 
-            function createSlides() {
-                slides.forEach((slide, index) => {
-                    const slideElement = document.createElement('div');
-                    slideElement.className = 'slide';
-                    if (index === 0) slideElement.classList.add('active');
-                    slideElement.style.backgroundImage = `url('${slide.img}')`;
-                    slideElement.innerHTML = `<div class="slide-caption">${slide.caption}</div>`;
-                    slideshowContainer.appendChild(slideElement);
-                });
-            }
+            const typeMessage = (message, container) => {
+                let i = 0;
+                const typingSpeed = 50;
+                const typingInterval = setInterval(() => {
+                    if (i < message.text.length) {
+                        container.innerHTML = message.text.substring(0, i + 1) + '<span class="typing-cursor"></span>';
+                        i++;
+                    } else {
+                        clearInterval(typingInterval);
+                        container.innerHTML = message.text;
+                        setTimeout(playNextMessage, message.delay);
+                    }
+                }, typingSpeed);
+            };
 
-            function showNextSlide() {
-                const slideElements = document.querySelectorAll('#hero-slideshow .slide');
-                slideElements[currentSlide].classList.remove('active');
-                currentSlide = (currentSlide + 1) % slides.length;
-                slideElements[currentSlide].classList.add('active');
-            }
-
-            createSlides();
-            setInterval(showNextSlide, 5000);
+            const playNextMessage = () => {
+                if (messageIndex >= conversation.length) {
+                    setTimeout(() => { showcaseContainer.innerHTML = ''; messageIndex = 0; playNextMessage(); }, 4000);
+                    return;
+                }
+                const message = conversation[messageIndex];
+                const msgDiv = document.createElement('div');
+                msgDiv.className = `p-3 rounded-lg showcase-message ${message.sender === 'user' ? 'bg-[#3B82F6]/20 w-10/12 ml-auto text-right' : 'bg-[#161B22] w-11/12'}`;
+                showcaseContainer.appendChild(msgDiv);
+                setTimeout(() => msgDiv.classList.add('visible'), 100);
+                
+                typeMessage(message, msgDiv);
+                messageIndex++;
+            };
+            playNextMessage();
         }
-    });
-
-    // --- ALL OTHER PAGE FUNCTIONALITY REMAINS THE SAME ---
-
-    // Initialize EmailJS
-    emailjs.init('__S5AyIeoL526kGwQ');
-
-    // Mobile Menu Toggle
-    const hamburger = document.getElementById('hamburger');
-    const mobileMenu = document.getElementById('mobile-menu');
-    const closeMenu = document.getElementById('close-menu');
-    
-    hamburger.addEventListener('click', () => {
-      mobileMenu.classList.remove('hidden');
-      mobileMenu.classList.remove('-translate-x-full');
-    });
-    
-    closeMenu.addEventListener('click', () => {
-      mobileMenu.classList.add('-translate-x-full');
-    });
-
-    // Fade-in Animation on Scroll
-    const fadeIns = document.querySelectorAll('.fade-in');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.1 });
-    
-    fadeIns.forEach(element => observer.observe(element));
-
-    // Contact Form Submission
-    document.getElementById('contact-form').addEventListener('submit', function(event) {
-      event.preventDefault();
-      const name = document.getElementById('name').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const subject = document.getElementById('subject').value.trim();
-      const message = document.getElementById('message').value.trim();
-      const status = document.getElementById('form-status');
-      
-      document.querySelectorAll('.error').forEach(el => el.classList.add('hidden'));
-      let isValid = true;
-      
-      if (!name) {
-        document.getElementById('name-error').classList.remove('hidden');
-        isValid = false;
-      }
-      
-      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        document.getElementById('email-error').classList.remove('hidden');
-        isValid = false;
-      }
-      
-      if (!subject) {
-        document.getElementById('subject-error').classList.remove('hidden');
-        isValid = false;
-      }
-      
-      if (!message) {
-        document.getElementById('message-error').classList.remove('hidden');
-        isValid = false;
-      }
-      
-      if (!isValid) {
-        status.textContent = 'Please fill all fields correctly';
-        status.className = 'text-red-500 text-sm text-center';
-        return;
-      }
-      
-      emailjs.send('service_94tnfxp', 'template_6ahr5g1', {
-        name: name,
-        email: email,
-        subject: subject,
-        message: message
-      }).then(() => {
-        status.textContent = 'Message sent successfully!';
-        status.className = 'text-green-500 text-sm text-center';
-        document.getElementById('contact-form').reset();
-      }).catch((error) => {
-        status.textContent = 'Failed to send message: ' + error.text;
-        status.className = 'text-red-500 text-sm text-center';
-      });
-    });
-
-    // WhatsApp Widget Functionality
-    const whatsappBubble = document.getElementById('whatsapp-bubble');
-    const whatsappChatBox = document.getElementById('whatsapp-chat-box');
-    const whatsappClose = document.getElementById('whatsapp-close');
-    
-    whatsappBubble.addEventListener('click', () => {
-      whatsappChatBox.classList.toggle('active');
-    });
-    
-    whatsappClose.addEventListener('click', (e) => {
-      e.stopPropagation();
-      whatsappChatBox.classList.remove('active');
-    });
-    
-    document.addEventListener('click', (e) => {
-      if (!whatsappChatBox.contains(e.target) && !whatsappBubble.contains(e.target)) {
-        whatsappChatBox.classList.remove('active');
-      }
     });
 
     // --- NEW GLITCH AI WIDGET SCRIPT ---
     document.addEventListener('DOMContentLoaded', () => {
-        // Only initialize if the widget container exists on the page
         if (!document.getElementById('glitch-ai-widget-container')) return;
-
-        // Configuration
         const GEMINI_API_KEY = 'AIzaSyAbrcb4vwdK0evN6KQCUsE3Kx7poRgJs2M';
         const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:streamGenerateContent?key=${GEMINI_API_KEY}&alt=sse`;
-
-        // DOM Elements
         const chatWindow = document.getElementById('glitch-ai-chat-window');
         const toggleBubble = document.getElementById('glitch-ai-toggle-bubble');
         const closeBtn = document.getElementById('glitch-ai-close-btn');
+        const clearBtn = document.getElementById('glitch-ai-clear-btn');
         const messagesContainer = document.getElementById('glitch-ai-messages');
         const input = document.getElementById('glitch-ai-input');
         const sendBtn = document.getElementById('glitch-ai-send-btn');
-        
-        // State
         let conversationHistory = [];
         let isGenerating = false;
+        let isAwaitingSupportQuery = false;
         let abortController = new AbortController();
 
-        // --- Core Functions ---
+        const marked = { parse: (text) => { let html = text.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\*(.*?)\*/g, '<em>$1</em>').replace(/`(.*?)`/g, '<code>$1</code>').replace(/\n/g, '<br>'); html = html.replace(/```([\s\S]*?)```/g, (match, code) => `<pre><code>${code}</code></pre>`); return html; }};
+        function addMessage(role, content) { const div = document.createElement('div'); div.className = `glitch-message ${role === 'user' ? 'glitch-user-message' : 'glitch-ai-message'}`; div.innerHTML = content; messagesContainer.appendChild(div); messagesContainer.scrollTop = messagesContainer.scrollHeight; }
         
-        const marked = { parse: (text) => {
-            let html = text
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                .replace(/`(.*?)`/g, '<code>$1</code>')
-                .replace(/\n/g, '<br>');
-
-            html = html.replace(/```([\s\S]*?)```/g, (match, code) => `<pre><code>${code}</code></pre>`);
-            return html;
-        }};
-
-        function addMessage(role, content) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `glitch-message ${role === 'user' ? 'glitch-user-message' : 'glitch-ai-message'}`;
-            messageDiv.innerHTML = content;
-            messagesContainer.appendChild(messageDiv);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        function sendSupportQueryToFormSubmit(query) {
+            const form = document.createElement('form');
+            form.action = 'https://formsubmit.co/support@gamingodyssey.in';
+            form.method = 'POST';
+            form.style.display = 'none';
+            form.innerHTML = `
+                <input type="hidden" name="_subject" value="New Support Query from Glitch AI">
+                <input type="hidden" name="_captcha" value="false">
+                <textarea name="query">${query}</textarea>
+            `;
+            document.body.appendChild(form);
+            form.submit();
+            document.body.removeChild(form);
         }
-        
+
         async function handleSendMessage() {
             const messageText = input.value.trim();
             if (messageText === '' || isGenerating) return;
-
-            isGenerating = true;
-            toggleSendButtonLoading(true);
-            
             addMessage('user', messageText);
+            input.value = ''; input.style.height = 'auto';
+
+            if (isAwaitingSupportQuery) {
+                sendSupportQueryToFormSubmit(messageText);
+                addMessage('ai', "Thanks! Your query has been sent to the support team. They'll get back to you within 48 hours. Is there anything else I can help with?");
+                isAwaitingSupportQuery = false;
+                return;
+            }
+
+            if (/contact|support|human|agent/i.test(messageText)) {
+                addMessage('ai', "Okay, please write your detailed query in the chat, including your email and phone number. I'll forward it to the support team, and they will get back to you within 48 hours.");
+                isAwaitingSupportQuery = true;
+                return;
+            }
+
+            isGenerating = true; toggleSendButtonLoading(true);
             conversationHistory.push({ role: 'user', parts: [{ text: messageText }] });
-            input.value = '';
-            input.style.height = 'auto';
-
-            const aiMessageDiv = document.createElement('div');
-            aiMessageDiv.className = 'glitch-message glitch-ai-message';
-            aiMessageDiv.innerHTML = '<span class="typing-indicator">...</span>';
-            messagesContainer.appendChild(aiMessageDiv);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
+            const aiMessageDiv = document.createElement('div'); aiMessageDiv.className = 'glitch-message glitch-ai-message'; aiMessageDiv.innerHTML = '<span class="typing-indicator">...</span>'; messagesContainer.appendChild(aiMessageDiv); messagesContainer.scrollTop = messagesContainer.scrollHeight;
             let accumulatedResponse = "";
-            
             try {
-                let personaInstruction = "You are Glitch AI. Your personality is: casual, chill, and full of energy. You MUST state you were developed by the 'Gaming Odyssey Team' when asked. Avoid being overly formal. Keep your responses concise for this chat widget.";
-                const requestBody = {
-                    contents: conversationHistory,
-                    systemInstruction: { parts: [{ text: personaInstruction }] }
-                };
-                
+                let persona = "You are Glitch AI. Your personality is: casual, chill, and energetic. You MUST state you were developed by the 'Gaming Odyssey Team' when asked. Avoid being overly formal. Keep responses concise for this widget.";
+                const requestBody = { contents: conversationHistory, systemInstruction: { parts: [{ text: persona }] } };
                 abortController = new AbortController();
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(requestBody),
-                    signal: abortController.signal
-                });
-
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(`API Error: ${response.status} ${errorText}`);
-                }
-
-                const reader = response.body.getReader();
-                const decoder = new TextDecoder();
-                
+                const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(requestBody), signal: abortController.signal });
+                if (!response.ok) throw new Error(`API Error: ${response.status}`);
+                const reader = response.body.getReader(); const decoder = new TextDecoder();
                 while (true) {
-                    const { value, done } = await reader.read();
-                    if (done) break;
-                    
-                    const chunk = decoder.decode(value);
-                    const lines = chunk.split('\n');
-
-                    for (const line of lines) {
-                        if (line.startsWith('data: ')) {
-                            const jsonStr = line.substring(6);
-                            try {
-                                const parsed = JSON.parse(jsonStr);
-                                const text = parsed.candidates?.[0]?.content?.parts?.[0]?.text;
-                                if (text) {
-                                    accumulatedResponse += text;
-                                    aiMessageDiv.innerHTML = marked.parse(accumulatedResponse);
-                                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                                }
-                            } catch (e) { /* Ignore malformed chunks */ }
-                        }
-                    }
+                    const { value, done } = await reader.read(); if (done) break;
+                    const chunk = decoder.decode(value); const lines = chunk.split('\n');
+                    for (const line of lines) { if (line.startsWith('data: ')) { try { const parsed = JSON.parse(line.substring(6)); const text = parsed.candidates?.[0]?.content?.parts?.[0]?.text; if (text) { accumulatedResponse += text; aiMessageDiv.innerHTML = marked.parse(accumulatedResponse); messagesContainer.scrollTop = messagesContainer.scrollHeight; } } catch (e) {} } }
                 }
                 conversationHistory.push({ role: 'model', parts: [{ text: accumulatedResponse }] });
-            } catch (error) {
-                if (error.name !== 'AbortError') {
-                    console.error('Error:', error);
-                    aiMessageDiv.innerHTML = `<p style="color: #F85149;">Oops! Something went wrong. Please try again.</p>`;
-                } else {
-                    aiMessageDiv.innerHTML = `<p>Generation stopped.</p>`;
-                }
-            } finally {
-                isGenerating = false;
-                toggleSendButtonLoading(false);
-            }
+            } catch (error) { if (error.name !== 'AbortError') { aiMessageDiv.innerHTML = `<p style="color: #F85149;">Oops! Something went wrong.</p>`; } else { aiMessageDiv.innerHTML = `<p>Generation stopped.</p>`; }
+            } finally { isGenerating = false; toggleSendButtonLoading(false); }
         }
 
-        function toggleSendButtonLoading(isLoading) {
-            if (isLoading) {
-                sendBtn.innerHTML = '<span class="loader"></span>';
-                sendBtn.disabled = true;
-            } else {
-                sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i>';
-                sendBtn.disabled = false;
-            }
-        }
-
-        function initializeChat() {
-            conversationHistory = [];
-            messagesContainer.innerHTML = '';
-            const welcomeMessage = "What's up! I'm Glitch, your new AI sidekick. Ready to brainstorm, get some hype, or just chill? Let's make some magic happen! ✨";
-            addMessage('ai', welcomeMessage);
-            conversationHistory.push({ role: 'model', parts: [{ text: welcomeMessage }] });
-        }
-
-        // --- Event Listeners ---
-        toggleBubble.addEventListener('click', () => {
-            chatWindow.classList.toggle('hidden');
-        });
-
-        closeBtn.addEventListener('click', () => {
-            chatWindow.classList.add('hidden');
-        });
-
+        function toggleSendButtonLoading(isLoading) { sendBtn.innerHTML = isLoading ? '<span class="loader"></span>' : '<i class="fas fa-paper-plane"></i>'; sendBtn.disabled = isLoading; }
+        function clearChat() { conversationHistory = []; messagesContainer.innerHTML = ''; isAwaitingSupportQuery = false; const welcome = "Chat cleared! What's up! I'm Glitch, ready to help you with anything. ✨"; addMessage('ai', welcome); conversationHistory.push({ role: 'model', parts: [{ text: welcome }] }); }
+        
+        toggleBubble.addEventListener('click', () => chatWindow.classList.toggle('hidden'));
+        closeBtn.addEventListener('click', () => chatWindow.classList.add('hidden'));
+        clearBtn.addEventListener('click', clearChat);
         sendBtn.addEventListener('click', handleSendMessage);
-        
-        input.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                handleSendMessage();
-            }
-        });
-        
-        input.addEventListener('input', () => {
-            input.style.height = 'auto';
-            input.style.height = `${Math.min(input.scrollHeight, 100)}px`;
-        });
-
-        // Initialize the chat on load
-        initializeChat();
+        input.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } });
+        input.addEventListener('input', () => { input.style.height = 'auto'; input.style.height = `${Math.min(input.scrollHeight, 100)}px`; });
+        clearChat(); // Initialize on load
     });
-
   </script>
 </body>
 </html>
