@@ -347,21 +347,49 @@
                 const currentApiKey = GEMINI_API_KEYS[apiKeyIndex];
                 apiKeyIndex = (apiKeyIndex + 1) % GEMINI_API_KEYS.length;
                 
-                // --- THIS IS THE ONLY LINE THAT CHANGED ---
-                const model = 'gemini-1.5-flash'; // Corrected from 'gemini-1.5-flash-latest'
-                // --- END OF CHANGE ---
-
+                // --- CORRECTED: Using the most compatible model name ---
+                const model = 'gemini-pro';
+                
+                // The v1beta endpoint is correct for gemini-pro with streaming
                 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?key=${currentApiKey}&alt=sse`;
 
+                // Build history and current message
                 const history = await Promise.all(chats[currentChatId].messages.slice(0, -1).map(msgToPart));
-                const contents = [...history, await msgToPart(userMessage)];
+                const userMessageParts = await msgToPart(userMessage);
+                
+                // IMPORTANT: gemini-pro does not support image data or system instructions in the same way as 1.5.
+                // Filter out any non-text parts for compatibility.
+                userMessageParts.parts = userMessageParts.parts.filter(part => 'text' in part);
+                if (userFiles.length > 0) {
+                     userMessageParts.parts.push({ text: "\n[NOTE: File attachments were sent, but this model (gemini-pro) does not support file analysis.]" });
+                }
+                
+                // Combine history with the (text-only) current message
+                const contents = [...history, userMessageParts];
+
+                // Since gemini-pro doesn't use the `systemInstruction` field, we inject the persona as part of the history.
                 let personaInstruction = "You are Glitch AI. Your personality is: casual, chill, and full of energy. You MUST state you were developed by the 'Gaming Odyssey Team' when asked. Avoid being overly formal.";
-                if (currentMode === 'code') { personaInstruction += " You are now in Code Mode. You are an expert programmer. Provide complete, well-commented, and runnable code examples. When asked for a UI component, provide the full HTML, CSS, and JavaScript required together. Do not truncate your code responses."; }
+                if (currentMode === 'code') { personaInstruction += " You are now in Code Mode. You are an expert programmer. Provide complete, well-commented, and runnable code examples."; }
                 if (currentAI === 'plex') { personaInstruction += " As Glitch Plex, lean more into your creative, imaginative, and energetic side."; }
-                const requestBody = { contents, systemInstruction: { parts: [{ text: personaInstruction }] } };
+                
+                const requestBody = {
+                    contents: [
+                        // Prepend the instructions to the main content
+                        ...history,
+                        { role: "user", parts: [{ text: `SYSTEM INSTRUCTION: ${personaInstruction}\n\nUSER QUESTION: ${messageText}`}] }
+                    ]
+                };
+                
+                // Clean up the request body by removing file-related data that gemini-pro can't handle.
+                requestBody.contents.forEach(item => {
+                    item.parts = item.parts.filter(part => 'text' in part);
+                });
+
                 abortController = new AbortController();
                 const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(requestBody), signal: abortController.signal });
+                
                 if (!response.ok) { const errorText = await response.text(); throw new Error(`API Error: ${response.status} ${errorText}`); }
+                
                 const reader = response.body.getReader(); const decoder = new TextDecoder();
                 while (true) {
                     const { value, done } = await reader.read(); if (done) break;
