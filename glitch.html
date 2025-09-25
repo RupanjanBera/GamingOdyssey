@@ -309,7 +309,7 @@
             document.addEventListener('keydown', initializeAudio, { once: true });
 
             messageInput.addEventListener('keydown', e => {
-                initializeAudio(); // This ensures audio is unlocked on the very first keystroke.
+                initializeAudio();
                 const now = Date.now();
                 if (now - lastTypingSoundTime > 120) {
                     playSound(sounds.typing, { volume: 0.7 });
@@ -371,7 +371,14 @@
             } catch (error) {
                 if (error.name !== 'AbortError') { console.error('Error:', error); contentElement.innerHTML = `<p style="color: var(--error-color);">Oops! Something went wrong: ${error.message}</p>`; chats[currentChatId].messages.push({ role: 'model', content: `Error: ${error.message}` });
                 } else { contentElement.innerHTML = `<p>Generation stopped.</p>`; chats[currentChatId].messages.push({ role: 'model', content: `Generation stopped.`, modelType: currentAI }); }
-            } finally { isGenerating = false; toggleSendButtonLoading(false); stopGeneratingBtn.style.display = 'none'; saveChatsToStorage(); updateChatHistoryItem(currentChatId); }
+            } finally {
+                isGenerating = false;
+                toggleSendButtonLoading(false);
+                stopGeneratingBtn.style.display = 'none';
+                saveChatsToStorage();
+                updateChatHistoryItem(currentChatId);
+                logActivityToDatabase(userMessage.content, accumulatedResponse, currentAI);
+            }
         }
         
         function displayMessage(message) {
@@ -399,6 +406,29 @@
                 messageElement.querySelector('.message-content').appendChild(runBtn);
             }
             hljs.highlightAll(); addCopyButtonsToCodeBlocks();
+        }
+
+        // UPDATED: This function sends data to your Google Sheet
+        async function logActivityToDatabase(userPrompt, aiResponse, model) {
+            const scriptURL = "[https://script.google.com/macros/s/AKfycbyOH5sopxoCxR53aNP_WhI5seGOo0W41g3TEiwK-v0dhb2sgmQgCkLxc0C5_BJZmwK2Kw/exec](https://script.google.com/macros/s/AKfycbyOH5sopxoCxR53aNP_WhI5seGOo0W41g3TEiwK-v0dhb2sgmQgCkLxc0C5_BJZmwK2Kw/exec)";
+
+            const logData = {
+                prompt: userPrompt,
+                response: aiResponse,
+                model: model
+            };
+
+            try {
+                await fetch(scriptURL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(logData)
+                });
+            } catch (error) {
+                console.error("Error sending log to Google Sheet:", error);
+            }
         }
 
         function runCodeInPreview(markdown) {
@@ -441,14 +471,73 @@
         function toggleWebSearch() { isWebSearchActive = !isWebSearchActive; webSearchBtn.classList.toggle('active', isWebSearchActive); }
         function handleStopGeneration() { if (isGenerating) { abortController.abort(); } }
         function regenerateLastResponse() { if (isGenerating || !currentChatId) return; const lastUserMessageIndex = chats[currentChatId].messages.findLastIndex(m => m.role === 'user'); if (lastUserMessageIndex === -1) return; chats[currentChatId].messages.splice(lastUserMessageIndex + 1); const lastUserMessage = chats[currentChatId].messages[lastUserMessageIndex]; messageInput.value = lastUserMessage.content; attachedFiles = lastUserMessage.files || []; updateFileAttachments(); loadChat(currentChatId); sendMessage(); }
-        function saveChatsToStorage() { const serializableChats = JSON.parse(JSON.stringify(chats, (key, value) => key === 'files' ? undefined : value)); localStorage.setItem('glitchChats', JSON.stringify(serializableChats)); }
-        function loadChatsFromStorage() { chats = JSON.parse(localStorage.getItem('glitchChats')) || {}; }
-        function loadChatHistory() { chatHistory.innerHTML = Object.values(chats).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)).map(chat => `<div class="history-item ${chat.id === currentChatId ? 'active' : ''}" data-chat-id="${chat.id}"><div class="history-content" onclick="loadChat('${chat.id}')"><div class="history-title">${chat.title}</div></div><button class="delete-chat-btn" onclick="deleteChat('${chat.id}')"><i class="fas fa-trash"></i></button></div>`).join(''); }
-        function updateChatHistoryItem(chatId) { const chat = chats[chatId]; const userMessages = chat.messages.filter(m => m.role === 'user'); if (userMessages.length > 0 && chat.title === 'New Chat') { const newTitle = userMessages[0].content.substring(0, 30); chat.title = newTitle + (userMessages[0].content.length > 30 ? '...' : ''); chatTitle.textContent = chat.title; } chat.updatedAt = new Date().toISOString(); saveChatsToStorage(); loadChatHistory(); }
-        function toggleSendButtonLoading(isLoading) { sendButton.querySelector('.send-text').style.display = isLoading ? 'none' : 'flex'; sendButton.querySelector('.loader').style.display = isLoading ? 'block' : 'none'; sendButton.disabled = isLoading; }
-        function getFileIconClass(fileType) { if (fileType.startsWith('image/')) return 'fa-image'; if (fileType === 'application/pdf') return 'fa-file-pdf'; if (fileType.includes('text')) return 'fa-file-alt'; return 'fa-file'; }
-        function copyMessageContent(element) { const content = element.closest('.message').querySelector('.message-content').innerText; navigator.clipboard.writeText(content).then(() => { const icon = element.querySelector('i'); icon.classList.replace('fa-copy', 'fa-check'); setTimeout(() => icon.classList.replace('fa-check', 'fa-copy'), 2000); }); }
-        async function exportCurrentChatAsPDF() { const { jsPDF } = window.jspdf; const doc = new jsPDF(); const chat = chats[currentChatId]; let y = 15; doc.setFontSize(16); doc.text(chat.title, 10, y); y += 10; doc.setFontSize(10); for (const msg of chat.messages) { if (y > 280) { doc.addPage(); y = 15; } const sender = msg.senderName || (msg.role === 'user' ? 'You' : 'Glitch AI'); doc.setFont(undefined, 'bold'); doc.text(`${sender}:`, 10, y); doc.setFont(undefined, 'normal'); const textLines = doc.splitTextToSize(msg.content, 180); doc.text(textLines, 15, y + 5); y += (textLines.length * 5) + 8; } doc.save(`Glitch-Chat-${chat.id}.pdf`); }
+        
+        // Saves chats to sessionStorage (cleared on tab close)
+        function saveChatsToStorage() {
+            const serializableChats = JSON.parse(JSON.stringify(chats, (key, value) => key === 'files' ? undefined : value));
+            sessionStorage.setItem('glitchChats', JSON.stringify(serializableChats));
+        }
+        
+        // Loads chats from sessionStorage
+        function loadChatsFromStorage() {
+            chats = JSON.parse(sessionStorage.getItem('glitchChats')) || {};
+        }
+
+        function loadChatHistory() {
+            chatHistory.innerHTML = Object.values(chats).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)).map(chat => `<div class="history-item ${chat.id === currentChatId ? 'active' : ''}" data-chat-id="${chat.id}"><div class="history-content" onclick="loadChat('${chat.id}')"><div class="history-title">${chat.title}</div></div><button class="delete-chat-btn" onclick="deleteChat('${chat.id}')"><i class="fas fa-trash"></i></button></div>`).join('');
+        }
+        function updateChatHistoryItem(chatId) {
+            const chat = chats[chatId];
+            const userMessages = chat.messages.filter(m => m.role === 'user');
+            if (userMessages.length > 0 && chat.title === 'New Chat') {
+                const newTitle = userMessages[0].content.substring(0, 30);
+                chat.title = newTitle + (userMessages[0].content.length > 30 ? '...' : '');
+                chatTitle.textContent = chat.title;
+            }
+            chat.updatedAt = new Date().toISOString();
+            saveChatsToStorage();
+            loadChatHistory();
+        }
+        function toggleSendButtonLoading(isLoading) {
+            sendButton.querySelector('.send-text').style.display = isLoading ? 'none' : 'flex';
+            sendButton.querySelector('.loader').style.display = isLoading ? 'block' : 'none';
+            sendButton.disabled = isLoading;
+        }
+        function getFileIconClass(fileType) {
+            if (fileType.startsWith('image/')) return 'fa-image';
+            if (fileType === 'application/pdf') return 'fa-file-pdf';
+            if (fileType.includes('text')) return 'fa-file-alt';
+            return 'fa-file';
+        }
+        function copyMessageContent(element) {
+            const content = element.closest('.message').querySelector('.message-content').innerText;
+            navigator.clipboard.writeText(content).then(() => {
+                const icon = element.querySelector('i');
+                icon.classList.replace('fa-copy', 'fa-check');
+                setTimeout(() => icon.classList.replace('fa-check', 'fa-copy'), 2000);
+            });
+        }
+        async function exportCurrentChatAsPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const chat = chats[currentChatId];
+            let y = 15;
+            doc.setFontSize(16);
+            doc.text(chat.title, 10, y);
+            y += 10;
+            doc.setFontSize(10);
+            for (const msg of chat.messages) {
+                if (y > 280) { doc.addPage(); y = 15; }
+                const sender = msg.senderName || (msg.role === 'user' ? 'You' : 'Glitch AI');
+                doc.setFont(undefined, 'bold');
+                doc.text(`${sender}:`, 10, y);
+                doc.setFont(undefined, 'normal');
+                const textLines = doc.splitTextToSize(msg.content, 180);
+                doc.text(textLines, 15, y + 5);
+                y += (textLines.length * 5) + 8;
+            }
+            doc.save(`Glitch-Chat-${chat.id}.pdf`);
+        }
     </script>
 </body>
 </html>
