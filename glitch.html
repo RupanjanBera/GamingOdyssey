@@ -259,16 +259,12 @@
     <script>
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
         
-        // --- MODIFIED SECTION START ---
-        // Replaced the single API key with an array of keys for rotation.
         const GEMINI_API_KEYS = [
-            'AIzaSyAbKXW75vSj9XhSgs0rC5SK-Blf7NhSB-A', // Your original key
-            'AIzaSyDF4Lfyj7hiUu1415cGAOIaOODABJTg4rY', // New key 1
-            'AIzaSyDhBEbmuuTR3LOZnWpR9Do8PGcZ4QAZ7ac'  // New key 2
+            'AIzaSyAbKXW75vSj9XhSgs0rC5SK-Blf7NhSB-A',
+            'AIzaSyDF4Lfyj7hiUu1415cGAOIaOODABJTg4rY',
+            'AIzaSyDhBEbmuuTR3LOZnWpR9Do8PGcZ4QAZ7ac'
         ];
-        // This index will keep track of which key to use next.
         let apiKeyIndex = 0;
-        // --- MODIFIED SECTION END ---
 
         let currentChatId = null; let chats = {}; let currentMode = 'chat'; let currentAI = 'zhoros'; let isWebSearchActive = false; let attachedFiles = []; let isGenerating = false; let abortController = new AbortController(); 
         let isAudioUnlocked = false; let lastTypingSoundTime = 0;
@@ -348,16 +344,14 @@
             const aiMessageId = `ai_${Date.now()}`; const aiModelName = currentAI === 'plex' ? 'Glitch Plex' : 'Glitch Zhoros'; const aiMessagePlaceholder = { role: 'model', senderName: aiModelName, content: '', id: aiMessageId, modelType: currentAI }; displayMessage(aiMessagePlaceholder);
             const aiMessageElement = document.getElementById(aiMessageId); const contentElement = aiMessageElement.querySelector('.message-content'); let accumulatedResponse = ""; let firstChunkReceived = false;
             try {
-                // --- MODIFIED SECTION START ---
-                // Get the current key from the array using the index
                 const currentApiKey = GEMINI_API_KEYS[apiKeyIndex];
-                // Move to the next key for the next request, looping back to the start if needed.
                 apiKeyIndex = (apiKeyIndex + 1) % GEMINI_API_KEYS.length;
                 
-                const model = 'gemini-1.5-flash-latest'; 
-                // Use the selected key in the API URL
+                // --- THIS IS THE ONLY LINE THAT CHANGED ---
+                const model = 'gemini-1.5-flash'; // Corrected from 'gemini-1.5-flash-latest'
+                // --- END OF CHANGE ---
+
                 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?key=${currentApiKey}&alt=sse`;
-                // --- MODIFIED SECTION END ---
 
                 const history = await Promise.all(chats[currentChatId].messages.slice(0, -1).map(msgToPart));
                 const contents = [...history, await msgToPart(userMessage)];
