@@ -39,8 +39,13 @@
         .logo-icon { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; animation: glow 2s infinite alternate; border: 2px solid var(--neon-blue); background: var(--space-dark); }
         .logo-text { font-size: 1.8rem; font-weight: 700; background: linear-gradient(to right, var(--neon-blue), var(--neon-purple), var(--neon-pink)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: gradient-shift 5s infinite alternate; background-size: 200% 200%; }
         .header-actions { display: flex; align-items: center; gap: 20px; }
-        .api-status { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: var(--text-muted); }
+        .api-status { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: var(--text-muted); position: relative; padding-bottom: 8px; /* Make space for progress bar */ }
         .status-indicator { width: 10px; height: 10px; border-radius: 50%; background-color: var(--warning-color); animation: pulse 2s infinite; box-shadow: 0 0 10px var(--warning-color); }
+        
+        /* STYLES FOR THE NEW PROGRESS BAR */
+        #ai-status-progress-container { display: none; position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; background-color: var(--space-blue); border-radius: 2px; overflow: hidden; }
+        #ai-status-progress-bar { width: 0%; height: 100%; background-color: var(--neon-blue); border-radius: 2px; transition: width 0.2s ease-out; }
+
         .theme-switch-wrapper { display: flex; align-items: center; }
         .theme-switch { display: inline-block; height: 24px; position: relative; width: 44px; }
         .theme-switch input { display:none; }
@@ -179,6 +184,9 @@
             <div class="api-status">
                 <div class="status-indicator" id="ai-status-indicator"></div>
                 <span id="ai-status-text">Connecting to AI Service...</span>
+                <div id="ai-status-progress-container">
+                    <div id="ai-status-progress-bar"></div>
+                </div>
             </div>
             <div class="theme-switch-wrapper">
                 <label class="theme-switch" for="theme-checkbox">
@@ -261,7 +269,6 @@
     <script>
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
         
-        // ADDED this new variable for WebLLM
         let chat;
 
         let currentChatId = null; let chats = {}; let currentMode = 'chat'; let currentAI = 'zhoros'; let isWebSearchActive = false; let attachedFiles = []; let isGenerating = false; let abortController = new AbortController(); 
@@ -284,7 +291,6 @@
             if (splashScreen) { setTimeout(() => { splashScreen.classList.add('hidden'); }, 3800); }
             initConstellationAnimation();
             
-            // ADDED THIS FUNCTION CALL to initialize WebLLM
             initWebLLM(); 
 
             loadChatsFromStorage(); 
@@ -295,26 +301,33 @@
             loadChatHistory();
         });
         
-        // ADDED THIS ENTIRE NEW FUNCTION
+        // UPDATED this function to include progress bar logic
         async function initWebLLM() {
             try {
                 const statusText = document.getElementById('ai-status-text');
                 const statusIndicator = document.getElementById('ai-status-indicator');
-                
-                // Use the webllm object from the global scope
+                // Get progress bar elements
+                const progressContainer = document.getElementById('ai-status-progress-container');
+                const progressBar = document.getElementById('ai-status-progress-bar');
+
+                // Show progress bar container when loading starts
+                progressContainer.style.display = 'block';
+
                 chat = new webllm.ChatModule();
 
-                // This callback will be called with progress updates
                 chat.setInitProgressCallback((report) => {
                     statusText.textContent = report.text;
+                    // Update the progress bar width based on download progress
+                    progressBar.style.width = (report.progress * 100) + '%';
                 });
 
-                // ** CHANGED MODEL to a much smaller and faster one **
                 await chat.reload("TinyLlama-1.1B-Chat-v1.0-q4f32_1-MLC");
 
                 statusText.textContent = "Local AI Ready";
                 statusIndicator.style.backgroundColor = 'var(--success-color)';
                 statusIndicator.style.boxShadow = '0 0 10px var(--success-color)';
+                // Hide progress bar on success
+                progressContainer.style.display = 'none';
                 
             } catch (err) {
                 console.error("WebLLM initialization failed:", err);
@@ -323,6 +336,8 @@
                 const statusIndicator = document.getElementById('ai-status-indicator');
                 statusIndicator.style.backgroundColor = 'var(--error-color)';
                 statusIndicator.style.boxShadow = '0 0 10px var(--error-color)';
+                // Hide progress bar on failure
+                document.getElementById('ai-status-progress-container').style.display = 'none';
             }
         }
 
@@ -368,10 +383,8 @@
         
         function initConstellationAnimation() { const canvas = document.getElementById('constellation-canvas'); if (!canvas) return; const ctx = canvas.getContext('2d'); let particles = []; const particleCount = 70; const maxDistance = 100; function resizeCanvas() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; } resizeCanvas(); window.addEventListener('resize', resizeCanvas); for (let i = 0; i < particleCount; i++) { particles.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, vx: Math.random() * 0.5 - 0.25, vy: Math.random() * 0.5 - 0.25 }); } function draw() { if (!ctx) return; ctx.clearRect(0, 0, canvas.width, canvas.height); const color = document.body.classList.contains('light-mode') ? 'rgba(0, 163, 255, 0.4)' : 'rgba(0, 163, 255, 0.3)'; ctx.fillStyle = color; ctx.strokeStyle = color; particles.forEach(p => { ctx.beginPath(); ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2); ctx.fill(); p.x += p.vx; p.y += p.vy; if (p.x < 0 || p.x > canvas.width) p.vx *= -1; if (p.y < 0 || p.y > canvas.height) p.vy *= -1; }); for (let i = 0; i < particles.length; i++) { for (let j = i + 1; j < particles.length; j++) { const dist = Math.sqrt(Math.pow(particles[i].x - particles[j].x, 2) + Math.pow(particles[i].y - particles[j].y, 2)); if (dist < maxDistance) { ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.lineWidth = 1 - dist / maxDistance; ctx.stroke(); } } } requestAnimationFrame(draw); } draw(); }
 
-        // REPLACED ENTIRE sendMessage function with WebLLM version
         async function sendMessage() {
             const messageText = messageInput.value.trim();
-            // WebLLM can't process files, so we check for text only
             if (messageText === '' || isGenerating || !chat) {
                 if (!chat) alert("Local AI is not ready yet. Please wait.");
                 return;
@@ -387,11 +400,10 @@
             
             messageInput.value = ''; 
             messageInput.style.height = 'auto'; 
-            attachedFiles = []; // Clear files as they aren't processed
+            attachedFiles = [];
             updateFileAttachments();
             
             const aiMessageId = `ai_${Date.now()}`;
-            // The model name is now static, based on what you loaded in initWebLLM
             const aiModelName = 'TinyLlama (Local)'; 
             const aiMessagePlaceholder = { role: 'model', senderName: aiModelName, content: '', id: aiMessageId, modelType: 'ai' };
             displayMessage(aiMessagePlaceholder);
@@ -403,19 +415,16 @@
             let firstChunkReceived = false;
             
             try {
-                // --- This is the core WebLLM logic ---
                 let personaInstruction = "You are Glitch AI, a helpful AI assistant. You were developed by the 'Gaming Odyssey Team'. Your personality is casual, chill, and energetic.";
                 if (currentMode === 'code') {
                     personaInstruction += " You are now an expert programmer. Provide complete and well-commented code examples.";
                 }
 
-                // Prepare conversation history for WebLLM
                 const conversation = chats[currentChatId].messages.slice(0, -1).map(msg => ({
                     role: msg.role === 'user' ? 'user' : 'assistant',
                     content: msg.content
                 }));
                 
-                // Add the system prompt and the current user message
                 const request = {
                     messages: [
                         { role: "system", content: personaInstruction },
@@ -443,13 +452,12 @@
                             firstChunkReceived = true; 
                         }
                         accumulatedResponse += delta;
-                        contentElement.innerHTML = marked.parse(accumulatedResponse + "..."); // Add cursor
+                        contentElement.innerHTML = marked.parse(accumulatedResponse + "...");
                         messagesContainer.scrollTop = messagesContainer.scrollHeight;
                     }
                 }
-                // --- End of WebLLM logic ---
 
-                contentElement.innerHTML = marked.parse(accumulatedResponse); // Final render
+                contentElement.innerHTML = marked.parse(accumulatedResponse);
                 chats[currentChatId].messages.push({ role: 'model', content: accumulatedResponse, modelType: 'ai' });
                 renderMessageActions(aiMessageElement, accumulatedResponse);
 
@@ -500,7 +508,6 @@
             hljs.highlightAll(); addCopyButtonsToCodeBlocks();
         }
 
-        // UPDATED: This function sends data to your Google Sheet
         async function logActivityToDatabase(userPrompt, aiResponse, model) {
             const scriptURL = "[https://script.google.com/macros/s/AKfycbyOH5sopxoCxR53aNP_WhI5seGOo0W41g3TEiwK-v0dhb2sgmQgCkLxc0C5_BJZmwK2Kw/exec](https://script.google.com/macros/s/AKfycbyOH5sopxoCxR53aNP_WhI5seGOo0W41g3TEiwK-v0dhb2sgmQgCkLxc0C5_BJZmwK2Kw/exec)";
 
@@ -563,13 +570,11 @@
         function handleStopGeneration() { if (isGenerating) { abortController.abort(); } }
         function regenerateLastResponse() { if (isGenerating || !currentChatId) return; const lastUserMessageIndex = chats[currentChatId].messages.findLastIndex(m => m.role === 'user'); if (lastUserMessageIndex === -1) return; chats[currentChatId].messages.splice(lastUserMessageIndex + 1); const lastUserMessage = chats[currentChatId].messages[lastUserMessageIndex]; messageInput.value = lastUserMessage.content; attachedFiles = lastUserMessage.files || []; updateFileAttachments(); loadChat(currentChatId); sendMessage(); }
         
-        // Saves chats to sessionStorage (cleared on tab close)
         function saveChatsToStorage() {
             const serializableChats = JSON.parse(JSON.stringify(chats, (key, value) => key === 'files' ? undefined : value));
             sessionStorage.setItem('glitchChats', JSON.stringify(serializableChats));
         }
         
-        // Loads chats from sessionStorage
         function loadChatsFromStorage() {
             chats = JSON.parse(sessionStorage.getItem('glitchChats')) || {};
         }
