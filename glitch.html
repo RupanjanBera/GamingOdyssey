@@ -46,8 +46,11 @@
         .logo-text { font-size: 1.8rem; font-weight: 700; background: linear-gradient(to right, var(--neon-blue), var(--neon-purple), var(--neon-pink)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: gradient-shift 5s infinite alternate; background-size: 200% 200%; }
         .header-actions { display: flex; align-items: center; gap: 20px; }
         .api-status { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: var(--text-muted); }
-        .status-indicator { width: 10px; height: 10px; border-radius: 50%; background-color: var(--warning-color); animation: pulse 2s infinite; box-shadow: 0 0 10px var(--warning-color); }
+        .status-container { display: flex; flex-direction: column; gap: 4px; }
+        .status-indicator { width: 10px; height: 10px; border-radius: 50%; background-color: var(--warning-color); animation: pulse 2s infinite; box-shadow: 0 0 10px var(--warning-color); align-self: center; }
         .status-indicator.ready { background-color: var(--success-color); box-shadow: 0 0 10px var(--success-color); }
+        .model-progress-container { width: 150px; height: 5px; background: rgba(0,0,0,0.2); border-radius: 5px; display: none; overflow: hidden; }
+        .model-progress-bar { width: 0%; height: 100%; background: var(--neon-blue); border-radius: 5px; transition: width 0.3s ease-in-out; }
         .theme-switch-wrapper { display: flex; align-items: center; }
         .theme-switch { display: inline-block; height: 24px; position: relative; width: 44px; }
         .theme-switch input { display:none; }
@@ -161,7 +164,7 @@
         @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         @media (max-width: 1200px) { .main-content { flex-direction: column; } .preview-area { flex-basis: 40vh; min-height: 300px; } .preview-area.hidden { flex-basis: 0; min-height: 0; } }
-        @media (max-width: 900px) { .container { flex-direction: column; padding: 10px; gap: 10px; } .sidebar { flex: 0 0 auto; width: 100%; order: 1; } .main-content { order: 2; } .chat-area { min-height: 60vh; } .logo-text { display: none; } }
+        @media (max-width: 900px) { .container { flex-direction: column; padding: 10px; gap: 10px; } .sidebar { flex: 0 0 auto; width: 100%; order: 1; } .main-content { order: 2; } .chat-area { min-height: 60vh; } .logo-text { display: none; } .status-container { display: none; } }
         @media (max-width: 600px) { html { font-size: 15px; } .header-actions .api-status span { display: none; } .sidebar { padding: 15px; } .chat-header, .input-area { padding: 10px 15px; } .message { max-width: 95%; padding: 12px; } .input-controls { flex-wrap: wrap; } .message-input { flex-basis: 100%; order: 3; } .input-btn, .send-button { flex-grow: 1; } }
     </style>
 </head>
@@ -185,7 +188,12 @@
         <div class="header-actions">
             <div class="api-status">
                 <div class="status-indicator" id="statusIndicator"></div>
-                <span id="statusText">Initializing AI...</span>
+                <div class="status-container">
+                    <span id="statusText">Initializing AI...</span>
+                    <div class="model-progress-container" id="modelProgressContainer">
+                        <div class="model-progress-bar" id="modelProgressBar"></div>
+                    </div>
+                </div>
             </div>
             <div class="theme-switch-wrapper">
                 <label class="theme-switch" for="theme-checkbox">
@@ -267,16 +275,18 @@
     <script type="module">
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
         
-        // --- Transformers.js Integration ---
         let generator = null;
         let isModelReady = false;
-        // --- End of Integration ---
 
         let currentChatId = null; let chats = {}; let currentMode = 'chat'; let currentAI = 'zhoros'; let attachedFiles = []; let isGenerating = false;
         let isAudioUnlocked = false; let lastTypingSoundTime = 0;
         
         const messageInput = document.getElementById('messageInput'); const sendButton = document.getElementById('sendButton'); const messagesContainer = document.getElementById('messages'); const chatHistory = document.getElementById('chatHistory'); const newChatBtn = document.getElementById('newChatBtn'); const modeButtons = document.querySelectorAll('.mode-btn'); const aiOptions = document.querySelectorAll('.ai-option'); const chatTitle = document.getElementById('chatTitle'); const fileInput = document.getElementById('fileInput'); const stopGeneratingBtn = document.getElementById('stopGeneratingBtn'); const themeCheckbox = document.getElementById('theme-checkbox');
         const previewArea = document.getElementById('previewArea'); const previewFrame = document.getElementById('preview-frame');
+        
+        // NEW: Get progress bar elements
+        const modelProgressContainer = document.getElementById('modelProgressContainer');
+        const modelProgressBar = document.getElementById('modelProgressBar');
         
         const sounds = {
             glitch: document.getElementById('glitch-sound'),
@@ -297,33 +307,43 @@
             document.body.classList.toggle('light-mode', !isDarkMode); themeCheckbox.checked = isDarkMode;
             if (Object.keys(chats).length === 0) { createNewChat(); } else { const latestChatId = Object.keys(chats).sort((a, b) => new Date(chats[b].updatedAt) - new Date(chats[a].updatedAt))[0]; loadChat(latestChatId); }
             loadChatHistory();
-            initializeAI(); // Load the AI model
+            initializeAI(); 
         });
         
         async function initializeAI() {
-            toggleUIForLoading(true, "Initializing AI model... This might take a moment.");
+            toggleUIForLoading(true, "Initializing AI...");
+            modelProgressContainer.style.display = 'block'; // Show progress bar
+            
             try {
-                // Initialize the pipeline for text generation
+                // UPDATED: Initialize pipeline with progress_callback
                 generator = await window.pipeline('text2text-generation', 'Xenova/LaMini-Flan-T5-783M', {
                      progress_callback: (progress) => {
                         const status = progress.status;
-                        const file = progress.file;
-                        let loadingText = "Initializing AI...";
-                        if (status === 'download' && progress.progress) {
-                            loadingText = `Downloading model: ${file} (${(progress.progress).toFixed(2)}%)`;
+                        let loadingText = "Waking up AI...";
+                        
+                        if (status === 'download') {
+                            const percentage = (progress.progress || 0).toFixed(2);
+                            loadingText = `Downloading... (${percentage}%)`;
+                            modelProgressBar.style.width = `${percentage}%`;
                         } else if (status === 'progress') {
-                            loadingText = `Loading model files...`;
+                             loadingText = `Preparing model...`;
+                             // You can make the bar pulse here if you want
                         }
                         updateModelStatus(loadingText);
                     }
                 });
+
                 isModelReady = true;
+                modelProgressBar.style.width = `100%`;
                 toggleUIForLoading(false, "AI Ready");
                 document.getElementById('statusIndicator').classList.add('ready');
+                setTimeout(() => { modelProgressContainer.style.display = 'none'; }, 500); // Hide after a short delay
+
             } catch (error) {
                 console.error("Failed to initialize AI model:", error);
                 toggleUIForLoading(false, "AI Failed to Load");
-                 document.getElementById('statusIndicator').style.backgroundColor = 'var(--error-color)';
+                document.getElementById('statusIndicator').style.backgroundColor = 'var(--error-color)';
+                modelProgressContainer.style.display = 'none';
             }
         }
         
@@ -373,7 +393,6 @@
 
             messageInput.addEventListener('input', () => { messageInput.style.height = 'auto'; messageInput.style.height = `${Math.min(messageInput.scrollHeight, 200)}px`; });
             sendButton.addEventListener('click', sendMessage); newChatBtn.addEventListener('click', createNewChat); modeButtons.forEach(btn => btn.addEventListener('click', () => setMode(btn.dataset.mode))); aiOptions.forEach(opt => opt.addEventListener('click', () => setAI(opt.dataset.ai))); document.getElementById('clearChatBtn').addEventListener('click', clearCurrentChat); document.getElementById('exportChatBtn').addEventListener('click', exportCurrentChatAsPDF); document.getElementById('fileInputBtn').addEventListener('click', () => fileInput.click()); fileInput.addEventListener('change', handleFileSelect); 
-            // Stop generating button is less relevant for fast local models but kept for consistency
             stopGeneratingBtn.addEventListener('click', () => { isGenerating = false; });
             themeCheckbox.addEventListener('change', () => { document.body.classList.toggle('light-mode', !themeCheckbox.checked); localStorage.setItem('glitchTheme', !themeCheckbox.checked ? 'light' : 'dark'); });
             
@@ -394,7 +413,6 @@
             if ((messageText === '' && attachedFiles.length === 0) || isGenerating) return;
             isGenerating = true; toggleSendButtonLoading(true); playSound(sounds.chime);
             
-            // Note: Local models can't process file content, so we just mention the filename in the prompt.
             let fullMessageText = messageText;
             if (attachedFiles.length > 0) {
                 const fileNames = attachedFiles.map(f => f.name).join(', ');
@@ -413,7 +431,6 @@
             const aiMessageElement = document.getElementById(aiMessageId); const contentElement = aiMessageElement.querySelector('.message-content'); 
             
             try {
-                // --- Transformers.js Logic ---
                 let personaInstruction = "You are Glitch AI, a casual and energetic AI assistant developed by the 'Gaming Odyssey Team'. Avoid being overly formal. ";
                 if (currentMode === 'code') { personaInstruction += "You are now in Code Mode, an expert programmer. Provide complete and runnable code examples."; }
                 if (currentAI === 'plex') { personaInstruction += "As Glitch Plex, be more creative and imaginative."; }
@@ -433,13 +450,12 @@
 
                 let generatedText = output[0].generated_text.split('Assistant:').pop().trim();
                 
-                // --- Simulate streaming for better UX ---
                 let accumulatedResponse = "";
                 const words = generatedText.split(' ');
                 let firstChunkReceived = false;
                 
                 for (let i = 0; i < words.length; i++) {
-                    if (!isGenerating) { // Allow stopping
+                    if (!isGenerating) { 
                         accumulatedResponse += " ... (stopped)";
                         break;
                     }
@@ -447,7 +463,7 @@
                     accumulatedResponse += words[i] + ' ';
                     contentElement.innerHTML = marked.parse(accumulatedResponse);
                     messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                    await new Promise(resolve => setTimeout(resolve, 50)); // Delay between words
+                    await new Promise(resolve => setTimeout(resolve, 50));
                 }
                 
                 const finalResponse = accumulatedResponse.trim();
@@ -603,7 +619,6 @@
             doc.save(`Glitch-Chat-${chat.id}.pdf`);
         }
         
-        // Make functions globally accessible if they are called from inline HTML event handlers
         window.loadChat = loadChat;
         window.deleteChat = deleteChat;
         window.removeAttachment = removeAttachment;
