@@ -142,7 +142,7 @@
         .chat-action-btn { background: transparent; border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-light); padding: 8px 12px; cursor: pointer; transition: all 0.3s; font-size: 0.9rem; }
         .chat-action-btn:hover { border-color: var(--neon-blue); }
 
-        .messages { flex: 1; padding: 20px; overflow-y: auto; max-height: 65vh; }
+        .messages { flex: 1; padding: 20px; overflow-y: auto; /* max-height removed for true flex scaling */ }
         .message { margin-bottom: 20px; padding: 15px; border-radius: 12px; max-width: 90%; position: relative; animation: fadeIn 0.5s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .user-message { background: var(--user-message-bg); margin-left: auto; border: 1px solid var(--border-color); }
@@ -198,10 +198,52 @@
         @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
         @media (max-width: 900px) {
-            .container { flex-direction: column; }
-            .sidebar { flex: 0 0 auto; max-height: 50vh; }
-            .logo-text { display: none; }
-            .messages { max-height: calc(100vh - 400px); }
+            .container { 
+                flex-direction: column;
+                padding: 10px;
+                gap: 10px;
+            }
+            .sidebar { 
+                flex: 0 0 auto;
+                width: 100%;
+                order: 1; /* Makes sidebar appear first on smaller screens */
+            }
+            .chat-area {
+                order: 2; /* Chat appears after the sidebar */
+                min-height: 60vh;
+            }
+            .logo-text { 
+                display: none; 
+            }
+        }
+
+        @media (max-width: 600px) {
+            html {
+                font-size: 15px; /* Adjust base font for smaller screens */
+            }
+            .header-actions .api-status span {
+                display: none; /* Hide status text on small phones, keep the icon */
+            }
+            .sidebar {
+                padding: 15px;
+            }
+            .chat-header, .input-area {
+                padding: 10px 15px;
+            }
+            .message {
+                max-width: 95%;
+                padding: 12px;
+            }
+            .input-controls {
+                flex-wrap: wrap; /* Allow input controls to wrap onto the next line */
+            }
+            .message-input {
+                flex-basis: 100%; /* Make input take full width */
+                order: 3; /* Position textarea below the buttons */
+            }
+            .input-btn, .send-button {
+                flex-grow: 1; /* Allow buttons to share the available space */
+            }
         }
     </style>
 </head>
