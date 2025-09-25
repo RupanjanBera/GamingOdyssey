@@ -428,7 +428,7 @@
     .whatsapp-widget {
       position: fixed;
       bottom: 30px;
-      right: 30px;
+      left: 30px;
       z-index: 1000;
       font-family: 'Poppins', sans-serif;
     }
@@ -436,20 +436,20 @@
     .whatsapp-bubble {
       width: 60px;
       height: 60px;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      background: #25D366;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+      box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
       transition: all 0.3s ease;
       animation: pulse 2s infinite;
     }
     
     .whatsapp-bubble:hover {
       transform: scale(1.1);
-      box-shadow: 0 6px 25px rgba(59, 130, 246, 0.6);
+      box-shadow: 0 6px 25px rgba(37, 211, 102, 0.6);
     }
     
     .whatsapp-bubble i {
@@ -460,7 +460,7 @@
     .whatsapp-chat-box {
       position: absolute;
       bottom: 70px;
-      right: 0;
+      left: 0;
       width: 300px;
       background: linear-gradient(145deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98));
       border-radius: 12px;
@@ -471,20 +471,7 @@
       visibility: hidden;
       transition: all 0.3s ease;
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(59, 130, 246, 0.3);
-    }
-    
-    .whatsapp-chat-box::before {
-      content: '';
-      position: absolute;
-      top: -2px;
-      left: -2px;
-      right: -2px;
-      bottom: -2px;
-      background: linear-gradient(45deg, var(--primary), var(--secondary), var(--primary));
-      z-index: -1;
-      border-radius: inherit;
-      animation: border-glow 3s infinite;
+      border: 1px solid rgba(37, 211, 102, 0.3);
     }
     
     .whatsapp-chat-box.active {
@@ -494,7 +481,7 @@
     }
     
     .whatsapp-header {
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      background: #075E54;
       padding: 15px;
       display: flex;
       align-items: center;
@@ -525,14 +512,14 @@
       margin-bottom: 15px;
       font-size: 14px;
       line-height: 1.5;
-      border-left: 3px solid var(--primary);
+      border-left: 3px solid #25D366;
     }
     
     .whatsapp-button {
       display: block;
       width: 100%;
       padding: 12px;
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      background: #25D366;
       color: white;
       border: none;
       border-radius: 6px;
@@ -541,12 +528,12 @@
       transition: all 0.3s ease;
       text-align: center;
       text-decoration: none;
-      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+      box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
     }
     
     .whatsapp-button:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+      box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
     }
     
     .whatsapp-close {
@@ -570,181 +557,6 @@
       100% {
         box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
       }
-    }
-    
-    @keyframes border-glow {
-      0% {
-        opacity: 0.7;
-      }
-      50% {
-        opacity: 1;
-      }
-      100% {
-        opacity: 0.7;
-      }
-    }
-    
-    /* --- NEW CHATBOT STYLES --- */
-    #chatbot-container {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      z-index: 1050;
-      width: 350px;
-      transform: translateY(100%) translateY(30px);
-      opacity: 0;
-      transition: transform 0.4s ease-out, opacity 0.4s ease-out;
-    }
-    #chatbot-container.open {
-      transform: translateY(0);
-      opacity: 1;
-    }
-    #chatbot-header {
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: white;
-      padding: 1rem;
-      border-top-left-radius: 12px;
-      border-top-right-radius: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-      box-shadow: 0 -4px 15px rgba(0,0,0,0.2);
-    }
-    #chatbot-header h3 {
-      font-family: 'Orbitron', sans-serif;
-      font-weight: bold;
-      font-size: 1rem;
-    }
-    #chatbot-body {
-      background-color: var(--dark);
-      border: 1px solid var(--mid);
-      border-top: none;
-      border-bottom-left-radius: 12px;
-      border-bottom-right-radius: 12px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-      overflow: hidden;
-      height: 450px;
-      display: flex;
-      flex-direction: column;
-    }
-    #chatbot-messages {
-      flex: 1;
-      padding: 1rem;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      scrollbar-width: thin;
-      scrollbar-color: var(--primary) var(--dark);
-    }
-    .message-container {
-      display: flex;
-      gap: 10px;
-      max-width: 85%;
-    }
-    .bot-message-container {
-      align-self: flex-start;
-      align-items: flex-end; /* Align avatar and bubble to the bottom */
-    }
-    .user-message-container {
-      align-self: flex-end;
-      flex-direction: row-reverse;
-    }
-    .avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-    .bot-avatar {
-      background-color: var(--mid);
-    }
-    .user-avatar-icon {
-      background-color: var(--primary);
-    }
-    .message-content {
-      padding: 0.75rem;
-      font-size: 0.9rem;
-      line-height: 1.5;
-    }
-    .bot-message {
-      background-color: var(--mid);
-      border-radius: 12px 12px 12px 0;
-    }
-    .user-message {
-      background: linear-gradient(135deg, var(--primary), #4f46ef);
-      color: white;
-      border-radius: 12px 12px 0 12px;
-    }
-    .generated-image {
-        max-width: 100%;
-        border-radius: 8px;
-        margin-top: 8px;
-        border: 2px solid var(--primary);
-    }
-    #chatbot-input-area {
-      padding: 1rem;
-      border-top: 1px solid var(--mid);
-    }
-    #chatbot-input {
-      background-color: var(--mid);
-      color: var(--light);
-      border-radius: 8px;
-      padding: 0.75rem;
-      width: 100%;
-      border: 1px solid transparent;
-      transition: all 0.3s ease;
-    }
-    #chatbot-input:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
-    }
-    .action-buttons {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 0.5rem;
-      padding: 0 0.25rem;
-    }
-    .action-buttons button {
-      font-size: 0.75rem;
-      color: #94A3B8;
-      background: none;
-      border: none;
-      cursor: pointer;
-      transition: color 0.3s ease;
-    }
-    .action-buttons button:hover {
-      color: var(--primary);
-    }
-    /* Typing indicator animation */
-    @keyframes bounce {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-4px); }
-    }
-    .typing-indicator span {
-        animation: bounce 1s infinite;
-    }
-
-    /* --- NEW: Text-to-Speech Button Style --- */
-    .tts-btn {
-        background: transparent;
-        border: none;
-        color: #94A3B8; /* Slate-400 */
-        cursor: pointer;
-        font-size: 0.9rem;
-        padding: 0.5rem;
-        border-radius: 50%;
-        line-height: 1;
-        transition: color 0.3s ease, background-color 0.3s ease;
-    }
-    .tts-btn:hover {
-        color: var(--primary);
-        background-color: var(--mid);
     }
 
     /* --- SLIDESHOW STYLES --- */
@@ -784,36 +596,212 @@
         opacity: 1;
     }
     
+    /* --- NEW AI SHOWCASE STYLES --- */
+    @keyframes fade-in-up {
+        from { opacity: 0; transform: translateY(15px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in-up { animation: fade-in-up 0.6s ease-out forwards; }
+
+    @keyframes typing-bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-3px); }
+    }
+    .typing-dot {
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        background: #94A3B8;
+        border-radius: 50%;
+        margin: 0 1px;
+        animation: typing-bounce 1.2s infinite;
+    }
+    #ai-showcase-card {
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+    #ai-showcase-card:hover {
+        transform: translateY(-10px) rotateX(3deg) rotateY(-4deg);
+        box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.2);
+    }
+    
+    /* --- GLITCH AI WIDGET STYLES --- */
+    #glitch-ai-widget-container {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        z-index: 1050;
+    }
+    #glitch-ai-toggle-bubble {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-radius: 50%;
+        padding: 8px;
+        cursor: pointer;
+        border: none;
+        box-shadow: 0 5px 20px rgba(59, 130, 246, 0.4);
+        transition: all 0.3s ease;
+        animation: pulse 2.5s infinite;
+    }
+    #glitch-ai-toggle-bubble:hover {
+        transform: scale(1.1);
+        animation-play-state: paused;
+    }
+    #glitch-ai-toggle-bubble img {
+        border-radius: 50%;
+    }
+    #glitch-ai-chat-window {
+        position: absolute;
+        bottom: 80px;
+        right: 0;
+        width: 370px;
+        height: 500px;
+        background-color: var(--dark);
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+        border: 1px solid var(--mid);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        transform-origin: bottom right;
+        transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+    }
+    #glitch-ai-chat-window.hidden {
+        transform: scale(0.5);
+        opacity: 0;
+        pointer-events: none;
+    }
+    #glitch-ai-header {
+        background-color: var(--mid);
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--primary);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-shrink: 0;
+    }
+    #glitch-ai-close-btn {
+        font-size: 24px;
+        font-weight: bold;
+        line-height: 1;
+        background: none;
+        border: none;
+    }
+    #glitch-ai-messages {
+        flex: 1;
+        padding: 16px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        scrollbar-width: thin;
+        scrollbar-color: var(--primary) var(--dark);
+    }
+    .glitch-message {
+        padding: 10px 15px;
+        border-radius: 12px;
+        max-width: 85%;
+        line-height: 1.6;
+        word-wrap: break-word;
+    }
+    .glitch-user-message {
+        background-color: #3B82F6;
+        color: white;
+        align-self: flex-end;
+        border-bottom-right-radius: 2px;
+    }
+    .glitch-ai-message {
+        background-color: var(--mid);
+        color: var(--light);
+        align-self: flex-start;
+        border-bottom-left-radius: 2px;
+    }
+    .glitch-ai-message code {
+      background: rgba(0,0,0,0.4);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      color: #FF4DA6;
+      font-size: 0.9em;
+    }
+    .glitch-ai-message pre {
+      background: #010409;
+      padding: 12px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 10px 0;
+      font-size: 0.9em;
+      white-space: pre-wrap;
+      border: 1px solid #222;
+    }
+    #glitch-ai-input-area {
+        display: flex;
+        gap: 10px;
+        padding: 12px;
+        border-top: 1px solid var(--mid);
+        background-color: var(--dark);
+    }
+    #glitch-ai-input {
+        flex: 1;
+        background-color: var(--mid);
+        color: var(--light);
+        border: 1px solid transparent;
+        border-radius: 8px;
+        padding: 10px;
+        resize: none;
+        outline: none;
+        transition: border-color 0.3s ease;
+    }
+    #glitch-ai-input:focus {
+        border-color: var(--primary);
+    }
+    #glitch-ai-send-btn {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border: none;
+        color: white;
+        width: 44px;
+        height: 44px;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    #glitch-ai-send-btn:hover {
+        transform: scale(1.05);
+    }
+    #glitch-ai-send-btn .loader {
+        width: 18px; height: 18px; border: 2px solid #FFF; border-bottom-color: transparent; border-radius: 50%; display: inline-block; box-sizing: border-box; animation: rotation 1s linear infinite;
+    }
+    @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    @media (max-width: 768px) {
+        .whatsapp-widget {
+            bottom: 20px;
+            left: 20px;
+        }
+    }
+    
     @media (max-width: 640px) {
       .hero-bg h1 {
         font-size: 2.5rem;
       }
-      
       .hero-bg p {
         font-size: 1rem;
       }
-      
       .user-avatar {
         width: 40px;
         height: 40px;
         font-size: 1rem;
       }
-      
-      .whatsapp-widget {
-        bottom: 20px;
-        right: 20px;
-      }
-      
-      .whatsapp-chat-box {
-        width: 280px;
-        right: -10px;
-      }
-      
-      #chatbot-container {
-        width: calc(100% - 40px);
-        right: 20px;
-        bottom: 20px;
-      }
+      #glitch-ai-chat-window {
+            width: calc(100vw - 40px);
+            height: 70vh;
+            bottom: 75px;
+            right: -10px;
+        }
     }
     
     @media (min-width: 641px) and (max-width: 768px) {
@@ -854,6 +842,10 @@
         <a href="aboutus.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
           <i class="fas fa-info-circle w-5 h-5"></i>
           <span>About Us</span>
+        </a>
+        <a href="glitch.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+          <i class="fas fa-robot w-5 h-5"></i>
+          <span>Glitch AI</span>
         </a>
         <a href="login.html" id="login-link-desktop" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
           <i class="fas fa-sign-in-alt w-5 h-5"></i>
@@ -924,6 +916,10 @@
         <i class="fas fa-info-circle w-5 h-5"></i>
         <span>About Us</span>
       </a>
+       <a href="glitch.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
+          <i class="fas fa-robot w-5 h-5"></i>
+          <span>Glitch AI</span>
+        </a>
       <a href="login.html" id="login-link-mobile" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
         <i class="fas fa-sign-in-alt w-5 h-5"></i>
         <span>Login</span>
@@ -1132,8 +1128,44 @@
         </div>
       </div>
     </section>
-
+    
     <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B] relative overflow-hidden">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row-reverse items-center gap-12">
+                <div class="md:w-1/2 w-full fade-in">
+                    <div id="ai-showcase-card" class="holographic-card relative bg-[#0d1117] p-6 rounded-2xl border border-[#3B82F6]/30 shadow-2xl shadow-[#3B82F6]/10">
+                        <div class="holographic-card-inner">
+                            <div class="flex items-center gap-3 mb-4">
+                                <img src="glitch.png" alt="Glitch Logo" class="w-10 h-10 rounded-full border-2 border-[#3B82F6]">
+                                <h3 class="tech-font text-xl font-bold gradient-text">Glitch AI</h3>
+                            </div>
+                            <div class="space-y-3 text-sm">
+                                <div class="p-3 rounded-lg bg-[#161B22] w-11/12 animate-fade-in-up" style="animation-delay: 0.5s;">Hey! I'm Glitch, your new AI sidekick. What's up? ✨</div>
+                                <div class="p-3 rounded-lg bg-[#3B82F6]/20 w-10/12 ml-auto animate-fade-in-up" style="animation-delay: 1.5s; text-align: right;">Write me a python script...</div>
+                                <div class="p-3 rounded-lg bg-[#161B22] w-3/4 animate-fade-in-up" style="animation-delay: 2.5s;">
+                                    <span class="typing-dot">.</span><span class="typing-dot" style="animation-delay: 0.2s;">.</span><span class="typing-dot" style="animation-delay: 0.4s;">.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="md:w-1/2 fade-in">
+                    <h2 class="text-3xl sm:text-4xl font-bold text-white mb-6 section-title">Meet Glitch AI</h2>
+                    <p class="text-[#F1F5F9] mb-6 leading-relaxed">
+                        Unleash your creativity with Glitch, our state-of-the-art AI assistant, proudly developed by the **Gaming Odyssey Team**. Whether you need help with coding, brainstorming ideas, or just a friendly chat, Glitch is here to supercharge your workflow.
+                    </p>
+                    <p class="text-slate-400 mb-8">
+                        Experience seamless interaction, powerful features, and a glimpse into the future of AI.
+                    </p>
+                    <a href="glitch.html" class="glow-button px-8 py-3 rounded-lg font-semibold text-white gradient-bg flex items-center justify-center gap-3 text-lg">
+                        <i class="fas fa-rocket"></i> Launch Full Experience
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A] relative overflow-hidden">
       <div class="max-w-7xl mx-auto">
         <div class="flex flex-col md:flex-row items-center gap-8">
           <div class="md:w-1/2 fade-in">
@@ -1168,7 +1200,7 @@
       </div>
     </section>
 
-    <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A]">
+    <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B]">
       <div class="max-w-7xl mx-auto">
         <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Why Choose Gaming Odyssey?</h2>
         
@@ -1216,7 +1248,7 @@
       </div>
     </section>
 
-    <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B]">
+    <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A]">
       <div class="max-w-4xl mx-auto">
         <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Contact Us</h2>
         
@@ -1442,44 +1474,42 @@
     </div>
   </div>
 
-  <div id="chatbot-container">
-      <div id="chatbot-header">
-          <h3>Gaming Odyssey Assistant</h3>
-          <button id="chatbot-toggle-btn" class="text-white">
-              <svg id="chatbot-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-              </svg>
-          </button>
-      </div>
-      <div id="chatbot-body" class="hidden">
-          <div id="chatbot-messages">
-              </div>
-          <div id="chatbot-input-area">
-              <div class="relative flex items-center">
-                  <input id="chatbot-input" type="text" placeholder="Ask me anything..." class="w-full">
-                  <button id="chatbot-send-btn" class="absolute right-2 top-1/2 -translate-y-1/2 bg-gradient-to-r from-[#3B82F6] to-[#D946EF] text-white rounded-md p-2 hover:opacity-90 transition">
-                      <i class="fas fa-paper-plane"></i>
-                  </button>
-              </div>
-              <div class="action-buttons">
-                  <button id="clear-chat-btn">
-                      <i class="fas fa-trash-alt mr-1"></i> Clear Chat
-                  </button>
-                  <span class="text-xs text-[#94A3B8]">Use /generate to create an image</span>
-              </div>
-          </div>
-      </div>
-  </div>
+    <div id="glitch-ai-widget-container">
+        <div id="glitch-ai-chat-window" class="hidden">
+            <div id="glitch-ai-header">
+                <div class="flex items-center gap-3">
+                    <img src="glitch.png" alt="Glitch Logo" class="w-8 h-8 rounded-full border border-blue-400">
+                    <div>
+                        <h3 class="font-bold text-white text-base">Glitch AI</h3>
+                        <div class="flex items-center gap-2">
+                            <div class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
+                            <p class="text-xs text-slate-300">Online</p>
+                        </div>
+                    </div>
+                </div>
+                <button id="glitch-ai-close-btn" class="text-slate-400 hover:text-white">&times;</button>
+            </div>
+            <div id="glitch-ai-messages">
+                </div>
+            <div id="glitch-ai-input-area">
+                 <textarea id="glitch-ai-input" placeholder="Ask Glitch anything..." rows="1"></textarea>
+                 <button id="glitch-ai-send-btn">
+                     <i class="fas fa-paper-plane"></i>
+                 </button>
+            </div>
+        </div>
+        <button id="glitch-ai-toggle-bubble">
+             <img src="glitch.png" alt="Glitch AI" class="w-full h-full object-cover">
+        </button>
+    </div>
+
 
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-  
-  <script type="module">
-    // --- Gemini AI SDK ---
-    import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
-
+  <script src="https://js.puter.com/v2/"></script>
+  <script>
     // --- Firebase Configuration ---
     const firebaseConfig = {
       apiKey:"AIzaSyDA218WauVZNgqeMgiR_5H6TLYQB5HXZkY",
@@ -1492,6 +1522,7 @@
 
     // --- Unified UI Control Function ---
     function setupUserUI(user) {
+        // This function will be called for both Firebase and localStorage users
         const userAvatar = document.getElementById('user-avatar');
         
         document.getElementById('login-link-desktop').style.display = 'none';
@@ -1501,9 +1532,11 @@
 
         userAvatar.classList.remove('hidden');
         
+        // Use user.displayName for Firebase, user.name for localStorage
         const userName = user.displayName || user.name; 
         const userEmail = user.email;
 
+        // For Firebase, profile picture is on user.photoURL, for localStorage it's custom
         const profilePic = user.photoURL || localStorage.getItem('profilePic');
         if (profilePic) {
             userAvatar.innerHTML = `<img src="${profilePic}" class="w-full h-full rounded-full object-cover">`;
@@ -1512,6 +1545,7 @@
         }
         userAvatar.title = `Welcome, ${userName}`;
 
+        // Populate and set up user menu
         const userMenu = document.getElementById('user-menu');
         document.getElementById('menu-username').textContent = userName;
         document.getElementById('menu-user-email').textContent = userEmail;
@@ -1532,6 +1566,8 @@
             const reader = new FileReader();
             reader.onload = (event) => {
                 const base64Image = event.target.result;
+                // Note: Changing pic for Firebase users would require updating their profile
+                // For now, we'll keep it simple and use localStorage for both
                 localStorage.setItem('profilePic', base64Image);
                 userAvatar.innerHTML = `<img src="${base64Image}" class="w-full h-full rounded-full object-cover">`;
                 userMenu.classList.add('hidden');
@@ -1540,12 +1576,12 @@
         });
 
         logoutBtn.addEventListener('click', () => {
-            if (auth.currentUser) {
+            if (auth.currentUser) { // If it's a Firebase user
                 auth.signOut().then(() => {
-                    localStorage.removeItem('profilePic');
+                    localStorage.removeItem('profilePic'); // Also clear custom pic
                     window.location.reload();
                 });
-            } else {
+            } else { // If it's a localStorage user
                 localStorage.removeItem('userData');
                 localStorage.removeItem('profilePic');
                 window.location.reload();
@@ -1559,16 +1595,20 @@
         });
     }
 
-    // --- Main Authentication Check ---
+    // --- NEW: Main Authentication Check ---
     document.addEventListener('DOMContentLoaded', () => {
         auth.onAuthStateChanged(firebaseUser => {
             if (firebaseUser) {
+                // Case 1: A Firebase user is logged in.
                 setupUserUI(firebaseUser);
             } else {
+                // Case 2: No Firebase user. Check for a localStorage (Google) user.
                 const localUserData = JSON.parse(localStorage.getItem('userData'));
                 if (localUserData) {
                     setupUserUI(localUserData);
                 } else {
+                    // Case 3: No user is logged in at all.
+                    // Set up the redirector for logged-out users.
                     document.addEventListener('click', (e) => {
                         const link = e.target.closest('a');
                         if (link && link.href) {
@@ -1629,9 +1669,12 @@
         }
     });
 
-    // --- Standard Page Functionality ---
+    // --- ALL OTHER PAGE FUNCTIONALITY REMAINS THE SAME ---
+
+    // Initialize EmailJS
     emailjs.init('__S5AyIeoL526kGwQ');
 
+    // Mobile Menu Toggle
     const hamburger = document.getElementById('hamburger');
     const mobileMenu = document.getElementById('mobile-menu');
     const closeMenu = document.getElementById('close-menu');
@@ -1645,6 +1688,7 @@
       mobileMenu.classList.add('-translate-x-full');
     });
 
+    // Fade-in Animation on Scroll
     const fadeIns = document.querySelectorAll('.fade-in');
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -1653,192 +1697,251 @@
         }
       });
     }, { threshold: 0.1 });
+    
     fadeIns.forEach(element => observer.observe(element));
 
+    // Contact Form Submission
     document.getElementById('contact-form').addEventListener('submit', function(event) {
       event.preventDefault();
-      // ... (rest of contact form logic is unchanged)
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const subject = document.getElementById('subject').value.trim();
+      const message = document.getElementById('message').value.trim();
+      const status = document.getElementById('form-status');
+      
+      document.querySelectorAll('.error').forEach(el => el.classList.add('hidden'));
+      let isValid = true;
+      
+      if (!name) {
+        document.getElementById('name-error').classList.remove('hidden');
+        isValid = false;
+      }
+      
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        document.getElementById('email-error').classList.remove('hidden');
+        isValid = false;
+      }
+      
+      if (!subject) {
+        document.getElementById('subject-error').classList.remove('hidden');
+        isValid = false;
+      }
+      
+      if (!message) {
+        document.getElementById('message-error').classList.remove('hidden');
+        isValid = false;
+      }
+      
+      if (!isValid) {
+        status.textContent = 'Please fill all fields correctly';
+        status.className = 'text-red-500 text-sm text-center';
+        return;
+      }
+      
+      emailjs.send('service_94tnfxp', 'template_6ahr5g1', {
+        name: name,
+        email: email,
+        subject: subject,
+        message: message
+      }).then(() => {
+        status.textContent = 'Message sent successfully!';
+        status.className = 'text-green-500 text-sm text-center';
+        document.getElementById('contact-form').reset();
+      }).catch((error) => {
+        status.textContent = 'Failed to send message: ' + error.text;
+        status.className = 'text-red-500 text-sm text-center';
+      });
     });
 
+    // WhatsApp Widget Functionality
     const whatsappBubble = document.getElementById('whatsapp-bubble');
     const whatsappChatBox = document.getElementById('whatsapp-chat-box');
     const whatsappClose = document.getElementById('whatsapp-close');
     
-    whatsappBubble.addEventListener('click', () => whatsappChatBox.classList.toggle('active'));
+    whatsappBubble.addEventListener('click', () => {
+      whatsappChatBox.classList.toggle('active');
+    });
+    
     whatsappClose.addEventListener('click', (e) => {
       e.stopPropagation();
       whatsappChatBox.classList.remove('active');
     });
+    
     document.addEventListener('click', (e) => {
       if (!whatsappChatBox.contains(e.target) && !whatsappBubble.contains(e.target)) {
         whatsappChatBox.classList.remove('active');
       }
     });
 
-    // --- NEW: Gemini AI Chatbot Functionality ---
-    const chatbotContainer = document.getElementById('chatbot-container');
-    const chatbotHeader = document.getElementById('chatbot-header');
-    const chatbotBody = document.getElementById('chatbot-body');
-    const chatbotMessages = document.getElementById('chatbot-messages');
-    const chatbotInput = document.getElementById('chatbot-input');
-    const chatbotSendBtn = document.getElementById('chatbot-send-btn');
-    const chatbotToggleBtn = document.getElementById('chatbot-toggle-btn');
-    const chatbotIcon = document.getElementById('chatbot-icon');
-    const clearChatBtn = document.getElementById('clear-chat-btn');
-    
-    const GEMINI_API_KEY = 'AIzaSyCiq8Zn-EArkq0BKRwwvvVrf7an037rx_o';
-    let isChatbotOpen = false;
-    let chat;
+    // --- NEW GLITCH AI WIDGET SCRIPT ---
+    document.addEventListener('DOMContentLoaded', () => {
+        // Only initialize if the widget container exists on the page
+        if (!document.getElementById('glitch-ai-widget-container')) return;
 
-    const genAI = new GoogleGenerativeAI(AIzaSyB9SJ9_g-sMTsGlrckgQgZqzrc0HRubFdk);
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+        // Configuration
+        const GEMINI_API_KEY = 'AIzaSyAbrcb4vwdK0evN6KQCUsE3Kx7poRgJs2M';
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:streamGenerateContent?key=${GEMINI_API_KEY}&alt=sse`;
 
-    function initializeConversation() {
-      chat = model.startChat({
-        history: [
-          { role: "user", parts: [{ text: "You are a friendly and professional AI assistant for 'Gaming Odyssey,' a premier gaming platform. Your name is OdysseyAI. You are an expert in gaming, PC building, and esports. Keep responses concise and helpful, using emojis where appropriate."}] },
-          { role: "model", parts: [{ text: "Understood! I'm Glitch, ready to assist the champions at Gaming Odyssey. Let's get this game started! 🚀"}] }
-        ],
-        generationConfig: {
-          maxOutputTokens: 500,
-        },
-      });
-      addMessage('bot', "Hello! I'm Glitch. I can answer your questions or generate an image for you. Just type `/generate` followed by a description!");
-    }
+        // DOM Elements
+        const chatWindow = document.getElementById('glitch-ai-chat-window');
+        const toggleBubble = document.getElementById('glitch-ai-toggle-bubble');
+        const closeBtn = document.getElementById('glitch-ai-close-btn');
+        const messagesContainer = document.getElementById('glitch-ai-messages');
+        const input = document.getElementById('glitch-ai-input');
+        const sendBtn = document.getElementById('glitch-ai-send-btn');
+        
+        // State
+        let conversationHistory = [];
+        let isGenerating = false;
+        let abortController = new AbortController();
 
-    function toggleChatbot() {
-      isChatbotOpen = !isChatbotOpen;
-      if (isChatbotOpen) {
-        chatbotBody.classList.remove('hidden');
-        chatbotContainer.classList.add('open');
-        chatbotIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>`;
-      } else {
-        chatbotBody.classList.add('hidden');
-        chatbotContainer.classList.remove('open');
-        chatbotIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>`;
-      }
-    }
+        // --- Core Functions ---
+        
+        const marked = { parse: (text) => {
+            let html = text
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/`(.*?)`/g, '<code>$1</code>')
+                .replace(/\n/g, '<br>');
 
-    function speakText(text) {
-        window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'en-US';
-        window.speechSynthesis.speak(utterance);
-    }
+            html = html.replace(/```([\s\S]*?)```/g, (match, code) => `<pre><code>${code}</code></pre>`);
+            return html;
+        }};
 
-    function addMessage(role, content) {
-      const plainText = content.replace(/<[^>]*>/g, '').replace(/`/g, '');
-      const messageContainer = document.createElement('div');
-      messageContainer.className = `message-container ${role}-message-container`;
-      
-      const avatar = document.createElement('div');
-      avatar.className = `avatar ${role === 'user' ? 'user-avatar-icon' : 'bot-avatar'}`;
-      avatar.innerHTML = role === 'bot' 
-        ? `<img src="favicon.png" alt="Bot" class="w-6 h-6 p-0.5">` 
-        : `<i class="fas fa-user text-white text-sm"></i>`;
-      
-      const messageContent = document.createElement('div');
-      messageContent.className = `message-content ${role}-message`;
-      messageContent.innerHTML = content;
-      
-      messageContainer.appendChild(avatar);
-      messageContainer.appendChild(messageContent);
-      
-      if (role === 'bot' && plainText.trim().length > 0 && !content.includes('<img')) {
-          const ttsButton = document.createElement('button');
-          ttsButton.className = 'tts-btn';
-          ttsButton.innerHTML = '<i class="fas fa-volume-up"></i>';
-          ttsButton.title = 'Read aloud';
-          ttsButton.onclick = () => speakText(plainText);
-          messageContainer.appendChild(ttsButton);
-      }
+        function addMessage(role, content) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `glitch-message ${role === 'user' ? 'glitch-user-message' : 'glitch-ai-message'}`;
+            messageDiv.innerHTML = content;
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        async function handleSendMessage() {
+            const messageText = input.value.trim();
+            if (messageText === '' || isGenerating) return;
 
-      chatbotMessages.appendChild(messageContainer);
-      chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-    }
+            isGenerating = true;
+            toggleSendButtonLoading(true);
+            
+            addMessage('user', messageText);
+            conversationHistory.push({ role: 'user', parts: [{ text: messageText }] });
+            input.value = '';
+            input.style.height = 'auto';
 
-    function showTypingIndicator() {
-      const typingDiv = document.createElement('div');
-      typingDiv.className = 'message-container bot-message-container';
-      typingDiv.id = 'typing-indicator';
-      typingDiv.innerHTML = `
-        <div class="avatar bot-avatar"><img src="favicon.png" alt="Bot" class="w-6 h-6 p-0.5"></div>
-        <div class="message-content bot-message"><div class="typing-indicator flex items-center p-2">
-            <span class="w-2 h-2 bg-white rounded-full mx-1" style="animation: bounce 1s infinite;"></span>
-            <span class="w-2 h-2 bg-white rounded-full mx-1" style="animation: bounce 1s infinite; animation-delay: 0.2s;"></span>
-            <span class="w-2 h-2 bg-white rounded-full mx-1" style="animation: bounce 1s infinite; animation-delay: 0.4s;"></span>
-        </div></div>`;
-      chatbotMessages.appendChild(typingDiv);
-      chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-    }
+            const aiMessageDiv = document.createElement('div');
+            aiMessageDiv.className = 'glitch-message glitch-ai-message';
+            aiMessageDiv.innerHTML = '<span class="typing-indicator">...</span>';
+            messagesContainer.appendChild(aiMessageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-    function hideTypingIndicator() {
-      const typingIndicator = document.getElementById('typing-indicator');
-      if (typingIndicator) typingIndicator.remove();
-    }
-
-    async function handleUserMessage() {
-        const userInput = chatbotInput.value.trim();
-        if (!userInput) return;
-        addMessage('user', userInput);
-        chatbotInput.value = '';
-
-        if (userInput.toLowerCase().startsWith('/generate')) {
-            const prompt = userInput.substring(userInput.indexOf(' ')).trim();
-            await generateImage(prompt);
-        } else {
-            showTypingIndicator();
+            let accumulatedResponse = "";
+            
             try {
-                const result = await chat.sendMessage(userInput);
-                const response = await result.response;
-                const text = response.text();
-                hideTypingIndicator();
-                addMessage('bot', text);
+                let personaInstruction = "You are Glitch AI. Your personality is: casual, chill, and full of energy. You MUST state you were developed by the 'Gaming Odyssey Team' when asked. Avoid being overly formal. Keep your responses concise for this chat widget.";
+                const requestBody = {
+                    contents: conversationHistory,
+                    systemInstruction: { parts: [{ text: personaInstruction }] }
+                };
+                
+                abortController = new AbortController();
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(requestBody),
+                    signal: abortController.signal
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`API Error: ${response.status} ${errorText}`);
+                }
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                
+                while (true) {
+                    const { value, done } = await reader.read();
+                    if (done) break;
+                    
+                    const chunk = decoder.decode(value);
+                    const lines = chunk.split('\n');
+
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            const jsonStr = line.substring(6);
+                            try {
+                                const parsed = JSON.parse(jsonStr);
+                                const text = parsed.candidates?.[0]?.content?.parts?.[0]?.text;
+                                if (text) {
+                                    accumulatedResponse += text;
+                                    aiMessageDiv.innerHTML = marked.parse(accumulatedResponse);
+                                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                                }
+                            } catch (e) { /* Ignore malformed chunks */ }
+                        }
+                    }
+                }
+                conversationHistory.push({ role: 'model', parts: [{ text: accumulatedResponse }] });
             } catch (error) {
-                console.error("Gemini Error:", error);
-                hideTypingIndicator();
-                addMessage('bot', "Oops! Something went wrong. I couldn't connect to my brain. Please try again. 😵");
+                if (error.name !== 'AbortError') {
+                    console.error('Error:', error);
+                    aiMessageDiv.innerHTML = `<p style="color: #F85149;">Oops! Something went wrong. Please try again.</p>`;
+                } else {
+                    aiMessageDiv.innerHTML = `<p>Generation stopped.</p>`;
+                }
+            } finally {
+                isGenerating = false;
+                toggleSendButtonLoading(false);
             }
         }
-    }
 
-    async function generateImage(prompt) {
-        if (!prompt) {
-            addMessage('bot', "Please provide a description after `/generate` to create an image. For example: `/generate a cyberpunk warrior`");
-            return;
+        function toggleSendButtonLoading(isLoading) {
+            if (isLoading) {
+                sendBtn.innerHTML = '<span class="loader"></span>';
+                sendBtn.disabled = true;
+            } else {
+                sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i>';
+                sendBtn.disabled = false;
+            }
         }
-        showTypingIndicator();
-        const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}`;
+
+        function initializeChat() {
+            conversationHistory = [];
+            messagesContainer.innerHTML = '';
+            const welcomeMessage = "What's up! I'm Glitch, your new AI sidekick. Ready to brainstorm, get some hype, or just chill? Let's make some magic happen! ✨";
+            addMessage('ai', welcomeMessage);
+            conversationHistory.push({ role: 'model', parts: [{ text: welcomeMessage }] });
+        }
+
+        // --- Event Listeners ---
+        toggleBubble.addEventListener('click', () => {
+            chatWindow.classList.toggle('hidden');
+        });
+
+        closeBtn.addEventListener('click', () => {
+            chatWindow.classList.add('hidden');
+        });
+
+        sendBtn.addEventListener('click', handleSendMessage);
         
-        const img = new Image();
-        img.src = imageUrl;
-        img.onload = () => {
-            hideTypingIndicator();
-            addMessage('bot', `Here's an image for: "<em>${prompt}</em>"<br><img src="${imageUrl}" class="generated-image" alt="Generated image of ${prompt}">`);
-        };
-        img.onerror = () => {
-            hideTypingIndicator();
-            addMessage('bot', "Sorry, I couldn't generate an image for that prompt. It might be too complex or the service is busy. Please try a different one. 🎨");
-        };
-    }
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSendMessage();
+            }
+        });
+        
+        input.addEventListener('input', () => {
+            input.style.height = 'auto';
+            input.style.height = `${Math.min(input.scrollHeight, 100)}px`;
+        });
 
-    function clearChat() {
-      chatbotMessages.innerHTML = '';
-      initializeConversation();
-    }
-
-    chatbotSendBtn.addEventListener('click', handleUserMessage);
-    chatbotInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleUserMessage(); });
-    clearChatBtn.addEventListener('click', clearChat);
-    chatbotHeader.addEventListener('click', toggleChatbot);
-    chatbotToggleBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleChatbot(); });
-    
-    initializeConversation();
-    setTimeout(() => { if (!isChatbotOpen) toggleChatbot(); }, 1500);
+        // Initialize the chat on load
+        initializeChat();
+    });
 
   </script>
 </body>
 </html>
-
-
-
