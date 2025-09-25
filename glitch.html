@@ -259,7 +259,7 @@
     <script>
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
         
-        const GEMINI_API_KEY = 'AIzaSyBVnb7V9LGdFbNtHkReRFFPnOs-PCaefOM'; // WARNING: For development only. Use a backend proxy in production.
+        const GEMINI_API_KEY = 'AIzaSyAbKXW75vSj9XhSgs0rC5SK-Blf7NhSB-A'; // WARNING: For development only. Use a backend proxy in production.
 
         let currentChatId = null; let chats = {}; let currentMode = 'chat'; let currentAI = 'zhoros'; let isWebSearchActive = false; let attachedFiles = []; let isGenerating = false; let abortController = new AbortController(); 
         let isAudioUnlocked = false; let lastTypingSoundTime = 0;
@@ -330,6 +330,10 @@
         
         function initConstellationAnimation() { const canvas = document.getElementById('constellation-canvas'); if (!canvas) return; const ctx = canvas.getContext('2d'); let particles = []; const particleCount = 70; const maxDistance = 100; function resizeCanvas() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; } resizeCanvas(); window.addEventListener('resize', resizeCanvas); for (let i = 0; i < particleCount; i++) { particles.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, vx: Math.random() * 0.5 - 0.25, vy: Math.random() * 0.5 - 0.25 }); } function draw() { if (!ctx) return; ctx.clearRect(0, 0, canvas.width, canvas.height); const color = document.body.classList.contains('light-mode') ? 'rgba(0, 163, 255, 0.4)' : 'rgba(0, 163, 255, 0.3)'; ctx.fillStyle = color; ctx.strokeStyle = color; particles.forEach(p => { ctx.beginPath(); ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2); ctx.fill(); p.x += p.vx; p.y += p.vy; if (p.x < 0 || p.x > canvas.width) p.vx *= -1; if (p.y < 0 || p.y > canvas.height) p.vy *= -1; }); for (let i = 0; i < particles.length; i++) { for (let j = i + 1; j < particles.length; j++) { const dist = Math.sqrt(Math.pow(particles[i].x - particles[j].x, 2) + Math.pow(particles[i].y - particles[j].y, 2)); if (dist < maxDistance) { ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.lineWidth = 1 - dist / maxDistance; ctx.stroke(); } } } requestAnimationFrame(draw); } draw(); }
 
+        // ================================================================= //
+        // ==================== UPDATED FUNCTION STARTS HERE =================== //
+        // ================================================================= //
+
         async function sendMessage() {
             const messageText = messageInput.value.trim();
             if ((messageText === '' && attachedFiles.length === 0) || isGenerating) return;
@@ -337,9 +341,13 @@
             const userFiles = [...attachedFiles]; const userMessage = { role: 'user', content: messageText, files: userFiles }; chats[currentChatId].messages.push(userMessage); displayMessage(userMessage);
             messageInput.value = ''; messageInput.style.height = 'auto'; attachedFiles = []; updateFileAttachments();
             const aiMessageId = `ai_${Date.now()}`; const aiModelName = currentAI === 'plex' ? 'Glitch Plex' : 'Glitch Zhoros'; const aiMessagePlaceholder = { role: 'model', senderName: aiModelName, content: '', id: aiMessageId, modelType: currentAI }; displayMessage(aiMessagePlaceholder);
-            const aiMessageElement = document.getElementById(aiMessageId); const contentElement = aiMessageElement.querySelector('.message-content'); let accumulatedResponse = ""; let firstChunkReceived = false;
+            const aiMessageElement = document.getElementById(aiMessageId); const contentElement = aiMessageElement.querySelector('.message-content'); let accumulatedResponse = "";
+            
             try {
-                const model = 'gemini-1.5-flash-latest'; const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?key=${GEMINI_API_KEY}&alt=sse`;
+                // 1. Updated the model and API URL
+                const model = 'gemini-2.0-flash';
+                const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
+                
                 const history = await Promise.all(chats[currentChatId].messages.slice(0, -1).map(msgToPart));
                 const contents = [...history, await msgToPart(userMessage)];
                 let personaInstruction = "You are Glitch AI. Your personality is: casual, chill, and full of energy. You MUST state you were developed by the 'Gaming Odyssey Team' when asked. Avoid being overly formal.";
@@ -347,25 +355,25 @@
                 if (currentAI === 'plex') { personaInstruction += " As Glitch Plex, lean more into your creative, imaginative, and energetic side."; }
                 const requestBody = { contents, systemInstruction: { parts: [{ text: personaInstruction }] } };
                 abortController = new AbortController();
+                
                 const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(requestBody), signal: abortController.signal });
+                
                 if (!response.ok) { const errorText = await response.text(); throw new Error(`API Error: ${response.status} ${errorText}`); }
-                const reader = response.body.getReader(); const decoder = new TextDecoder();
-                while (true) {
-                    const { value, done } = await reader.read(); if (done) break;
-                    const chunk = decoder.decode(value); const lines = chunk.split('\n');
-                    for (const line of lines) {
-                        if (line.startsWith('data: ')) {
-                            const jsonStr = line.substring(6);
-                            try {
-                                const parsed = JSON.parse(jsonStr); const text = parsed.candidates?.[0]?.content?.parts?.[0]?.text;
-                                if (text) {
-                                    if (!firstChunkReceived) { playSound(sounds.notification, {volume: 0.7}); firstChunkReceived = true; }
-                                    accumulatedResponse += text; contentElement.innerHTML = marked.parse(accumulatedResponse); messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                                }
-                            } catch (e) { /* Ignore malformed chunks */ }
-                        }
-                    }
+                
+                // 2. Replaced streaming logic with non-streaming (unary) response handling
+                const responseData = await response.json();
+                const text = responseData.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                if (text) {
+                    playSound(sounds.notification, {volume: 0.7});
+                    accumulatedResponse = text;
+                    contentElement.innerHTML = marked.parse(accumulatedResponse);
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                } else {
+                    accumulatedResponse = "Sorry, I couldn't process that request.";
+                    contentElement.innerHTML = `<p style="color: var(--warning-color);">${accumulatedResponse}</p>`;
                 }
+                
                 chats[currentChatId].messages.push({ role: 'model', content: accumulatedResponse, modelType: currentAI });
                 renderMessageActions(aiMessageElement, accumulatedResponse);
             } catch (error) {
@@ -381,6 +389,10 @@
             }
         }
         
+        // ================================================================= //
+        // ===================== UPDATED FUNCTION ENDS HERE ==================== //
+        // ================================================================= //
+
         function displayMessage(message) {
             const isUser = message.role === 'user'; const senderClass = isUser ? 'user-message' : (message.modelType === 'plex' ? 'plex-message' : 'ai-message');
             const messageDiv = document.createElement('div'); messageDiv.className = `message ${senderClass}`; if (message.id) messageDiv.id = message.id;
@@ -541,4 +553,3 @@
     </script>
 </body>
 </html>
-
