@@ -59,6 +59,7 @@
         .shine-btn:hover::before { left: 150%; }
         .sidebar-heading { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin: 10px 0 10px 5px; }
         .ai-selector, .mode-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .ai-selector { grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); }
         .ai-option, .mode-btn { padding: 10px; background: var(--space-blue); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-light); cursor: pointer; transition: all 0.3s ease; text-align: center; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .ai-option:hover, .mode-btn:hover { border-color: var(--neon-blue); background-color: var(--user-message-bg); transform: scale(1.03); }
         .ai-option.active, .mode-btn.active { background: var(--user-message-bg); border-color: var(--neon-blue); box-shadow: 0 0 15px rgba(0, 163, 255, 0.4); color: var(--text-light); }
@@ -199,8 +200,9 @@
             <div>
                 <h4 class="sidebar-heading">Models</h4>
                 <div class="ai-selector">
-                    <div class="ai-option active" data-ai="zhoros"><i class="fas fa-brain"></i> Glitch Zhoros</div>
-                    <div class="ai-option plex" data-ai="plex"><i class="fas fa-bolt"></i> Glitch Plex</div>
+                    <div class="ai-option" data-ai="zhoros"><i class="fas fa-brain"></i> Glitch Zhoros</div>
+                    <div class="ai-option plex active" data-ai="plex"><i class="fas fa-bolt"></i> Glitch Plex</div>
+                    <div class="ai-option" data-ai="lite"><i class="fas fa-feather-alt"></i> Glitch Lite</div>
                 </div>
             </div>
             <div>
@@ -268,11 +270,12 @@
         let engine;
         const modelMapping = {
             zhoros: "Llama-3-8B-Instruct-q4f16_1-MLC", // A more powerful model
-            plex: "Phi-3-mini-4k-instruct-q4f16_1-MLC"  // A smaller, faster model
+            plex: "Phi-3-mini-4k-instruct-q4f16_1-MLC",  // A smaller, faster model
+            lite: "TinyLlama-1.1B-Chat-v1.0-q4f16_1-MLC" // A lightweight model for compatibility
         };
         // --- End WebLLM Integration ---
 
-        let currentChatId = null; let chats = {}; let currentMode = 'chat'; let currentAI = 'zhoros'; let isWebSearchActive = false; let attachedFiles = []; let isGenerating = false;
+        let currentChatId = null; let chats = {}; let currentMode = 'chat'; let currentAI = 'plex'; let isWebSearchActive = false; let attachedFiles = []; let isGenerating = false;
         let isAudioUnlocked = false; let lastTypingSoundTime = 0;
         
         const messageInput = document.getElementById('messageInput'); const sendButton = document.getElementById('sendButton'); const messagesContainer = document.getElementById('messages'); const chatHistory = document.getElementById('chatHistory'); const newChatBtn = document.getElementById('newChatBtn'); const modeButtons = document.querySelectorAll('.mode-btn'); const aiOptions = document.querySelectorAll('.ai-option'); const webSearchBtn = document.getElementById('webSearchBtn'); const chatTitle = document.getElementById('chatTitle'); const fileInput = document.getElementById('fileInput'); const stopGeneratingBtn = document.getElementById('stopGeneratingBtn'); const themeCheckbox = document.getElementById('theme-checkbox');
@@ -359,13 +362,14 @@
             chats[currentChatId].messages.push(userMessage); displayMessage(userMessage);
             messageInput.value = ''; messageInput.style.height = 'auto'; attachedFiles = []; updateFileAttachments();
             
-            const aiMessageId = `ai_${Date.now()}`; const aiModelName = currentAI === 'plex' ? 'Glitch Plex' : 'Glitch Zhoros'; const aiMessagePlaceholder = { role: 'model', senderName: aiModelName, content: '', id: aiMessageId, modelType: currentAI }; displayMessage(aiMessagePlaceholder);
+            const aiMessageId = `ai_${Date.now()}`; const aiModelName = currentAI === 'plex' ? 'Glitch Plex' : (currentAI === 'lite' ? 'Glitch Lite' : 'Glitch Zhoros'); const aiMessagePlaceholder = { role: 'model', senderName: aiModelName, content: '', id: aiMessageId, modelType: currentAI }; displayMessage(aiMessagePlaceholder);
             const aiMessageElement = document.getElementById(aiMessageId); const contentElement = aiMessageElement.querySelector('.message-content'); let accumulatedResponse = ""; let firstChunkReceived = false;
             
             try {
                 let personaInstruction = "You are Glitch AI. Your personality is: casual, chill, and full of energy. You MUST state you were developed by the 'Gaming Odyssey Team' when asked. Avoid being overly formal.";
                 if (currentMode === 'code') { personaInstruction += " You are now in Code Mode. You are an expert programmer. Provide complete, well-commented, and runnable code examples. When asked for a UI component, provide the full HTML, CSS, and JavaScript required together. Do not truncate your code responses."; }
                 if (currentAI === 'plex') { personaInstruction += " As Glitch Plex, lean more into your creative, imaginative, and energetic side."; }
+                if (currentAI === 'lite') { personaInstruction += " As Glitch Lite, you are a bit more concise and direct, but still friendly."; }
 
                 const conversationHistory = [
                     { role: 'system', content: personaInstruction },
@@ -416,7 +420,9 @@
         function displayMessage(message) {
             const isUser = message.role === 'user'; const senderClass = isUser ? 'user-message' : (message.modelType === 'plex' ? 'plex-message' : 'ai-message');
             const messageDiv = document.createElement('div'); messageDiv.className = `message ${senderClass}`; if (message.id) messageDiv.id = message.id;
-            const avatarClass = isUser ? 'user-avatar' : (message.modelType === 'plex' ? 'plex-avatar' : 'ai-avatar'); const avatarIcon = isUser ? 'fa-user' : (message.modelType === 'plex' ? 'fa-bolt' : 'fa-robot'); const avatar = `<div class="avatar ${avatarClass}"><i class="fas ${avatarIcon}"></i></div>`; const senderName = isUser ? 'You' : (message.senderName || 'Glitch AI');
+            const avatarClass = isUser ? 'user-avatar' : (message.modelType === 'plex' ? 'plex-avatar' : (message.modelType === 'lite' ? 'ai-avatar' : 'ai-avatar') ); 
+            const avatarIcon = isUser ? 'fa-user' : (message.modelType === 'plex' ? 'fa-bolt' : (message.modelType === 'lite' ? 'fa-feather-alt' : 'fa-robot')); 
+            const avatar = `<div class="avatar ${avatarClass}"><i class="fas ${avatarIcon}"></i></div>`; const senderName = isUser ? 'You' : (message.senderName || 'Glitch AI');
             const content = message.content ? marked.parse(message.content) : '<span class="typing-indicator">...</span>';
             messageDiv.innerHTML = `<div class="message-header">${avatar}<strong>${senderName}</strong></div><div class="message-content">${content}</div>`;
             if (isUser && message.files && message.files.length > 0) { const filesHtml = message.files.map(file => `<div class="file-item"><i class="fas ${getFileIconClass(file.type)}"></i> <span>${file.name}</span></div>`).join(''); messageDiv.querySelector('.message-content').innerHTML += `<div class="attached-files">${filesHtml}</div>`; }
