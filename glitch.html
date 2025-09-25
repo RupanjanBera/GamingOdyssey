@@ -6,16 +6,10 @@
     <title>Glitch - Advanced AI Assistant</title>
     <link rel="icon" type="image/png" href="https://placehold.co/32x32/4a3b8a/ffffff?text=G">
     
-    <!-- ICONS & FONTS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     
-    <!-- LIBRARIES FOR NEW FEATURES -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script> <!-- Markdown Rendering -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"> <!-- Code Syntax Highlighting -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script> <!-- PDF Reading -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script> <!-- PDF Export -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"> <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script> <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script> <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <style>
         :root {
@@ -142,7 +136,7 @@
         .chat-action-btn { background: transparent; border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-light); padding: 8px 12px; cursor: pointer; transition: all 0.3s; font-size: 0.9rem; }
         .chat-action-btn:hover { border-color: var(--neon-blue); }
 
-        .messages { flex: 1; padding: 20px; overflow-y: auto; /* max-height removed for true flex scaling */ }
+        .messages { flex: 1; padding: 20px; overflow-y: auto; }
         .message { margin-bottom: 20px; padding: 15px; border-radius: 12px; max-width: 90%; position: relative; animation: fadeIn 0.5s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .user-message { background: var(--user-message-bg); margin-left: auto; border: 1px solid var(--border-color); }
@@ -197,6 +191,139 @@
         }
         @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
+        /* --- REVAMPED SPLASH SCREEN STYLES --- */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: var(--space-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            font-family: 'Courier New', monospace;
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.8s ease-in-out, visibility 0.8s;
+            overflow: hidden;
+        }
+
+        #splash-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .splash-stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 200%;
+            height: 200%;
+            background-image: radial-gradient(var(--star-color) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.4;
+            animation: stars-pan 120s linear infinite;
+        }
+        
+        #splash-screen::after {
+            content: ' ';
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 3px, 5px 100%;
+            pointer-events: none;
+            animation: scanline-anim 2s linear infinite;
+        }
+
+        .glitch-container {
+            text-align: center;
+            color: var(--text-light);
+            position: relative;
+            z-index: 10;
+        }
+
+        .glitch-main {
+            position: relative;
+            font-size: clamp(3rem, 10vw, 6rem);
+            font-weight: 700;
+            text-transform: uppercase;
+            animation: glitch-flicker 3s infinite;
+        }
+
+        .glitch-main::before,
+        .glitch-main::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--space-dark);
+            overflow: hidden;
+            clip-path: inset(50% 50% 50% 50%);
+        }
+
+        .glitch-main::before {
+            left: -2px;
+            text-shadow: 2px 0 var(--neon-pink);
+            animation: noise-anim-1 4s infinite linear alternate-reverse, glitch-effect 4s infinite;
+        }
+
+        .glitch-main::after {
+            left: 2px;
+            text-shadow: -2px 0 var(--neon-blue);
+            animation: noise-anim-2 4s infinite linear alternate-reverse, glitch-effect 4s infinite reverse;
+        }
+        
+        .glitch-subtitle {
+            font-size: clamp(0.8rem, 2vw, 1.1rem);
+            font-weight: 300;
+            letter-spacing: 2px;
+            margin-top: 15px;
+            opacity: 0;
+            animation: fade-in-up 2s ease-out 0.5s forwards;
+            color: rgba(230, 230, 255, 0.8);
+        }
+
+        @keyframes stars-pan {
+            from { transform: translate(0, 0); }
+            to { transform: translate(-50%, -50%); }
+        }
+
+        @keyframes noise-anim-1 {
+            0%{clip-path:inset(10% 0 85% 0)}10%{clip-path:inset(80% 0 5% 0)}20%{clip-path:inset(45% 0 45% 0)}30%{clip-path:inset(90% 0 2% 0)}40%{clip-path:inset(25% 0 70% 0)}50%{clip-path:inset(0 0 100% 0)}60%{clip-path:inset(60% 0 35% 0)}70%{clip-path:inset(15% 0 80% 0)}80%{clip-path:inset(75% 0 10% 0)}90%{clip-path:inset(40% 0 50% 0)}100%{clip-path:inset(95% 0 1% 0)}
+        }
+
+        @keyframes noise-anim-2 {
+            0%{clip-path:inset(90% 0 5% 0)}10%{clip-path:inset(20% 0 75% 0)}20%{clip-path:inset(65% 0 25% 0)}30%{clip-path:inset(5% 0 90% 0)}40%{clip-path:inset(50% 0 40% 0)}50%{clip-path:inset(100% 0 0 0)}60%{clip-path:inset(30% 0 60% 0)}70%{clip-path:inset(85% 0 10% 0)}80%{clip-path:inset(10% 0 85% 0)}90%{clip-path:inset(55% 0 30% 0)}100%{clip-path:inset(5% 0 92% 0)}
+        }
+
+        @keyframes glitch-flicker {
+            0%,100%{opacity:1;transform:none}33.1%{opacity:1;transform:none}33.2%{opacity:.8;transform:skewX(5deg)}33.3%{opacity:1;transform:none}66.1%{opacity:1;transform:none}66.2%{opacity:.9;transform:skewX(-5deg)}66.3%{opacity:1;transform:none}
+        }
+
+        @keyframes glitch-effect {
+            0%,100%{transform:translate(0,0)}10%{transform:translate(-2px,2px)}20%{transform:translate(2px,-2px)}30%{transform:translate(0,0)}40%{transform:translate(2px,2px)}50%{transform:translate(-2px,-2px)}60%{transform:translate(0,0)}70%{transform:translate(-2px,0)}80%{transform:translate(2px,0)}90%{transform:translate(0,0)}
+        }
+
+        @keyframes fade-in-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 0.8; transform: translateY(0); }
+        }
+        
+        @keyframes scanline-anim {
+            from { background-position: 0 0; }
+            to { background-position: 0 100%; }
+        }
+
         @media (max-width: 900px) {
             .container { 
                 flex-direction: column;
@@ -206,10 +333,10 @@
             .sidebar { 
                 flex: 0 0 auto;
                 width: 100%;
-                order: 1; /* Makes sidebar appear first on smaller screens */
+                order: 1; 
             }
             .chat-area {
-                order: 2; /* Chat appears after the sidebar */
+                order: 2; 
                 min-height: 60vh;
             }
             .logo-text { 
@@ -219,10 +346,10 @@
 
         @media (max-width: 600px) {
             html {
-                font-size: 15px; /* Adjust base font for smaller screens */
+                font-size: 15px;
             }
             .header-actions .api-status span {
-                display: none; /* Hide status text on small phones, keep the icon */
+                display: none; 
             }
             .sidebar {
                 padding: 15px;
@@ -235,19 +362,27 @@
                 padding: 12px;
             }
             .input-controls {
-                flex-wrap: wrap; /* Allow input controls to wrap onto the next line */
+                flex-wrap: wrap; 
             }
             .message-input {
-                flex-basis: 100%; /* Make input take full width */
-                order: 3; /* Position textarea below the buttons */
+                flex-basis: 100%; 
+                order: 3; 
             }
             .input-btn, .send-button {
-                flex-grow: 1; /* Allow buttons to share the available space */
+                flex-grow: 1; 
             }
         }
     </style>
 </head>
 <body>
+    <div id="splash-screen">
+        <div class="splash-stars"></div>
+        <div class="glitch-container">
+            <h1 class="glitch-main" data-text="Glitch AI">Glitch AI</h1>
+            <div class="glitch-subtitle">created and developed by Gaming Odyssey</div>
+        </div>
+    </div>
+
     <div class="stars"></div>
     <header>
         <div class="logo">
@@ -348,6 +483,14 @@
 
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
+            // --- SPLASH SCREEN LOGIC ---
+            const splashScreen = document.getElementById('splash-screen');
+            if (splashScreen) {
+                setTimeout(() => {
+                    splashScreen.classList.add('hidden');
+                }, 3800); // Hide after 3.8 seconds to allow animations to play out
+            }
+
             loadChatsFromStorage();
             setupEventListeners();
             
