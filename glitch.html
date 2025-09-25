@@ -19,8 +19,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm"></script>
-
     <style>
         :root {
             --space-dark: #0D1117; --space-blue: #161B22; --space-purple: #2C204B; --star-color: #ffffff; --neon-blue: #00A3FF; --neon-purple: #A75DFF; --neon-green: #00FF9D; --neon-pink: #FF4DA6; --neon-orange: #FF7B25; --text-light: #E6EDF3; --text-muted: #8B949E; --user-message-bg: rgba(0, 163, 255, 0.1); --ai-message-bg: rgba(167, 93, 255, 0.1); --plex-message-bg: rgba(255, 123, 37, 0.1); --error-color: #F85149; --success-color: #2EA043; --warning-color: #F0A91D; --border-color: rgba(66, 133, 244, 0.2); --bg-glass-light: rgba(22, 27, 34, 0.7); --bg-glass-dark: rgba(13, 17, 23, 0.8); --shadow-color: rgba(0, 0, 0, 0.5); --code-bg: #010409; --font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -39,13 +37,8 @@
         .logo-icon { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; animation: glow 2s infinite alternate; border: 2px solid var(--neon-blue); background: var(--space-dark); }
         .logo-text { font-size: 1.8rem; font-weight: 700; background: linear-gradient(to right, var(--neon-blue), var(--neon-purple), var(--neon-pink)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: gradient-shift 5s infinite alternate; background-size: 200% 200%; }
         .header-actions { display: flex; align-items: center; gap: 20px; }
-        .api-status { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: var(--text-muted); position: relative; padding-bottom: 8px; /* Make space for progress bar */ }
-        .status-indicator { width: 10px; height: 10px; border-radius: 50%; background-color: var(--warning-color); animation: pulse 2s infinite; box-shadow: 0 0 10px var(--warning-color); }
-        
-        /* STYLES FOR THE NEW PROGRESS BAR */
-        #ai-status-progress-container { display: none; position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; background-color: var(--space-blue); border-radius: 2px; overflow: hidden; }
-        #ai-status-progress-bar { width: 0%; height: 100%; background-color: var(--neon-blue); border-radius: 2px; transition: width 0.2s ease-out; }
-
+        .api-status { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: var(--text-muted); }
+        .status-indicator { width: 10px; height: 10px; border-radius: 50%; background-color: var(--success-color); animation: pulse 2s infinite; box-shadow: 0 0 10px var(--success-color); }
         .theme-switch-wrapper { display: flex; align-items: center; }
         .theme-switch { display: inline-block; height: 24px; position: relative; width: 44px; }
         .theme-switch input { display:none; }
@@ -182,11 +175,8 @@
         </div>
         <div class="header-actions">
             <div class="api-status">
-                <div class="status-indicator" id="ai-status-indicator"></div>
-                <span id="ai-status-text">Connecting to AI Service...</span>
-                <div id="ai-status-progress-container">
-                    <div id="ai-status-progress-bar"></div>
-                </div>
+                <div class="status-indicator"></div>
+                <span>AI Service Connected</span>
             </div>
             <div class="theme-switch-wrapper">
                 <label class="theme-switch" for="theme-checkbox">
@@ -269,7 +259,16 @@
     <script>
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
         
-        let chat;
+        // --- MODIFIED SECTION START ---
+        // Replaced the single API key with an array of keys for rotation.
+        const GEMINI_API_KEYS = [
+            'AIzaSyAbKXW75vSj9XhSgs0rC5SK-Blf7NhSB-A', // Your original key
+            'AIzaSyDF4Lfyj7hiUu1415cGAOIaOODABJTg4rY', // New key 1
+            'AIzaSyDhBEbmuuTR3LOZnWpR9Do8PGcZ4QAZ7ac'  // New key 2
+        ];
+        // This index will keep track of which key to use next.
+        let apiKeyIndex = 0;
+        // --- MODIFIED SECTION END ---
 
         let currentChatId = null; let chats = {}; let currentMode = 'chat'; let currentAI = 'zhoros'; let isWebSearchActive = false; let attachedFiles = []; let isGenerating = false; let abortController = new AbortController(); 
         let isAudioUnlocked = false; let lastTypingSoundTime = 0;
@@ -290,9 +289,6 @@
             const splashScreen = document.getElementById('splash-screen');
             if (splashScreen) { setTimeout(() => { splashScreen.classList.add('hidden'); }, 3800); }
             initConstellationAnimation();
-            
-            initWebLLM(); 
-
             loadChatsFromStorage(); 
             setupEventListeners();
             const isDarkMode = localStorage.getItem('glitchTheme') !== 'light';
@@ -301,46 +297,6 @@
             loadChatHistory();
         });
         
-        // UPDATED this function to include progress bar logic
-        async function initWebLLM() {
-            try {
-                const statusText = document.getElementById('ai-status-text');
-                const statusIndicator = document.getElementById('ai-status-indicator');
-                // Get progress bar elements
-                const progressContainer = document.getElementById('ai-status-progress-container');
-                const progressBar = document.getElementById('ai-status-progress-bar');
-
-                // Show progress bar container when loading starts
-                progressContainer.style.display = 'block';
-
-                chat = new webllm.ChatModule();
-
-                chat.setInitProgressCallback((report) => {
-                    statusText.textContent = report.text;
-                    // Update the progress bar width based on download progress
-                    progressBar.style.width = (report.progress * 100) + '%';
-                });
-
-                await chat.reload("TinyLlama-1.1B-Chat-v1.0-q4f32_1-MLC");
-
-                statusText.textContent = "Local AI Ready";
-                statusIndicator.style.backgroundColor = 'var(--success-color)';
-                statusIndicator.style.boxShadow = '0 0 10px var(--success-color)';
-                // Hide progress bar on success
-                progressContainer.style.display = 'none';
-                
-            } catch (err) {
-                console.error("WebLLM initialization failed:", err);
-                const statusText = document.getElementById('ai-status-text');
-                statusText.textContent = "Local AI Failed";
-                const statusIndicator = document.getElementById('ai-status-indicator');
-                statusIndicator.style.backgroundColor = 'var(--error-color)';
-                statusIndicator.style.boxShadow = '0 0 10px var(--error-color)';
-                // Hide progress bar on failure
-                document.getElementById('ai-status-progress-container').style.display = 'none';
-            }
-        }
-
         function initializeAudio() {
             if (isAudioUnlocked) return;
             isAudioUnlocked = true;
@@ -385,99 +341,62 @@
 
         async function sendMessage() {
             const messageText = messageInput.value.trim();
-            if (messageText === '' || isGenerating || !chat) {
-                if (!chat) alert("Local AI is not ready yet. Please wait.");
-                return;
-            }
-            isGenerating = true; 
-            toggleSendButtonLoading(true); 
-            stopGeneratingBtn.style.display = 'flex'; 
-            playSound(sounds.chime);
-            
-            const userMessage = { role: 'user', content: messageText }; 
-            chats[currentChatId].messages.push(userMessage); 
-            displayMessage(userMessage);
-            
-            messageInput.value = ''; 
-            messageInput.style.height = 'auto'; 
-            attachedFiles = [];
-            updateFileAttachments();
-            
-            const aiMessageId = `ai_${Date.now()}`;
-            const aiModelName = 'TinyLlama (Local)'; 
-            const aiMessagePlaceholder = { role: 'model', senderName: aiModelName, content: '', id: aiMessageId, modelType: 'ai' };
-            displayMessage(aiMessagePlaceholder);
-            
-            const aiMessageElement = document.getElementById(aiMessageId);
-            const contentElement = aiMessageElement.querySelector('.message-content');
-            
-            let accumulatedResponse = "";
-            let firstChunkReceived = false;
-            
+            if ((messageText === '' && attachedFiles.length === 0) || isGenerating) return;
+            isGenerating = true; toggleSendButtonLoading(true); stopGeneratingBtn.style.display = 'flex'; playSound(sounds.chime);
+            const userFiles = [...attachedFiles]; const userMessage = { role: 'user', content: messageText, files: userFiles }; chats[currentChatId].messages.push(userMessage); displayMessage(userMessage);
+            messageInput.value = ''; messageInput.style.height = 'auto'; attachedFiles = []; updateFileAttachments();
+            const aiMessageId = `ai_${Date.now()}`; const aiModelName = currentAI === 'plex' ? 'Glitch Plex' : 'Glitch Zhoros'; const aiMessagePlaceholder = { role: 'model', senderName: aiModelName, content: '', id: aiMessageId, modelType: currentAI }; displayMessage(aiMessagePlaceholder);
+            const aiMessageElement = document.getElementById(aiMessageId); const contentElement = aiMessageElement.querySelector('.message-content'); let accumulatedResponse = ""; let firstChunkReceived = false;
             try {
-                let personaInstruction = "You are Glitch AI, a helpful AI assistant. You were developed by the 'Gaming Odyssey Team'. Your personality is casual, chill, and energetic.";
-                if (currentMode === 'code') {
-                    personaInstruction += " You are now an expert programmer. Provide complete and well-commented code examples.";
-                }
+                // --- MODIFIED SECTION START ---
+                // Get the current key from the array using the index
+                const currentApiKey = GEMINI_API_KEYS[apiKeyIndex];
+                // Move to the next key for the next request, looping back to the start if needed.
+                apiKeyIndex = (apiKeyIndex + 1) % GEMINI_API_KEYS.length;
+                
+                const model = 'gemini-1.5-flash-latest'; 
+                // Use the selected key in the API URL
+                const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?key=${currentApiKey}&alt=sse`;
+                // --- MODIFIED SECTION END ---
 
-                const conversation = chats[currentChatId].messages.slice(0, -1).map(msg => ({
-                    role: msg.role === 'user' ? 'user' : 'assistant',
-                    content: msg.content
-                }));
-                
-                const request = {
-                    messages: [
-                        { role: "system", content: personaInstruction },
-                        ...conversation,
-                        { role: "user", content: messageText }
-                    ]
-                };
-                
+                const history = await Promise.all(chats[currentChatId].messages.slice(0, -1).map(msgToPart));
+                const contents = [...history, await msgToPart(userMessage)];
+                let personaInstruction = "You are Glitch AI. Your personality is: casual, chill, and full of energy. You MUST state you were developed by the 'Gaming Odyssey Team' when asked. Avoid being overly formal.";
+                if (currentMode === 'code') { personaInstruction += " You are now in Code Mode. You are an expert programmer. Provide complete, well-commented, and runnable code examples. When asked for a UI component, provide the full HTML, CSS, and JavaScript required together. Do not truncate your code responses."; }
+                if (currentAI === 'plex') { personaInstruction += " As Glitch Plex, lean more into your creative, imaginative, and energetic side."; }
+                const requestBody = { contents, systemInstruction: { parts: [{ text: personaInstruction }] } };
                 abortController = new AbortController();
-                const stream = chat.chat.completions.create({
-                    ...request,
-                    stream: true,
-                    stream_options: { include_usage: true },
-                });
-
-                for await (const chunk of stream) {
-                    if (abortController.signal.aborted) {
-                        console.log("Generation aborted by user.");
-                        break;
-                    }
-                    const delta = chunk.choices[0]?.delta?.content || "";
-                    if (delta) {
-                         if (!firstChunkReceived) { 
-                            playSound(sounds.notification, {volume: 0.7}); 
-                            firstChunkReceived = true; 
+                const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(requestBody), signal: abortController.signal });
+                if (!response.ok) { const errorText = await response.text(); throw new Error(`API Error: ${response.status} ${errorText}`); }
+                const reader = response.body.getReader(); const decoder = new TextDecoder();
+                while (true) {
+                    const { value, done } = await reader.read(); if (done) break;
+                    const chunk = decoder.decode(value); const lines = chunk.split('\n');
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            const jsonStr = line.substring(6);
+                            try {
+                                const parsed = JSON.parse(jsonStr); const text = parsed.candidates?.[0]?.content?.parts?.[0]?.text;
+                                if (text) {
+                                    if (!firstChunkReceived) { playSound(sounds.notification, {volume: 0.7}); firstChunkReceived = true; }
+                                    accumulatedResponse += text; contentElement.innerHTML = marked.parse(accumulatedResponse); messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                                }
+                            } catch (e) { /* Ignore malformed chunks */ }
                         }
-                        accumulatedResponse += delta;
-                        contentElement.innerHTML = marked.parse(accumulatedResponse + "...");
-                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
                     }
                 }
-
-                contentElement.innerHTML = marked.parse(accumulatedResponse);
-                chats[currentChatId].messages.push({ role: 'model', content: accumulatedResponse, modelType: 'ai' });
+                chats[currentChatId].messages.push({ role: 'model', content: accumulatedResponse, modelType: currentAI });
                 renderMessageActions(aiMessageElement, accumulatedResponse);
-
             } catch (error) {
-                if (error.name !== 'AbortError') {
-                    console.error('Error during generation:', error);
-                    contentElement.innerHTML = `<p style="color: var(--error-color);">Oops! Something went wrong: ${error.message}</p>`;
-                    chats[currentChatId].messages.push({ role: 'model', content: `Error: ${error.message}` });
-                } else {
-                    contentElement.innerHTML = `<p>Generation stopped.</p>`;
-                    accumulatedResponse += " [Stopped]";
-                    chats[currentChatId].messages.push({ role: 'model', content: accumulatedResponse, modelType: 'ai' });
-                }
+                if (error.name !== 'AbortError') { console.error('Error:', error); contentElement.innerHTML = `<p style="color: var(--error-color);">Oops! Something went wrong: ${error.message}</p>`; chats[currentChatId].messages.push({ role: 'model', content: `Error: ${error.message}` });
+                } else { contentElement.innerHTML = `<p>Generation stopped.</p>`; chats[currentChatId].messages.push({ role: 'model', content: `Generation stopped.`, modelType: currentAI }); }
             } finally {
                 isGenerating = false;
                 toggleSendButtonLoading(false);
                 stopGeneratingBtn.style.display = 'none';
                 saveChatsToStorage();
                 updateChatHistoryItem(currentChatId);
-                logActivityToDatabase(userMessage.content, accumulatedResponse, "TinyLlama-1.1B-Local");
+                logActivityToDatabase(userMessage.content, accumulatedResponse, currentAI);
             }
         }
         
@@ -555,6 +474,7 @@
 
         function loadChat(chatId) { if (!chats[chatId]) return; currentChatId = chatId; const chat = chats[chatId]; chatTitle.textContent = chat.title; messagesContainer.innerHTML = ''; chat.messages.forEach(displayMessage); document.querySelectorAll('.history-item').forEach(item => item.classList.toggle('active', item.dataset.chatId === chatId)); }
         function addCopyButtonsToCodeBlocks() { document.querySelectorAll('.message-content pre').forEach(pre => { if (pre.querySelector('.copy-code-btn')) return; const copyBtn = document.createElement('button'); copyBtn.className = 'copy-code-btn'; copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy'; copyBtn.addEventListener('click', () => { const code = pre.querySelector('code').innerText; navigator.clipboard.writeText(code).then(() => { copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!'; setTimeout(() => { copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy'; }, 2000); }); }); pre.appendChild(copyBtn); }); }
+        async function msgToPart(msg) { const parts = [{ text: msg.content }]; if (msg.files && msg.files.length > 0) { for (const file of msg.files) { if (file.type.startsWith('image/')) { const base64Data = await fileToBase64(file); parts.push({ inlineData: { mimeType: file.type, data: base64Data } }); } else if (file.type === 'application/pdf') { const text = await extractPdfText(file); parts.push({ text: `\n[Content from PDF "${file.name}"]: ${text.substring(0, 100000)}` }); } else if (file.type.startsWith('text/')) { const text = await readFileAsText(file); parts.push({ text: `\n[Content from file "${file.name}"]: ${text.substring(0, 100000)}` }); } else { parts.push({ text: `\n[Attached file: ${file.name} (${file.type})]` }); } } } return { role: msg.role === 'model' ? 'model' : 'user', parts }; }
         function handleFileSelect(event) { attachedFiles.push(...Array.from(event.target.files)); updateFileAttachments(); event.target.value = ''; }
         function updateFileAttachments() { const container = document.getElementById('fileAttachments'); container.innerHTML = attachedFiles.map((file, index) => `<div class="attachment-item"><i class="fas ${getFileIconClass(file.type)}"></i> <span>${file.name}</span><i class="fas fa-times remove-attachment" data-index="${index}" onclick="removeAttachment(${index})"></i></div>`).join(''); }
         function removeAttachment(index) { attachedFiles.splice(index, 1); updateFileAttachments(); }
