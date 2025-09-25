@@ -294,7 +294,6 @@
 
             statusElement.style.display = 'block';
 
-            // Crucial Check for WebGPU support
             if (!navigator.gpu) {
                 const errorMsg = "WebGPU is not supported by your browser. Please use the latest version of Chrome or Edge to enable local AI.";
                 statusIndicator.style.backgroundColor = 'var(--error-color)';
@@ -306,7 +305,7 @@
             }
 
             try {
-                const engine = await webllm.CreateMLCEngine("Llama-3-8B-Instruct-q4f16_1", {
+                const engine = await webllm.CreateMLCEngine("Llama-2-7b-chat-hf-q4f16_1", {
                     initProgressCallback: (progress) => {
                         apiStatusText.textContent = progress.text;
                         statusElement.textContent = progress.text;
@@ -382,8 +381,7 @@
                 let personaInstruction = "You are Glitch AI. Your personality is: casual, chill, and full of energy. You were developed by the 'Gaming Odyssey Team'. Avoid being overly formal.";
                 if (currentMode === 'code') { personaInstruction += " You are now in Code Mode, an expert programmer. Provide complete, well-commented, and runnable code examples. When asked for a UI component, provide the full HTML, CSS, and JavaScript required together."; }
                 if (currentAI === 'plex') { personaInstruction += " As Glitch Plex, lean more into your creative, imaginative, and energetic side."; }
-
-                // Note: File handling for local models is complex. This basic implementation describes the files.
+                
                 let combinedContent = messageText;
                 if (userMessage.files.length > 0) {
                     const fileDescriptions = userMessage.files.map(f => `[Attached file: ${f.name} of type ${f.type}]`).join("\n");
@@ -428,10 +426,7 @@
                 updateChatHistoryItem(currentChatId);
             }
         }
-
-        // --- All other utility functions (displayMessage, renderMessageActions, etc.) remain largely the same as your previous version ---
-        // I have included them below for completeness without modification markers.
-
+        
         function playSound(soundElement, options = {}) { if (soundElement && isAudioUnlocked) { soundElement.currentTime = 0; soundElement.volume = options.volume || 1.0; soundElement.play().catch(e => {}); } }
         function initConstellationAnimation() { const canvas = document.getElementById('constellation-canvas'); if (!canvas) return; const ctx = canvas.getContext('2d'); let particles = []; const particleCount = 70; const maxDistance = 100; function resizeCanvas() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; } resizeCanvas(); window.addEventListener('resize', resizeCanvas); for (let i = 0; i < particleCount; i++) { particles.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, vx: Math.random() * 0.5 - 0.25, vy: Math.random() * 0.5 - 0.25 }); } function draw() { if (!ctx) return; ctx.clearRect(0, 0, canvas.width, canvas.height); const color = document.body.classList.contains('light-mode') ? 'rgba(0, 163, 255, 0.4)' : 'rgba(0, 163, 255, 0.3)'; ctx.fillStyle = color; ctx.strokeStyle = color; particles.forEach(p => { ctx.beginPath(); ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2); ctx.fill(); p.x += p.vx; p.y += p.vy; if (p.x < 0 || p.x > canvas.width) p.vx *= -1; if (p.y < 0 || p.y > canvas.height) p.vy *= -1; }); for (let i = 0; i < particles.length; i++) { for (let j = i + 1; j < particles.length; j++) { const dist = Math.sqrt(Math.pow(particles[i].x - particles[j].x, 2) + Math.pow(particles[i].y - particles[j].y, 2)); if (dist < maxDistance) { ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.lineWidth = 1 - dist / maxDistance; ctx.stroke(); } } } requestAnimationFrame(draw); } draw(); }
         function displayMessage(message) {
