@@ -345,7 +345,7 @@
             
             try {
                 // 1. Updated the model and API URL
-                const model = 'gemini-2.0-flash';
+                const model = 'gemini-2.5-pro';
                 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
                 
                 const history = await Promise.all(chats[currentChatId].messages.slice(0, -1).map(msgToPart));
@@ -553,4 +553,5 @@
     </script>
 </body>
 </html>
+
 
