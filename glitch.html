@@ -200,13 +200,15 @@
                 </div>
             </div>
             <div>
-                 <h4 class="sidebar-heading">Modes</h4>
-                <div class="mode-selector">
-                    <button class="mode-btn active" data-mode="chat">Chat</button>
-                    <button class="mode-btn" data-mode="code">Code</button>
-                    <button class="mode-btn" data-mode="study">Study</button>
-                    <button class="mode-btn" data-mode="creative">Creative</button>
-                </div>
+                 <h4 class="sidebar-heading">Settings</h4>
+                 <div class="sidebar-setting">
+                    <label for="temperatureSlider">Temperature: <span id="temperatureValue">1.0</span></label>
+                    <input type="range" id="temperatureSlider" min="0" max="2" step="0.1" value="1">
+                 </div>
+                 <div class="sidebar-setting">
+                    <label for="topPSlider">Top-P: <span id="topPValue">0.95</span></label>
+                    <input type="range" id="topPSlider" min="0" max="1" step="0.05" value="0.95">
+                 </div>
             </div>
              <h4 class="sidebar-heading">History</h4>
             <div class="chat-history" id="chatHistory"></div>
@@ -257,15 +259,31 @@
     <audio id="hover-sound" src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_bb630cc098.mp3" preload="auto"></audio>
 
     <script>
+        // Inject new styles for settings
+        const style = document.createElement('style');
+        style.textContent = `
+            .sidebar-setting { margin-bottom: 15px; }
+            .sidebar-setting label { font-size: 0.9rem; color: var(--text-muted); display: block; margin-bottom: 5px; }
+            .sidebar-setting input[type="range"] { width: 100%; cursor: pointer; }
+        `;
+        document.head.appendChild(style);
+        
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
         
-        const GEMINI_API_KEY = 'AIzaSyB0uMxMuKtpfQqRF-wGiarSvke72yQnsUA'; // WARNING: For development only. Use a backend proxy in production.
+        // WARNING: For development only. Use a backend proxy in production.
+        const GEMINI_API_KEY = 'AIzaSyB0uMxMuKtpfQqRF-wGiarSvke72yQnsUA'; 
 
         let currentChatId = null; let chats = {}; let currentMode = 'chat'; let currentAI = 'zhoros'; let isWebSearchActive = false; let attachedFiles = []; let isGenerating = false; let abortController = new AbortController(); 
         let isAudioUnlocked = false; let lastTypingSoundTime = 0;
         
         const messageInput = document.getElementById('messageInput'); const sendButton = document.getElementById('sendButton'); const messagesContainer = document.getElementById('messages'); const chatHistory = document.getElementById('chatHistory'); const newChatBtn = document.getElementById('newChatBtn'); const modeButtons = document.querySelectorAll('.mode-btn'); const aiOptions = document.querySelectorAll('.ai-option'); const webSearchBtn = document.getElementById('webSearchBtn'); const chatTitle = document.getElementById('chatTitle'); const fileInput = document.getElementById('fileInput'); const stopGeneratingBtn = document.getElementById('stopGeneratingBtn'); const themeCheckbox = document.getElementById('theme-checkbox');
         const previewArea = document.getElementById('previewArea'); const previewFrame = document.getElementById('preview-frame');
+        
+        // NEW: Add elements for generation controls
+        const temperatureSlider = document.getElementById('temperatureSlider');
+        const topPSlider = document.getElementById('topPSlider');
+        const temperatureValue = document.getElementById('temperatureValue');
+        const topPValue = document.getElementById('topPValue');
         
         const sounds = {
             glitch: document.getElementById('glitch-sound'),
@@ -322,6 +340,10 @@
             sendButton.addEventListener('click', sendMessage); newChatBtn.addEventListener('click', createNewChat); webSearchBtn.addEventListener('click', toggleWebSearch); modeButtons.forEach(btn => btn.addEventListener('click', () => setMode(btn.dataset.mode))); aiOptions.forEach(opt => opt.addEventListener('click', () => setAI(opt.dataset.ai))); document.getElementById('clearChatBtn').addEventListener('click', clearCurrentChat); document.getElementById('exportChatBtn').addEventListener('click', exportCurrentChatAsPDF); document.getElementById('fileInputBtn').addEventListener('click', () => fileInput.click()); fileInput.addEventListener('change', handleFileSelect); stopGeneratingBtn.addEventListener('click', handleStopGeneration);
             themeCheckbox.addEventListener('change', () => { document.body.classList.toggle('light-mode', !themeCheckbox.checked); localStorage.setItem('glitchTheme', !themeCheckbox.checked ? 'light' : 'dark'); });
             
+            // NEW: Event listeners for sliders
+            temperatureSlider.addEventListener('input', () => temperatureValue.textContent = parseFloat(temperatureSlider.value).toFixed(2));
+            topPSlider.addEventListener('input', () => topPValue.textContent = parseFloat(topPSlider.value).toFixed(2));
+            
             document.querySelectorAll('button, .ai-option, .mode-btn, .history-item, .slider, .msg-action-btn, .remove-attachment').forEach(el => {
                 el.addEventListener('click', () => playSound(sounds.click, { volume: 0.5 }));
                 el.addEventListener('mouseenter', () => playSound(sounds.hover, { volume: 0.3 }));
@@ -334,48 +356,111 @@
         // ==================== UPDATED FUNCTION STARTS HERE =================== //
         // ================================================================= //
 
+        // NEW: Centralized function for better system instructions
+        function getSystemInstruction(mode, isImageRequest = false) {
+            const baseInstruction = `You are Glitch AI, developed by the 'Gaming Odyssey Team'. Your personality is energetic, helpful, and a bit quirky. Always be friendly and engaging.`;
+            
+            if (isImageRequest) {
+                return `You are an expert SVG and CSS artist. The user wants an image. Respond ONLY with a single HTML code block containing a complete, self-contained SVG that artistically represents the user's prompt. Do not add any explanation or text outside the code block. Make the SVG visually appealing and complex. Ensure the SVG is responsive by using a viewBox attribute.`;
+            }
+
+            switch (mode) {
+                case 'code':
+                    return baseInstruction + ` You are now in **Code Mode**. You are an expert programmer with years of experience in all languages. When a user asks for code, provide complete, runnable, and well-commented examples. For UI components, provide the full HTML, CSS, and JavaScript required. **Never truncate your code responses.** Always aim to provide the full, working solution, even if it is very long.`;
+                case 'study':
+                    return baseInstruction + ` You are now in **Study Mode**. Act as a knowledgeable and patient tutor. Break down complex topics into simple, easy-to-understand concepts. Use analogies, examples, and ask questions to check for understanding. Be encouraging and supportive.`;
+                case 'creative':
+                    return baseInstruction + ` You are now in **Creative Mode**. Act as a brainstorming partner and creative muse. Generate imaginative ideas, write stories, create poetry, and think outside the box. Be bold, expressive, and never afraid to suggest something unconventional.`;
+                case 'chat':
+                default:
+                    return baseInstruction + ` You are in **Chat Mode**. Be a conversational partner. Be casual, ask questions, and share interesting facts. Your goal is to have a friendly and engaging conversation.`;
+            }
+        }
+        
         async function sendMessage() {
             const messageText = messageInput.value.trim();
             if ((messageText === '' && attachedFiles.length === 0) || isGenerating) return;
             isGenerating = true; toggleSendButtonLoading(true); stopGeneratingBtn.style.display = 'flex'; playSound(sounds.chime);
+            
             const userFiles = [...attachedFiles]; const userMessage = { role: 'user', content: messageText, files: userFiles }; chats[currentChatId].messages.push(userMessage); displayMessage(userMessage);
             messageInput.value = ''; messageInput.style.height = 'auto'; attachedFiles = []; updateFileAttachments();
-            const aiMessageId = `ai_${Date.now()}`; const aiModelName = currentAI === 'plex' ? 'Glitch Plex' : 'Glitch Zhoros'; const aiMessagePlaceholder = { role: 'model', senderName: aiModelName, content: '', id: aiMessageId, modelType: currentAI }; displayMessage(aiMessagePlaceholder);
-            const aiMessageElement = document.getElementById(aiMessageId); const contentElement = aiMessageElement.querySelector('.message-content'); let accumulatedResponse = "";
             
+            const aiMessageId = `ai_${Date.now()}`; const aiModelName = currentAI === 'plex' ? 'Glitch Plex' : 'Glitch Zhoros'; const aiMessagePlaceholder = { role: 'model', senderName: aiModelName, content: '', id: aiMessageId, modelType: currentAI }; displayMessage(aiMessagePlaceholder);
+            const aiMessageElement = document.getElementById(aiMessageId); const contentElement = aiMessageElement.querySelector('.message-content');
+            contentElement.innerHTML = '<span class="typing-indicator">...</span>'; // Show typing indicator immediately
+            let accumulatedResponse = "";
+
             try {
-                // 1. Updated the model and API URL
-                const model = 'gemini-2.5-pro';
-                const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
+                const model = 'gemini-1.5-pro-latest'; // Using the latest powerful model
+                // MODIFIED: Switched to the streaming endpoint
+                const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?alt=sse&key=${GEMINI_API_KEY}`;
                 
                 const history = await Promise.all(chats[currentChatId].messages.slice(0, -1).map(msgToPart));
                 const contents = [...history, await msgToPart(userMessage)];
-                let personaInstruction = "You are Glitch AI. Your personality is: casual, chill, and full of energy. You MUST state you were developed by the 'Gaming Odyssey Team' when asked. Avoid being overly formal.";
-                if (currentMode === 'code') { personaInstruction += " You are now in Code Mode. You are an expert programmer. Provide complete, well-commented, and runnable code examples. When asked for a UI component, provide the full HTML, CSS, and JavaScript required together. Do not truncate your code responses."; }
-                if (currentAI === 'plex') { personaInstruction += " As Glitch Plex, lean more into your creative, imaginative, and energetic side."; }
-                const requestBody = { contents, systemInstruction: { parts: [{ text: personaInstruction }] } };
+
+                // NEW: Image generation check
+                const isImageRequest = currentMode === 'creative' && /image|generate|draw|create a picture of/i.test(messageText);
+                const systemInstruction = getSystemInstruction(currentMode, isImageRequest);
+                
+                const requestBody = {
+                    contents,
+                    systemInstruction: { parts: [{ text: systemInstruction }] },
+                    // NEW: Added generation config from sliders
+                    generationConfig: {
+                        temperature: parseFloat(temperatureSlider.value),
+                        topP: parseFloat(topPSlider.value),
+                    }
+                };
+
                 abortController = new AbortController();
                 
                 const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(requestBody), signal: abortController.signal });
                 
                 if (!response.ok) { const errorText = await response.text(); throw new Error(`API Error: ${response.status} ${errorText}`); }
                 
-                // 2. Replaced streaming logic with non-streaming (unary) response handling
-                const responseData = await response.json();
-                const text = responseData.candidates?.[0]?.content?.parts?.[0]?.text;
+                // MODIFIED: Complete rewrite of response handling for streaming
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let firstChunk = true;
 
-                if (text) {
-                    playSound(sounds.notification, {volume: 0.7});
-                    accumulatedResponse = text;
-                    contentElement.innerHTML = marked.parse(accumulatedResponse);
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                } else {
-                    accumulatedResponse = "Sorry, I couldn't process that request.";
-                    contentElement.innerHTML = `<p style="color: var(--warning-color);">${accumulatedResponse}</p>`;
+                while (true) {
+                    const { value, done } = await reader.read();
+                    if (done) break;
+
+                    const chunk = decoder.decode(value);
+                    const lines = chunk.split('\n');
+                    
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            if (firstChunk) {
+                                contentElement.innerHTML = ''; // Clear typing indicator
+                                playSound(sounds.notification, { volume: 0.4 });
+                                firstChunk = false;
+                            }
+                            const jsonStr = line.substring(6);
+                            try {
+                                const data = JSON.parse(jsonStr);
+                                const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                                if (text) {
+                                    accumulatedResponse += text;
+                                    contentElement.innerHTML = marked.parse(accumulatedResponse);
+                                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                                }
+                            } catch (e) {
+                                console.error("Could not parse stream chunk:", jsonStr);
+                            }
+                        }
+                    }
                 }
                 
+                if (firstChunk) { // Handle cases where stream is empty
+                     accumulatedResponse = "Sorry, I couldn't generate a response for that.";
+                     contentElement.innerHTML = `<p style="color: var(--warning-color);">${accumulatedResponse}</p>`;
+                }
+
                 chats[currentChatId].messages.push({ role: 'model', content: accumulatedResponse, modelType: currentAI });
                 renderMessageActions(aiMessageElement, accumulatedResponse);
+
             } catch (error) {
                 if (error.name !== 'AbortError') { console.error('Error:', error); contentElement.innerHTML = `<p style="color: var(--error-color);">Oops! Something went wrong: ${error.message}</p>`; chats[currentChatId].messages.push({ role: 'model', content: `Error: ${error.message}` });
                 } else { contentElement.innerHTML = `<p>Generation stopped.</p>`; chats[currentChatId].messages.push({ role: 'model', content: `Generation stopped.`, modelType: currentAI }); }
@@ -411,57 +496,65 @@
             messageElement.insertAdjacentHTML('afterbegin', actionsHTML);
             
             if (content && content.includes('```')) {
-                const runBtn = document.createElement('button');
-                runBtn.className = 'run-code-btn';
-                runBtn.innerHTML = '<i class="fas fa-play"></i> Run Code';
-                runBtn.onclick = () => runCodeInPreview(content);
-                messageElement.querySelector('.message-content').appendChild(runBtn);
+                messageElement.querySelectorAll('.message-content pre').forEach(pre => {
+                    if (pre.nextElementSibling && pre.nextElementSibling.classList.contains('run-code-btn')) return;
+                    const runBtn = document.createElement('button');
+                    runBtn.className = 'run-code-btn';
+                    runBtn.innerHTML = '<i class="fas fa-play"></i> Run Code';
+                    runBtn.onclick = () => runCodeInPreview(pre.innerText);
+                    pre.insertAdjacentElement('afterend', runBtn);
+                });
             }
             hljs.highlightAll(); addCopyButtonsToCodeBlocks();
         }
 
-        // UPDATED: This function sends data to your Google Sheet
         async function logActivityToDatabase(userPrompt, aiResponse, model) {
             const scriptURL = "[https://script.google.com/macros/s/AKfycbyOH5sopxoCxR53aNP_WhI5seGOo0W41g3TEiwK-v0dhb2sgmQgCkLxc0C5_BJZmwK2Kw/exec](https://script.google.com/macros/s/AKfycbyOH5sopxoCxR53aNP_WhI5seGOo0W41g3TEiwK-v0dhb2sgmQgCkLxc0C5_BJZmwK2Kw/exec)";
-
-            const logData = {
-                prompt: userPrompt,
-                response: aiResponse,
-                model: model
-            };
-
+            const logData = { prompt: userPrompt, response: aiResponse, model: model };
             try {
-                await fetch(scriptURL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(logData)
-                });
-            } catch (error) {
-                console.error("Error sending log to Google Sheet:", error);
-            }
+                await fetch(scriptURL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(logData), mode: 'no-cors' });
+            } catch (error) { console.error("Error sending log to Google Sheet:", error); }
         }
 
-        function runCodeInPreview(markdown) {
-            const code = extractCode(markdown);
-            const source = `<!DOCTYPE html><html><head><style>${code.css}</style></head><body>${code.html}<script>${code.javascript}<\/script></body></html>`;
+        function runCodeInPreview(codeBlockContent) {
+            previewFrame.srcdoc = `<!DOCTYPE html><html><body><p>Loading preview...</p></body></html>`;
+            const code = extractCode(codeBlockContent);
+            const source = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <style>
+                        body { font-family: sans-serif; background-color: #f0f0f0; color: #333; margin: 0; padding: 1em; }
+                        ${code.css}
+                    </style>
+                </head>
+                <body>
+                    ${code.html}
+                    <script>${code.javascript}<\/script>
+                </body>
+                </html>
+            `;
             previewFrame.srcdoc = source;
             if (previewArea.classList.contains('hidden')) {
-                alert("Code running in preview panel. Switch to 'Code' mode to see it!");
+                setMode('code'); // Automatically switch to code mode to show the preview
+                alert("Switched to Code Mode to display live preview.");
             }
         }
         
-        function extractCode(markdown) {
+        function extractCode(content) {
             const codeBlocks = { html: '', css: '', javascript: '' };
-            const regex = /```(\w+)\n([\s\S]*?)```/g;
+            const fullMarkdown = '```' + content.replace(/```/g, '') + '```';
+            const regex = /```(\w+)?\n([\s\S]*?)```/g;
             let match;
-            while ((match = regex.exec(markdown)) !== null) {
-                const lang = match[1].toLowerCase();
+            while ((match = regex.exec(fullMarkdown)) !== null) {
+                const lang = (match[1] || 'html').toLowerCase(); // Default to HTML if no lang is specified
                 const code = match[2];
-                if (['html', 'xml'].includes(lang)) { codeBlocks.html += code + '\n'; }
+                if (['html', 'xml', 'svg'].includes(lang)) { codeBlocks.html += code + '\n'; }
                 else if (lang === 'css') { codeBlocks.css += code + '\n'; }
                 else if (['js', 'javascript'].includes(lang)) { codeBlocks.javascript += code + '\n'; }
+            }
+            if (!codeBlocks.html && !codeBlocks.css && !codeBlocks.javascript) {
+                codeBlocks.html = content;
             }
             return codeBlocks;
         }
@@ -484,13 +577,11 @@
         function handleStopGeneration() { if (isGenerating) { abortController.abort(); } }
         function regenerateLastResponse() { if (isGenerating || !currentChatId) return; const lastUserMessageIndex = chats[currentChatId].messages.findLastIndex(m => m.role === 'user'); if (lastUserMessageIndex === -1) return; chats[currentChatId].messages.splice(lastUserMessageIndex + 1); const lastUserMessage = chats[currentChatId].messages[lastUserMessageIndex]; messageInput.value = lastUserMessage.content; attachedFiles = lastUserMessage.files || []; updateFileAttachments(); loadChat(currentChatId); sendMessage(); }
         
-        // Saves chats to sessionStorage (cleared on tab close)
         function saveChatsToStorage() {
             const serializableChats = JSON.parse(JSON.stringify(chats, (key, value) => key === 'files' ? undefined : value));
             sessionStorage.setItem('glitchChats', JSON.stringify(serializableChats));
         }
         
-        // Loads chats from sessionStorage
         function loadChatsFromStorage() {
             chats = JSON.parse(sessionStorage.getItem('glitchChats')) || {};
         }
@@ -551,7 +642,4 @@
             doc.save(`Glitch-Chat-${chat.id}.pdf`);
         }
     </script>
-</body>
-</html>
-
 
