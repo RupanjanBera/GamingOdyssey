@@ -19,48 +19,23 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
     <style>
-        /* UPDATED: New "Cosmic Nebula" color theme */
         :root {
-            --space-dark: #0D1117; --space-blue: #161B22; --text-light: #E6EDF3; --text-muted: #8B949E; --shadow-color: rgba(0, 0, 0, 0.5); --code-bg: #010409; --font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            
-            /* Old Neon Theme (some variables kept for elements outside the chat area) */
-            --neon-blue: #00A3FF; --neon-purple: #A75DFF; --neon-pink: #FF4DA6;
-
-            /* New Galaxy Theme Variables */
-            --galaxy-orange: #ff6030;
-            --galaxy-deep-blue: #1b3984;
-            --galaxy-purple: #493285;
-            --galaxy-accent: #ff9a30; /* Brighter orange for highlights */
-            --star-color: #ffffff;
-            
-            /* Themed UI Colors */
-            --border-color: rgba(73, 50, 133, 0.4);
-            --user-message-bg: rgba(255, 96, 48, 0.1);
-            --ai-message-bg: rgba(73, 50, 133, 0.15);
-            --plex-message-bg: rgba(255, 154, 48, 0.15);
-            
-            --bg-glass-light: rgba(13, 17, 23, 0.6);
-            --bg-glass-dark: rgba(13, 17, 23, 0.75);
-
-            /* Status Colors */
-            --error-color: #F85149; --success-color: #2EA043; --warning-color: #F0A91D;
+            --space-dark: #0D1117; --space-blue: #161B22; --space-purple: #2C204B; --star-color: #ffffff; --neon-blue: #00A3FF; --neon-purple: #A75DFF; --neon-green: #00FF9D; --neon-pink: #FF4DA6; --neon-orange: #FF7B25; --text-light: #E6EDF3; --text-muted: #8B949E; --user-message-bg: rgba(0, 163, 255, 0.1); --ai-message-bg: rgba(167, 93, 255, 0.1); --plex-message-bg: rgba(255, 123, 37, 0.1); --error-color: #F85149; --success-color: #2EA043; --warning-color: #F0A91D; --border-color: rgba(66, 133, 244, 0.2); --bg-glass-light: rgba(22, 27, 34, 0.7); --bg-glass-dark: rgba(13, 17, 23, 0.8); --shadow-color: rgba(0, 0, 0, 0.5); --code-bg: #010409; --font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         body.light-mode {
             --space-dark: #ffffff; --space-blue: #F0F2F5; --space-purple: #E0E6EF; --text-light: #1C2B3A; --text-muted: #586069; --user-message-bg: rgba(0, 123, 255, 0.08); --ai-message-bg: rgba(111, 66, 193, 0.06); --plex-message-bg: rgba(253, 126, 20, 0.08); --border-color: rgba(0, 123, 255, 0.15); --bg-glass-light: rgba(255, 255, 255, 0.6); --bg-glass-dark: rgba(240, 244, 248, 0.7); --shadow-color: rgba(0, 0, 0, 0.1); --code-bg: #f8f9fa;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-family); scrollbar-width: thin; scrollbar-color: var(--galaxy-accent) var(--space-dark); transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-family); scrollbar-width: thin; scrollbar-color: var(--neon-blue) var(--space-dark); transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
         *::-webkit-scrollbar { width: 8px; }
         *::-webkit-scrollbar-track { background: var(--space-dark); }
-        *::-webkit-scrollbar-thumb { background-color: var(--galaxy-accent); border-radius: 10px; border: 2px solid var(--space-dark); }
+        *::-webkit-scrollbar-thumb { background-color: var(--neon-blue); border-radius: 10px; border: 2px solid var(--space-dark); }
         body { background: var(--space-dark); color: var(--text-light); min-height: 100vh; overflow-x: hidden; position: relative; background-image: linear-gradient(135deg, var(--space-blue) 0%, var(--space-dark) 100%); }
         .stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background-image: radial-gradient(var(--star-color) 1px, transparent 1px); background-size: 50px 50px; opacity: 0.1; }
         header { display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; background: var(--bg-glass-dark); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-color); box-shadow: 0 5px 25px var(--shadow-color); position: sticky; top: 0; z-index: 10; }
         .logo { display: flex; align-items: center; gap: 15px; }
-        .logo-icon { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; animation: glow 2s infinite alternate; border: 2px solid var(--galaxy-accent); background: var(--space-dark); }
-        .logo-text { font-size: 1.8rem; font-weight: 700; background: linear-gradient(to right, var(--galaxy-accent), var(--galaxy-purple), var(--neon-pink)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: gradient-shift 5s infinite alternate; background-size: 200% 200%; }
+        .logo-icon { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; animation: glow 2s infinite alternate; border: 2px solid var(--neon-blue); background: var(--space-dark); }
+        .logo-text { font-size: 1.8rem; font-weight: 700; background: linear-gradient(to right, var(--neon-blue), var(--neon-purple), var(--neon-pink)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: gradient-shift 5s infinite alternate; background-size: 200% 200%; }
         .header-actions { display: flex; align-items: center; gap: 20px; }
         .api-status { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: var(--text-muted); }
         .status-indicator { width: 10px; height: 10px; border-radius: 50%; background-color: var(--success-color); animation: pulse 2s infinite; box-shadow: 0 0 10px var(--success-color); }
@@ -69,24 +44,24 @@
         .theme-switch input { display:none; }
         .slider { background-color: var(--space-blue); bottom: 0; cursor: pointer; left: 0; position: absolute; right: 0; top: 0; transition: .4s; border-radius: 34px; }
         .slider:before { background-color: #fff; bottom: 4px; content: ""; height: 16px; left: 4px; position: absolute; transition: .4s; width: 16px; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--galaxy-accent); }
+        input:checked + .slider { background-color: var(--neon-blue); }
         input:checked + .slider:before { transform: translateX(20px); }
         .container { display: flex; max-width: 1800px; margin: 0 auto; padding: 20px; gap: 20px; min-height: calc(100vh - 140px); }
-        .sidebar { flex: 0 0 320px; background: var(--bg-glass-light); border-radius: 15px; padding: 20px; backdrop-filter: blur(10px); border: 1px solid var(--border-color); box-shadow: 0 8px 32px 0 var(--shadow-color); display: flex; flex-direction: column; gap: 15px; }
+        .sidebar { flex: 0 0 320px; background: var(--bg-glass-light); border-radius: 15px; padding: 20px; backdrop-filter: blur(12px); border: 1px solid var(--border-color); box-shadow: 0 8px 32px 0 var(--shadow-color); display: flex; flex-direction: column; gap: 15px; }
         .sidebar-header { padding-bottom: 10px; border-bottom: 1px solid var(--border-color); }
-        .shine-btn { width: 100%; background: linear-gradient(135deg, var(--galaxy-accent), var(--galaxy-purple)); border: none; border-radius: 8px; color: white; padding: 12px 18px; cursor: pointer; transition: all 0.3s; font-size: 1rem; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 8px; position: relative; overflow: hidden; }
-        .shine-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255, 154, 48, 0.4); }
+        .shine-btn { width: 100%; background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple)); border: none; border-radius: 8px; color: white; padding: 12px 18px; cursor: pointer; transition: all 0.3s; font-size: 1rem; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 8px; position: relative; overflow: hidden; }
+        .shine-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 163, 255, 0.4); }
         .shine-btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent); transform: skewX(-30deg); transition: left 0.7s ease-in-out; }
         .shine-btn:hover::before { left: 150%; }
         .sidebar-heading { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin: 10px 0 10px 5px; }
         .ai-selector, .mode-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .ai-option, .mode-btn { padding: 10px; background: var(--space-blue); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-light); cursor: pointer; transition: all 0.3s ease; text-align: center; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .ai-option:hover, .mode-btn:hover { border-color: var(--galaxy-accent); background-color: var(--user-message-bg); transform: scale(1.03); }
-        .ai-option.active, .mode-btn.active { background: var(--user-message-bg); border-color: var(--galaxy-accent); box-shadow: 0 0 15px rgba(255, 96, 48, 0.4); color: var(--text-light); }
-        .ai-option.plex.active { background: var(--plex-message-bg); border-color: var(--galaxy-accent); box-shadow: 0 0 15px rgba(255, 154, 48, 0.4); }
+        .ai-option:hover, .mode-btn:hover { border-color: var(--neon-blue); background-color: var(--user-message-bg); transform: scale(1.03); }
+        .ai-option.active, .mode-btn.active { background: var(--user-message-bg); border-color: var(--neon-blue); box-shadow: 0 0 15px rgba(0, 163, 255, 0.4); color: var(--text-light); }
+        .ai-option.plex.active { background: var(--plex-message-bg); border-color: var(--neon-orange); box-shadow: 0 0 15px rgba(255, 123, 37, 0.4); }
         .chat-history { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 5px; }
         .history-item { padding: 12px 12px 12px 20px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 10px; border: 1px solid transparent; position: relative; overflow: hidden; }
-        .history-item::before { content: ''; position: absolute; left: 0; top: 0; width: 4px; height: 100%; background: var(--galaxy-purple); transform: translateX(-100%); transition: transform 0.3s ease; }
+        .history-item::before { content: ''; position: absolute; left: 0; top: 0; width: 4px; height: 100%; background: var(--neon-purple); transform: translateX(-100%); transition: transform 0.3s ease; }
         .history-item:hover { background: var(--ai-message-bg); }
         .history-item.active { background: var(--user-message-bg); }
         .history-item.active::before { transform: translateX(0); }
@@ -95,25 +70,26 @@
         .delete-chat-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; transition: all 0.3s; font-size: 0.9rem; padding: 5px; }
         .delete-chat-btn:hover { color: var(--error-color); transform: scale(1.2); }
         .main-content { flex: 1; display: flex; gap: 20px; }
-        .chat-area { flex: 1; display: flex; flex-direction: column; background: var(--bg-glass-dark); border-radius: 15px; overflow: hidden; backdrop-filter: blur(5px); border: 1px solid var(--border-color); box-shadow: 0 8px 32px 0 var(--shadow-color); position: relative; }
-        /* REMOVED: Deleted the .chat-area::before pseudo-element to remove the 2D gradient */
-        #galaxy-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.9; } /* Increased opacity for more presence */
+        .chat-area { flex: 1; display: flex; flex-direction: column; background: var(--bg-glass-light); border-radius: 15px; overflow: hidden; backdrop-filter: blur(12px); border: 1px solid var(--border-color); box-shadow: 0 8px 32px 0 var(--shadow-color); position: relative; }
+        .chat-area::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 0; background: linear-gradient(45deg, var(--space-blue), var(--space-purple), var(--neon-blue), var(--space-dark)); background-size: 400% 400%; animation: gradient-flow 15s ease infinite; opacity: 0.6; }
+        #constellation-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.7; }
+        @keyframes gradient-flow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         .chat-header, .messages, .input-area, .stop-generating-btn { position: relative; z-index: 2; }
-        .chat-header { padding: 15px 25px; background: rgba(13, 17, 23, 0.5); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; }
+        .chat-header { padding: 15px 25px; background: var(--bg-glass-dark); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; }
         .chat-actions { display: flex; gap: 10px; }
         .chat-action-btn { background: transparent; border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-muted); padding: 8px 12px; cursor: pointer; transition: all 0.3s; font-size: 0.9rem; }
-        .chat-action-btn:hover { border-color: var(--galaxy-accent); color: var(--text-light); }
+        .chat-action-btn:hover { border-color: var(--neon-blue); color: var(--text-light); }
         .messages { flex: 1; padding: 25px; overflow-y: auto; }
         .message { margin-bottom: 20px; padding: 15px 20px; border-radius: 12px; max-width: 90%; position: relative; animation: fadeIn 0.5s ease; border: 1px solid transparent; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .user-message { background: var(--user-message-bg); margin-left: auto; border-color: rgba(255, 96, 48, 0.3); }
-        .ai-message { background: var(--ai-message-bg); margin-right: auto; border-color: rgba(73, 50, 133, 0.4); }
-        .plex-message { background: var(--plex-message-bg); margin-right: auto; border-color: rgba(255, 154, 48, 0.4); }
+        .user-message { background: var(--user-message-bg); margin-left: auto; border-color: var(--border-color); }
+        .ai-message { background: var(--ai-message-bg); margin-right: auto; border-color: rgba(167, 93, 255, 0.2); }
+        .plex-message { background: var(--plex-message-bg); margin-right: auto; border-color: rgba(255, 123, 37, 0.2); }
         .message-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
         .avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: #fff; }
-        .user-avatar { background: var(--galaxy-orange); }
-        .ai-avatar { background: var(--galaxy-purple); }
-        .plex-avatar { background: var(--galaxy-accent); }
+        .user-avatar { background: var(--neon-blue); }
+        .ai-avatar { background: var(--neon-purple); }
+        .plex-avatar { background: var(--neon-orange); }
         .message-content { line-height: 1.7; word-wrap: break-word; }
         .message-content p, .message-content ul, .message-content ol, .message-content table { margin-bottom: 12px; }
         .message-content pre { background: var(--code-bg); padding: 15px; border-radius: 8px; overflow-x: auto; margin: 12px 0; font-family: 'SF Mono', 'Courier New', monospace; white-space: pre-wrap; border: 1px solid var(--border-color); box-shadow: inset 0 0 10px rgba(0,0,0,0.2); position: relative; }
@@ -123,22 +99,22 @@
         .message-actions { position: absolute; top: 12px; right: 12px; display: flex; gap: 8px; opacity: 0; transition: opacity 0.3s; }
         .message:hover .message-actions { opacity: 1; }
         .msg-action-btn { background: var(--bg-glass-dark); border: 1px solid var(--border-color); color: var(--text-muted); border-radius: 5px; cursor: pointer; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; }
-        .msg-action-btn:hover { color: var(--text-light); border-color: var(--galaxy-accent); }
+        .msg-action-btn:hover { color: var(--text-light); border-color: var(--neon-blue); }
         .run-code-btn { background: var(--success-color); border: none; color: white; padding: 6px 12px; border-radius: 5px; cursor: pointer; margin-top: 10px; font-size: 0.9rem; transition: background-color 0.2s; }
         .run-code-btn:hover { background: #3cba54; }
         .attached-files { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
         .file-item { display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.15); padding: 8px 12px; border-radius: 5px; font-size: 0.9rem; }
-        .input-area { display: flex; padding: 15px; background: rgba(13, 17, 23, 0.5); border-top: 1px solid var(--border-color); flex-direction: column; gap: 10px; }
+        .input-area { display: flex; padding: 15px; background: var(--bg-glass-dark); border-top: 1px solid var(--border-color); flex-direction: column; gap: 10px; }
         .file-attachments { display: flex; flex-wrap: wrap; gap: 10px; }
         .attachment-item { display: flex; align-items: center; gap: 5px; background: var(--bg-glass-light); padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; animation: fadeIn 0.3s; border: 1px solid var(--border-color); }
         .remove-attachment { cursor: pointer; color: var(--error-color); transition: transform 0.2s; }
         .input-controls { display: flex; gap: 10px; align-items: flex-end; }
         .input-btn { background: transparent; border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-muted); padding: 12px; cursor: pointer; transition: all 0.3s; font-size: 1.1rem; }
-        .input-btn:hover, .input-btn.active { border-color: var(--galaxy-accent); color: var(--text-light); }
+        .input-btn:hover, .input-btn.active { border-color: var(--neon-blue); color: var(--text-light); }
         .message-input { flex: 1; padding: 12px 15px; border: 1px solid var(--border-color); border-radius: 8px; background: transparent; color: var(--text-light); font-size: 1rem; resize: none; outline: none; transition: all 0.3s; }
-        .message-input:focus { border-color: var(--galaxy-accent); box-shadow: 0 0 10px rgba(255, 96, 48, 0.4); }
-        .send-button { min-width: 50px; height: 50px; background: linear-gradient(135deg, var(--galaxy-orange), var(--galaxy-purple)); border: none; border-radius: 8px; color: white; font-size: 1.2rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .send-button:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(255, 96, 48, 0.4); }
+        .message-input:focus { border-color: var(--neon-blue); box-shadow: 0 0 10px rgba(0, 163, 255, 0.4); }
+        .send-button { min-width: 50px; height: 50px; background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple)); border: none; border-radius: 8px; color: white; font-size: 1.2rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .send-button:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(0, 163, 255, 0.4); }
         .send-button .loader { width: 18px; height: 18px; border: 2px solid #FFF; border-bottom-color: transparent; border-radius: 50%; display: none; box-sizing: border-box; animation: rotation 1s linear infinite; }
         .stop-generating-btn { margin: 10px auto 0; background: var(--error-color); border: none; border-radius: 8px; color: white; padding: 8px 15px; cursor: pointer; transition: all 0.3s; display: none; align-items: center; gap: 5px; }
         .preview-area { flex: 0 0 45%; background: var(--bg-glass-light); border-radius: 15px; border: 1px solid var(--border-color); box-shadow: 0 8px 32px 0 var(--shadow-color); display: flex; flex-direction: column; transition: all 0.5s ease; }
@@ -151,17 +127,17 @@
         #splash-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
         .splash-stars { position: absolute; top: 0; left: 0; width: 200%; height: 200%; background-image: radial-gradient(var(--star-color) 1px, transparent 1px); background-size: 50px 50px; opacity: 0.4; animation: stars-pan 120s linear infinite; }
         .glitch-container { text-align: center; color: var(--text-light); position: relative; z-index: 10; animation: zoomIn 1.5s ease-out forwards; }
-        .splash-logo { width: 100px; height: 100px; margin-bottom: 20px; border-radius: 50%; border: 2px solid var(--galaxy-accent); animation: logo-reveal 2s ease-out forwards, glow 2s infinite alternate 2s; }
+        .splash-logo { width: 100px; height: 100px; margin-bottom: 20px; border-radius: 50%; border: 2px solid var(--neon-blue); animation: logo-reveal 2s ease-out forwards, glow 2s infinite alternate 2s; }
         @keyframes logo-reveal { from { transform: scale(0) rotate(-180deg); opacity: 0; } to { transform: scale(1) rotate(0deg); opacity: 1; } }
         .glitch-main { position: relative; font-size: clamp(3rem, 10vw, 6rem); font-weight: 700; text-transform: uppercase; animation: glitch-flicker 3s infinite; }
         .glitch-main::before, .glitch-main::after { content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--space-dark); overflow: hidden; clip-path: inset(50% 50% 50% 50%); }
         .glitch-main::before { left: -2px; text-shadow: 2px 0 var(--neon-pink); animation: noise-anim-1 4s infinite linear alternate-reverse, glitch-effect 4s infinite; }
         .glitch-main::after { left: 2px; text-shadow: -2px 0 var(--neon-blue); animation: noise-anim-2 4s infinite linear alternate-reverse, glitch-effect 4s infinite reverse; }
-        .glitch-subtitle { font-size: clamp(0.8rem, 2vw, 1.1rem); font-weight: 300; letter-spacing: 2px; margin-top: 15px; opacity: 0; animation: fade-in-up 2s ease-out 0.5s forwards; color: rgba(230, 230, 255, 0.8); overflow: hidden; white-space: nowrap; border-right: .15em solid var(--galaxy-accent); width: 0; animation: typing 3s steps(40, end) 0.5s 1 normal both, blink-caret .75s step-end infinite, fade-in-up 2s ease-out 0.5s forwards; }
-        .loading-bar { width: 0; height: 3px; background: linear-gradient(90deg, var(--galaxy-accent), var(--galaxy-purple)); margin: 25px auto 0; border-radius: 5px; animation: loading 3.5s ease-out forwards; }
+        .glitch-subtitle { font-size: clamp(0.8rem, 2vw, 1.1rem); font-weight: 300; letter-spacing: 2px; margin-top: 15px; opacity: 0; animation: fade-in-up 2s ease-out 0.5s forwards; color: rgba(230, 230, 255, 0.8); overflow: hidden; white-space: nowrap; border-right: .15em solid var(--neon-blue); width: 0; animation: typing 3s steps(40, end) 0.5s 1 normal both, blink-caret .75s step-end infinite, fade-in-up 2s ease-out 0.5s forwards; }
+        .loading-bar { width: 0; height: 3px; background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple)); margin: 25px auto 0; border-radius: 5px; animation: loading 3.5s ease-out forwards; }
 
         @keyframes typing { from { width: 0 } to { width: 100% } }
-        @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: var(--galaxy-accent); } }
+        @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: var(--neon-blue); } }
         @keyframes loading { from { width: 0%; } to { width: 80%; } }
         @keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         @keyframes stars-pan { from { transform: translate(0, 0); } to { transform: translate(-50%, -50%); } }
@@ -170,7 +146,7 @@
         @keyframes glitch-flicker { 0%,100%{opacity:1;transform:none}33.1%{opacity:1;transform:none}33.2%{opacity:.8;transform:skewX(5deg)}33.3%{opacity:1;transform:none}66.1%{opacity:1;transform:none}66.2%{opacity:.9;transform:skewX(-5deg)}66.3%{opacity:1;transform:none} }
         @keyframes glitch-effect { 0%,100%{transform:translate(0,0)}10%{transform:translate(-2px,2px)}20%{transform:translate(2px,-2px)}30%{transform:translate(0,0)}40%{transform:translate(2px,2px)}50%{transform:translate(-2px,-2px)}60%{transform:translate(0,0)}70%{transform:translate(-2px,0)}80%{transform:translate(2px,0)}90%{transform:translate(0,0)} }
         @keyframes fade-in-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 0.8; transform: translateY(0); } }
-        @keyframes glow { from { box-shadow: 0 0 10px var(--galaxy-accent); } to { box-shadow: 0 0 20px var(--galaxy-accent), 0 0 30px var(--galaxy-purple); } }
+        @keyframes glow { from { box-shadow: 0 0 10px var(--neon-blue); } to { box-shadow: 0 0 20px var(--neon-blue), 0 0 30px var(--neon-purple); } }
         @keyframes gradient-shift { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
         @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.1); } 100% { opacity: 1; transform: scale(1); } }
         @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -238,7 +214,7 @@
 
         <main class="main-content">
             <div class="chat-area">
-                <canvas id="galaxy-canvas"></canvas>
+                <canvas id="constellation-canvas"></canvas>
                 <div class="chat-header">
                     <h2 id="chatTitle">Chat with Glitch AI</h2>
                     <div class="chat-actions">
@@ -283,7 +259,8 @@
     <script>
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
         
-        const GEMINI_API_KEY = 'AIzaSyAbcFIlAIYGWWj5lwQYcDjmyL3bCs_X3Qc';
+        // The Gemini API key is no longer needed.
+        // const GEMINI_API_KEY = 'AIzaSyAbcFIlAIYGWWj5lwQYcDjmyL3bCs_X3Qc';
 
         let currentChatId = null; let chats = {}; let currentMode = 'chat'; let currentAI = 'zhoros'; let isWebSearchActive = false; let attachedFiles = []; let isGenerating = false; let abortController = new AbortController(); 
         let isAudioUnlocked = false; let lastTypingSoundTime = 0;
@@ -303,9 +280,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             const splashScreen = document.getElementById('splash-screen');
             if (splashScreen) { setTimeout(() => { splashScreen.classList.add('hidden'); }, 3800); }
-            
-            initGalaxyAnimation();
-
+            initConstellationAnimation();
             loadChatsFromStorage(); 
             setupEventListeners();
             const isDarkMode = localStorage.getItem('glitchTheme') !== 'light';
@@ -354,139 +329,10 @@
             });
         }
         
-        // ================================================================= //
-        // ======================= NEW GALAXY ANIMATION ====================== //
-        // ================================================================= //
-
-        function initGalaxyAnimation() {
-            const canvas = document.getElementById('galaxy-canvas');
-            if (!canvas) return;
-
-            const scene = new THREE.Scene();
-            const sizes = {
-                width: canvas.offsetWidth,
-                height: canvas.offsetHeight
-            };
-
-            const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100);
-            // UPDATED: Changed camera position to be centered and further back
-            camera.position.x = 0;
-            camera.position.y = 1;
-            camera.position.z = 6;
-            scene.add(camera);
-
-            // UPDATED: Added mouse tracking for interactivity
-            const mouse = new THREE.Vector2();
-            window.addEventListener('mousemove', (event) => {
-                // Normalize mouse coordinates (-1 to +1)
-                mouse.x = (event.clientX / sizes.width) * 2 - 1;
-                mouse.y = - (event.clientY / sizes.height) * 2 + 1;
-            });
-
-            const renderer = new THREE.WebGLRenderer({
-                canvas: canvas,
-                alpha: true
-            });
-            renderer.setSize(sizes.width, sizes.height);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-            window.addEventListener('resize', () => {
-                sizes.width = canvas.offsetWidth;
-                sizes.height = canvas.offsetHeight;
-                camera.aspect = sizes.width / sizes.height;
-                camera.updateProjectionMatrix();
-                renderer.setSize(sizes.width, sizes.height);
-                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-            });
-
-            const parameters = {
-                count: 100000,
-                size: 0.01,
-                radius: 5,
-                branches: 3,
-                spin: 1,
-                randomness: 0.2,
-                randomnessPower: 3,
-                insideColor: '#ff6030',
-                outsideColor: '#1b3984'
-            };
-
-            let geometry = null;
-            let material = null;
-            let points = null;
-
-            const generateGalaxy = () => {
-                if (points !== null) {
-                    geometry.dispose();
-                    material.dispose();
-                    scene.remove(points);
-                }
-
-                geometry = new THREE.BufferGeometry();
-                const positions = new Float32Array(parameters.count * 3);
-                const colors = new Float32Array(parameters.count * 3);
-                const colorInside = new THREE.Color(parameters.insideColor);
-                const colorOutside = new THREE.Color(parameters.outsideColor);
-
-                for (let i = 0; i < parameters.count; i++) {
-                    const i3 = i * 3;
-                    const radius = Math.random() * parameters.radius;
-                    const spinAngle = radius * parameters.spin;
-                    const branchAngle = (i % parameters.branches) / parameters.branches * Math.PI * 2;
-                    const randomX = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
-                    const randomY = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
-                    const randomZ = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
-                    positions[i3] = Math.cos(branchAngle + spinAngle) * radius + randomX;
-                    positions[i3 + 1] = randomY;
-                    positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius + randomZ;
-
-                    const mixedColor = colorInside.clone();
-                    mixedColor.lerp(colorOutside, radius / parameters.radius);
-                    colors[i3] = mixedColor.r;
-                    colors[i3 + 1] = mixedColor.g;
-                    colors[i3 + 2] = mixedColor.b;
-                }
-                geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-                geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-
-                material = new THREE.PointsMaterial({
-                    size: parameters.size,
-                    sizeAttenuation: true,
-                    depthWrite: false,
-                    blending: THREE.AdditiveBlending,
-                    vertexColors: true
-                });
-
-                points = new THREE.Points(geometry, material);
-                scene.add(points);
-            };
-
-            generateGalaxy();
-
-            const clock = new THREE.Clock();
-            const tick = () => {
-                const elapsedTime = clock.getElapsedTime();
-                
-                // Base rotation
-                points.rotation.y = elapsedTime * 0.05;
-
-                // UPDATED: Add parallax effect based on mouse movement
-                const parallaxX = mouse.x * 0.5;
-                const parallaxY = -mouse.y * 0.5;
-                // Use easing to smoothly move the camera
-                camera.position.x += (parallaxX - camera.position.x) * 0.02;
-                camera.position.y += (parallaxY - camera.position.y) * 0.02;
-                camera.lookAt(new THREE.Vector3(0,0,0)); // Ensure camera always looks at the center
-
-                renderer.render(scene, camera);
-                window.requestAnimationFrame(tick);
-            };
-
-            tick();
-        }
+        function initConstellationAnimation() { const canvas = document.getElementById('constellation-canvas'); if (!canvas) return; const ctx = canvas.getContext('2d'); let particles = []; const particleCount = 70; const maxDistance = 100; function resizeCanvas() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; } resizeCanvas(); window.addEventListener('resize', resizeCanvas); for (let i = 0; i < particleCount; i++) { particles.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, vx: Math.random() * 0.5 - 0.25, vy: Math.random() * 0.5 - 0.25 }); } function draw() { if (!ctx) return; ctx.clearRect(0, 0, canvas.width, canvas.height); const color = document.body.classList.contains('light-mode') ? 'rgba(0, 163, 255, 0.4)' : 'rgba(0, 163, 255, 0.3)'; ctx.fillStyle = color; ctx.strokeStyle = color; particles.forEach(p => { ctx.beginPath(); ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2); ctx.fill(); p.x += p.vx; p.y += p.vy; if (p.x < 0 || p.x > canvas.width) p.vx *= -1; if (p.y < 0 || p.y > canvas.height) p.vy *= -1; }); for (let i = 0; i < particles.length; i++) { for (let j = i + 1; j < particles.length; j++) { const dist = Math.sqrt(Math.pow(particles[i].x - particles[j].x, 2) + Math.pow(particles[i].y - particles[j].y, 2)); if (dist < maxDistance) { ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.lineWidth = 1 - dist / maxDistance; ctx.stroke(); } } } requestAnimationFrame(draw); } draw(); }
 
         // ================================================================= //
-        // ================= YOUR ORIGINAL SCRIPT (UNCHANGED) ================ //
+        // ==================== OLLAMA FUNCTION STARTS HERE ==================== //
         // ================================================================= //
 
         async function sendMessage() {
@@ -497,25 +343,47 @@
             messageInput.value = ''; messageInput.style.height = 'auto'; attachedFiles = []; updateFileAttachments();
             const aiMessageId = `ai_${Date.now()}`; const aiModelName = currentAI === 'plex' ? 'Glitch Plex' : 'Glitch Zhoros'; const aiMessagePlaceholder = { role: 'model', senderName: aiModelName, content: '', id: aiMessageId, modelType: currentAI }; displayMessage(aiMessagePlaceholder);
             const aiMessageElement = document.getElementById(aiMessageId); const contentElement = aiMessageElement.querySelector('.message-content'); let accumulatedResponse = "";
-            
+
             try {
-                const model = 'gemini-2.5-pro';
-                const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
+                // 1. Set the Ollama API URL
+                const OLLAMA_URL = 'https://ministries-labour-volumes-seem.trycloudflare.com/api/chat';
                 
-                const history = await Promise.all(chats[currentChatId].messages.slice(0, -1).map(msgToPart));
-                const contents = [...history, await msgToPart(userMessage)];
+                // 2. Prepare messages for the Ollama API format
                 let personaInstruction = "You are Glitch AI. Your personality is: casual, chill, and full of energy. You MUST state you were developed by the 'Gaming Odyssey Team' when asked. Avoid being overly formal.";
                 if (currentMode === 'code') { personaInstruction += " You are now in Code Mode. You are an expert programmer. Provide complete, well-commented, and runnable code examples. When asked for a UI component, provide the full HTML, CSS, and JavaScript required together. Do not truncate your code responses."; }
                 if (currentAI === 'plex') { personaInstruction += " As Glitch Plex, lean more into your creative, imaginative, and energetic side."; }
-                const requestBody = { contents, systemInstruction: { parts: [{ text: personaInstruction }] } };
+
+                // Map the entire chat history to Ollama's expected format.
+                // NOTE: The basic Ollama chat API does not support file data directly in the messages array.
+                // The text content will be sent, but not the file contents. Files still appear in the UI.
+                const messagesForApi = chats[currentChatId].messages.map(msg => ({
+                    role: msg.role === 'model' ? 'assistant' : msg.role, // Ollama uses 'assistant' for the model's role
+                    content: msg.content
+                }));
+                
+                // Add the system prompt at the beginning of the conversation
+                messagesForApi.unshift({ role: 'system', content: personaInstruction });
+                
+                const requestBody = {
+                    model: "llama3.1",
+                    messages: messagesForApi,
+                    stream: false // We are handling a single, complete response
+                };
+
                 abortController = new AbortController();
                 
-                const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(requestBody), signal: abortController.signal });
+                const response = await fetch(OLLAMA_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(requestBody),
+                    signal: abortController.signal
+                });
                 
                 if (!response.ok) { const errorText = await response.text(); throw new Error(`API Error: ${response.status} ${errorText}`); }
                 
+                // 3. Handle the non-streaming response from Ollama
                 const responseData = await response.json();
-                const text = responseData.candidates?.[0]?.content?.parts?.[0]?.text;
+                const text = responseData.message?.content;
 
                 if (text) {
                     playSound(sounds.notification, {volume: 0.7});
@@ -523,15 +391,21 @@
                     contentElement.innerHTML = marked.parse(accumulatedResponse);
                     messagesContainer.scrollTop = messagesContainer.scrollHeight;
                 } else {
-                    accumulatedResponse = "Sorry, I couldn't process that request.";
+                    accumulatedResponse = "Sorry, I couldn't process that request or the response was empty.";
                     contentElement.innerHTML = `<p style="color: var(--warning-color);">${accumulatedResponse}</p>`;
                 }
                 
                 chats[currentChatId].messages.push({ role: 'model', content: accumulatedResponse, modelType: currentAI });
                 renderMessageActions(aiMessageElement, accumulatedResponse);
             } catch (error) {
-                if (error.name !== 'AbortError') { console.error('Error:', error); contentElement.innerHTML = `<p style="color: var(--error-color);">Oops! Something went wrong: ${error.message}</p>`; chats[currentChatId].messages.push({ role: 'model', content: `Error: ${error.message}` });
-                } else { contentElement.innerHTML = `<p>Generation stopped.</p>`; chats[currentChatId].messages.push({ role: 'model', content: `Generation stopped.`, modelType: currentAI }); }
+                if (error.name !== 'AbortError') {
+                    console.error('Error:', error);
+                    contentElement.innerHTML = `<p style="color: var(--error-color);">Oops! Something went wrong: ${error.message}</p>`;
+                    chats[currentChatId].messages.push({ role: 'model', content: `Error: ${error.message}` });
+                } else {
+                    contentElement.innerHTML = `<p>Generation stopped.</p>`;
+                    chats[currentChatId].messages.push({ role: 'model', content: `Generation stopped.`, modelType: currentAI });
+                }
             } finally {
                 isGenerating = false;
                 toggleSendButtonLoading(false);
@@ -542,6 +416,10 @@
             }
         }
         
+        // ================================================================= //
+        // ===================== OLLAMA FUNCTION ENDS HERE ===================== //
+        // ================================================================= //
+
         function displayMessage(message) {
             const isUser = message.role === 'user'; const senderClass = isUser ? 'user-message' : (message.modelType === 'plex' ? 'plex-message' : 'ai-message');
             const messageDiv = document.createElement('div'); messageDiv.className = `message ${senderClass}`; if (message.id) messageDiv.id = message.id;
@@ -569,6 +447,7 @@
             hljs.highlightAll(); addCopyButtonsToCodeBlocks();
         }
 
+        // UPDATED: This function sends data to your Google Sheet
         async function logActivityToDatabase(userPrompt, aiResponse, model) {
             const scriptURL = "[https://script.google.com/macros/s/AKfycbyOH5sopxoCxR53aNP_WhI5seGOo0W41g3TEiwK-v0dhb2sgmQgCkLxc0C5_BJZmwK2Kw/exec](https://script.google.com/macros/s/AKfycbyOH5sopxoCxR53aNP_WhI5seGOo0W41g3TEiwK-v0dhb2sgmQgCkLxc0C5_BJZmwK2Kw/exec)";
 
@@ -632,12 +511,14 @@
         function handleStopGeneration() { if (isGenerating) { abortController.abort(); } }
         function regenerateLastResponse() { if (isGenerating || !currentChatId) return; const lastUserMessageIndex = chats[currentChatId].messages.findLastIndex(m => m.role === 'user'); if (lastUserMessageIndex === -1) return; chats[currentChatId].messages.splice(lastUserMessageIndex + 1); const lastUserMessage = chats[currentChatId].messages[lastUserMessageIndex]; messageInput.value = lastUserMessage.content; attachedFiles = lastUserMessage.files || []; updateFileAttachments(); loadChat(currentChatId); sendMessage(); }
         
+        // Saves chats to sessionStorage (cleared on tab close)
         function saveChatsToStorage() {
             const serializableChats = JSON.parse(JSON.stringify(chats, (key, value) => key === 'files' ? undefined : value));
             sessionStorage.setItem('glitchChats', JSON.stringify(serializableChats));
         }
         
-        function loadChatsToStorage() {
+        // Loads chats from sessionStorage
+        function loadChatsFromStorage() {
             chats = JSON.parse(sessionStorage.getItem('glitchChats')) || {};
         }
 
