@@ -23,10 +23,10 @@
 
     <style>
         :root {
-            --space-dark: #0D1117; --space-blue: #161B22; --space-purple: #2C204B; --star-color: #ffffff; --neon-blue: #00A3FF; --neon-purple: #A75DFF; --neon-green: #00FF9D; --neon-pink: #FF4DA6; --neon-orange: #FF7B25; --text-light: #E6EDF3; --text-muted: #8B949E; --user-message-bg: rgba(0, 163, 255, 0.1); --ai-message-bg: rgba(167, 93, 255, 0.1); --plex-message-bg: rgba(255, 123, 37, 0.1); --error-color: #F85149; --success-color: #2EA043; --warning-color: #F0A91D; --border-color: rgba(66, 133, 244, 0.2); --bg-glass-light: rgba(22, 27, 34, 0.7); --bg-glass-dark: rgba(13, 17, 23, 0.8); --shadow-color: rgba(0, 0, 0, 0.5); --code-bg: #010409; --font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --space-dark: #0D1117; --space-blue: #161B22; --space-purple: #2C204B; --star-color: #ffffff; --neon-blue: #00A3FF; --neon-purple: #A75DFF; --neon-green: #00FF9D; --neon-pink: #FF4DA6; --neon-orange: #FF7B25; --text-light: #E6EDF3; --text-muted: #8B949E; --user-message-bg: rgba(0, 163, 255, 0.1); --ai-message-bg: rgba(167, 93, 255, 0.1); --plex-message-bg: rgba(255, 123, 37, 0.1); --error-color: #F85149; --success-color: #2EA043; --warning-color: #F0A91D; --border-color: rgba(66, 133, 244, 0.2); --bg-glass-light: rgba(22, 27, 34, 0.7); --bg-glass-dark: rgba(13, 17, 23, 0.9); --shadow-color: rgba(0, 0, 0, 0.5); --code-bg: #010409; --font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         body.light-mode {
-            --space-dark: #ffffff; --space-blue: #F0F2F5; --space-purple: #E0E6EF; --text-light: #1C2B3A; --text-muted: #586069; --user-message-bg: rgba(0, 123, 255, 0.08); --ai-message-bg: rgba(111, 66, 193, 0.06); --plex-message-bg: rgba(253, 126, 20, 0.08); --border-color: rgba(0, 123, 255, 0.15); --bg-glass-light: rgba(255, 255, 255, 0.6); --bg-glass-dark: rgba(240, 244, 248, 0.7); --shadow-color: rgba(0, 0, 0, 0.1); --code-bg: #f8f9fa;
+            --space-dark: #ffffff; --space-blue: #F0F2F5; --space-purple: #E0E6EF; --text-light: #1C2B3A; --text-muted: #586069; --user-message-bg: rgba(0, 123, 255, 0.08); --ai-message-bg: rgba(111, 66, 193, 0.06); --plex-message-bg: rgba(253, 126, 20, 0.08); --border-color: rgba(0, 123, 255, 0.15); --bg-glass-light: rgba(255, 255, 255, 0.6); --bg-glass-dark: rgba(240, 244, 248, 0.85); --shadow-color: rgba(0, 0, 0, 0.1); --code-bg: #f8f9fa;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-family); scrollbar-width: thin; scrollbar-color: var(--neon-blue) var(--space-dark); transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
         *::-webkit-scrollbar { width: 8px; }
@@ -93,7 +93,7 @@
         .chat-action-btn { background: transparent; border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-muted); padding: 8px 12px; cursor: pointer; transition: all 0.3s; font-size: 0.9rem; }
         .chat-action-btn:hover { border-color: var(--neon-blue); color: var(--text-light); }
         .messages { flex: 1; padding: 25px; overflow-y: auto; }
-        .message { margin-bottom: 20px; padding: 15px 20px; border-radius: 12px; max-width: 90%; position: relative; animation: fadeIn 0.5s ease; border: 1px solid transparent; background: var(--bg-glass-dark); backdrop-filter: blur(5px); }
+        .message { margin-bottom: 20px; padding: 15px 20px; border-radius: 12px; max-width: 90%; position: relative; animation: fadeIn 0.5s ease; border: 1px solid transparent; background: var(--bg-glass-dark); backdrop-filter: blur(8px); }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .user-message { background: var(--user-message-bg); margin-left: auto; border-color: var(--border-color); }
         .ai-message { background: var(--ai-message-bg); margin-right: auto; border-color: rgba(167, 93, 255, 0.2); }
@@ -400,8 +400,10 @@
                     size: parameters.size,
                     sizeAttenuation: true,
                     depthWrite: false,
-                    blending: THREE.AdditiveBlending,
-                    vertexColors: true
+                    blending: THREE.NormalBlending, // Change blending mode to avoid excessive brightness
+                    opacity: 0.8, // Add opacity for better control
+                    vertexColors: true,
+                    transparent: true // Required for opacity to work
                 });
 
                 points = new THREE.Points(geometry, material);
@@ -451,6 +453,29 @@
             tick();
         }
 
+        async function typewriterEffect(element, text) {
+            return new Promise(resolve => {
+                let i = 0;
+                element.innerHTML = ""; // Clear existing content
+                const typingSpeed = 20; // Milliseconds per character
+
+                function type() {
+                    if (i < text.length) {
+                        element.innerHTML += text.charAt(i);
+                        i++;
+                        // Auto-scroll as content is added
+                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                        setTimeout(type, typingSpeed);
+                    } else {
+                        // Once typing is done, parse the full markdown
+                        element.innerHTML = marked.parse(text);
+                        resolve();
+                    }
+                }
+                type();
+            });
+        }
+
         async function sendMessage() {
             const messageText = messageInput.value.trim();
             if ((messageText === '' && attachedFiles.length === 0) || isGenerating) return;
@@ -461,7 +486,7 @@
             const aiMessageElement = document.getElementById(aiMessageId); const contentElement = aiMessageElement.querySelector('.message-content'); let accumulatedResponse = "";
             
             try {
-                const model = 'gemini-2.5-pro';
+                const model = 'gemini-1.5-pro-latest';
                 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
                 const history = await Promise.all(chats[currentChatId].messages.slice(0, -1).map(msgToPart));
                 const contents = [...history, await msgToPart(userMessage)];
@@ -478,15 +503,22 @@
                 if (text) {
                     playSound(sounds.notification, {volume: 0.7});
                     accumulatedResponse = text;
-                    contentElement.innerHTML = marked.parse(accumulatedResponse);
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    
+                    // Use the new typewriter effect
+                    await typewriterEffect(contentElement, accumulatedResponse);
+                    
                 } else {
                     accumulatedResponse = "Sorry, I couldn't process that request.";
                     contentElement.innerHTML = `<p style="color: var(--warning-color);">${accumulatedResponse}</p>`;
                 }
                 
                 chats[currentChatId].messages.push({ role: 'model', content: accumulatedResponse, modelType: currentAI });
+                
+                // Render actions and highlight code *after* typing and parsing is complete
                 renderMessageActions(aiMessageElement, accumulatedResponse);
+                hljs.highlightAll();
+                addCopyButtonsToCodeBlocks();
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
             } catch (error) {
                 if (error.name !== 'AbortError') { console.error('Error:', error); contentElement.innerHTML = `<p style="color: var(--error-color);">Oops! Something went wrong: ${error.message}</p>`; chats[currentChatId].messages.push({ role: 'model', content: `Error: ${error.message}` });
                 } else { contentElement.innerHTML = `<p>Generation stopped.</p>`; chats[currentChatId].messages.push({ role: 'model', content: `Generation stopped.`, modelType: currentAI }); }
@@ -518,11 +550,14 @@
             messageElement.insertAdjacentHTML('afterbegin', actionsHTML);
             
             if (content && content.includes('```')) {
-                const runBtn = document.createElement('button');
-                runBtn.className = 'run-code-btn';
-                runBtn.innerHTML = '<i class="fas fa-play"></i> Run Code';
-                runBtn.onclick = () => runCodeInPreview(content);
-                messageElement.querySelector('.message-content').appendChild(runBtn);
+                // Ensure no duplicate run buttons are added
+                if (!messageElement.querySelector('.run-code-btn')) {
+                    const runBtn = document.createElement('button');
+                    runBtn.className = 'run-code-btn';
+                    runBtn.innerHTML = '<i class="fas fa-play"></i> Run Code';
+                    runBtn.onclick = () => runCodeInPreview(content);
+                    messageElement.querySelector('.message-content').appendChild(runBtn);
+                }
             }
             hljs.highlightAll(); addCopyButtonsToCodeBlocks();
         }
@@ -588,7 +623,6 @@
                 id: chatId,
                 title: 'New Chat',
                 messages: [{ role: 'model', senderName: 'Glitch AI', content: `What's up! I'm Glitch, your new AI sidekick. Ready to brainstorm some wild ideas, get some hype, or just chill and chat? I got you. Let's make some magic happen! ✨`, modelType: 'ai' }],
-                // FIXED: Corrected typo from newtoISOString() to new Date().toISOString()
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString()
             };
