@@ -33,7 +33,6 @@
         *::-webkit-scrollbar-track { background: var(--space-dark); }
         *::-webkit-scrollbar-thumb { background-color: var(--neon-blue); border-radius: 10px; border: 2px solid var(--space-dark); }
         
-        /* EDITED: Restored original body background */
         body { background: var(--space-dark); color: var(--text-light); min-height: 100vh; overflow-x: hidden; position: relative; background-image: linear-gradient(135deg, var(--space-blue) 0%, var(--space-dark) 100%); }
 
         .stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background-image: radial-gradient(var(--star-color) 1px, transparent 1px); background-size: 50px 50px; opacity: 0.1; }
@@ -76,20 +75,17 @@
         .delete-chat-btn:hover { color: var(--error-color); transform: scale(1.2); }
         .main-content { flex: 1; display: flex; gap: 20px; }
         
-        /* EDITED: Chat area is now transparent over its own canvas */
         .chat-area { flex: 1; display: flex; flex-direction: column; background: transparent; border-radius: 15px; overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 8px 32px 0 var(--shadow-color); position: relative; }
         
-        /* NEW: Styles for the galaxy canvas INSIDE the chat area */
         #galaxy-canvas {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 0; /* Behind other chat elements */
+            z-index: 0;
         }
         
-        /* EDITED: Made sure chat contents are on top of the canvas */
         .chat-header, .messages, .input-area, .stop-generating-btn { position: relative; z-index: 1; }
         
         .chat-header { padding: 15px 25px; background: var(--bg-glass-dark); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; }
@@ -297,7 +293,6 @@
             const splashScreen = document.getElementById('splash-screen');
             if (splashScreen) { setTimeout(() => { splashScreen.classList.add('hidden'); }, 3800); }
             
-            // Initialize the interactive galaxy inside the chat area
             initGalaxyBackground();
 
             loadChatsFromStorage(); 
@@ -348,9 +343,6 @@
             });
         }
         
-        // ================================================================= //
-        // ============= UPGRADED 3D INTERACTIVE GALAXY CODE ================= //
-        // ================================================================= //
         function initGalaxyBackground() {
             const chatArea = document.getElementById('chatArea');
             const canvas = document.getElementById('galaxy-canvas');
@@ -358,7 +350,6 @@
 
             const scene = new THREE.Scene();
             
-            // UPDATED: Enhanced parameters for a better galaxy feel
             const parameters = {
                 count: 150000,
                 size: 0.015,
@@ -367,8 +358,8 @@
                 spin: 0.8,
                 randomness: 0.4,
                 randomnessPower: 3.5,
-                insideColor: '#a75dff', // Using theme color
-                outsideColor: '#00a3ff' // Using theme color
+                insideColor: '#a75dff',
+                outsideColor: '#00a3ff'
             };
 
             let geometry = null;
@@ -418,7 +409,6 @@
             };
             generateGalaxy();
             
-            // UPDATED: Sizing based on the chatArea element
             const sizes = { width: chatArea.clientWidth, height: chatArea.clientHeight };
             const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100);
             camera.position.z = 3;
@@ -428,14 +418,12 @@
             renderer.setSize(sizes.width, sizes.height);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-            // NEW: Mouse interaction for parallax effect
             const mouse = new THREE.Vector2();
             window.addEventListener('mousemove', (event) => {
                 mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
                 mouse.y = -((event.clientY / window.innerHeight) * 2 - 1);
             });
             
-            // UPDATED: Resize logic now observes the chatArea
             const resizeObserver = new ResizeObserver(entries => {
                 for (let entry of entries) {
                     sizes.width = entry.contentRect.width;
@@ -452,9 +440,7 @@
             const tick = () => {
                 const elapsedTime = clock.getElapsedTime();
                 if (points) {
-                    // Base rotation
                     points.rotation.y = elapsedTime * 0.05;
-                    // Parallax effect from mouse
                     camera.position.x += (mouse.x * 0.5 - camera.position.x) * 0.05;
                     camera.position.y += (mouse.y * 0.5 - camera.position.y) * 0.05;
                     camera.lookAt(scene.position);
@@ -464,9 +450,6 @@
             };
             tick();
         }
-        // ================================================================= //
-        // ======================= END GALAXY CODE ========================= //
-        // ================================================================= //
 
         async function sendMessage() {
             const messageText = messageInput.value.trim();
@@ -598,7 +581,23 @@
         function fileToBase64(file) { return new Promise((resolve, reject) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = () => resolve(reader.result.split(',')[1]); reader.onerror = reject; }); }
         function readFileAsText(file) { return new Promise((resolve, reject) => { const reader = new FileReader(); reader.readAsText(file); reader.onload = () => resolve(reader.result); reader.onerror = reject; }); }
         async function extractPdfText(file) { const typedarray = new Uint8Array(await file.arrayBuffer()); const pdf = await pdfjsLib.getDocument(typedarray).promise; let text = ''; for (let i = 1; i <= pdf.numPages; i++) { const page = await pdf.getPage(i); const content = await page.getTextContent(); text += content.items.map(item => item.str).join(' '); } return text; }
-        function createNewChat() { const chatId = `chat_${Date.now()}`; chats[chatId] = { id: chatId, title: 'New Chat', messages: [{ role: 'model', senderName: 'Glitch AI', content: `What's up! I'm Glitch, your new AI sidekick. Ready to brainstorm some wild ideas, get some hype, or just chill and chat? I got you. Let's make some magic happen! ✨`, modelType: 'ai' }], createdAt: newtoISOString(), updatedAt: newtoISOString() }; currentChatId = chatId; saveChatsToStorage(); loadChat(chatId); loadChatHistory(); }
+        
+        function createNewChat() {
+            const chatId = `chat_${Date.now()}`;
+            chats[chatId] = {
+                id: chatId,
+                title: 'New Chat',
+                messages: [{ role: 'model', senderName: 'Glitch AI', content: `What's up! I'm Glitch, your new AI sidekick. Ready to brainstorm some wild ideas, get some hype, or just chill and chat? I got you. Let's make some magic happen! ✨`, modelType: 'ai' }],
+                // FIXED: Corrected typo from newtoISOString() to new Date().toISOString()
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+            currentChatId = chatId;
+            saveChatsToStorage();
+            loadChat(chatId);
+            loadChatHistory();
+        }
+
         function deleteChat(chatId) { if (Object.keys(chats).length <= 1) { alert("You can't delete your only chat!"); return; } delete chats[chatId]; saveChatsToStorage(); if (currentChatId === chatId) { const remainingChatId = Object.keys(chats).sort((a, b) => new Date(chats[b].updatedAt) - new Date(chats[a].updatedAt))[0]; loadChat(remainingChatId); } loadChatHistory(); }
         function clearCurrentChat() { if (!chats[currentChatId] || chats[currentChatId].messages.length <= 1) return; chats[currentChatId].messages = [chats[currentChatId].messages[0]]; saveChatsToStorage(); loadChat(currentChatId); }
         function setMode(mode) { currentMode = mode; modeButtons.forEach(b => b.classList.toggle('active', b.dataset.mode === mode)); previewArea.classList.toggle('hidden', mode !== 'code'); }
