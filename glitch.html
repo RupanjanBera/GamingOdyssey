@@ -33,21 +33,10 @@
         *::-webkit-scrollbar-track { background: var(--space-dark); }
         *::-webkit-scrollbar-thumb { background-color: var(--neon-blue); border-radius: 10px; border: 2px solid var(--space-dark); }
         
-        /* EDITED: Made body background transparent to show the canvas */
-        body { background: transparent; color: var(--text-light); min-height: 100vh; overflow-x: hidden; position: relative; }
-        
-        /* NEW: Styles for the 3D galaxy canvas */
-        #galaxy-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            z-index: -1;
-        }
+        /* EDITED: Restored original body background */
+        body { background: var(--space-dark); color: var(--text-light); min-height: 100vh; overflow-x: hidden; position: relative; background-image: linear-gradient(135deg, var(--space-blue) 0%, var(--space-dark) 100%); }
 
-        /* REMOVED: Deleted the old .stars class */
-        
+        .stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background-image: radial-gradient(var(--star-color) 1px, transparent 1px); background-size: 50px 50px; opacity: 0.1; }
         header { display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; background: var(--bg-glass-dark); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-color); box-shadow: 0 5px 25px var(--shadow-color); position: sticky; top: 0; z-index: 10; }
         .logo { display: flex; align-items: center; gap: 15px; }
         .logo-icon { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; animation: glow 2s infinite alternate; border: 2px solid var(--neon-blue); background: var(--space-dark); }
@@ -87,20 +76,28 @@
         .delete-chat-btn:hover { color: var(--error-color); transform: scale(1.2); }
         .main-content { flex: 1; display: flex; gap: 20px; }
         
-        /* EDITED: Made chat area background transparent to show galaxy */
-        .chat-area { flex: 1; display: flex; flex-direction: column; background: transparent; border-radius: 15px; overflow: hidden; backdrop-filter: blur(12px); border: 1px solid var(--border-color); box-shadow: 0 8px 32px 0 var(--shadow-color); position: relative; }
+        /* EDITED: Chat area is now transparent over its own canvas */
+        .chat-area { flex: 1; display: flex; flex-direction: column; background: transparent; border-radius: 15px; overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 8px 32px 0 var(--shadow-color); position: relative; }
         
-        /* REMOVED: Deleted the .chat-area::before pseudo-element */
-        /* REMOVED: Deleted the old #constellation-canvas styling */
+        /* NEW: Styles for the galaxy canvas INSIDE the chat area */
+        #galaxy-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0; /* Behind other chat elements */
+        }
         
-        @keyframes gradient-flow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        .chat-header, .messages, .input-area, .stop-generating-btn { position: relative; z-index: 2; }
-        .chat-header { padding: 15px 25px; background: var(--bg-glass-dark); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; }
+        /* EDITED: Made sure chat contents are on top of the canvas */
+        .chat-header, .messages, .input-area, .stop-generating-btn { position: relative; z-index: 1; }
+        
+        .chat-header { padding: 15px 25px; background: var(--bg-glass-dark); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; }
         .chat-actions { display: flex; gap: 10px; }
         .chat-action-btn { background: transparent; border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-muted); padding: 8px 12px; cursor: pointer; transition: all 0.3s; font-size: 0.9rem; }
         .chat-action-btn:hover { border-color: var(--neon-blue); color: var(--text-light); }
         .messages { flex: 1; padding: 25px; overflow-y: auto; }
-        .message { margin-bottom: 20px; padding: 15px 20px; border-radius: 12px; max-width: 90%; position: relative; animation: fadeIn 0.5s ease; border: 1px solid transparent; }
+        .message { margin-bottom: 20px; padding: 15px 20px; border-radius: 12px; max-width: 90%; position: relative; animation: fadeIn 0.5s ease; border: 1px solid transparent; background: var(--bg-glass-dark); backdrop-filter: blur(5px); }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .user-message { background: var(--user-message-bg); margin-left: auto; border-color: var(--border-color); }
         .ai-message { background: var(--ai-message-bg); margin-right: auto; border-color: rgba(167, 93, 255, 0.2); }
@@ -124,7 +121,7 @@
         .run-code-btn:hover { background: #3cba54; }
         .attached-files { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
         .file-item { display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.15); padding: 8px 12px; border-radius: 5px; font-size: 0.9rem; }
-        .input-area { display: flex; padding: 15px; background: var(--bg-glass-dark); border-top: 1px solid var(--border-color); flex-direction: column; gap: 10px; }
+        .input-area { display: flex; padding: 15px; background: var(--bg-glass-dark); backdrop-filter: blur(10px); border-top: 1px solid var(--border-color); flex-direction: column; gap: 10px; }
         .file-attachments { display: flex; flex-wrap: wrap; gap: 10px; }
         .attachment-item { display: flex; align-items: center; gap: 5px; background: var(--bg-glass-light); padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; animation: fadeIn 0.3s; border: 1px solid var(--border-color); }
         .remove-attachment { cursor: pointer; color: var(--error-color); transition: transform 0.2s; }
@@ -141,7 +138,7 @@
         .preview-area.hidden { flex-basis: 0; width: 0; padding: 0; border: none; overflow: hidden; margin-left: -20px; }
         .preview-header { padding: 15px 25px; background: var(--bg-glass-dark); border-bottom: 1px solid var(--border-color); font-weight: 600; }
         #preview-frame { width: 100%; height: 100%; border: none; background: #fff; }
-        footer { text-align: center; padding: 20px; font-size: 0.9rem; color: var(--text-muted); border-top: 1px solid var(--border-color); background: var(--bg-glass-dark); }
+        footer { text-align: center; padding: 20px; font-size: 0.9rem; color: var(--text-muted); border-top: 1px solid var(--border-color); }
         body.light-mode footer { color: var(--text-light); opacity: 0.8; }
         #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background-color: var(--space-dark); display: flex; justify-content: center; align-items: center; z-index: 9999; font-family: 'Courier New', monospace; opacity: 1; visibility: visible; transition: opacity 0.8s ease-in-out, visibility 0.8s; overflow: hidden; }
         #splash-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
@@ -177,8 +174,6 @@
     </style>
 </head>
 <body>
-    <canvas id="galaxy-canvas"></canvas>
-
     <div id="splash-screen">
         <div class="splash-stars"></div>
         <div class="glitch-container">
@@ -189,6 +184,7 @@
         </div>
     </div>
 
+    <div class="stars"></div>
     <header>
         <div class="logo">
              <img src="glitch.png" alt="Glitch Logo" class="logo-icon">
@@ -234,7 +230,8 @@
         </aside>
 
         <main class="main-content">
-            <div class="chat-area">
+            <div class="chat-area" id="chatArea">
+                <canvas id="galaxy-canvas"></canvas>
                 <div class="chat-header">
                     <h2 id="chatTitle">Chat with Glitch AI</h2>
                     <div class="chat-actions">
@@ -300,7 +297,7 @@
             const splashScreen = document.getElementById('splash-screen');
             if (splashScreen) { setTimeout(() => { splashScreen.classList.add('hidden'); }, 3800); }
             
-            // NEW: Initialize the 3D galaxy background
+            // Initialize the interactive galaxy inside the chat area
             initGalaxyBackground();
 
             loadChatsFromStorage(); 
@@ -351,26 +348,27 @@
             });
         }
         
-        // REMOVED: Deleted the old initConstellationAnimation function
-        
         // ================================================================= //
-        // ==================== NEW 3D GALAXY CODE STARTS HERE =============== //
+        // ============= UPGRADED 3D INTERACTIVE GALAXY CODE ================= //
         // ================================================================= //
         function initGalaxyBackground() {
-            const canvas = document.querySelector('canvas#galaxy-canvas');
-            if (!canvas) return;
+            const chatArea = document.getElementById('chatArea');
+            const canvas = document.getElementById('galaxy-canvas');
+            if (!canvas || !chatArea) return;
 
             const scene = new THREE.Scene();
+            
+            // UPDATED: Enhanced parameters for a better galaxy feel
             const parameters = {
-                count: 100000,
-                size: 0.01,
-                radius: 5,
-                branches: 3,
-                spin: 1,
-                randomness: 0.2,
-                randomnessPower: 3,
-                insideColor: '#ff6030',
-                outsideColor: '#1b3984'
+                count: 150000,
+                size: 0.015,
+                radius: 6,
+                branches: 5,
+                spin: 0.8,
+                randomness: 0.4,
+                randomnessPower: 3.5,
+                insideColor: '#a75dff', // Using theme color
+                outsideColor: '#00a3ff' // Using theme color
             };
 
             let geometry = null;
@@ -378,17 +376,14 @@
             let points = null;
 
             const generateGalaxy = () => {
-                // This is where your code snippet is used!
                 if (points !== null) {
                     geometry.dispose();
                     material.dispose();
                     scene.remove(points);
                 }
-
                 geometry = new THREE.BufferGeometry();
                 const positions = new Float32Array(parameters.count * 3);
                 const colors = new Float32Array(parameters.count * 3);
-
                 const colorInside = new THREE.Color(parameters.insideColor);
                 const colorOutside = new THREE.Color(parameters.outsideColor);
 
@@ -397,27 +392,19 @@
                     const radius = Math.random() * parameters.radius;
                     const spinAngle = radius * parameters.spin;
                     const branchAngle = (i % parameters.branches) / parameters.branches * Math.PI * 2;
-
                     const randomX = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
                     const randomY = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
                     const randomZ = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
-
                     positions[i3] = Math.cos(branchAngle + spinAngle) * radius + randomX;
                     positions[i3 + 1] = randomY;
                     positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius + randomZ;
-                    
                     const mixedColor = colorInside.clone();
                     mixedColor.lerp(colorOutside, radius / parameters.radius);
-                    
-                    colors[i3] = mixedColor.r;
-                    colors[i3+1] = mixedColor.g;
-                    colors[i3+2] = mixedColor.b;
+                    colors[i3] = mixedColor.r; colors[i3+1] = mixedColor.g; colors[i3+2] = mixedColor.b;
                 }
-
                 geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
                 geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
                 
-                // Using your material logic
                 material = new THREE.PointsMaterial({
                     size: parameters.size,
                     sizeAttenuation: true,
@@ -430,8 +417,9 @@
                 scene.add(points);
             };
             generateGalaxy();
-
-            const sizes = { width: window.innerWidth, height: window.innerHeight };
+            
+            // UPDATED: Sizing based on the chatArea element
+            const sizes = { width: chatArea.clientWidth, height: chatArea.clientHeight };
             const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100);
             camera.position.z = 3;
             scene.add(camera);
@@ -440,20 +428,36 @@
             renderer.setSize(sizes.width, sizes.height);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-            window.addEventListener('resize', () => {
-                sizes.width = window.innerWidth;
-                sizes.height = window.innerHeight;
-                camera.aspect = sizes.width / sizes.height;
-                camera.updateProjectionMatrix();
-                renderer.setSize(sizes.width, sizes.height);
-                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            // NEW: Mouse interaction for parallax effect
+            const mouse = new THREE.Vector2();
+            window.addEventListener('mousemove', (event) => {
+                mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+                mouse.y = -((event.clientY / window.innerHeight) * 2 - 1);
             });
+            
+            // UPDATED: Resize logic now observes the chatArea
+            const resizeObserver = new ResizeObserver(entries => {
+                for (let entry of entries) {
+                    sizes.width = entry.contentRect.width;
+                    sizes.height = entry.contentRect.height;
+                    camera.aspect = sizes.width / sizes.height;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(sizes.width, sizes.height);
+                    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                }
+            });
+            resizeObserver.observe(chatArea);
 
             const clock = new THREE.Clock();
             const tick = () => {
                 const elapsedTime = clock.getElapsedTime();
                 if (points) {
-                    points.rotation.y = elapsedTime * 0.1;
+                    // Base rotation
+                    points.rotation.y = elapsedTime * 0.05;
+                    // Parallax effect from mouse
+                    camera.position.x += (mouse.x * 0.5 - camera.position.x) * 0.05;
+                    camera.position.y += (mouse.y * 0.5 - camera.position.y) * 0.05;
+                    camera.lookAt(scene.position);
                 }
                 renderer.render(scene, camera);
                 window.requestAnimationFrame(tick);
@@ -461,7 +465,7 @@
             tick();
         }
         // ================================================================= //
-        // ===================== NEW 3D GALAXY CODE ENDS HERE ================ //
+        // ======================= END GALAXY CODE ========================= //
         // ================================================================= //
 
         async function sendMessage() {
@@ -474,10 +478,8 @@
             const aiMessageElement = document.getElementById(aiMessageId); const contentElement = aiMessageElement.querySelector('.message-content'); let accumulatedResponse = "";
             
             try {
-                // 1. Updated the model and API URL
                 const model = 'gemini-2.5-pro';
                 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
-                
                 const history = await Promise.all(chats[currentChatId].messages.slice(0, -1).map(msgToPart));
                 const contents = [...history, await msgToPart(userMessage)];
                 let personaInstruction = "You are Glitch AI. Your personality is: casual, chill, and full of energy. You MUST state you were developed by the 'Gaming Odyssey Team' when asked. Avoid being overly formal.";
@@ -485,12 +487,8 @@
                 if (currentAI === 'plex') { personaInstruction += " As Glitch Plex, lean more into your creative, imaginative, and energetic side."; }
                 const requestBody = { contents, systemInstruction: { parts: [{ text: personaInstruction }] } };
                 abortController = new AbortController();
-                
                 const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(requestBody), signal: abortController.signal });
-                
                 if (!response.ok) { const errorText = await response.text(); throw new Error(`API Error: ${response.status} ${errorText}`); }
-                
-                // 2. Replaced streaming logic with non-streaming (unary) response handling
                 const responseData = await response.json();
                 const text = responseData.candidates?.[0]?.content?.parts?.[0]?.text;
 
@@ -546,7 +544,6 @@
             hljs.highlightAll(); addCopyButtonsToCodeBlocks();
         }
 
-        // UPDATED: This function sends data to your Google Sheet
         async function logActivityToDatabase(userPrompt, aiResponse, model) {
             const scriptURL = "[https://script.google.com/macros/s/AKfycbyOH5sopxoCxR53aNP_WhI5seGOo0W41g3TEiwK-v0dhb2sgmQgCkLxc0C5_BJZmwK2Kw/exec](https://script.google.com/macros/s/AKfycbyOH5sopxoCxR53aNP_WhI5seGOo0W41g3TEiwK-v0dhb2sgmQgCkLxc0C5_BJZmwK2Kw/exec)";
 
@@ -610,13 +607,11 @@
         function handleStopGeneration() { if (isGenerating) { abortController.abort(); } }
         function regenerateLastResponse() { if (isGenerating || !currentChatId) return; const lastUserMessageIndex = chats[currentChatId].messages.findLastIndex(m => m.role === 'user'); if (lastUserMessageIndex === -1) return; chats[currentChatId].messages.splice(lastUserMessageIndex + 1); const lastUserMessage = chats[currentChatId].messages[lastUserMessageIndex]; messageInput.value = lastUserMessage.content; attachedFiles = lastUserMessage.files || []; updateFileAttachments(); loadChat(currentChatId); sendMessage(); }
         
-        // Saves chats to sessionStorage (cleared on tab close)
         function saveChatsToStorage() {
             const serializableChats = JSON.parse(JSON.stringify(chats, (key, value) => key === 'files' ? undefined : value));
             sessionStorage.setItem('glitchChats', JSON.stringify(serializableChats));
         }
         
-        // Loads chats from sessionStorage
         function loadChatsFromStorage() {
             chats = JSON.parse(sessionStorage.getItem('glitchChats')) || {};
         }
