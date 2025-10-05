@@ -19,6 +19,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
     <style>
         :root {
             --space-dark: #0D1117; --space-blue: #161B22; --space-purple: #2C204B; --star-color: #ffffff; --neon-blue: #00A3FF; --neon-purple: #A75DFF; --neon-green: #00FF9D; --neon-pink: #FF4DA6; --neon-orange: #FF7B25; --text-light: #E6EDF3; --text-muted: #8B949E; --user-message-bg: rgba(0, 163, 255, 0.1); --ai-message-bg: rgba(167, 93, 255, 0.1); --plex-message-bg: rgba(255, 123, 37, 0.1); --error-color: #F85149; --success-color: #2EA043; --warning-color: #F0A91D; --border-color: rgba(66, 133, 244, 0.2); --bg-glass-light: rgba(22, 27, 34, 0.7); --bg-glass-dark: rgba(13, 17, 23, 0.8); --shadow-color: rgba(0, 0, 0, 0.5); --code-bg: #010409; --font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -30,7 +32,9 @@
         *::-webkit-scrollbar { width: 8px; }
         *::-webkit-scrollbar-track { background: var(--space-dark); }
         *::-webkit-scrollbar-thumb { background-color: var(--neon-blue); border-radius: 10px; border: 2px solid var(--space-dark); }
+        
         body { background: var(--space-dark); color: var(--text-light); min-height: 100vh; overflow-x: hidden; position: relative; background-image: linear-gradient(135deg, var(--space-blue) 0%, var(--space-dark) 100%); }
+
         .stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background-image: radial-gradient(var(--star-color) 1px, transparent 1px); background-size: 50px 50px; opacity: 0.1; }
         header { display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; background: var(--bg-glass-dark); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-color); box-shadow: 0 5px 25px var(--shadow-color); position: sticky; top: 0; z-index: 10; }
         .logo { display: flex; align-items: center; gap: 15px; }
@@ -70,17 +74,26 @@
         .delete-chat-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; transition: all 0.3s; font-size: 0.9rem; padding: 5px; }
         .delete-chat-btn:hover { color: var(--error-color); transform: scale(1.2); }
         .main-content { flex: 1; display: flex; gap: 20px; }
-        .chat-area { flex: 1; display: flex; flex-direction: column; background: var(--bg-glass-light); border-radius: 15px; overflow: hidden; backdrop-filter: blur(12px); border: 1px solid var(--border-color); box-shadow: 0 8px 32px 0 var(--shadow-color); position: relative; }
-        .chat-area::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 0; background: linear-gradient(45deg, var(--space-blue), var(--space-purple), var(--neon-blue), var(--space-dark)); background-size: 400% 400%; animation: gradient-flow 15s ease infinite; opacity: 0.6; }
-        #constellation-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.7; }
-        @keyframes gradient-flow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        .chat-header, .messages, .input-area, .stop-generating-btn { position: relative; z-index: 2; }
-        .chat-header { padding: 15px 25px; background: var(--bg-glass-dark); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; }
+        
+        .chat-area { flex: 1; display: flex; flex-direction: column; background: transparent; border-radius: 15px; overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 8px 32px 0 var(--shadow-color); position: relative; }
+        
+        #galaxy-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        
+        .chat-header, .messages, .input-area, .stop-generating-btn { position: relative; z-index: 1; }
+        
+        .chat-header { padding: 15px 25px; background: var(--bg-glass-dark); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; }
         .chat-actions { display: flex; gap: 10px; }
         .chat-action-btn { background: transparent; border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-muted); padding: 8px 12px; cursor: pointer; transition: all 0.3s; font-size: 0.9rem; }
         .chat-action-btn:hover { border-color: var(--neon-blue); color: var(--text-light); }
         .messages { flex: 1; padding: 25px; overflow-y: auto; }
-        .message { margin-bottom: 20px; padding: 15px 20px; border-radius: 12px; max-width: 90%; position: relative; animation: fadeIn 0.5s ease; border: 1px solid transparent; }
+        .message { margin-bottom: 20px; padding: 15px 20px; border-radius: 12px; max-width: 90%; position: relative; animation: fadeIn 0.5s ease; border: 1px solid transparent; background: var(--bg-glass-dark); backdrop-filter: blur(5px); }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .user-message { background: var(--user-message-bg); margin-left: auto; border-color: var(--border-color); }
         .ai-message { background: var(--ai-message-bg); margin-right: auto; border-color: rgba(167, 93, 255, 0.2); }
@@ -104,7 +117,7 @@
         .run-code-btn:hover { background: #3cba54; }
         .attached-files { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
         .file-item { display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.15); padding: 8px 12px; border-radius: 5px; font-size: 0.9rem; }
-        .input-area { display: flex; padding: 15px; background: var(--bg-glass-dark); border-top: 1px solid var(--border-color); flex-direction: column; gap: 10px; }
+        .input-area { display: flex; padding: 15px; background: var(--bg-glass-dark); backdrop-filter: blur(10px); border-top: 1px solid var(--border-color); flex-direction: column; gap: 10px; }
         .file-attachments { display: flex; flex-wrap: wrap; gap: 10px; }
         .attachment-item { display: flex; align-items: center; gap: 5px; background: var(--bg-glass-light); padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; animation: fadeIn 0.3s; border: 1px solid var(--border-color); }
         .remove-attachment { cursor: pointer; color: var(--error-color); transition: transform 0.2s; }
@@ -213,8 +226,8 @@
         </aside>
 
         <main class="main-content">
-            <div class="chat-area">
-                <canvas id="constellation-canvas"></canvas>
+            <div class="chat-area" id="chatArea">
+                <canvas id="galaxy-canvas"></canvas>
                 <div class="chat-header">
                     <h2 id="chatTitle">Chat with Glitch AI</h2>
                     <div class="chat-actions">
@@ -279,7 +292,9 @@
         document.addEventListener('DOMContentLoaded', () => {
             const splashScreen = document.getElementById('splash-screen');
             if (splashScreen) { setTimeout(() => { splashScreen.classList.add('hidden'); }, 3800); }
-            initConstellationAnimation();
+            
+            initGalaxyBackground();
+
             loadChatsFromStorage(); 
             setupEventListeners();
             const isDarkMode = localStorage.getItem('glitchTheme') !== 'light';
@@ -328,11 +343,113 @@
             });
         }
         
-        function initConstellationAnimation() { const canvas = document.getElementById('constellation-canvas'); if (!canvas) return; const ctx = canvas.getContext('2d'); let particles = []; const particleCount = 70; const maxDistance = 100; function resizeCanvas() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; } resizeCanvas(); window.addEventListener('resize', resizeCanvas); for (let i = 0; i < particleCount; i++) { particles.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, vx: Math.random() * 0.5 - 0.25, vy: Math.random() * 0.5 - 0.25 }); } function draw() { if (!ctx) return; ctx.clearRect(0, 0, canvas.width, canvas.height); const color = document.body.classList.contains('light-mode') ? 'rgba(0, 163, 255, 0.4)' : 'rgba(0, 163, 255, 0.3)'; ctx.fillStyle = color; ctx.strokeStyle = color; particles.forEach(p => { ctx.beginPath(); ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2); ctx.fill(); p.x += p.vx; p.y += p.vy; if (p.x < 0 || p.x > canvas.width) p.vx *= -1; if (p.y < 0 || p.y > canvas.height) p.vy *= -1; }); for (let i = 0; i < particles.length; i++) { for (let j = i + 1; j < particles.length; j++) { const dist = Math.sqrt(Math.pow(particles[i].x - particles[j].x, 2) + Math.pow(particles[i].y - particles[j].y, 2)); if (dist < maxDistance) { ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.lineWidth = 1 - dist / maxDistance; ctx.stroke(); } } } requestAnimationFrame(draw); } draw(); }
+        function initGalaxyBackground() {
+            const chatArea = document.getElementById('chatArea');
+            const canvas = document.getElementById('galaxy-canvas');
+            if (!canvas || !chatArea) return;
 
-        // ================================================================= //
-        // ==================== UPDATED FUNCTION STARTS HERE =================== //
-        // ================================================================= //
+            const scene = new THREE.Scene();
+            
+            const parameters = {
+                count: 150000,
+                size: 0.015,
+                radius: 6,
+                branches: 5,
+                spin: 0.8,
+                randomness: 0.4,
+                randomnessPower: 3.5,
+                insideColor: '#a75dff',
+                outsideColor: '#00a3ff'
+            };
+
+            let geometry = null;
+            let material = null;
+            let points = null;
+
+            const generateGalaxy = () => {
+                if (points !== null) {
+                    geometry.dispose();
+                    material.dispose();
+                    scene.remove(points);
+                }
+                geometry = new THREE.BufferGeometry();
+                const positions = new Float32Array(parameters.count * 3);
+                const colors = new Float32Array(parameters.count * 3);
+                const colorInside = new THREE.Color(parameters.insideColor);
+                const colorOutside = new THREE.Color(parameters.outsideColor);
+
+                for (let i = 0; i < parameters.count; i++) {
+                    const i3 = i * 3;
+                    const radius = Math.random() * parameters.radius;
+                    const spinAngle = radius * parameters.spin;
+                    const branchAngle = (i % parameters.branches) / parameters.branches * Math.PI * 2;
+                    const randomX = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
+                    const randomY = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
+                    const randomZ = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
+                    positions[i3] = Math.cos(branchAngle + spinAngle) * radius + randomX;
+                    positions[i3 + 1] = randomY;
+                    positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius + randomZ;
+                    const mixedColor = colorInside.clone();
+                    mixedColor.lerp(colorOutside, radius / parameters.radius);
+                    colors[i3] = mixedColor.r; colors[i3+1] = mixedColor.g; colors[i3+2] = mixedColor.b;
+                }
+                geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+                geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+                
+                material = new THREE.PointsMaterial({
+                    size: parameters.size,
+                    sizeAttenuation: true,
+                    depthWrite: false,
+                    blending: THREE.AdditiveBlending,
+                    vertexColors: true
+                });
+
+                points = new THREE.Points(geometry, material);
+                scene.add(points);
+            };
+            generateGalaxy();
+            
+            const sizes = { width: chatArea.clientWidth, height: chatArea.clientHeight };
+            const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100);
+            camera.position.z = 3;
+            scene.add(camera);
+            
+            const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+            renderer.setSize(sizes.width, sizes.height);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            const mouse = new THREE.Vector2();
+            window.addEventListener('mousemove', (event) => {
+                mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+                mouse.y = -((event.clientY / window.innerHeight) * 2 - 1);
+            });
+            
+            const resizeObserver = new ResizeObserver(entries => {
+                for (let entry of entries) {
+                    sizes.width = entry.contentRect.width;
+                    sizes.height = entry.contentRect.height;
+                    camera.aspect = sizes.width / sizes.height;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(sizes.width, sizes.height);
+                    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                }
+            });
+            resizeObserver.observe(chatArea);
+
+            const clock = new THREE.Clock();
+            const tick = () => {
+                const elapsedTime = clock.getElapsedTime();
+                if (points) {
+                    points.rotation.y = elapsedTime * 0.05;
+                    camera.position.x += (mouse.x * 0.5 - camera.position.x) * 0.05;
+                    camera.position.y += (mouse.y * 0.5 - camera.position.y) * 0.05;
+                    camera.lookAt(scene.position);
+                }
+                renderer.render(scene, camera);
+                window.requestAnimationFrame(tick);
+            };
+            tick();
+        }
 
         async function sendMessage() {
             const messageText = messageInput.value.trim();
@@ -344,10 +461,8 @@
             const aiMessageElement = document.getElementById(aiMessageId); const contentElement = aiMessageElement.querySelector('.message-content'); let accumulatedResponse = "";
             
             try {
-                // 1. Updated the model and API URL
                 const model = 'gemini-2.5-pro';
                 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
-                
                 const history = await Promise.all(chats[currentChatId].messages.slice(0, -1).map(msgToPart));
                 const contents = [...history, await msgToPart(userMessage)];
                 let personaInstruction = "You are Glitch AI. Your personality is: casual, chill, and full of energy. You MUST state you were developed by the 'Gaming Odyssey Team' when asked. Avoid being overly formal.";
@@ -355,12 +470,8 @@
                 if (currentAI === 'plex') { personaInstruction += " As Glitch Plex, lean more into your creative, imaginative, and energetic side."; }
                 const requestBody = { contents, systemInstruction: { parts: [{ text: personaInstruction }] } };
                 abortController = new AbortController();
-                
                 const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(requestBody), signal: abortController.signal });
-                
                 if (!response.ok) { const errorText = await response.text(); throw new Error(`API Error: ${response.status} ${errorText}`); }
-                
-                // 2. Replaced streaming logic with non-streaming (unary) response handling
                 const responseData = await response.json();
                 const text = responseData.candidates?.[0]?.content?.parts?.[0]?.text;
 
@@ -389,10 +500,6 @@
             }
         }
         
-        // ================================================================= //
-        // ===================== UPDATED FUNCTION ENDS HERE ==================== //
-        // ================================================================= //
-
         function displayMessage(message) {
             const isUser = message.role === 'user'; const senderClass = isUser ? 'user-message' : (message.modelType === 'plex' ? 'plex-message' : 'ai-message');
             const messageDiv = document.createElement('div'); messageDiv.className = `message ${senderClass}`; if (message.id) messageDiv.id = message.id;
@@ -420,7 +527,6 @@
             hljs.highlightAll(); addCopyButtonsToCodeBlocks();
         }
 
-        // UPDATED: This function sends data to your Google Sheet
         async function logActivityToDatabase(userPrompt, aiResponse, model) {
             const scriptURL = "[https://script.google.com/macros/s/AKfycbyOH5sopxoCxR53aNP_WhI5seGOo0W41g3TEiwK-v0dhb2sgmQgCkLxc0C5_BJZmwK2Kw/exec](https://script.google.com/macros/s/AKfycbyOH5sopxoCxR53aNP_WhI5seGOo0W41g3TEiwK-v0dhb2sgmQgCkLxc0C5_BJZmwK2Kw/exec)";
 
@@ -475,7 +581,23 @@
         function fileToBase64(file) { return new Promise((resolve, reject) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = () => resolve(reader.result.split(',')[1]); reader.onerror = reject; }); }
         function readFileAsText(file) { return new Promise((resolve, reject) => { const reader = new FileReader(); reader.readAsText(file); reader.onload = () => resolve(reader.result); reader.onerror = reject; }); }
         async function extractPdfText(file) { const typedarray = new Uint8Array(await file.arrayBuffer()); const pdf = await pdfjsLib.getDocument(typedarray).promise; let text = ''; for (let i = 1; i <= pdf.numPages; i++) { const page = await pdf.getPage(i); const content = await page.getTextContent(); text += content.items.map(item => item.str).join(' '); } return text; }
-        function createNewChat() { const chatId = `chat_${Date.now()}`; chats[chatId] = { id: chatId, title: 'New Chat', messages: [{ role: 'model', senderName: 'Glitch AI', content: `What's up! I'm Glitch, your new AI sidekick. Ready to brainstorm some wild ideas, get some hype, or just chill and chat? I got you. Let's make some magic happen! ✨`, modelType: 'ai' }], createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }; currentChatId = chatId; saveChatsToStorage(); loadChat(chatId); loadChatHistory(); }
+        
+        function createNewChat() {
+            const chatId = `chat_${Date.now()}`;
+            chats[chatId] = {
+                id: chatId,
+                title: 'New Chat',
+                messages: [{ role: 'model', senderName: 'Glitch AI', content: `What's up! I'm Glitch, your new AI sidekick. Ready to brainstorm some wild ideas, get some hype, or just chill and chat? I got you. Let's make some magic happen! ✨`, modelType: 'ai' }],
+                // FIXED: Corrected typo from newtoISOString() to new Date().toISOString()
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+            currentChatId = chatId;
+            saveChatsToStorage();
+            loadChat(chatId);
+            loadChatHistory();
+        }
+
         function deleteChat(chatId) { if (Object.keys(chats).length <= 1) { alert("You can't delete your only chat!"); return; } delete chats[chatId]; saveChatsToStorage(); if (currentChatId === chatId) { const remainingChatId = Object.keys(chats).sort((a, b) => new Date(chats[b].updatedAt) - new Date(chats[a].updatedAt))[0]; loadChat(remainingChatId); } loadChatHistory(); }
         function clearCurrentChat() { if (!chats[currentChatId] || chats[currentChatId].messages.length <= 1) return; chats[currentChatId].messages = [chats[currentChatId].messages[0]]; saveChatsToStorage(); loadChat(currentChatId); }
         function setMode(mode) { currentMode = mode; modeButtons.forEach(b => b.classList.toggle('active', b.dataset.mode === mode)); previewArea.classList.toggle('hidden', mode !== 'code'); }
@@ -484,13 +606,11 @@
         function handleStopGeneration() { if (isGenerating) { abortController.abort(); } }
         function regenerateLastResponse() { if (isGenerating || !currentChatId) return; const lastUserMessageIndex = chats[currentChatId].messages.findLastIndex(m => m.role === 'user'); if (lastUserMessageIndex === -1) return; chats[currentChatId].messages.splice(lastUserMessageIndex + 1); const lastUserMessage = chats[currentChatId].messages[lastUserMessageIndex]; messageInput.value = lastUserMessage.content; attachedFiles = lastUserMessage.files || []; updateFileAttachments(); loadChat(currentChatId); sendMessage(); }
         
-        // Saves chats to sessionStorage (cleared on tab close)
         function saveChatsToStorage() {
             const serializableChats = JSON.parse(JSON.stringify(chats, (key, value) => key === 'files' ? undefined : value));
             sessionStorage.setItem('glitchChats', JSON.stringify(serializableChats));
         }
         
-        // Loads chats from sessionStorage
         function loadChatsFromStorage() {
             chats = JSON.parse(sessionStorage.getItem('glitchChats')) || {};
         }
