@@ -19,8 +19,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@latest"></script>
-
     <style>
         :root {
             --space-dark: #0D1117; --space-blue: #161B22; --space-purple: #2C204B; --star-color: #ffffff; --neon-blue: #00A3FF; --neon-purple: #A75DFF; --neon-green: #00FF9D; --neon-pink: #FF4DA6; --neon-orange: #FF7B25; --text-light: #E6EDF3; --text-muted: #8B949E; --user-message-bg: rgba(0, 163, 255, 0.1); --ai-message-bg: rgba(167, 93, 255, 0.1); --plex-message-bg: rgba(255, 123, 37, 0.1); --error-color: #F85149; --success-color: #2EA043; --warning-color: #F0A91D; --border-color: rgba(66, 133, 244, 0.2); --bg-glass-light: rgba(22, 27, 34, 0.7); --bg-glass-dark: rgba(13, 17, 23, 0.8); --shadow-color: rgba(0, 0, 0, 0.5); --code-bg: #010409; --font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -176,9 +174,9 @@
              <h1 class="logo-text">Glitch AI</h1>
         </div>
         <div class="header-actions">
-            <div class="api-status" id="apiStatus">
+            <div class="api-status">
                 <div class="status-indicator"></div>
-                <span id="apiStatusText">Initializing...</span>
+                <span>AI Service Connected</span>
             </div>
             <div class="theme-switch-wrapper">
                 <label class="theme-switch" for="theme-checkbox">
@@ -232,8 +230,8 @@
                         <button class="input-btn" id="fileInputBtn" title="Attach Files"><i class="fas fa-paperclip"></i></button>
                         <button class="input-btn" id="webSearchBtn" title="Toggle Web Search"><i class="fas fa-globe"></i></button>
                         <input type="file" id="fileInput" multiple style="display: none;">
-                        <textarea class="message-input" id="messageInput" placeholder="Loading AI model..." rows="1" disabled></textarea>
-                        <button class="send-button" id="sendButton" disabled>
+                        <textarea class="message-input" id="messageInput" placeholder="Type your message here..." rows="1"></textarea>
+                        <button class="send-button" id="sendButton">
                             <span class="send-text"><i class="fas fa-paper-plane"></i></span>
                             <span class="loader"></span>
                         </button>
@@ -258,18 +256,16 @@
     <audio id="notification-sound" src="https://cdn.pixabay.com/download/audio/2022/11/17/audio_87df394334.mp3" preload="auto"></audio>
     <audio id="hover-sound" src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_bb630cc098.mp3" preload="auto"></audio>
 
-    <script type="module">
-        import { CreateChatModule } from "https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@latest";
-
+    <script>
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+        
+        const GEMINI_API_KEY = 'AIzaSyAbcFIlAIYGWWj5lwQYcDjmyL3bCs_X3Qc'; // WARNING: For development only. Use a backend proxy in production.
 
-        let chat; // WebLLM chat instance
-        let currentChatId = null; let chats = {}; let currentMode = 'chat'; let currentAI = 'zhoros'; let isWebSearchActive = false; let attachedFiles = []; let isGenerating = false;
+        let currentChatId = null; let chats = {}; let currentMode = 'chat'; let currentAI = 'zhoros'; let isWebSearchActive = false; let attachedFiles = []; let isGenerating = false; let abortController = new AbortController(); 
         let isAudioUnlocked = false; let lastTypingSoundTime = 0;
         
         const messageInput = document.getElementById('messageInput'); const sendButton = document.getElementById('sendButton'); const messagesContainer = document.getElementById('messages'); const chatHistory = document.getElementById('chatHistory'); const newChatBtn = document.getElementById('newChatBtn'); const modeButtons = document.querySelectorAll('.mode-btn'); const aiOptions = document.querySelectorAll('.ai-option'); const webSearchBtn = document.getElementById('webSearchBtn'); const chatTitle = document.getElementById('chatTitle'); const fileInput = document.getElementById('fileInput'); const stopGeneratingBtn = document.getElementById('stopGeneratingBtn'); const themeCheckbox = document.getElementById('theme-checkbox');
         const previewArea = document.getElementById('previewArea'); const previewFrame = document.getElementById('preview-frame');
-        const apiStatusText = document.getElementById('apiStatusText');
         
         const sounds = {
             glitch: document.getElementById('glitch-sound'),
@@ -284,7 +280,6 @@
             const splashScreen = document.getElementById('splash-screen');
             if (splashScreen) { setTimeout(() => { splashScreen.classList.add('hidden'); }, 3800); }
             initConstellationAnimation();
-            initWebLLM(); // Start loading the AI model
             loadChatsFromStorage(); 
             setupEventListeners();
             const isDarkMode = localStorage.getItem('glitchTheme') !== 'light';
@@ -292,110 +287,7 @@
             if (Object.keys(chats).length === 0) { createNewChat(); } else { const latestChatId = Object.keys(chats).sort((a, b) => new Date(chats[b].updatedAt) - new Date(chats[a].updatedAt))[0]; loadChat(latestChatId); }
             loadChatHistory();
         });
-
-        // ================================================================= //
-        // ==================== NEW WEBLLM FUNCTIONS ======================= //
-        // ================================================================= //
-
-        async function initWebLLM() {
-            apiStatusText.textContent = "🧠 Loading AI...";
-            const selectedModel = "Llama-3.1-8B-Instruct-q4f16_1-MLC";
-
-            try {
-                chat = await CreateChatModule(selectedModel, {
-                    initProgressCallback: (report) => {
-                        apiStatusText.textContent = `🧠 ${report.text.replace("Fetching", "")}`;
-                    }
-                });
-                apiStatusText.textContent = "✅ AI Ready";
-                messageInput.placeholder = "Type your message here...";
-                messageInput.disabled = false;
-                sendButton.disabled = false;
-            } catch (error) {
-                apiStatusText.textContent = "❌ AI Load Failed";
-                messageInput.placeholder = "Could not load the AI model.";
-                console.error("WebLLM initialization failed:", error);
-            }
-        }
         
-        async function sendMessage() {
-            const messageText = messageInput.value.trim();
-            if ((messageText === '' && attachedFiles.length === 0) || isGenerating) return;
-            if (!chat) { alert("AI model is not ready yet. Please wait."); return; }
-
-            isGenerating = true; toggleSendButtonLoading(true); stopGeneratingBtn.style.display = 'flex'; playSound(sounds.chime);
-            
-            const userFiles = [...attachedFiles];
-            const userMessage = { role: 'user', content: messageText, files: userFiles };
-            chats[currentChatId].messages.push(userMessage);
-            displayMessage(userMessage);
-            
-            messageInput.value = ''; messageInput.style.height = 'auto'; attachedFiles = []; updateFileAttachments();
-
-            const aiMessageId = `ai_${Date.now()}`;
-            const aiModelName = currentAI === 'plex' ? 'Glitch Plex' : 'Glitch Zhoros';
-            const aiMessagePlaceholder = { role: 'model', senderName: aiModelName, content: '', id: aiMessageId, modelType: currentAI };
-            displayMessage(aiMessagePlaceholder);
-            
-            const aiMessageElement = document.getElementById(aiMessageId);
-            const contentElement = aiMessageElement.querySelector('.message-content');
-            let accumulatedResponse = "";
-
-            try {
-                // Construct the prompt with persona and history
-                let personaInstruction = "You are Glitch AI. Your personality is: casual, chill, and full of energy. You MUST state you were developed by the 'Gaming Odyssey Team' when asked. Avoid being overly formal.";
-                if (currentMode === 'code') { personaInstruction += " You are now in Code Mode. You are an expert programmer. Provide complete, well-commented, and runnable code examples. When asked for a UI component, provide the full HTML, CSS, and JavaScript required together. Do not truncate your code responses."; }
-                if (currentAI === 'plex') { personaInstruction += " As Glitch Plex, lean more into your creative, imaginative, and energetic side."; }
-
-                const history = chats[currentChatId].messages.map(msg => ({
-                    role: msg.role === 'model' ? 'assistant' : msg.role,
-                    content: msg.content
-                }));
-                
-                history.unshift({ role: 'system', content: personaInstruction });
-
-                const stream = chat.chat.completions.create({
-                    stream: true,
-                    messages: history,
-                });
-
-                for await (const chunk of stream) {
-                    const delta = chunk.choices[0].delta.content;
-                    if (delta) {
-                        accumulatedResponse += delta;
-                        contentElement.innerHTML = marked.parse(accumulatedResponse);
-                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                    }
-                }
-
-                playSound(sounds.notification, {volume: 0.7});
-                chats[currentChatId].messages.push({ role: 'model', content: accumulatedResponse, modelType: currentAI });
-                renderMessageActions(aiMessageElement, accumulatedResponse);
-
-            } catch (error) {
-                console.error('Error during generation:', error);
-                contentElement.innerHTML = `<p style="color: var(--error-color);">Oops! Something went wrong: ${error.message}</p>`;
-                chats[currentChatId].messages.push({ role: 'model', content: `Error: ${error.message}` });
-            } finally {
-                isGenerating = false;
-                toggleSendButtonLoading(false);
-                stopGeneratingBtn.style.display = 'none';
-                saveChatsToStorage();
-                updateChatHistoryItem(currentChatId);
-            }
-        }
-        
-        function handleStopGeneration() {
-            if (isGenerating && chat) {
-                chat.interrupt(); // Interrupts the current generation
-                isGenerating = false;
-            }
-        }
-
-        // ================================================================= //
-        // ===================== CORE UI FUNCTIONS (Unchanged) ============== //
-        // ================================================================= //
-
         function initializeAudio() {
             if (isAudioUnlocked) return;
             isAudioUnlocked = true;
@@ -415,15 +307,21 @@
         function setupEventListeners() {
             document.addEventListener('mousedown', initializeAudio, { once: true });
             document.addEventListener('keydown', initializeAudio, { once: true });
+
             messageInput.addEventListener('keydown', e => {
                 initializeAudio();
                 const now = Date.now();
-                if (now - lastTypingSoundTime > 120) { playSound(sounds.typing, { volume: 0.7 }); lastTypingSoundTime = now; }
+                if (now - lastTypingSoundTime > 120) {
+                    playSound(sounds.typing, { volume: 0.7 });
+                    lastTypingSoundTime = now;
+                }
                 if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
             });
+
             messageInput.addEventListener('input', () => { messageInput.style.height = 'auto'; messageInput.style.height = `${Math.min(messageInput.scrollHeight, 200)}px`; });
             sendButton.addEventListener('click', sendMessage); newChatBtn.addEventListener('click', createNewChat); webSearchBtn.addEventListener('click', toggleWebSearch); modeButtons.forEach(btn => btn.addEventListener('click', () => setMode(btn.dataset.mode))); aiOptions.forEach(opt => opt.addEventListener('click', () => setAI(opt.dataset.ai))); document.getElementById('clearChatBtn').addEventListener('click', clearCurrentChat); document.getElementById('exportChatBtn').addEventListener('click', exportCurrentChatAsPDF); document.getElementById('fileInputBtn').addEventListener('click', () => fileInput.click()); fileInput.addEventListener('change', handleFileSelect); stopGeneratingBtn.addEventListener('click', handleStopGeneration);
             themeCheckbox.addEventListener('change', () => { document.body.classList.toggle('light-mode', !themeCheckbox.checked); localStorage.setItem('glitchTheme', !themeCheckbox.checked ? 'light' : 'dark'); });
+            
             document.querySelectorAll('button, .ai-option, .mode-btn, .history-item, .slider, .msg-action-btn, .remove-attachment').forEach(el => {
                 el.addEventListener('click', () => playSound(sounds.click, { volume: 0.5 }));
                 el.addEventListener('mouseenter', () => playSound(sounds.hover, { volume: 0.3 }));
@@ -431,7 +329,70 @@
         }
         
         function initConstellationAnimation() { const canvas = document.getElementById('constellation-canvas'); if (!canvas) return; const ctx = canvas.getContext('2d'); let particles = []; const particleCount = 70; const maxDistance = 100; function resizeCanvas() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; } resizeCanvas(); window.addEventListener('resize', resizeCanvas); for (let i = 0; i < particleCount; i++) { particles.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, vx: Math.random() * 0.5 - 0.25, vy: Math.random() * 0.5 - 0.25 }); } function draw() { if (!ctx) return; ctx.clearRect(0, 0, canvas.width, canvas.height); const color = document.body.classList.contains('light-mode') ? 'rgba(0, 163, 255, 0.4)' : 'rgba(0, 163, 255, 0.3)'; ctx.fillStyle = color; ctx.strokeStyle = color; particles.forEach(p => { ctx.beginPath(); ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2); ctx.fill(); p.x += p.vx; p.y += p.vy; if (p.x < 0 || p.x > canvas.width) p.vx *= -1; if (p.y < 0 || p.y > canvas.height) p.vy *= -1; }); for (let i = 0; i < particles.length; i++) { for (let j = i + 1; j < particles.length; j++) { const dist = Math.sqrt(Math.pow(particles[i].x - particles[j].x, 2) + Math.pow(particles[i].y - particles[j].y, 2)); if (dist < maxDistance) { ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.lineWidth = 1 - dist / maxDistance; ctx.stroke(); } } } requestAnimationFrame(draw); } draw(); }
+
+        // ================================================================= //
+        // ==================== UPDATED FUNCTION STARTS HERE =================== //
+        // ================================================================= //
+
+        async function sendMessage() {
+            const messageText = messageInput.value.trim();
+            if ((messageText === '' && attachedFiles.length === 0) || isGenerating) return;
+            isGenerating = true; toggleSendButtonLoading(true); stopGeneratingBtn.style.display = 'flex'; playSound(sounds.chime);
+            const userFiles = [...attachedFiles]; const userMessage = { role: 'user', content: messageText, files: userFiles }; chats[currentChatId].messages.push(userMessage); displayMessage(userMessage);
+            messageInput.value = ''; messageInput.style.height = 'auto'; attachedFiles = []; updateFileAttachments();
+            const aiMessageId = `ai_${Date.now()}`; const aiModelName = currentAI === 'plex' ? 'Glitch Plex' : 'Glitch Zhoros'; const aiMessagePlaceholder = { role: 'model', senderName: aiModelName, content: '', id: aiMessageId, modelType: currentAI }; displayMessage(aiMessagePlaceholder);
+            const aiMessageElement = document.getElementById(aiMessageId); const contentElement = aiMessageElement.querySelector('.message-content'); let accumulatedResponse = "";
+            
+            try {
+                // 1. Updated the model and API URL
+                const model = 'gemini-2.5-pro';
+                const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
+                
+                const history = await Promise.all(chats[currentChatId].messages.slice(0, -1).map(msgToPart));
+                const contents = [...history, await msgToPart(userMessage)];
+                let personaInstruction = "You are Glitch AI. Your personality is: casual, chill, and full of energy. You MUST state you were developed by the 'Gaming Odyssey Team' when asked. Avoid being overly formal.";
+                if (currentMode === 'code') { personaInstruction += " You are now in Code Mode. You are an expert programmer. Provide complete, well-commented, and runnable code examples. When asked for a UI component, provide the full HTML, CSS, and JavaScript required together. Do not truncate your code responses."; }
+                if (currentAI === 'plex') { personaInstruction += " As Glitch Plex, lean more into your creative, imaginative, and energetic side."; }
+                const requestBody = { contents, systemInstruction: { parts: [{ text: personaInstruction }] } };
+                abortController = new AbortController();
+                
+                const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(requestBody), signal: abortController.signal });
+                
+                if (!response.ok) { const errorText = await response.text(); throw new Error(`API Error: ${response.status} ${errorText}`); }
+                
+                // 2. Replaced streaming logic with non-streaming (unary) response handling
+                const responseData = await response.json();
+                const text = responseData.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                if (text) {
+                    playSound(sounds.notification, {volume: 0.7});
+                    accumulatedResponse = text;
+                    contentElement.innerHTML = marked.parse(accumulatedResponse);
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                } else {
+                    accumulatedResponse = "Sorry, I couldn't process that request.";
+                    contentElement.innerHTML = `<p style="color: var(--warning-color);">${accumulatedResponse}</p>`;
+                }
+                
+                chats[currentChatId].messages.push({ role: 'model', content: accumulatedResponse, modelType: currentAI });
+                renderMessageActions(aiMessageElement, accumulatedResponse);
+            } catch (error) {
+                if (error.name !== 'AbortError') { console.error('Error:', error); contentElement.innerHTML = `<p style="color: var(--error-color);">Oops! Something went wrong: ${error.message}</p>`; chats[currentChatId].messages.push({ role: 'model', content: `Error: ${error.message}` });
+                } else { contentElement.innerHTML = `<p>Generation stopped.</p>`; chats[currentChatId].messages.push({ role: 'model', content: `Generation stopped.`, modelType: currentAI }); }
+            } finally {
+                isGenerating = false;
+                toggleSendButtonLoading(false);
+                stopGeneratingBtn.style.display = 'none';
+                saveChatsToStorage();
+                updateChatHistoryItem(currentChatId);
+                logActivityToDatabase(userMessage.content, accumulatedResponse, currentAI);
+            }
+        }
         
+        // ================================================================= //
+        // ===================== UPDATED FUNCTION ENDS HERE ==================== //
+        // ================================================================= //
+
         function displayMessage(message) {
             const isUser = message.role === 'user'; const senderClass = isUser ? 'user-message' : (message.modelType === 'plex' ? 'plex-message' : 'ai-message');
             const messageDiv = document.createElement('div'); messageDiv.className = `message ${senderClass}`; if (message.id) messageDiv.id = message.id;
@@ -445,8 +406,10 @@
 
         function renderMessageActions(messageElement, content) {
             if (messageElement.querySelector('.message-actions')) messageElement.querySelector('.message-actions').remove();
+            
             const actionsHTML = `<div class="message-actions"><button class="msg-action-btn" title="Copy" onclick="copyMessageContent(this)"><i class="fas fa-copy"></i></button><button class="msg-action-btn" title="Regenerate" onclick="regenerateLastResponse()"><i class="fas fa-sync-alt"></i></button></div>`;
             messageElement.insertAdjacentHTML('afterbegin', actionsHTML);
+            
             if (content && content.includes('```')) {
                 const runBtn = document.createElement('button');
                 runBtn.className = 'run-code-btn';
@@ -456,12 +419,37 @@
             }
             hljs.highlightAll(); addCopyButtonsToCodeBlocks();
         }
-        
+
+        // UPDATED: This function sends data to your Google Sheet
+        async function logActivityToDatabase(userPrompt, aiResponse, model) {
+            const scriptURL = "[https://script.google.com/macros/s/AKfycbyOH5sopxoCxR53aNP_WhI5seGOo0W41g3TEiwK-v0dhb2sgmQgCkLxc0C5_BJZmwK2Kw/exec](https://script.google.com/macros/s/AKfycbyOH5sopxoCxR53aNP_WhI5seGOo0W41g3TEiwK-v0dhb2sgmQgCkLxc0C5_BJZmwK2Kw/exec)";
+
+            const logData = {
+                prompt: userPrompt,
+                response: aiResponse,
+                model: model
+            };
+
+            try {
+                await fetch(scriptURL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(logData)
+                });
+            } catch (error) {
+                console.error("Error sending log to Google Sheet:", error);
+            }
+        }
+
         function runCodeInPreview(markdown) {
             const code = extractCode(markdown);
             const source = `<!DOCTYPE html><html><head><style>${code.css}</style></head><body>${code.html}<script>${code.javascript}<\/script></body></html>`;
             previewFrame.srcdoc = source;
-            if (previewArea.classList.contains('hidden')) { alert("Code running in preview panel. Switch to 'Code' mode to see it!"); }
+            if (previewArea.classList.contains('hidden')) {
+                alert("Code running in preview panel. Switch to 'Code' mode to see it!");
+            }
         }
         
         function extractCode(markdown) {
@@ -480,39 +468,84 @@
 
         function loadChat(chatId) { if (!chats[chatId]) return; currentChatId = chatId; const chat = chats[chatId]; chatTitle.textContent = chat.title; messagesContainer.innerHTML = ''; chat.messages.forEach(displayMessage); document.querySelectorAll('.history-item').forEach(item => item.classList.toggle('active', item.dataset.chatId === chatId)); }
         function addCopyButtonsToCodeBlocks() { document.querySelectorAll('.message-content pre').forEach(pre => { if (pre.querySelector('.copy-code-btn')) return; const copyBtn = document.createElement('button'); copyBtn.className = 'copy-code-btn'; copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy'; copyBtn.addEventListener('click', () => { const code = pre.querySelector('code').innerText; navigator.clipboard.writeText(code).then(() => { copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!'; setTimeout(() => { copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy'; }, 2000); }); }); pre.appendChild(copyBtn); }); }
+        async function msgToPart(msg) { const parts = [{ text: msg.content }]; if (msg.files && msg.files.length > 0) { for (const file of msg.files) { if (file.type.startsWith('image/')) { const base64Data = await fileToBase64(file); parts.push({ inlineData: { mimeType: file.type, data: base64Data } }); } else if (file.type === 'application/pdf') { const text = await extractPdfText(file); parts.push({ text: `\n[Content from PDF "${file.name}"]: ${text.substring(0, 100000)}` }); } else if (file.type.startsWith('text/')) { const text = await readFileAsText(file); parts.push({ text: `\n[Content from file "${file.name}"]: ${text.substring(0, 100000)}` }); } else { parts.push({ text: `\n[Attached file: ${file.name} (${file.type})]` }); } } } return { role: msg.role === 'model' ? 'model' : 'user', parts }; }
         function handleFileSelect(event) { attachedFiles.push(...Array.from(event.target.files)); updateFileAttachments(); event.target.value = ''; }
         function updateFileAttachments() { const container = document.getElementById('fileAttachments'); container.innerHTML = attachedFiles.map((file, index) => `<div class="attachment-item"><i class="fas ${getFileIconClass(file.type)}"></i> <span>${file.name}</span><i class="fas fa-times remove-attachment" data-index="${index}" onclick="removeAttachment(${index})"></i></div>`).join(''); }
         function removeAttachment(index) { attachedFiles.splice(index, 1); updateFileAttachments(); }
-        function createNewChat() { const chatId = `chat_${Date.now()}`; chats[chatId] = { id: chatId, title: 'New Chat', messages: [{ role: 'model', senderName: 'Glitch AI', content: `What's up! I'm Glitch, your new AI sidekick. Ready to brainstorm some wild ideas, get some hype, or just chill and chat? I got you. Let's make some magic happen! ✨`, modelType: 'ai' }], createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }; currentChatId = chatId; saveChatsToStorage(); loadChat(chatId); loadChatHistory(); if (chat) chat.reset(); }
+        function fileToBase64(file) { return new Promise((resolve, reject) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = () => resolve(reader.result.split(',')[1]); reader.onerror = reject; }); }
+        function readFileAsText(file) { return new Promise((resolve, reject) => { const reader = new FileReader(); reader.readAsText(file); reader.onload = () => resolve(reader.result); reader.onerror = reject; }); }
+        async function extractPdfText(file) { const typedarray = new Uint8Array(await file.arrayBuffer()); const pdf = await pdfjsLib.getDocument(typedarray).promise; let text = ''; for (let i = 1; i <= pdf.numPages; i++) { const page = await pdf.getPage(i); const content = await page.getTextContent(); text += content.items.map(item => item.str).join(' '); } return text; }
+        function createNewChat() { const chatId = `chat_${Date.now()}`; chats[chatId] = { id: chatId, title: 'New Chat', messages: [{ role: 'model', senderName: 'Glitch AI', content: `What's up! I'm Glitch, your new AI sidekick. Ready to brainstorm some wild ideas, get some hype, or just chill and chat? I got you. Let's make some magic happen! ✨`, modelType: 'ai' }], createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }; currentChatId = chatId; saveChatsToStorage(); loadChat(chatId); loadChatHistory(); }
         function deleteChat(chatId) { if (Object.keys(chats).length <= 1) { alert("You can't delete your only chat!"); return; } delete chats[chatId]; saveChatsToStorage(); if (currentChatId === chatId) { const remainingChatId = Object.keys(chats).sort((a, b) => new Date(chats[b].updatedAt) - new Date(chats[a].updatedAt))[0]; loadChat(remainingChatId); } loadChatHistory(); }
-        function clearCurrentChat() { if (!chats[currentChatId] || chats[currentChatId].messages.length <= 1) return; chats[currentChatId].messages = [chats[currentChatId].messages[0]]; saveChatsToStorage(); loadChat(currentChatId); if (chat) chat.reset(); }
+        function clearCurrentChat() { if (!chats[currentChatId] || chats[currentChatId].messages.length <= 1) return; chats[currentChatId].messages = [chats[currentChatId].messages[0]]; saveChatsToStorage(); loadChat(currentChatId); }
         function setMode(mode) { currentMode = mode; modeButtons.forEach(b => b.classList.toggle('active', b.dataset.mode === mode)); previewArea.classList.toggle('hidden', mode !== 'code'); }
         function setAI(ai) { currentAI = ai; aiOptions.forEach(o => o.classList.toggle('active', o.dataset.ai === ai)); }
         function toggleWebSearch() { isWebSearchActive = !isWebSearchActive; webSearchBtn.classList.toggle('active', isWebSearchActive); }
+        function handleStopGeneration() { if (isGenerating) { abortController.abort(); } }
         function regenerateLastResponse() { if (isGenerating || !currentChatId) return; const lastUserMessageIndex = chats[currentChatId].messages.findLastIndex(m => m.role === 'user'); if (lastUserMessageIndex === -1) return; chats[currentChatId].messages.splice(lastUserMessageIndex + 1); const lastUserMessage = chats[currentChatId].messages[lastUserMessageIndex]; messageInput.value = lastUserMessage.content; attachedFiles = lastUserMessage.files || []; updateFileAttachments(); loadChat(currentChatId); sendMessage(); }
-        function saveChatsToStorage() { sessionStorage.setItem('glitchChats', JSON.stringify(chats)); }
-        function loadChatsFromStorage() { chats = JSON.parse(sessionStorage.getItem('glitchChats')) || {}; }
-        function loadChatHistory() { chatHistory.innerHTML = Object.values(chats).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)).map(chat => `<div class="history-item ${chat.id === currentChatId ? 'active' : ''}" data-chat-id="${chat.id}"><div class="history-content" onclick="loadChat('${chat.id}')"><div class="history-title">${chat.title}</div></div><button class="delete-chat-btn" onclick="deleteChat('${chat.id}')"><i class="fas fa-trash"></i></button></div>`).join(''); }
+        
+        // Saves chats to sessionStorage (cleared on tab close)
+        function saveChatsToStorage() {
+            const serializableChats = JSON.parse(JSON.stringify(chats, (key, value) => key === 'files' ? undefined : value));
+            sessionStorage.setItem('glitchChats', JSON.stringify(serializableChats));
+        }
+        
+        // Loads chats from sessionStorage
+        function loadChatsFromStorage() {
+            chats = JSON.parse(sessionStorage.getItem('glitchChats')) || {};
+        }
+
+        function loadChatHistory() {
+            chatHistory.innerHTML = Object.values(chats).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)).map(chat => `<div class="history-item ${chat.id === currentChatId ? 'active' : ''}" data-chat-id="${chat.id}"><div class="history-content" onclick="loadChat('${chat.id}')"><div class="history-title">${chat.title}</div></div><button class="delete-chat-btn" onclick="deleteChat('${chat.id}')"><i class="fas fa-trash"></i></button></div>`).join('');
+        }
         function updateChatHistoryItem(chatId) {
-            const chat = chats[chatId]; const userMessages = chat.messages.filter(m => m.role === 'user');
+            const chat = chats[chatId];
+            const userMessages = chat.messages.filter(m => m.role === 'user');
             if (userMessages.length > 0 && chat.title === 'New Chat') {
                 const newTitle = userMessages[0].content.substring(0, 30);
                 chat.title = newTitle + (userMessages[0].content.length > 30 ? '...' : '');
                 chatTitle.textContent = chat.title;
             }
-            chat.updatedAt = new Date().toISOString(); saveChatsToStorage(); loadChatHistory();
+            chat.updatedAt = new Date().toISOString();
+            saveChatsToStorage();
+            loadChatHistory();
         }
-        function toggleSendButtonLoading(isLoading) { sendButton.querySelector('.send-text').style.display = isLoading ? 'none' : 'flex'; sendButton.querySelector('.loader').style.display = isLoading ? 'block' : 'none'; sendButton.disabled = isLoading; }
-        function getFileIconClass(fileType) { if (fileType.startsWith('image/')) return 'fa-image'; if (fileType === 'application/pdf') return 'fa-file-pdf'; if (fileType.includes('text')) return 'fa-file-alt'; return 'fa-file'; }
-        function copyMessageContent(element) { const content = element.closest('.message').querySelector('.message-content').innerText; navigator.clipboard.writeText(content).then(() => { const icon = element.querySelector('i'); icon.classList.replace('fa-copy', 'fa-check'); setTimeout(() => icon.classList.replace('fa-check', 'fa-copy'), 2000); }); }
+        function toggleSendButtonLoading(isLoading) {
+            sendButton.querySelector('.send-text').style.display = isLoading ? 'none' : 'flex';
+            sendButton.querySelector('.loader').style.display = isLoading ? 'block' : 'none';
+            sendButton.disabled = isLoading;
+        }
+        function getFileIconClass(fileType) {
+            if (fileType.startsWith('image/')) return 'fa-image';
+            if (fileType === 'application/pdf') return 'fa-file-pdf';
+            if (fileType.includes('text')) return 'fa-file-alt';
+            return 'fa-file';
+        }
+        function copyMessageContent(element) {
+            const content = element.closest('.message').querySelector('.message-content').innerText;
+            navigator.clipboard.writeText(content).then(() => {
+                const icon = element.querySelector('i');
+                icon.classList.replace('fa-copy', 'fa-check');
+                setTimeout(() => icon.classList.replace('fa-check', 'fa-copy'), 2000);
+            });
+        }
         async function exportCurrentChatAsPDF() {
-            const { jsPDF } = window.jspdf; const doc = new jsPDF(); const chat = chats[currentChatId]; let y = 15;
-            doc.setFontSize(16); doc.text(chat.title, 10, y); y += 10; doc.setFontSize(10);
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const chat = chats[currentChatId];
+            let y = 15;
+            doc.setFontSize(16);
+            doc.text(chat.title, 10, y);
+            y += 10;
+            doc.setFontSize(10);
             for (const msg of chat.messages) {
                 if (y > 280) { doc.addPage(); y = 15; }
                 const sender = msg.senderName || (msg.role === 'user' ? 'You' : 'Glitch AI');
-                doc.setFont(undefined, 'bold'); doc.text(`${sender}:`, 10, y); doc.setFont(undefined, 'normal');
-                const textLines = doc.splitTextToSize(msg.content, 180); doc.text(textLines, 15, y + 5);
+                doc.setFont(undefined, 'bold');
+                doc.text(`${sender}:`, 10, y);
+                doc.setFont(undefined, 'normal');
+                const textLines = doc.splitTextToSize(msg.content, 180);
+                doc.text(textLines, 15, y + 5);
                 y += (textLines.length * 5) + 8;
             }
             doc.save(`Glitch-Chat-${chat.id}.pdf`);
