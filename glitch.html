@@ -75,18 +75,45 @@
         .delete-chat-btn:hover { color: var(--error-color); transform: scale(1.2); }
         .main-content { flex: 1; display: flex; gap: 20px; }
         
-        .chat-area { flex: 1; display: flex; flex-direction: column; background: transparent; border-radius: 15px; overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 8px 32px 0 var(--shadow-color); position: relative; }
+        .chat-area { 
+            flex: 1; display: flex; flex-direction: column; 
+            border-radius: 15px; overflow: hidden; 
+            border: 1px solid var(--border-color); 
+            box-shadow: 0 8px 32px 0 var(--shadow-color); 
+            position: relative;
+            background-image: url('https://images.pexels.com/photos/158826/structure-nature-trail-path-158826.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .chat-header, .messages, .input-area, .stop-generating-btn { position: relative; z-index: 1; }
         
-        #galaxy-canvas {
+        #snowfall-container {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            overflow: hidden;
+            pointer-events: none;
             z-index: 0;
         }
-        
-        .chat-header, .messages, .input-area, .stop-generating-btn { position: relative; z-index: 1; }
+
+        .snowflake {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            animation: snowfall linear infinite;
+        }
+
+        @keyframes snowfall {
+            0% {
+                transform: translateY(-10vh) translateX(0);
+            }
+            100% {
+                transform: translateY(105vh) translateX(15px);
+            }
+        }
         
         .chat-header { padding: 15px 25px; background: var(--bg-glass-dark); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; }
         .chat-actions { display: flex; gap: 10px; }
@@ -138,6 +165,7 @@
         body.light-mode footer { color: var(--text-light); opacity: 0.8; }
         #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background-color: var(--space-dark); display: flex; justify-content: center; align-items: center; z-index: 9999; font-family: 'Courier New', monospace; opacity: 1; visibility: visible; transition: opacity 0.8s ease-in-out, visibility 0.8s; overflow: hidden; }
         #splash-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        #galaxy-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
         .splash-stars { position: absolute; top: 0; left: 0; width: 200%; height: 200%; background-image: radial-gradient(var(--star-color) 1px, transparent 1px); background-size: 50px 50px; opacity: 0.4; animation: stars-pan 120s linear infinite; }
         .glitch-container { text-align: center; color: var(--text-light); position: relative; z-index: 10; animation: zoomIn 1.5s ease-out forwards; }
         .splash-logo { width: 100px; height: 100px; margin-bottom: 20px; border-radius: 50%; border: 2px solid var(--neon-blue); animation: logo-reveal 2s ease-out forwards, glow 2s infinite alternate 2s; }
@@ -212,6 +240,7 @@
 </head>
 <body>
     <div id="splash-screen">
+        <canvas id="galaxy-canvas"></canvas>
         <div class="splash-stars"></div>
         <div class="glitch-container">
             <img src="glitch.png" alt="Glitch Logo" class="splash-logo">
@@ -268,7 +297,7 @@
 
         <main class="main-content">
             <div class="chat-area" id="chatArea">
-                <canvas id="galaxy-canvas"></canvas>
+                <div id="snowfall-container"></div>
                 <div class="chat-header">
                     <h2 id="chatTitle">Chat with Glitch AI</h2>
                     <div class="chat-actions">
@@ -320,6 +349,7 @@
         
         let currentChatId = null; let chats = {}; let currentMode = 'chat'; let currentAI = 'zhoros'; let isWebSearchActive = false; let attachedFiles = []; let isGenerating = false; let abortController = new AbortController(); 
         let isAudioUnlocked = false; let lastTypingSoundTime = 0;
+        let galaxyAnimationId;
         
         const messageInput = document.getElementById('messageInput'); const sendButton = document.getElementById('sendButton'); const messagesContainer = document.getElementById('messages'); const chatHistory = document.getElementById('chatHistory'); const newChatBtn = document.getElementById('newChatBtn'); const modeButtons = document.querySelectorAll('.mode-btn'); const aiOptions = document.querySelectorAll('.ai-option'); const webSearchBtn = document.getElementById('webSearchBtn'); const chatTitle = document.getElementById('chatTitle'); const fileInput = document.getElementById('fileInput'); const stopGeneratingBtn = document.getElementById('stopGeneratingBtn'); const themeCheckbox = document.getElementById('theme-checkbox');
         const previewArea = document.getElementById('previewArea'); const previewFrame = document.getElementById('preview-frame');
@@ -335,9 +365,17 @@
         
         document.addEventListener('DOMContentLoaded', () => {
             const splashScreen = document.getElementById('splash-screen');
-            if (splashScreen) { setTimeout(() => { splashScreen.classList.add('hidden'); }, 3800); }
+            if (splashScreen) { 
+                setTimeout(() => { 
+                    splashScreen.classList.add('hidden'); 
+                    if (galaxyAnimationId) {
+                        cancelAnimationFrame(galaxyAnimationId);
+                    }
+                }, 3800); 
+            }
             
             initGalaxyBackground();
+            initSnowfall();
 
             loadChatsFromStorage(); 
             setupEventListeners();
@@ -388,98 +426,44 @@
         }
         
         function initGalaxyBackground() {
-            const chatArea = document.getElementById('chatArea');
+            const splashScreen = document.getElementById('splash-screen');
             const canvas = document.getElementById('galaxy-canvas');
-            if (!canvas || !chatArea) return;
+            if (!canvas || !splashScreen) return;
 
             const scene = new THREE.Scene();
             
-            const parameters = {
-                count: 150000,
-                size: 0.015,
-                radius: 6,
-                branches: 5,
-                spin: 0.8,
-                randomness: 0.4,
-                randomnessPower: 3.5,
-                insideColor: '#a75dff',
-                outsideColor: '#00a3ff'
-            };
-
-            let geometry = null;
-            let material = null;
-            let points = null;
+            const parameters = { count: 150000, size: 0.015, radius: 6, branches: 5, spin: 0.8, randomness: 0.4, randomnessPower: 3.5, insideColor: '#a75dff', outsideColor: '#00a3ff' };
+            let geometry = null, material = null, points = null;
 
             const generateGalaxy = () => {
-                if (points !== null) {
-                    geometry.dispose();
-                    material.dispose();
-                    scene.remove(points);
-                }
+                if (points !== null) { geometry.dispose(); material.dispose(); scene.remove(points); }
                 geometry = new THREE.BufferGeometry();
-                const positions = new Float32Array(parameters.count * 3);
-                const colors = new Float32Array(parameters.count * 3);
-                const colorInside = new THREE.Color(parameters.insideColor);
-                const colorOutside = new THREE.Color(parameters.outsideColor);
-
+                const positions = new Float32Array(parameters.count * 3), colors = new Float32Array(parameters.count * 3);
+                const colorInside = new THREE.Color(parameters.insideColor), colorOutside = new THREE.Color(parameters.outsideColor);
                 for (let i = 0; i < parameters.count; i++) {
                     const i3 = i * 3;
-                    const radius = Math.random() * parameters.radius;
-                    const spinAngle = radius * parameters.spin;
-                    const branchAngle = (i % parameters.branches) / parameters.branches * Math.PI * 2;
+                    const radius = Math.random() * parameters.radius, spinAngle = radius * parameters.spin, branchAngle = (i % parameters.branches) / parameters.branches * Math.PI * 2;
                     const randomX = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
                     const randomY = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
                     const randomZ = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
-                    positions[i3] = Math.cos(branchAngle + spinAngle) * radius + randomX;
-                    positions[i3 + 1] = randomY;
-                    positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius + randomZ;
-                    const mixedColor = colorInside.clone();
-                    mixedColor.lerp(colorOutside, radius / parameters.radius);
+                    positions[i3] = Math.cos(branchAngle + spinAngle) * radius + randomX; positions[i3 + 1] = randomY; positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius + randomZ;
+                    const mixedColor = colorInside.clone(); mixedColor.lerp(colorOutside, radius / parameters.radius);
                     colors[i3] = mixedColor.r; colors[i3+1] = mixedColor.g; colors[i3+2] = mixedColor.b;
                 }
-                geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-                geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-                
-                material = new THREE.PointsMaterial({
-                    size: parameters.size,
-                    sizeAttenuation: true,
-                    depthWrite: false,
-                    blending: THREE.AdditiveBlending,
-                    vertexColors: true
-                });
-
-                points = new THREE.Points(geometry, material);
-                scene.add(points);
+                geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3)); geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+                material = new THREE.PointsMaterial({ size: parameters.size, sizeAttenuation: true, depthWrite: false, blending: THREE.AdditiveBlending, vertexColors: true });
+                points = new THREE.Points(geometry, material); scene.add(points);
             };
             generateGalaxy();
             
-            const sizes = { width: chatArea.clientWidth, height: chatArea.clientHeight };
+            const sizes = { width: splashScreen.clientWidth, height: splashScreen.clientHeight };
             const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100);
-            camera.position.z = 3;
-            scene.add(camera);
-            
+            camera.position.z = 3; scene.add(camera);
             const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
-            renderer.setSize(sizes.width, sizes.height);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
+            renderer.setSize(sizes.width, sizes.height); renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             const mouse = new THREE.Vector2();
-            window.addEventListener('mousemove', (event) => {
-                mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-                mouse.y = -((event.clientY / window.innerHeight) * 2 - 1);
-            });
+            window.addEventListener('mousemove', (event) => { mouse.x = (event.clientX / window.innerWidth) * 2 - 1; mouse.y = -((event.clientY / window.innerHeight) * 2 - 1); });
             
-            const resizeObserver = new ResizeObserver(entries => {
-                for (let entry of entries) {
-                    sizes.width = entry.contentRect.width;
-                    sizes.height = entry.contentRect.height;
-                    camera.aspect = sizes.width / sizes.height;
-                    camera.updateProjectionMatrix();
-                    renderer.setSize(sizes.width, sizes.height);
-                    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-                }
-            });
-            resizeObserver.observe(chatArea);
-
             const clock = new THREE.Clock();
             const tick = () => {
                 const elapsedTime = clock.getElapsedTime();
@@ -490,30 +474,40 @@
                     camera.lookAt(scene.position);
                 }
                 renderer.render(scene, camera);
-                window.requestAnimationFrame(tick);
+                galaxyAnimationId = window.requestAnimationFrame(tick);
             };
             tick();
+        }
+
+        function initSnowfall() {
+            const container = document.getElementById('snowfall-container');
+            if (!container) return;
+            const snowflakeCount = 100;
+            for (let i = 0; i < snowflakeCount; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                
+                const size = Math.random() * 4 + 1;
+                snowflake.style.width = `${size}px`;
+                snowflake.style.height = `${size}px`;
+                snowflake.style.left = `${Math.random() * 100}vw`;
+                snowflake.style.animationDuration = `${Math.random() * 8 + 6}s`;
+                snowflake.style.animationDelay = `${Math.random() * 5}s`;
+                snowflake.style.opacity = Math.random() * 0.7 + 0.3;
+                
+                container.appendChild(snowflake);
+            }
         }
 
         async function webSearch(query) {
             const url = `https://www.googleapis.com/customsearch/v1?key=${GOOGLE_SEARCH_API_KEY}&cx=${GOOGLE_SEARCH_ENGINE_ID}&q=${encodeURIComponent(query)}`;
             try {
                 const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error(`Google Search API error: ${response.status}`);
-                }
+                if (!response.ok) { throw new Error(`Google Search API error: ${response.status}`); }
                 const data = await response.json();
                 if (!data.items) return [];
-                // Return top 5 results with title, link, and snippet.
-                return data.items.slice(0, 5).map(item => ({
-                    title: item.title,
-                    link: item.link,
-                    snippet: item.snippet
-                }));
-            } catch (error) {
-                console.error("Web search failed:", error);
-                return [];
-            }
+                return data.items.slice(0, 5).map(item => ({ title: item.title, link: item.link, snippet: item.snippet }));
+            } catch (error) { console.error("Web search failed:", error); return []; }
         }
         
         async function sendMessage() {
@@ -601,10 +595,7 @@
                     </li>`;
             }).join('');
 
-            container.innerHTML = `
-                <h4>Sources</h4>
-                <ul class="sources-list">${list}</ul>
-            `;
+            container.innerHTML = `<h4>Sources</h4><ul class="sources-list">${list}</ul>`;
             messageElement.appendChild(container);
         }
 
@@ -627,14 +618,10 @@
 
         function renderMessageActions(messageElement, content) {
             if (messageElement.querySelector('.message-actions')) messageElement.querySelector('.message-actions').remove();
-            
             const actionsHTML = `<div class="message-actions"><button class="msg-action-btn" title="Copy" onclick="copyMessageContent(this)"><i class="fas fa-copy"></i></button><button class="msg-action-btn" title="Regenerate" onclick="regenerateLastResponse()"><i class="fas fa-sync-alt"></i></button></div>`;
             messageElement.insertAdjacentHTML('afterbegin', actionsHTML);
-            
             if (content && content.includes('```')) {
-                const runBtn = document.createElement('button');
-                runBtn.className = 'run-code-btn';
-                runBtn.innerHTML = '<i class="fas fa-play"></i> Run Code';
+                const runBtn = document.createElement('button'); runBtn.className = 'run-code-btn'; runBtn.innerHTML = '<i class="fas fa-play"></i> Run Code';
                 runBtn.onclick = () => runCodeInPreview(content);
                 messageElement.querySelector('.message-content').appendChild(runBtn);
             }
@@ -644,30 +631,21 @@
         async function logActivityToDatabase(userPrompt, aiResponse, model) {
             const scriptURL = "[https://script.google.com/macros/s/AKfycbyOH5sopxoCxR53aNP_WhI5seGOo0W41g3TEiwK-v0dhb2sgmQgCkLxc0C5_BJZmwK2Kw/exec](https://script.google.com/macros/s/AKfycbyOH5sopxoCxR53aNP_WhI5seGOo0W41g3TEiwK-v0dhb2sgmQgCkLxc0C5_BJZmwK2Kw/exec)";
             const logData = { prompt: userPrompt, response: aiResponse, model: model };
-            try {
-                await fetch(scriptURL, { method: 'POST', headers: { 'Content-Type': 'application/json', }, body: JSON.stringify(logData) });
-            } catch (error) { console.error("Error sending log to Google Sheet:", error); }
+            try { await fetch(scriptURL, { method: 'POST', headers: { 'Content-Type': 'application/json', }, body: JSON.stringify(logData) }); } catch (error) { console.error("Error sending log to Google Sheet:", error); }
         }
 
         function runCodeInPreview(markdown) {
             const code = extractCode(markdown);
             const source = `<!DOCTYPE html><html><head><style>${code.css}</style></head><body>${code.html}<script>${code.javascript}<\/script></body></html>`;
             previewFrame.srcdoc = source;
-            if (previewArea.classList.contains('hidden')) {
-                alert("Code running in preview panel. Switch to 'Code' mode to see it!");
-            }
+            if (previewArea.classList.contains('hidden')) { alert("Code running in preview panel. Switch to 'Code' mode to see it!"); }
         }
         
         function extractCode(markdown) {
-            const codeBlocks = { html: '', css: '', javascript: '' };
-            const regex = /```(\w+)\n([\s\S]*?)```/g;
-            let match;
+            const codeBlocks = { html: '', css: '', javascript: '' }; const regex = /```(\w+)\n([\s\S]*?)```/g; let match;
             while ((match = regex.exec(markdown)) !== null) {
-                const lang = match[1].toLowerCase();
-                const code = match[2];
-                if (['html', 'xml'].includes(lang)) { codeBlocks.html += code + '\n'; }
-                else if (lang === 'css') { codeBlocks.css += code + '\n'; }
-                else if (['js', 'javascript'].includes(lang)) { codeBlocks.javascript += code + '\n'; }
+                const lang = match[1].toLowerCase(), code = match[2];
+                if (['html', 'xml'].includes(lang)) { codeBlocks.html += code + '\n'; } else if (lang === 'css') { codeBlocks.css += code + '\n'; } else if (['js', 'javascript'].includes(lang)) { codeBlocks.javascript += code + '\n'; }
             }
             return codeBlocks;
         }
@@ -684,17 +662,8 @@
         
         function createNewChat() {
             const chatId = `chat_${Date.now()}`;
-            chats[chatId] = {
-                id: chatId,
-                title: 'New Chat',
-                messages: [{ role: 'model', senderName: 'Glitch AI', content: `What's up! I'm Glitch, your new AI sidekick. Ready to brainstorm some wild ideas, get some hype, or just chill and chat? I got you. Let's make some magic happen! ✨`, modelType: 'ai' }],
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString()
-            };
-            currentChatId = chatId;
-            saveChatsToStorage();
-            loadChat(chatId);
-            loadChatHistory();
+            chats[chatId] = { id: chatId, title: 'New Chat', messages: [{ role: 'model', senderName: 'Glitch AI', content: `What's up! I'm Glitch, your new AI sidekick. Ready to brainstorm some wild ideas, get some hype, or just chill and chat? I got you. Let's make some magic happen! ✨`, modelType: 'ai' }], createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() };
+            currentChatId = chatId; saveChatsToStorage(); loadChat(chatId); loadChatHistory();
         }
 
         function deleteChat(chatId) { if (Object.keys(chats).length <= 1) { alert("You can't delete your only chat!"); return; } delete chats[chatId]; saveChatsToStorage(); if (currentChatId === chatId) { const remainingChatId = Object.keys(chats).sort((a, b) => new Date(chats[b].updatedAt) - new Date(chats[a].updatedAt))[0]; loadChat(remainingChatId); } loadChatHistory(); }
@@ -705,67 +674,29 @@
         function handleStopGeneration() { if (isGenerating) { abortController.abort(); } }
         function regenerateLastResponse() { if (isGenerating || !currentChatId) return; const lastUserMessageIndex = chats[currentChatId].messages.findLastIndex(m => m.role === 'user'); if (lastUserMessageIndex === -1) return; chats[currentChatId].messages.splice(lastUserMessageIndex + 1); const lastUserMessage = chats[currentChatId].messages[lastUserMessageIndex]; messageInput.value = lastUserMessage.content; attachedFiles = lastUserMessage.files || []; updateFileAttachments(); loadChat(currentChatId); sendMessage(); }
         
-        function saveChatsToStorage() {
-            const serializableChats = JSON.parse(JSON.stringify(chats, (key, value) => key === 'files' ? undefined : value));
-            sessionStorage.setItem('glitchChats', JSON.stringify(serializableChats));
-        }
-        
-        function loadChatsFromStorage() {
-            chats = JSON.parse(sessionStorage.getItem('glitchChats')) || {};
-        }
+        function saveChatsToStorage() { const serializableChats = JSON.parse(JSON.stringify(chats, (key, value) => key === 'files' ? undefined : value)); sessionStorage.setItem('glitchChats', JSON.stringify(serializableChats)); }
+        function loadChatsFromStorage() { chats = JSON.parse(sessionStorage.getItem('glitchChats')) || {}; }
 
-        function loadChatHistory() {
-            chatHistory.innerHTML = Object.values(chats).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)).map(chat => `<div class="history-item ${chat.id === currentChatId ? 'active' : ''}" data-chat-id="${chat.id}"><div class="history-content" onclick="loadChat('${chat.id}')"><div class="history-title">${chat.title}</div></div><button class="delete-chat-btn" onclick="deleteChat('${chat.id}')"><i class="fas fa-trash"></i></button></div>`).join('');
-        }
+        function loadChatHistory() { chatHistory.innerHTML = Object.values(chats).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)).map(chat => `<div class="history-item ${chat.id === currentChatId ? 'active' : ''}" data-chat-id="${chat.id}"><div class="history-content" onclick="loadChat('${chat.id}')"><div class="history-title">${chat.title}</div></div><button class="delete-chat-btn" onclick="deleteChat('${chat.id}')"><i class="fas fa-trash"></i></button></div>`).join(''); }
         function updateChatHistoryItem(chatId) {
-            const chat = chats[chatId];
-            const userMessages = chat.messages.filter(m => m.role === 'user');
+            const chat = chats[chatId]; const userMessages = chat.messages.filter(m => m.role === 'user');
             if (userMessages.length > 0 && chat.title === 'New Chat') {
                 const newTitle = userMessages[0].content.substring(0, 30);
                 chat.title = newTitle + (userMessages[0].content.length > 30 ? '...' : '');
                 chatTitle.textContent = chat.title;
             }
-            chat.updatedAt = new Date().toISOString();
-            saveChatsToStorage();
-            loadChatHistory();
+            chat.updatedAt = new Date().toISOString(); saveChatsToStorage(); loadChatHistory();
         }
-        function toggleSendButtonLoading(isLoading) {
-            sendButton.querySelector('.send-text').style.display = isLoading ? 'none' : 'flex';
-            sendButton.querySelector('.loader').style.display = isLoading ? 'block' : 'none';
-            sendButton.disabled = isLoading;
-        }
+        function toggleSendButtonLoading(isLoading) { sendButton.querySelector('.send-text').style.display = isLoading ? 'none' : 'flex'; sendButton.querySelector('.loader').style.display = isLoading ? 'block' : 'none'; sendButton.disabled = isLoading; }
         function getFileIconClass(fileType) {
-            if (fileType.startsWith('image/')) return 'fa-image';
-            if (fileType === 'application/pdf') return 'fa-file-pdf';
-            if (fileType.includes('text')) return 'fa-file-alt';
-            return 'fa-file';
+            if (fileType.startsWith('image/')) return 'fa-image'; if (fileType === 'application/pdf') return 'fa-file-pdf'; if (fileType.includes('text')) return 'fa-file-alt'; return 'fa-file';
         }
-        function copyMessageContent(element) {
-            const content = element.closest('.message').querySelector('.message-content').innerText;
-            navigator.clipboard.writeText(content).then(() => {
-                const icon = element.querySelector('i');
-                icon.classList.replace('fa-copy', 'fa-check');
-                setTimeout(() => icon.classList.replace('fa-check', 'fa-copy'), 2000);
-            });
-        }
+        function copyMessageContent(element) { const content = element.closest('.message').querySelector('.message-content').innerText; navigator.clipboard.writeText(content).then(() => { const icon = element.querySelector('i'); icon.classList.replace('fa-copy', 'fa-check'); setTimeout(() => icon.classList.replace('fa-check', 'fa-copy'), 2000); }); }
         async function exportCurrentChatAsPDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            const chat = chats[currentChatId];
-            let y = 15;
-            doc.setFontSize(16);
-            doc.text(chat.title, 10, y);
-            y += 10;
-            doc.setFontSize(10);
+            const { jsPDF } = window.jspdf; const doc = new jsPDF(); const chat = chats[currentChatId]; let y = 15; doc.setFontSize(16); doc.text(chat.title, 10, y); y += 10; doc.setFontSize(10);
             for (const msg of chat.messages) {
                 if (y > 280) { doc.addPage(); y = 15; }
-                const sender = msg.senderName || (msg.role === 'user' ? 'You' : 'Glitch AI');
-                doc.setFont(undefined, 'bold');
-                doc.text(`${sender}:`, 10, y);
-                doc.setFont(undefined, 'normal');
-                const textLines = doc.splitTextToSize(msg.content, 180);
-                doc.text(textLines, 15, y + 5);
-                y += (textLines.length * 5) + 8;
+                const sender = msg.senderName || (msg.role === 'user' ? 'You' : 'Glitch AI'); doc.setFont(undefined, 'bold'); doc.text(`${sender}:`, 10, y); doc.setFont(undefined, 'normal'); const textLines = doc.splitTextToSize(msg.content, 180); doc.text(textLines, 15, y + 5); y += (textLines.length * 5) + 8;
             }
             doc.save(`Glitch-Chat-${chat.id}.pdf`);
         }
