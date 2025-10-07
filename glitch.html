@@ -149,6 +149,47 @@
         .glitch-subtitle { font-size: clamp(0.8rem, 2vw, 1.1rem); font-weight: 300; letter-spacing: 2px; margin-top: 15px; opacity: 0; animation: fade-in-up 2s ease-out 0.5s forwards; color: rgba(230, 230, 255, 0.8); overflow: hidden; white-space: nowrap; border-right: .15em solid var(--neon-blue); width: 0; animation: typing 3s steps(40, end) 0.5s 1 normal both, blink-caret .75s step-end infinite, fade-in-up 2s ease-out 0.5s forwards; }
         .loading-bar { width: 0; height: 3px; background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple)); margin: 25px auto 0; border-radius: 5px; animation: loading 3.5s ease-out forwards; }
 
+        /* --- NEW CSS FOR WEB SEARCH SOURCES --- */
+        .sources-container {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+        }
+        .sources-container h4 {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .sources-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .source-item {
+            font-size: 0.85rem;
+        }
+        .source-item a {
+            color: var(--text-muted);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.2s ease;
+        }
+        .source-item a:hover {
+            color: var(--neon-blue);
+        }
+        .favicon {
+            width: 16px;
+            height: 16px;
+            border-radius: 2px;
+            vertical-align: middle;
+        }
+        /* --- END OF NEW CSS --- */
+
         @keyframes typing { from { width: 0 } to { width: 100% } }
         @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: var(--neon-blue); } }
         @keyframes loading { from { width: 0%; } to { width: 80%; } }
@@ -272,7 +313,15 @@
     <script>
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
         
-        const GEMINI_API_KEY = 'AIzaSyAbcFIlAIYGWWj5lwQYcDjmyL3bCs_X3Qc'; // WARNING: For development only. Use a backend proxy in production.
+        // API Keys
+        const GEMINI_API_KEY = 'AIzaSyAbcFIlAIYGWWj5lwQYcDjmyL3bCs_X3Qc'; // For normal AI chat.
+        const GOOGLE_SEARCH_API_KEY = 'AIzaSyBm8SxGHDl9pkrDuZt_VgFQME9a3aRUeXY'; // For Web Search feature.
+        
+        // --- IMPORTANT ---
+        // To enable the web search feature, you MUST create a Programmable Search Engine at https://programmablesearchengine.google.com/
+        // and paste your Search Engine ID (CX) here.
+        const GOOGLE_SEARCH_ENGINE_ID = 'YOUR_SEARCH_ENGINE_ID_HERE'; 
+        // -----------------
 
         let currentChatId = null; let chats = {}; let currentMode = 'chat'; let currentAI = 'zhoros'; let isWebSearchActive = false; let attachedFiles = []; let isGenerating = false; let abortController = new AbortController(); 
         let isAudioUnlocked = false; let lastTypingSoundTime = 0;
@@ -451,6 +500,31 @@
             tick();
         }
 
+        async function webSearch(query) {
+            if (GOOGLE_SEARCH_ENGINE_ID === 'AIzaSyBm8SxGHDl9pkrDuZt_VgFQME9a3aRUeXY') {
+                console.warn("Web search is disabled. Please provide your Google Search Engine ID (CX).");
+                return [];
+            }
+            const url = `https://www.googleapis.com/customsearch/v1?key=${GOOGLE_SEARCH_API_KEY}&cx=${GOOGLE_SEARCH_ENGINE_ID}&q=${encodeURIComponent(query)}`;
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`Google Search API error: ${response.status}`);
+                }
+                const data = await response.json();
+                if (!data.items) return [];
+                // Return top 5 results with title, link, and snippet.
+                return data.items.slice(0, 5).map(item => ({
+                    title: item.title,
+                    link: item.link,
+                    snippet: item.snippet
+                }));
+            } catch (error) {
+                console.error("Web search failed:", error);
+                return [];
+            }
+        }
+        
         async function sendMessage() {
             const messageText = messageInput.value.trim();
             if ((messageText === '' && attachedFiles.length === 0) || isGenerating) return;
@@ -458,20 +532,36 @@
             const userFiles = [...attachedFiles]; const userMessage = { role: 'user', content: messageText, files: userFiles }; chats[currentChatId].messages.push(userMessage); displayMessage(userMessage);
             messageInput.value = ''; messageInput.style.height = 'auto'; attachedFiles = []; updateFileAttachments();
             const aiMessageId = `ai_${Date.now()}`; const aiModelName = currentAI === 'plex' ? 'Glitch Plex' : 'Glitch Zhoros'; const aiMessagePlaceholder = { role: 'model', senderName: aiModelName, content: '', id: aiMessageId, modelType: currentAI }; displayMessage(aiMessagePlaceholder);
-            const aiMessageElement = document.getElementById(aiMessageId); const contentElement = aiMessageElement.querySelector('.message-content'); let accumulatedResponse = "";
+            const aiMessageElement = document.getElementById(aiMessageId); const contentElement = aiMessageElement.querySelector('.message-content'); let accumulatedResponse = ""; let finalPrompt = messageText; let sources = [];
             
             try {
-                const model = 'gemini-2.5-pro';
+                if (isWebSearchActive) {
+                    contentElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Searching the web...';
+                    sources = await webSearch(messageText);
+                    if (sources.length > 0) {
+                        contentElement.innerHTML = '<i class="fas fa-brain"></i> Thinking...';
+                        const searchContext = sources.map((s, i) => `[${i+1}] ${s.snippet}`).join('\n');
+                        finalPrompt = `Based on these web search results, provide a comprehensive answer. Cite the results using the format [1], [2], etc., where appropriate.\n\nWeb Search Results:\n${searchContext}\n\nUser's Question: ${messageText}`;
+                    }
+                }
+
+                const model = 'gemini-1.5-pro-latest';
                 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
+                
                 const history = await Promise.all(chats[currentChatId].messages.slice(0, -1).map(msgToPart));
-                const contents = [...history, await msgToPart(userMessage)];
+                const userMessageForApi = { role: 'user', content: finalPrompt, files: userFiles }; // Use the potentially modified prompt
+                const contents = [...history, await msgToPart(userMessageForApi)];
+                
                 let personaInstruction = "You are Glitch AI. Your personality is: casual, chill, and full of energy. You MUST state you were developed by the 'Gaming Odyssey Team' when asked. Avoid being overly formal.";
                 if (currentMode === 'code') { personaInstruction += " You are now in Code Mode. You are an expert programmer. Provide complete, well-commented, and runnable code examples. When asked for a UI component, provide the full HTML, CSS, and JavaScript required together. Do not truncate your code responses."; }
                 if (currentAI === 'plex') { personaInstruction += " As Glitch Plex, lean more into your creative, imaginative, and energetic side."; }
+                
                 const requestBody = { contents, systemInstruction: { parts: [{ text: personaInstruction }] } };
                 abortController = new AbortController();
+                
                 const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(requestBody), signal: abortController.signal });
                 if (!response.ok) { const errorText = await response.text(); throw new Error(`API Error: ${response.status} ${errorText}`); }
+                
                 const responseData = await response.json();
                 const text = responseData.candidates?.[0]?.content?.parts?.[0]?.text;
 
@@ -479,14 +569,17 @@
                     playSound(sounds.notification, {volume: 0.7});
                     accumulatedResponse = text;
                     contentElement.innerHTML = marked.parse(accumulatedResponse);
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
                 } else {
                     accumulatedResponse = "Sorry, I couldn't process that request.";
                     contentElement.innerHTML = `<p style="color: var(--warning-color);">${accumulatedResponse}</p>`;
                 }
                 
-                chats[currentChatId].messages.push({ role: 'model', content: accumulatedResponse, modelType: currentAI });
+                chats[currentChatId].messages.push({ role: 'model', content: accumulatedResponse, modelType: currentAI, sources: sources });
                 renderMessageActions(aiMessageElement, accumulatedResponse);
+                if (sources.length > 0) {
+                    renderSources(aiMessageElement, sources);
+                }
+                
             } catch (error) {
                 if (error.name !== 'AbortError') { console.error('Error:', error); contentElement.innerHTML = `<p style="color: var(--error-color);">Oops! Something went wrong: ${error.message}</p>`; chats[currentChatId].messages.push({ role: 'model', content: `Error: ${error.message}` });
                 } else { contentElement.innerHTML = `<p>Generation stopped.</p>`; chats[currentChatId].messages.push({ role: 'model', content: `Generation stopped.`, modelType: currentAI }); }
@@ -497,9 +590,33 @@
                 saveChatsToStorage();
                 updateChatHistoryItem(currentChatId);
                 logActivityToDatabase(userMessage.content, accumulatedResponse, currentAI);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
             }
         }
         
+        function renderSources(messageElement, sources) {
+            if (!sources || sources.length === 0) return;
+            const container = document.createElement('div');
+            container.className = 'sources-container';
+            const list = sources.map(source => {
+                const domain = new URL(source.link).hostname;
+                const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=16`;
+                return `
+                    <li class="source-item">
+                        <a href="${source.link}" target="_blank" rel="noopener noreferrer">
+                            <img src="${faviconUrl}" alt="favicon" class="favicon">
+                            ${source.title}
+                        </a>
+                    </li>`;
+            }).join('');
+
+            container.innerHTML = `
+                <h4>Sources</h4>
+                <ul class="sources-list">${list}</ul>
+            `;
+            messageElement.appendChild(container);
+        }
+
         function displayMessage(message) {
             const isUser = message.role === 'user'; const senderClass = isUser ? 'user-message' : (message.modelType === 'plex' ? 'plex-message' : 'ai-message');
             const messageDiv = document.createElement('div'); messageDiv.className = `message ${senderClass}`; if (message.id) messageDiv.id = message.id;
@@ -508,7 +625,14 @@
             messageDiv.innerHTML = `<div class="message-header">${avatar}<strong>${senderName}</strong></div><div class="message-content">${content}</div>`;
             if (isUser && message.files && message.files.length > 0) { const filesHtml = message.files.map(file => `<div class="file-item"><i class="fas ${getFileIconClass(file.type)}"></i> <span>${file.name}</span></div>`).join(''); messageDiv.querySelector('.message-content').innerHTML += `<div class="attached-files">${filesHtml}</div>`; }
             messagesContainer.appendChild(messageDiv); messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            if (!isUser) { renderMessageActions(messageDiv, message.content); }
+            
+            if (!isUser) { 
+                renderMessageActions(messageDiv, message.content); 
+                // Render sources if they exist (for loading from history)
+                if (message.sources && message.sources.length > 0) {
+                    renderSources(messageDiv, message.sources);
+                }
+            }
         }
 
         function renderMessageActions(messageElement, content) {
@@ -529,24 +653,10 @@
 
         async function logActivityToDatabase(userPrompt, aiResponse, model) {
             const scriptURL = "[https://script.google.com/macros/s/AKfycbyOH5sopxoCxR53aNP_WhI5seGOo0W41g3TEiwK-v0dhb2sgmQgCkLxc0C5_BJZmwK2Kw/exec](https://script.google.com/macros/s/AKfycbyOH5sopxoCxR53aNP_WhI5seGOo0W41g3TEiwK-v0dhb2sgmQgCkLxc0C5_BJZmwK2Kw/exec)";
-
-            const logData = {
-                prompt: userPrompt,
-                response: aiResponse,
-                model: model
-            };
-
+            const logData = { prompt: userPrompt, response: aiResponse, model: model };
             try {
-                await fetch(scriptURL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(logData)
-                });
-            } catch (error) {
-                console.error("Error sending log to Google Sheet:", error);
-            }
+                await fetch(scriptURL, { method: 'POST', headers: { 'Content-Type': 'application/json', }, body: JSON.stringify(logData) });
+            } catch (error) { console.error("Error sending log to Google Sheet:", error); }
         }
 
         function runCodeInPreview(markdown) {
@@ -588,7 +698,6 @@
                 id: chatId,
                 title: 'New Chat',
                 messages: [{ role: 'model', senderName: 'Glitch AI', content: `What's up! I'm Glitch, your new AI sidekick. Ready to brainstorm some wild ideas, get some hype, or just chill and chat? I got you. Let's make some magic happen! ✨`, modelType: 'ai' }],
-                // FIXED: Corrected typo from newtoISOString() to new Date().toISOString()
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString()
             };
