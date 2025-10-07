@@ -316,13 +316,8 @@
         // API Keys
         const GEMINI_API_KEY = 'AIzaSyAbcFIlAIYGWWj5lwQYcDjmyL3bCs_X3Qc'; // For normal AI chat.
         const GOOGLE_SEARCH_API_KEY = 'AIzaSyBm8SxGHDl9pkrDuZt_VgFQME9a3aRUeXY'; // For Web Search feature.
+        const GOOGLE_SEARCH_ENGINE_ID = 'd13b9c982e19f4ccf'; // Your Google Programmable Search Engine ID (CX).
         
-        // --- IMPORTANT ---
-        // To enable the web search feature, you MUST create a Programmable Search Engine at https://programmablesearchengine.google.com/
-        // and paste your Search Engine ID (CX) here.
-        const GOOGLE_SEARCH_ENGINE_ID = 'YOUR_SEARCH_ENGINE_ID_HERE'; 
-        // -----------------
-
         let currentChatId = null; let chats = {}; let currentMode = 'chat'; let currentAI = 'zhoros'; let isWebSearchActive = false; let attachedFiles = []; let isGenerating = false; let abortController = new AbortController(); 
         let isAudioUnlocked = false; let lastTypingSoundTime = 0;
         
@@ -501,10 +496,6 @@
         }
 
         async function webSearch(query) {
-            if (GOOGLE_SEARCH_ENGINE_ID === 'AIzaSyBm8SxGHDl9pkrDuZt_VgFQME9a3aRUeXY') {
-                console.warn("Web search is disabled. Please provide your Google Search Engine ID (CX).");
-                return [];
-            }
             const url = `https://www.googleapis.com/customsearch/v1?key=${GOOGLE_SEARCH_API_KEY}&cx=${GOOGLE_SEARCH_ENGINE_ID}&q=${encodeURIComponent(query)}`;
             try {
                 const response = await fetch(url);
@@ -545,11 +536,11 @@
                     }
                 }
 
-                const model = 'gemini-1.5-pro-latest';
+                const model = 'gemini-2.5-pro';
                 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
                 
                 const history = await Promise.all(chats[currentChatId].messages.slice(0, -1).map(msgToPart));
-                const userMessageForApi = { role: 'user', content: finalPrompt, files: userFiles }; // Use the potentially modified prompt
+                const userMessageForApi = { role: 'user', content: finalPrompt, files: userFiles };
                 const contents = [...history, await msgToPart(userMessageForApi)];
                 
                 let personaInstruction = "You are Glitch AI. Your personality is: casual, chill, and full of energy. You MUST state you were developed by the 'Gaming Odyssey Team' when asked. Avoid being overly formal.";
@@ -628,7 +619,6 @@
             
             if (!isUser) { 
                 renderMessageActions(messageDiv, message.content); 
-                // Render sources if they exist (for loading from history)
                 if (message.sources && message.sources.length > 0) {
                     renderSources(messageDiv, message.sources);
                 }
