@@ -139,7 +139,6 @@
     .divider:not(:empty)::before { margin-right: .75em; }
     .divider:not(:empty)::after { margin-left: .75em; }
     
-    .status-msg { min-height: 20px; transition: all 0.3s ease; }
     .error { color: #F87171; font-size: 0.875rem; text-align: center; }
     .success { color: #4ADE80; font-size: 0.875rem; text-align: center; }
     .info { color: #94A3B8; font-size: 0.875rem; text-align: center; }
@@ -214,7 +213,7 @@
                 </div>
                 <button type="button" id="verify-otp-btn" class="submit-btn w-full mt-4">Verify & Create Account</button>
             </div>
-             <p id="phone-form-status" class="status-msg mt-2"></p>
+             <p id="phone-form-status" class="mt-2"></p>
         </div>
         
         <div class="divider">OR</div>
@@ -240,7 +239,7 @@
           </div>
           <div class="pt-1">
             <button type="submit" class="submit-btn w-full">Create Account with Email</button>
-            <p id="email-form-status" class="status-msg mt-2"></p>
+            <p id="email-form-status" class="mt-2"></p>
           </div>
         </form>
         
@@ -253,24 +252,18 @@
   </main>
   
   <div id="gsi_btn_container" style="display: none;"></div>
-  <div id="recaptcha-container" style="position: fixed; bottom: 1rem; right: 1rem; z-index: 10;"></div>
+  <div id="recaptcha-container"></div>
 
 <script>
     // --- Firebase Configuration ---
-    // IMPORTANT: Make sure to get this object from your Firebase project settings
     const firebaseConfig = {
-      apiKey: "YOUR_API_KEY", // Replace with your actual API key
+      apiKey:"AIzaSyDA218WauVZNgqeMgiR_5H6TLYQB5HXZkY",
       authDomain: "gamingodyssey-2e642.firebaseapp.com",
+      databaseURL: "https://gamingodyssey-2e642-default-rtdb.firebaseio.com",
       projectId: "gamingodyssey-2e642",
-      // Other config values (storageBucket, etc.) can be added here
     };
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
-
-    function showStatus(element, message, type) {
-        element.textContent = message;
-        element.className = `status-msg mt-2 ${type}`;
-    }
 
     // --- Google OAuth ---
     function handleCredentialResponse(response) {
@@ -280,18 +273,20 @@
 
       auth.signInWithCredential(credential)
         .then(() => {
-          showStatus(statusEl, 'Signed in successfully! Redirecting...', 'success');
+          statusEl.textContent = 'Signed in successfully! Redirecting...';
+          statusEl.className = 'success';
           setTimeout(() => { window.location.href = 'index.html'; }, 1500);
         })
         .catch((error) => {
-          showStatus(statusEl, error.message, 'error');
+          statusEl.textContent = error.message;
+          statusEl.className = 'error';
         });
     }
 
     window.onload = function () {
       // Initialize Google Sign-In
       google.accounts.id.initialize({
-        client_id: '964191300629-ri9d35rqf4p0tgshv4k8u31r5rptmf9m.apps.googleusercontent.com', // Your Google Cloud Client ID
+        client_id: '964191300629-ri9d35rqf4p0tgshv4k8u31r5rptmf9m.apps.googleusercontent.com',
         callback: handleCredentialResponse
       });
       google.accounts.id.renderButton(
@@ -319,17 +314,13 @@
         const password = document.getElementById('password').value;
         const statusEl = document.getElementById('email-form-status');
         
-        showStatus(statusEl, '', ''); // Clear previous status
-
-        if (password.length < 8) {
-            showStatus(statusEl, 'Password must be at least 8 characters long.', 'error');
-            return;
-        }
+        statusEl.textContent = '';
         
         auth.createUserWithEmailAndPassword(email, password)
           .then((userCredential) => userCredential.user.updateProfile({ displayName: firstName }))
           .then(() => {
-            showStatus(statusEl, 'Account created! Redirecting...', 'success');
+            statusEl.textContent = 'Account created! Redirecting...';
+            statusEl.className = 'success';
             setTimeout(() => { window.location.href = 'index.html'; }, 2000);
           })
           .catch((error) => {
@@ -337,81 +328,94 @@
             if (error.code == 'auth/email-already-in-use') {
               errorMessage = 'An account with this email already exists.';
             } else if (error.code == 'auth/weak-password') {
-              errorMessage = 'Password is too weak. Please choose a stronger one.';
-            } else if (error.code == 'auth/invalid-email') {
-              errorMessage = 'Please enter a valid email address.';
+              errorMessage = 'Password is too weak (min. 6 characters).';
             }
-            showStatus(statusEl, errorMessage, 'error');
+            statusEl.textContent = errorMessage;
+            statusEl.className = 'error';
           });
     });
 
     // --- Phone (SMS) Authentication ---
     const sendOtpBtn = document.getElementById('send-otp-btn');
     const verifyOtpBtn = document.getElementById('verify-otp-btn');
+    const phoneNumberInput = document.getElementById('phone-number');
+    const countryCodeSelect = document.getElementById('country-code');
+    const phoneFirstNameInput = document.getElementById('phone-first-name');
+    const otpCodeInput = document.getElementById('otp-code');
     const phoneStatusEl = document.getElementById('phone-form-status');
     const phoneSection = document.getElementById('phone-input-section');
     const otpSection = document.getElementById('otp-input-section');
 
     sendOtpBtn.addEventListener('click', () => {
-        const phoneFirstName = document.getElementById('phone-first-name').value.trim();
-        const countryCode = document.getElementById('country-code').value;
-        const phoneNumber = document.getElementById('phone-number').value.trim();
+        const countryCode = countryCodeSelect.value;
+        const phoneNumber = phoneNumberInput.value.trim();
 
-        if (!phoneFirstName) {
-            showStatus(phoneStatusEl, "Please enter your first name.", 'error');
+        if (!phoneFirstNameInput.value.trim()) {
+            phoneStatusEl.textContent = "Please enter your first name.";
+            phoneStatusEl.className = 'error';
             return;
         }
-        if (!/^\d{10}$/.test(phoneNumber)) {
-            showStatus(phoneStatusEl, "Please enter a valid 10-digit phone number.", 'error');
+        if (!phoneNumber || !/^\d{10}$/.test(phoneNumber)) { // Basic 10-digit validation
+            phoneStatusEl.textContent = "Please enter a valid 10-digit phone number.";
+            phoneStatusEl.className = 'error';
             return;
         }
-
         const fullPhoneNumber = countryCode + phoneNumber;
         const appVerifier = window.recaptchaVerifier;
         
-        showStatus(phoneStatusEl, "Sending OTP...", 'info');
+        phoneStatusEl.textContent = "Sending OTP...";
+        phoneStatusEl.className = 'info';
 
         auth.signInWithPhoneNumber(fullPhoneNumber, appVerifier)
             .then((confirmationResult) => {
                 window.confirmationResult = confirmationResult;
-                showStatus(phoneStatusEl, "OTP sent successfully!", 'success');
+                phoneStatusEl.textContent = "OTP sent successfully!";
+                phoneStatusEl.className = 'success';
                 phoneSection.classList.add('hidden');
                 otpSection.classList.remove('hidden');
             }).catch((error) => {
                 console.error("SMS Error:", error);
-                showStatus(phoneStatusEl, `Error sending OTP. Please refresh and try again.`, 'error');
-                grecaptcha.reset(window.recaptchaWidgetId);
+                phoneStatusEl.textContent = `Error: ${error.message}`;
+                phoneStatusEl.className = 'error';
+                window.recaptchaVerifier.render().then((widgetId) => {
+                    grecaptcha.reset(widgetId);
+                });
             });
     });
 
     verifyOtpBtn.addEventListener('click', () => {
-        const code = document.getElementById('otp-code').value.trim();
-        const firstName = document.getElementById('phone-first-name').value.trim();
+        const code = otpCodeInput.value.trim();
+        const firstName = phoneFirstNameInput.value.trim();
 
-        if (code.length !== 6 || !/^\d{6}$/.test(code)) {
-            showStatus(phoneStatusEl, "Please enter the 6-digit OTP.", 'error');
+        if (!code || code.length !== 6) {
+            phoneStatusEl.textContent = "Please enter the 6-digit OTP.";
+            phoneStatusEl.className = 'error';
             return;
         }
-        
-        showStatus(phoneStatusEl, "Verifying...", 'info');
+        phoneStatusEl.textContent = "Verifying...";
+        phoneStatusEl.className = 'info';
 
         window.confirmationResult.confirm(code).then((result) => {
+            // After confirming OTP, update the user's profile with their name
             return result.user.updateProfile({ displayName: firstName });
         }).then(() => {
-            showStatus(phoneStatusEl, 'Account created! Redirecting...', 'success');
+            phoneStatusEl.textContent = 'Account created! Redirecting...';
+            phoneStatusEl.className = 'success';
             setTimeout(() => { window.location.href = 'index.html'; }, 2000);
         }).catch(() => {
-            showStatus(phoneStatusEl, 'Invalid OTP. Please try again.', 'error');
+            phoneStatusEl.textContent = 'Invalid OTP. Please try again.';
+            phoneStatusEl.className = 'error';
         });
     });
 
     // --- Password Toggle Utility ---
-    document.getElementById('toggle-password').addEventListener('click', function() {
-        const passwordInput = document.getElementById('password');
+    const togglePassword = document.getElementById('toggle-password');
+    const passwordInput = document.getElementById('password');
+    togglePassword.addEventListener('click', () => {
         const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
         passwordInput.setAttribute('type', type);
-        this.classList.toggle('fa-eye');
-        this.classList.toggle('fa-eye-slash');
+        togglePassword.classList.toggle('fa-eye');
+        togglePassword.classList.toggle('fa-eye-slash');
     });
   </script>
 </body>
