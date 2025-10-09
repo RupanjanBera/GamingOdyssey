@@ -100,7 +100,6 @@
       box-shadow: 4px 0 15px rgba(59, 130, 246, 0.2);
     }
 
-    /* --- Increased Sidebar Menu Item Size --- */
     .sidebar nav a {
         padding: 12px 10px;
         font-size: 1.05rem;
@@ -581,6 +580,45 @@
         opacity: 1;
     }
     
+    /* --- PC BUILDER WIZARD STYLES --- */
+    .pc-builder-step {
+        animation: step-fade-in 0.5s ease-out;
+    }
+    @keyframes step-fade-in {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .builder-option {
+        background-color: rgba(30, 41, 59, 0.5);
+        border: 2px solid var(--mid);
+        border-radius: 0.75rem;
+        padding: 1rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    .builder-option:hover {
+        transform: translateY(-5px);
+        border-color: var(--primary);
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+    }
+    .builder-option img {
+        height: 60px;
+        margin-bottom: 0.75rem;
+        object-fit: contain;
+        filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
+    }
+    .builder-option-icon {
+        font-size: 3rem;
+        margin-bottom: 0.75rem;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
     /* --- ODYSSEY AI WIDGET STYLES --- */
     #odyssey-ai-widget-container {
         position: fixed;
@@ -1018,6 +1056,54 @@
     </section>
 
     <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B] relative overflow-hidden">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-6 section-title">Forge Your Legend</h2>
+            <p class="text-center text-slate-300 mb-12 max-w-2xl mx-auto">Answer three simple questions to find the perfect rig for your gaming journey.</p>
+            
+            <div id="pc-builder-wizard" class="holographic-effect rounded-2xl p-6 sm:p-10 z-10 fade-in">
+                <div class="pc-builder-step" data-step="1">
+                    <h3 class="text-2xl font-bold text-center mb-8 tech-font">Step 1: What's Your Main Game?</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <button class="builder-option" data-next="2"><i class="fas fa-crosshairs builder-option-icon"></i><span class="font-semibold">FPS / Shooters</span></button>
+                        <button class="builder-option" data-next="2"><i class="fas fa-dragon builder-option-icon"></i><span class="font-semibold">RPG / Adventure</span></button>
+                        <button class="builder-option" data-next="2"><i class="fas fa-fist-raised builder-option-icon"></i><span class="font-semibold">Esports / MOBA</span></button>
+                        <button class="builder-option" data-next="2"><i class="fas fa-palette builder-option-icon"></i><span class="font-semibold">Creative / Sandbox</span></button>
+                    </div>
+                </div>
+
+                <div class="pc-builder-step hidden" data-step="2">
+                    <h3 class="text-2xl font-bold text-center mb-8 tech-font">Step 2: What's Your Budget?</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <button class="builder-option" data-next="3"><i class="fas fa-shield-alt builder-option-icon"></i><span class="font-semibold">Entry-Level</span><p class="text-sm text-slate-400">Solid Performance</p></button>
+                        <button class="builder-option" data-next="3"><i class="fas fa-trophy builder-option-icon"></i><span class="font-semibold">Pro-Tier</span><p class="text-sm text-slate-400">Competitive Edge</p></button>
+                        <button class="builder-option" data-next="3"><i class="fas fa-meteor builder-option-icon"></i><span class="font-semibold">God-Tier</span><p class="text-sm text-slate-400">Unmatched Power</p></button>
+                    </div>
+                </div>
+
+                <div class="pc-builder-step hidden" data-step="3">
+                    <h3 class="text-2xl font-bold text-center mb-8 tech-font">Step 3: What's Your Style?</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <button class="builder-option" data-next="4"><i class="fas fa-moon builder-option-icon"></i><span class="font-semibold">Stealth Black</span></button>
+                        <button class="builder-option" data-next="4"><i class="fas fa-rainbow builder-option-icon"></i><span class="font-semibold">RGB Overload</span></button>
+                        <button class="builder-option" data-next="4"><i class="fas fa-sun builder-option-icon"></i><span class="font-semibold">Clean White</span></button>
+                    </div>
+                </div>
+                
+                <div class="pc-builder-step hidden" data-step="4">
+                    <div class="text-center">
+                        <i class="fas fa-check-circle text-6xl text-green-400 mb-6"></i>
+                        <h3 class="text-2xl font-bold text-center mb-4 tech-font">Analysis Complete!</h3>
+                        <p class="text-slate-300 mb-8">We've forged the perfect build recommendation for you based on your choices.</p>
+                        <a href="store.html" class="inline-block glow-button px-8 py-4 rounded-lg font-semibold text-white gradient-bg text-lg">
+                            <i class="fas fa-desktop mr-2"></i> View Your Recommended Build
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A] relative overflow-hidden">
       <div class="max-w-7xl mx-auto">
         <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Upcoming Tournaments</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -1064,7 +1150,7 @@
       </div>
     </section>
 
-    <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A] relative overflow-hidden">
+    <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B] relative overflow-hidden">
       <div class="max-w-7xl mx-auto">
         <div class="flex flex-col md:flex-row items-center gap-8">
           <div class="md:w-1/2 fade-in">
@@ -1095,7 +1181,7 @@
       </div>
     </section>
 
-    <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B]">
+    <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A]">
       <div class="max-w-7xl mx-auto">
         <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Why Choose Gaming Odyssey?</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -1107,7 +1193,7 @@
       </div>
     </section>
 
-    <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A]">
+    <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B]">
       <div class="max-w-4xl mx-auto">
         <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Contact Us</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -1253,9 +1339,35 @@
         if (slideshowContainer) {
             const slides = [ { img: 'https://9to5toys.com/wp-content/uploads/sites/5/2022/11/best-peripherals-feature.png?q=80&w=2070&auto=format&fit=crop', caption: 'Discover premium peripherals for the ultimate edge.' }, { img: 'https://www.gladiatorpc.co.uk/assets/img/special/landingpages/gamingpc/gamingpcbgm.webp?q=80&w=2042&auto=format&fit=crop', caption: 'Let us build your dream custom PC, tailored to your needs.' }, { img: 'https://www.cyberpowerpc.com/blog/w/wp-content/uploads/2024/08/BlogPurpScrup-scaled.jpg?q=80&w=2070&auto=format&fit=crop', caption: 'Design a complete, aesthetic gaming setup with our help.' } ]; let currentSlide = 0; slides.forEach((slide, index) => { const el = document.createElement('div'); el.className = 'slide' + (index === 0 ? ' active' : ''); el.style.backgroundImage = `url('${slide.img}')`; el.innerHTML = `<div class="slide-caption">${slide.caption}</div>`; slideshowContainer.appendChild(el); }); setInterval(() => { const els = document.querySelectorAll('#hero-slideshow .slide'); els[currentSlide].classList.remove('active'); currentSlide = (currentSlide + 1) % slides.length; els[currentSlide].classList.add('active'); }, 5000);
         }
+
+        // --- PC Builder Wizard Script ---
+        const wizard = document.getElementById('pc-builder-wizard');
+        if (wizard) {
+            const steps = wizard.querySelectorAll('.pc-builder-step');
+            const options = wizard.querySelectorAll('.builder-option');
+
+            const showStep = (stepNumber) => {
+                steps.forEach(step => {
+                    if (step.dataset.step === stepNumber) {
+                        step.classList.remove('hidden');
+                    } else {
+                        step.classList.add('hidden');
+                    }
+                });
+            };
+
+            options.forEach(option => {
+                option.addEventListener('click', () => {
+                    const nextStep = option.dataset.next;
+                    if (nextStep) {
+                        showStep(nextStep);
+                    }
+                });
+            });
+        }
     });
 
-    // --- NEW ODYSSEY AI WIDGET SCRIPT ---
+    // --- ODYSSEY AI WIDGET SCRIPT ---
     document.addEventListener('DOMContentLoaded', () => {
         if (!document.getElementById('odyssey-ai-widget-container')) return;
         const GEMINI_API_KEY = 'AIzaSyBVnb7V9LGdFbNtHkReRFFPnOs-PCaefOM';
