@@ -277,13 +277,13 @@
       transform: translateY(-3px) scale(1.1);
     }
     
-    .tournament-card {
+    .tournament-card, .category-card {
       position: relative;
       overflow: hidden;
       transition: all 0.3s ease;
     }
     
-    .tournament-card::before {
+    .tournament-card::before, .category-card::before {
       content: '';
       position: absolute;
       top: 0;
@@ -293,17 +293,17 @@
       background: linear-gradient(
         to bottom,
         transparent 60%,
-        rgba(0, 0, 0, 0.7) 90%
+        rgba(0, 0, 0, 0.8) 100%
       );
       z-index: 1;
     }
     
-    .tournament-card-content {
+    .tournament-card-content, .category-card-content {
       position: relative;
       z-index: 2;
     }
     
-    .tournament-card:hover {
+    .tournament-card:hover, .category-card:hover {
       transform: translateY(-5px);
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
     }
@@ -431,7 +431,6 @@
       cursor: pointer;
       box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
       transition: all 0.3s ease;
-      animation: pulse 2s infinite;
     }
     
     .whatsapp-bubble:hover {
@@ -582,45 +581,14 @@
         opacity: 1;
     }
     
-    /* --- NEW AI SHOWCASE STYLES --- */
-    #ai-showcase-card {
-        transition: transform 0.4s ease, box-shadow 0.4s ease;
-        min-height: 180px;
-    }
-    #ai-showcase-card:hover {
-        transform: translateY(-10px) rotateX(3deg) rotateY(-4deg);
-        box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.2);
-    }
-    .showcase-message {
-        opacity: 0;
-        transform: translateY(10px);
-        transition: opacity 0.5s ease, transform 0.5s ease;
-    }
-    .showcase-message.visible {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    @keyframes typing-blink {
-      50% { opacity: 0; }
-    }
-    .typing-cursor {
-        display: inline-block;
-        width: 2px;
-        height: 1em;
-        background-color: #94A3B8;
-        animation: typing-blink 1s step-end infinite;
-        vertical-align: bottom;
-    }
-
-    
-    /* --- GLITCH AI WIDGET STYLES --- */
-    #glitch-ai-widget-container {
+    /* --- ODYSSEY AI WIDGET STYLES --- */
+    #odyssey-ai-widget-container {
         position: fixed;
         bottom: 30px;
         right: 30px;
         z-index: 1050;
     }
-    #glitch-ai-toggle-bubble {
+    #odyssey-ai-toggle-bubble {
         width: 60px;
         height: 60px;
         background: linear-gradient(135deg, var(--primary), var(--secondary));
@@ -632,14 +600,14 @@
         transition: all 0.3s ease;
         animation: pulse 2.5s infinite;
     }
-    #glitch-ai-toggle-bubble:hover {
+    #odyssey-ai-toggle-bubble:hover {
         transform: scale(1.1);
         animation-play-state: paused;
     }
-    #glitch-ai-toggle-bubble img {
+    #odyssey-ai-toggle-bubble img {
         border-radius: 50%;
     }
-    #glitch-ai-chat-window {
+    #odyssey-ai-chat-window {
         position: absolute;
         bottom: 80px;
         right: 0;
@@ -655,12 +623,12 @@
         transform-origin: bottom right;
         transition: transform 0.3s ease-out, opacity 0.3s ease-out;
     }
-    #glitch-ai-chat-window.hidden {
+    #odyssey-ai-chat-window.hidden {
         transform: scale(0.5);
         opacity: 0;
         pointer-events: none;
     }
-    #glitch-ai-header {
+    #odyssey-ai-header {
         background-color: var(--mid);
         padding: 12px 16px;
         border-bottom: 1px solid var(--primary);
@@ -669,7 +637,7 @@
         align-items: center;
         flex-shrink: 0;
     }
-    #glitch-ai-header-buttons button {
+    #odyssey-ai-header-buttons button {
         background: none;
         border: none;
         color: #94A3B8;
@@ -677,15 +645,15 @@
         cursor: pointer;
         transition: color 0.2s;
     }
-    #glitch-ai-header-buttons button:hover {
+    #odyssey-ai-header-buttons button:hover {
         color: white;
     }
-    #glitch-ai-close-btn {
+    #odyssey-ai-close-btn {
         font-weight: bold;
         font-size: 24px;
         line-height: 1;
     }
-    #glitch-ai-messages {
+    #odyssey-ai-messages {
         flex: 1;
         padding: 16px;
         overflow-y: auto;
@@ -695,26 +663,26 @@
         scrollbar-width: thin;
         scrollbar-color: var(--primary) var(--dark);
     }
-    .glitch-message {
+    .odyssey-message {
         padding: 10px 15px;
         border-radius: 12px;
         max-width: 85%;
         line-height: 1.6;
         word-wrap: break-word;
     }
-    .glitch-user-message {
+    .odyssey-user-message {
         background-color: #3B82F6;
         color: white;
         align-self: flex-end;
         border-bottom-right-radius: 2px;
     }
-    .glitch-ai-message {
+    .odyssey-ai-message {
         background-color: var(--mid);
         color: var(--light);
         align-self: flex-start;
         border-bottom-left-radius: 2px;
     }
-    .glitch-ai-message code {
+    .odyssey-ai-message code {
       background: rgba(0,0,0,0.4);
       padding: 2px 6px;
       border-radius: 4px;
@@ -722,7 +690,7 @@
       color: #FF4DA6;
       font-size: 0.9em;
     }
-    .glitch-ai-message pre {
+    .odyssey-ai-message pre {
       background: #010409;
       padding: 12px;
       border-radius: 8px;
@@ -732,14 +700,14 @@
       white-space: pre-wrap;
       border: 1px solid #222;
     }
-    #glitch-ai-input-area {
+    #odyssey-ai-input-area {
         display: flex;
         gap: 10px;
         padding: 12px;
         border-top: 1px solid var(--mid);
         background-color: var(--dark);
     }
-    #glitch-ai-input {
+    #odyssey-ai-input {
         flex: 1;
         background-color: var(--mid);
         color: var(--light);
@@ -750,10 +718,10 @@
         outline: none;
         transition: border-color 0.3s ease;
     }
-    #glitch-ai-input:focus {
+    #odyssey-ai-input:focus {
         border-color: var(--primary);
     }
-    #glitch-ai-send-btn {
+    #odyssey-ai-send-btn {
         background: linear-gradient(135deg, var(--primary), var(--secondary));
         border: none;
         color: white;
@@ -767,10 +735,10 @@
         align-items: center;
         justify-content: center;
     }
-    #glitch-ai-send-btn:hover {
+    #odyssey-ai-send-btn:hover {
         transform: scale(1.05);
     }
-    #glitch-ai-send-btn .loader {
+    #odyssey-ai-send-btn .loader {
         width: 18px; height: 18px; border: 2px solid #FFF; border-bottom-color: transparent; border-radius: 50%; display: inline-block; box-sizing: border-box; animation: rotation 1s linear infinite;
     }
     @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -793,7 +761,7 @@
         height: 40px;
         font-size: 1rem;
       }
-      #glitch-ai-chat-window {
+      #odyssey-ai-chat-window {
             width: calc(100vw - 40px);
             height: 70vh;
             bottom: 75px;
@@ -838,10 +806,6 @@
         <a href="aboutus.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link rounded-md">
           <i class="fas fa-info-circle w-5 h-5"></i>
           <span>About Us</span>
-        </a>
-        <a href="glitch.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link rounded-md">
-          <i class="fas fa-robot w-5 h-5"></i>
-          <span>Glitch AI</span>
         </a>
         <a href="login.html" id="login-link-desktop" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link rounded-md">
           <i class="fas fa-sign-in-alt w-5 h-5"></i>
@@ -912,10 +876,6 @@
         <i class="fas fa-info-circle w-5 h-5"></i>
         <span>About Us</span>
       </a>
-       <a href="glitch.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
-          <i class="fas fa-robot w-5 h-5"></i>
-          <span>Glitch AI</span>
-        </a>
       <a href="login.html" id="login-link-mobile" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
         <i class="fas fa-sign-in-alt w-5 h-5"></i>
         <span>Login</span>
@@ -1019,7 +979,45 @@
       </div>
     </section>
 
-    <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A] relative overflow-hidden">
+    <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A]">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Explore Categories</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                <a href="store.html" class="category-card rounded-xl group fade-in">
+                    <img src="https://images.unsplash.com/photo-1599643477877-0b7f53b198a6?q=80&w=2070&auto=format&fit=crop" alt="Audio and Wearables" class="w-full h-72 object-cover">
+                    <div class="category-card-content p-4 absolute bottom-0 left-0 right-0">
+                        <h3 class="text-lg font-bold text-white">Audio / Wearables</h3>
+                    </div>
+                </a>
+                <a href="store.html" class="category-card rounded-xl group fade-in">
+                    <img src="https://images.unsplash.com/photo-1615663249873-42b7816a4595?q=80&w=2070&auto=format&fit=crop" alt="Gaming Mouse" class="w-full h-72 object-cover">
+                    <div class="category-card-content p-4 absolute bottom-0 left-0 right-0">
+                        <h3 class="text-lg font-bold text-white">Mouse</h3>
+                    </div>
+                </a>
+                <a href="store.html" class="category-card rounded-xl group fade-in">
+                    <img src="https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?q=80&w=2070&auto=format&fit=crop" alt="Gaming Keyboards" class="w-full h-72 object-cover">
+                    <div class="category-card-content p-4 absolute bottom-0 left-0 right-0">
+                        <h3 class="text-lg font-bold text-white">Keyboards</h3>
+                    </div>
+                </a>
+                <a href="store.html" class="category-card rounded-xl group fade-in">
+                    <img src="https://images.unsplash.com/photo-1598986643649-1f49a85785f2?q=80&w=2070&auto=format&fit=crop" alt="Custom PC Building" class="w-full h-72 object-cover">
+                    <div class="category-card-content p-4 absolute bottom-0 left-0 right-0">
+                        <h3 class="text-lg font-bold text-white">Custom PC Building</h3>
+                    </div>
+                </a>
+                <a href="store.html" class="category-card rounded-xl group fade-in">
+                    <img src="https://images.unsplash.com/photo-1555680202-c86f0e12f086?q=80&w=2070&auto=format&fit=crop" alt="Pre-built PCs" class="w-full h-72 object-cover">
+                    <div class="category-card-content p-4 absolute bottom-0 left-0 right-0">
+                        <h3 class="text-lg font-bold text-white">Pre-Built PCs</h3>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B] relative overflow-hidden">
       <div class="max-w-7xl mx-auto">
         <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Upcoming Tournaments</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -1065,39 +1063,8 @@
         </div>
       </div>
     </section>
-    
-    <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A] relative overflow-hidden">
-        <div class="max-w-7xl mx-auto">
-            <div class="flex flex-col md:flex-row-reverse items-center gap-12">
-                <div class="md:w-1/2 w-full fade-in">
-                    <div id="ai-showcase-card" class="holographic-card relative bg-[#0d1117] p-6 rounded-2xl border border-[#3B82F6]/30 shadow-2xl shadow-[#3B82F6]/10">
-                        <div class="holographic-card-inner">
-                            <div class="flex items-center gap-3 mb-4">
-                                <img src="glitch.png" alt="Glitch Logo" class="w-10 h-10 rounded-full border-2 border-[#3B82F6]">
-                                <h3 class="tech-font text-xl font-bold gradient-text">Glitch AI Live</h3>
-                            </div>
-                            <div id="showcase-chat-container" class="space-y-3 text-sm">
-                                </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="md:w-1/2 fade-in">
-                    <h2 class="text-3xl sm:text-4xl font-bold text-white mb-6 section-title">Meet Glitch AI</h2>
-                    <p class="text-[#F1F5F9] mb-6 leading-relaxed">
-                        Unleash your creativity with Glitch, our state-of-the-art AI assistant, proudly developed by the **Gaming Odyssey Team**. Whether you need help with coding, brainstorming ideas, or just a friendly chat, Glitch is here to supercharge your workflow.
-                    </p>
-                    <p class="text-slate-400 mb-8">
-                        Experience seamless interaction, powerful features, and a glimpse into the future of AI. Try it out live with the widget on your screen!
-                    </p>
-                    <a href="glitch.html" class="glow-button px-8 py-3 rounded-lg font-semibold text-white gradient-bg flex items-center justify-center gap-3 text-lg">
-                        <i class="fas fa-rocket"></i> Launch Full Experience
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B] relative overflow-hidden">
+    <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A] relative overflow-hidden">
       <div class="max-w-7xl mx-auto">
         <div class="flex flex-col md:flex-row items-center gap-8">
           <div class="md:w-1/2 fade-in">
@@ -1128,7 +1095,7 @@
       </div>
     </section>
 
-    <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A]">
+    <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B]">
       <div class="max-w-7xl mx-auto">
         <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Why Choose Gaming Odyssey?</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -1140,7 +1107,7 @@
       </div>
     </section>
 
-    <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B]">
+    <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A]">
       <div class="max-w-4xl mx-auto">
         <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Contact Us</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -1201,28 +1168,28 @@
     </div>
   </div>
 
-    <div id="glitch-ai-widget-container">
-        <div id="glitch-ai-chat-window" class="hidden">
-            <div id="glitch-ai-header">
+    <div id="odyssey-ai-widget-container">
+        <div id="odyssey-ai-chat-window" class="hidden">
+            <div id="odyssey-ai-header">
                 <div class="flex items-center gap-3">
-                    <img src="glitch.png" alt="Glitch Logo" class="w-8 h-8 rounded-full border border-blue-400">
+                    <img src="favicon.png" alt="Odyssey AI Logo" class="w-8 h-8 rounded-full border border-blue-400">
                     <div>
-                        <h3 class="font-bold text-white text-base">Glitch AI</h3>
+                        <h3 class="font-bold text-white text-base">Odyssey AI</h3>
                         <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div><p class="text-xs text-slate-300">Online</p></div>
                     </div>
                 </div>
-                <div id="glitch-ai-header-buttons" class="flex items-center gap-4">
-                    <button id="glitch-ai-clear-btn" title="Clear Chat"><i class="fas fa-sync-alt"></i></button>
-                    <button id="glitch-ai-close-btn" class="text-slate-400 hover:text-white">&times;</button>
+                <div id="odyssey-ai-header-buttons" class="flex items-center gap-4">
+                    <button id="odyssey-ai-clear-btn" title="Clear Chat"><i class="fas fa-sync-alt"></i></button>
+                    <button id="odyssey-ai-close-btn" class="text-slate-400 hover:text-white">&times;</button>
                 </div>
             </div>
-            <div id="glitch-ai-messages"></div>
-            <div id="glitch-ai-input-area">
-                 <textarea id="glitch-ai-input" placeholder="Ask Glitch anything..." rows="1"></textarea>
-                 <button id="glitch-ai-send-btn"><i class="fas fa-paper-plane"></i></button>
+            <div id="odyssey-ai-messages"></div>
+            <div id="odyssey-ai-input-area">
+                 <textarea id="odyssey-ai-input" placeholder="Ask Odyssey AI anything..." rows="1"></textarea>
+                 <button id="odyssey-ai-send-btn"><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
-        <button id="glitch-ai-toggle-bubble"><img src="glitch.png" alt="Glitch AI" class="w-full h-full object-cover"></button>
+        <button id="odyssey-ai-toggle-bubble"><img src="favicon.png" alt="Odyssey AI" class="w-full h-full object-cover"></button>
     </div>
 
 
@@ -1286,75 +1253,32 @@
         if (slideshowContainer) {
             const slides = [ { img: 'https://9to5toys.com/wp-content/uploads/sites/5/2022/11/best-peripherals-feature.png?q=80&w=2070&auto=format&fit=crop', caption: 'Discover premium peripherals for the ultimate edge.' }, { img: 'https://www.gladiatorpc.co.uk/assets/img/special/landingpages/gamingpc/gamingpcbgm.webp?q=80&w=2042&auto=format&fit=crop', caption: 'Let us build your dream custom PC, tailored to your needs.' }, { img: 'https://www.cyberpowerpc.com/blog/w/wp-content/uploads/2024/08/BlogPurpScrup-scaled.jpg?q=80&w=2070&auto=format&fit=crop', caption: 'Design a complete, aesthetic gaming setup with our help.' } ]; let currentSlide = 0; slides.forEach((slide, index) => { const el = document.createElement('div'); el.className = 'slide' + (index === 0 ? ' active' : ''); el.style.backgroundImage = `url('${slide.img}')`; el.innerHTML = `<div class="slide-caption">${slide.caption}</div>`; slideshowContainer.appendChild(el); }); setInterval(() => { const els = document.querySelectorAll('#hero-slideshow .slide'); els[currentSlide].classList.remove('active'); currentSlide = (currentSlide + 1) % slides.length; els[currentSlide].classList.add('active'); }, 5000);
         }
-
-        // --- Live AI Showcase Script ---
-        const showcaseContainer = document.getElementById('showcase-chat-container');
-        if (showcaseContainer) {
-            const conversation = [
-                { sender: 'ai', text: "Hey! I'm Glitch, ready to help. ✨", delay: 1500 },
-                { sender: 'user', text: "Can you write a python script to sort a list?", delay: 2500 },
-                { sender: 'ai', text: "Of course! Here you go...", delay: 2000 },
-                { sender: 'ai', text: "<code>def sort_list(my_list):<br>&nbsp;&nbsp;return sorted(my_list)</code>", delay: 3000 }
-            ];
-            let messageIndex = 0;
-
-            const typeMessage = (message, container) => {
-                let i = 0;
-                const typingSpeed = 50;
-                const typingInterval = setInterval(() => {
-                    if (i < message.text.length) {
-                        container.innerHTML = message.text.substring(0, i + 1) + '<span class="typing-cursor"></span>';
-                        i++;
-                    } else {
-                        clearInterval(typingInterval);
-                        container.innerHTML = message.text;
-                        setTimeout(playNextMessage, message.delay);
-                    }
-                }, typingSpeed);
-            };
-
-            const playNextMessage = () => {
-                if (messageIndex >= conversation.length) {
-                    setTimeout(() => { showcaseContainer.innerHTML = ''; messageIndex = 0; playNextMessage(); }, 4000);
-                    return;
-                }
-                const message = conversation[messageIndex];
-                const msgDiv = document.createElement('div');
-                msgDiv.className = `p-3 rounded-lg showcase-message ${message.sender === 'user' ? 'bg-[#3B82F6]/20 w-10/12 ml-auto text-right' : 'bg-[#161B22] w-11/12'}`;
-                showcaseContainer.appendChild(msgDiv);
-                setTimeout(() => msgDiv.classList.add('visible'), 100);
-                
-                typeMessage(message, msgDiv);
-                messageIndex++;
-            };
-            playNextMessage();
-        }
     });
 
-    // --- NEW GLITCH AI WIDGET SCRIPT ---
+    // --- NEW ODYSSEY AI WIDGET SCRIPT ---
     document.addEventListener('DOMContentLoaded', () => {
-        if (!document.getElementById('glitch-ai-widget-container')) return;
+        if (!document.getElementById('odyssey-ai-widget-container')) return;
         const GEMINI_API_KEY = 'AIzaSyBVnb7V9LGdFbNtHkReRFFPnOs-PCaefOM';
         const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}&alt=sse`;
-        const chatWindow = document.getElementById('glitch-ai-chat-window');
-        const toggleBubble = document.getElementById('glitch-ai-toggle-bubble');
-        const closeBtn = document.getElementById('glitch-ai-close-btn');
-        const clearBtn = document.getElementById('glitch-ai-clear-btn');
-        const messagesContainer = document.getElementById('glitch-ai-messages');
-        const input = document.getElementById('glitch-ai-input');
-        const sendBtn = document.getElementById('glitch-ai-send-btn');
+        const chatWindow = document.getElementById('odyssey-ai-chat-window');
+        const toggleBubble = document.getElementById('odyssey-ai-toggle-bubble');
+        const closeBtn = document.getElementById('odyssey-ai-close-btn');
+        const clearBtn = document.getElementById('odyssey-ai-clear-btn');
+        const messagesContainer = document.getElementById('odyssey-ai-messages');
+        const input = document.getElementById('odyssey-ai-input');
+        const sendBtn = document.getElementById('odyssey-ai-send-btn');
         let conversationHistory = [];
         let isGenerating = false;
         let isAwaitingSupportQuery = false;
         let abortController = new AbortController();
 
         const marked = { parse: (text) => { let html = text.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\*(.*?)\*/g, '<em>$1</em>').replace(/`(.*?)`/g, '<code>$1</code>').replace(/\n/g, '<br>'); html = html.replace(/```([\s\S]*?)```/g, (match, code) => `<pre><code>${code}</code></pre>`); return html; }};
-        function addMessage(role, content) { const div = document.createElement('div'); div.className = `glitch-message ${role === 'user' ? 'glitch-user-message' : 'glitch-ai-message'}`; div.innerHTML = content; messagesContainer.appendChild(div); messagesContainer.scrollTop = messagesContainer.scrollHeight; }
+        function addMessage(role, content) { const div = document.createElement('div'); div.className = `odyssey-message ${role === 'user' ? 'odyssey-user-message' : 'odyssey-ai-message'}`; div.innerHTML = content; messagesContainer.appendChild(div); messagesContainer.scrollTop = messagesContainer.scrollHeight; }
         
         async function sendSupportQueryToFormSubmit(query) {
             const formSubmitUrl = 'https://formsubmit.co/support@gamingodyssey.in';
             const formData = {
-                _subject: "New Support Query from Glitch AI",
+                _subject: "New Support Query from Odyssey AI",
                 _captcha: "false",
                 message: query
             };
@@ -1390,10 +1314,10 @@
 
             isGenerating = true; toggleSendButtonLoading(true);
             conversationHistory.push({ role: 'user', parts: [{ text: messageText }] });
-            const aiMessageDiv = document.createElement('div'); aiMessageDiv.className = 'glitch-message glitch-ai-message'; aiMessageDiv.innerHTML = '<span class="typing-indicator">...</span>'; messagesContainer.appendChild(aiMessageDiv); messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            const aiMessageDiv = document.createElement('div'); aiMessageDiv.className = 'odyssey-message odyssey-ai-message'; aiMessageDiv.innerHTML = '<span class="typing-indicator">...</span>'; messagesContainer.appendChild(aiMessageDiv); messagesContainer.scrollTop = messagesContainer.scrollHeight;
             let accumulatedResponse = "";
             try {
-                let persona = "You are Glitch AI. Your personality is: casual, chill, and energetic. You MUST state you were developed by the 'Gaming Odyssey Team' when asked. Avoid being overly formal. Keep responses concise for this widget.";
+                let persona = "You are Odyssey AI, the official AI assistant for Gaming Odyssey. Your personality is helpful, knowledgeable about gaming, and slightly futuristic. You MUST state you were developed by the 'Gaming Odyssey Team' when asked. Keep responses concise for this widget.";
                 const requestBody = { contents: conversationHistory, systemInstruction: { parts: [{ text: persona }] } };
                 abortController = new AbortController();
                 const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(requestBody), signal: abortController.signal });
@@ -1410,7 +1334,7 @@
         }
 
         function toggleSendButtonLoading(isLoading) { sendBtn.innerHTML = isLoading ? '<span class="loader"></span>' : '<i class="fas fa-paper-plane"></i>'; sendBtn.disabled = isLoading; }
-        function clearChat() { conversationHistory = []; messagesContainer.innerHTML = ''; isAwaitingSupportQuery = false; const welcome = "Chat cleared! What's up! I'm Glitch, ready to help you with anything. ✨"; addMessage('ai', welcome); conversationHistory.push({ role: 'model', parts: [{ text: welcome }] }); }
+        function clearChat() { conversationHistory = []; messagesContainer.innerHTML = ''; isAwaitingSupportQuery = false; const welcome = "Welcome! I'm Odyssey AI, your personal gaming assistant. How can I level up your experience today? 🚀"; addMessage('ai', welcome); conversationHistory.push({ role: 'model', parts: [{ text: welcome }] }); }
         
         toggleBubble.addEventListener('click', () => chatWindow.classList.toggle('hidden'));
         closeBtn.addEventListener('click', () => chatWindow.classList.add('hidden'));
@@ -1423,7 +1347,3 @@
   </script>
 </body>
 </html>
-
-
-
-
