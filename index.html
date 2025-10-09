@@ -212,6 +212,18 @@
       opacity: 1;
       transform: translateY(0);
     }
+
+    /* --- NEW IMMERSIVE SCROLL EFFECT --- */
+    .immersive-section {
+        opacity: 0;
+        transform: scale(0.9);
+        transition: opacity 1s ease-out, transform 1s ease-out;
+    }
+
+    .immersive-section.visible {
+        opacity: 1;
+        transform: scale(1);
+    }
     
     .input-field {
       background: rgba(30, 41, 59, 0.7);
@@ -962,11 +974,11 @@
       </div>
     </section>
 
-    <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B] relative overflow-hidden">
+    <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B] relative overflow-hidden immersive-section">
       <div class="max-w-7xl mx-auto">
         <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Featured Gaming Gear</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          <div class="product-card fade-in flex flex-col">
+          <div class="product-card flex flex-col">
             <div class="h-48 flex items-center justify-center mb-6">
               <img src="https://assets.aceternity.com/images/products/g-pro-x-superlight-black-gallery-1-v2.png" alt="Logitech G PRO X Superlight" class="max-h-full object-contain drop-shadow-2xl">
             </div>
@@ -977,7 +989,7 @@
               <a href="store.html" class="card-button"><i class="fas fa-shopping-cart"></i></a>
             </div>
           </div>
-          <div class="product-card fade-in flex flex-col">
+          <div class="product-card flex flex-col">
             <div class="h-48 flex items-center justify-center mb-6">
               <img src="https://assets.aceternity.com/images/products/corsair-k100-01.png" alt="Corsair K100 RGB Keyboard" class="max-h-full object-contain drop-shadow-2xl">
             </div>
@@ -988,7 +1000,7 @@
               <a href="store.html" class="card-button"><i class="fas fa-shopping-cart"></i></a>
             </div>
           </div>
-          <div class="product-card fade-in flex flex-col">
+          <div class="product-card flex flex-col">
             <div class="h-48 flex items-center justify-center mb-6">
               <img src="https://assets.aceternity.com/images/products/steelseries-nova-pro.png" alt="SteelSeries Arctis Nova Pro" class="max-h-full object-contain drop-shadow-2xl">
             </div>
@@ -999,7 +1011,7 @@
               <a href="store.html" class="card-button"><i class="fas fa-shopping-cart"></i></a>
             </div>
           </div>
-          <div class="product-card fade-in flex flex-col">
+          <div class="product-card flex flex-col">
             <div class="h-48 flex items-center justify-center mb-6">
               <img src="https://assets.aceternity.com/images/products/shure-mv7.png" alt="Shure MV7 Microphone" class="max-h-full object-contain drop-shadow-2xl">
             </div>
@@ -1014,10 +1026,10 @@
       </div>
     </section>
     
-    <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A] relative overflow-hidden">
+    <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A] relative overflow-hidden immersive-section">
         <div class="max-w-7xl mx-auto">
             <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Latest Deals</h2>
-            <div class="swiper latest-deals-swiper fade-in">
+            <div class="swiper latest-deals-swiper">
                 <div class="swiper-wrapper">
                     <div class="swiper-slide">
                         <div class="product-card flex flex-col">
@@ -1095,65 +1107,65 @@
         </div>
     </section>
 
-    <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B]">
+    <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B] immersive-section">
         <div class="max-w-7xl mx-auto">
             <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Explore Everything</h2>
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
-                <a href="store.html" class="category-card rounded-xl group fade-in">
+                <a href="store.html" class="category-card rounded-xl group">
                     <img src="https://media.tatacroma.com/Croma%20Assets/Communication/Headphones%20and%20Earphones/Images/239032_0_ogo1io.png?v?q=80&w=2070&auto=format&fit=crop" alt="Audio and Wearables" class="w-full h-72 object-cover">
                     <div class="category-card-content p-4 absolute bottom-0 left-0 right-0">
                         <h3 class="text-lg font-bold text-white">Audio / Wearables</h3>
                     </div>
                 </a>
-                <a href="store.html" class="category-card rounded-xl group fade-in">
+                <a href="store.html" class="category-card rounded-xl group">
                     <img src="https://cdn.mos.cms.futurecdn.net/osrZoPFd72eY4sqWNJ7YjA.jpg?q=80&w=2070&auto=format&fit=crop" alt="Gaming Mouse" class="w-full h-72 object-cover">
                     <div class="category-card-content p-4 absolute bottom-0 left-0 right-0">
                         <h3 class="text-lg font-bold text-white">Mouse</h3>
                     </div>
                 </a>
-                <a href="store.html" class="category-card rounded-xl group fade-in">
+                <a href="store.html" class="category-card rounded-xl group">
                     <img src="https://mechanicalkeyboards.com/cdn/shop/files/Compact_Collection.jpg?v?q=80&w=2070&auto=format&fit=crop" alt="Gaming Keyboards" class="w-full h-72 object-cover">
                     <div class="category-card-content p-4 absolute bottom-0 left-0 right-0">
                         <h3 class="text-lg font-bold text-white">Keyboards</h3>
                     </div>
                 </a>
-                 <a href="store.html" class="category-card rounded-xl group fade-in">
+                 <a href="store.html" class="category-card rounded-xl group">
                     <img src="https://static0.howtogeekimages.com/wordpress/wp-content/uploads/2024/09/an-intel-cpu-with-an-amd-cpu-in-front-of-it.jpg?w?q=80&w=1974&auto=format&fit=crop" alt="CPU" class="w-full h-72 object-cover">
                     <div class="category-card-content p-4 absolute bottom-0 left-0 right-0">
                         <h3 class="text-lg font-bold text-white">CPU (AMD/Intel)</h3>
                     </div>
                 </a>
-                <a href="store.html" class="category-card rounded-xl group fade-in">
+                <a href="store.html" class="category-card rounded-xl group">
                     <img src="https://i0.wp.com/techwarez.online/wp-content/uploads/2023/04/en_catalog_list_23a03_uq6dnp69w41.jpg?w?q=80&w=2070&auto=format&fit=crop" alt="Graphics Cards" class="w-full h-72 object-cover">
                     <div class="category-card-content p-4 absolute bottom-0 left-0 right-0">
                         <h3 class="text-lg font-bold text-white">Graphics Cards</h3>
                     </div>
                 </a>
-                <a href="store.html" class="category-card rounded-xl group fade-in">
+                <a href="store.html" class="category-card rounded-xl group">
                     <img src="https://www.gigabyte.com/FileUpload/Global/KeyFeature/3882/innergigabyte/images/product/summary.png?q=80&w=2070&auto=format&fit=crop" alt="Motherboards" class="w-full h-72 object-cover">
                     <div class="category-card-content p-4 absolute bottom-0 left-0 right-0">
                         <h3 class="text-lg font-bold text-white">Motherboards</h3>
                     </div>
                 </a>
-                <a href="store.html" class="category-card rounded-xl group fade-in">
+                <a href="store.html" class="category-card rounded-xl group">
                     <img src="https://cdn.mos.cms.futurecdn.net/sTrFShD2FCXCXsfj6T9y87.jpg?q=80&w=1935&auto=format&fit=crop" alt="SSD and Hard Drives" class="w-full h-72 object-cover">
                     <div class="category-card-content p-4 absolute bottom-0 left-0 right-0">
                         <h3 class="text-lg font-bold text-white">SSD / Hard Drives</h3>
                     </div>
                 </a>
-                <a href="store.html" class="category-card rounded-xl group fade-in">
+                <a href="store.html" class="category-card rounded-xl group">
                     <img src="https://www.vedantcomputers.com/image/cache/catalog/assets/product/corsair/ram/cmp64gx5m2b6000z30/cmp64gx5m2b6000z30-1-250x250.jpg?q=80&w=2070&auto=format&fit=crop" alt="RAM" class="w-full h-72 object-cover">
                     <div class="category-card-content p-4 absolute bottom-0 left-0 right-0">
                         <h3 class="text-lg font-bold text-white">RAM</h3>
                     </div>
                 </a>
-                <a href="store.html" class="category-card rounded-xl group fade-in">
+                <a href="store.html" class="category-card rounded-xl group">
                     <img src="https://microcenterindia.com/wp-content/uploads/2025/06/CPU-AMD-RYZEN-5-7600X-8-scaled-1.webp?q=80&w=2070&auto=format&fit=crop" alt="Custom PC Building" class="w-full h-72 object-cover">
                     <div class="category-card-content p-4 absolute bottom-0 left-0 right-0">
                         <h3 class="text-lg font-bold text-white">Custom PC Building</h3>
                     </div>
                 </a>
-                <a href="store.html" class="category-card rounded-xl group fade-in">
+                <a href="store.html" class="category-card rounded-xl group">
                     <img src="https://platform.theverge.com/wp-content/uploads/sites/2/chorus/uploads/chorus_asset/file/21820772/NZXT_starter.jpg?quality?q=80&w=2070&auto=format&fit=crop" alt="Pre-built PCs" class="w-full h-72 object-cover">
                     <div class="category-card-content p-4 absolute bottom-0 left-0 right-0">
                         <h3 class="text-lg font-bold text-white">Pre-Built PCs</h3>
@@ -1163,12 +1175,12 @@
         </div>
     </section>
 
-    <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A] relative overflow-hidden">
+    <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A] relative overflow-hidden immersive-section">
         <div class="max-w-4xl mx-auto">
             <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-6 section-title">Forge Your Legend</h2>
             <p class="text-center text-slate-300 mb-12 max-w-2xl mx-auto">Answer three simple questions to find the perfect rig for your gaming journey.</p>
             
-            <div id="pc-builder-wizard" class="holographic-effect rounded-2xl p-6 sm:p-10 z-10 fade-in">
+            <div id="pc-builder-wizard" class="holographic-effect rounded-2xl p-6 sm:p-10 z-10">
                 <div class="pc-builder-step" data-step="1">
                     <h3 class="text-2xl font-bold text-center mb-8 tech-font">Step 1: What's Your Main Game?</h3>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -1211,11 +1223,11 @@
         </div>
     </section>
 
-    <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B] relative overflow-hidden">
+    <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B] relative overflow-hidden immersive-section">
       <div class="max-w-7xl mx-auto">
         <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Upcoming Tournaments</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div class="tournament-card rounded-xl overflow-hidden fade-in">
+          <div class="tournament-card rounded-xl overflow-hidden">
             <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Cyber Clash 2025" class="w-full h-64 object-cover">
             <div class="tournament-card-content p-6 absolute bottom-0 left-0 right-0">
               <div class="flex justify-between items-start mb-2">
@@ -1227,7 +1239,7 @@
               <a href="tournaments.html" class="inline-block w-full text-center bg-gradient-to-r from-[#3B82F6] to-[#D946EF] text-white py-2 rounded-lg font-medium hover:opacity-90 transition">Register Now</a>
             </div>
           </div>
-          <div class="tournament-card rounded-xl overflow-hidden fade-in">
+          <div class="tournament-card rounded-xl overflow-hidden">
             <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80" alt="Neon Strike" class="w-full h-64 object-cover">
             <div class="tournament-card-content p-6 absolute bottom-0 left-0 right-0">
               <div class="flex justify-between items-start mb-2">
@@ -1239,7 +1251,7 @@
               <a href="tournaments.html" class="inline-block w-full text-center bg-gradient-to-r from-[#3B82F6] to-[#D946EF] text-white py-2 rounded-lg font-medium hover:opacity-90 transition">Register Now</a>
             </div>
           </div>
-          <div class="tournament-card rounded-xl overflow-hidden fade-in">
+          <div class="tournament-card rounded-xl overflow-hidden">
             <img src="https://images.unsplash.com/photo-1633613286848-e6f43bbafb8d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Odyssey League" class="w-full h-64 object-cover">
             <div class="tournament-card-content p-6 absolute bottom-0 left-0 right-0">
               <div class="flex justify-between items-start mb-2">
@@ -1258,10 +1270,10 @@
       </div>
     </section>
 
-    <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A] relative overflow-hidden">
+    <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A] relative overflow-hidden immersive-section">
       <div class="max-w-7xl mx-auto">
         <div class="flex flex-col md:flex-row items-center gap-8">
-          <div class="md:w-1/2 fade-in">
+          <div class="md:w-1/2">
             <h2 class="text-3xl sm:text-4xl font-bold text-white mb-6 section-title">Join Our Minecraft Server</h2>
             <p class="text-[#F1F5F9] mb-6 leading-relaxed">
               Experience the ultimate Minecraft adventure on our dedicated server. Join thousands of players in an expansive world with custom minigames, survival, and creative modes.
@@ -1280,7 +1292,7 @@
               <a href="ranks.html" class="glow-button px-6 py-3 rounded-lg font-semibold text-white bg-[#1E293B] border border-[#3B82F6] flex items-center justify-center gap-2"><i class="fas fa-crown"></i> View Ranks</a>
             </div>
           </div>
-          <div class="md:w-1/2 fade-in">
+          <div class="md:w-1/2">
             <div class="holographic-effect rounded-xl overflow-hidden">
               <img src="minecraft.png" alt="Minecraft Minigames Server" class="w-full h-auto object-cover">
             </div>
@@ -1289,24 +1301,24 @@
       </div>
     </section>
 
-    <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B]">
+    <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B] immersive-section">
       <div class="max-w-7xl mx-auto">
         <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Why Choose Gaming Odyssey?</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div class="stats-item fade-in"><div class="text-center p-6"><div class="bg-[#3B82F6] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-trophy text-2xl text-white"></i></div><h3 class="text-3xl font-bold text-white text-center mb-2">50+</h3><p class="text-[#94A3B8] text-center">Tournaments Hosted</p></div></div>
-          <div class="stats-item fade-in"><div class="text-center p-6"><div class="bg-[#D946EF] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-users text-2xl text-white"></i></div><h3 class="text-3xl font-bold text-white text-center mb-2">10K+</h3><p class="text-[#94A3B8] text-center">Active Members</p></div></div>
-          <div class="stats-item fade-in"><div class="text-center p-6"><div class="bg-[#10B981] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-gamepad text-2xl text-white"></i></div><h3 class="text-3xl font-bold text-white text-center mb-2">100+</h3><p class="text-[#94A3B8] text-center">Supported Games</p></div></div>
-          <div class="stats-item fade-in"><div class="text-center p-6"><div class="bg-[#F59E0B] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-headset text-2xl text-white"></i></div><h3 class="text-3xl font-bold text-white text-center mb-2">24/7</h3><p class="text-[#94A3B8] text-center">Customer Support</p></div></div>
+          <div class="stats-item"><div class="text-center p-6"><div class="bg-[#3B82F6] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-trophy text-2xl text-white"></i></div><h3 class="text-3xl font-bold text-white text-center mb-2">50+</h3><p class="text-[#94A3B8] text-center">Tournaments Hosted</p></div></div>
+          <div class="stats-item"><div class="text-center p-6"><div class="bg-[#D946EF] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-users text-2xl text-white"></i></div><h3 class="text-3xl font-bold text-white text-center mb-2">10K+</h3><p class="text-[#94A3B8] text-center">Active Members</p></div></div>
+          <div class="stats-item"><div class="text-center p-6"><div class="bg-[#10B981] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-gamepad text-2xl text-white"></i></div><h3 class="text-3xl font-bold text-white text-center mb-2">100+</h3><p class="text-[#94A3B8] text-center">Supported Games</p></div></div>
+          <div class="stats-item"><div class="text-center p-6"><div class="bg-[#F59E0B] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-headset text-2xl text-white"></i></div><h3 class="text-3xl font-bold text-white text-center mb-2">24/7</h3><p class="text-[#94A3B8] text-center">Customer Support</p></div></div>
         </div>
       </div>
     </section>
 
-    <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A]">
+    <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A] immersive-section">
       <div class="max-w-4xl mx-auto">
         <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Contact Us</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div class="fade-in"><div class="holographic-effect rounded-xl p-6 h-full"><h3 class="text-xl font-bold text-white mb-4">Get In Touch</h3><div class="space-y-4"><div class="flex items-start"><i class="fas fa-map-marker-alt mt-1 text-[#3B82F6] mr-3"></i><div><h4 class="text-white font-medium">Address</h4><p class="text-[#94A3B8] text-sm">Howrah,WEST BENGAL</p></div></div><div class="flex items-center"><i class="fas fa-envelope text-[#3B82F6] mr-3"></i><div><h4 class="text-white font-medium">Email</h4><a href="mailto:support@gamingodyssey.in" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition">support@gamingodyssey.in</a></div></div><div class="flex items-center"><i class="fas fa-phone text-[#3B82F6] mr-3"></i><div><h4 class="text-white font-medium">Phone</h4><p class="text-[#94A3B8] text-sm">+91-6289119156</p></div></div><div class="flex items-center"><i class="fas fa-server text-[#3B82F6] mr-3"></i><div><h4 class="text-white font-medium">Minecraft Server</h4><p class="text-[#94A3B8] text-sm">play.gamingodyssey.in</p></div></div></div><div class="mt-8"><h3 class="text-xl font-bold text-white mb-4">Follow Us</h3><div class="flex space-x-4"><a href="https://www.instagram.com/noticedveil" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#E1306C]"><i class="fab fa-instagram text-2xl"></i></a><a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#FF0000]"><i class="fab fa-youtube text-2xl"></i></a><a href="https://www.facebook.com" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#1877F2]"><i class="fab fa-facebook text-2xl"></i></a><a href="https://www.twitter.com" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#1DA1F2]"><i class="fab fa-twitter text-2xl"></i></a></div></div></div></div>
-          <div class="fade-in"><div class="holographic-effect rounded-xl p-6"><form id="contact-form"><div class="mb-5"><label for="name" class="block text-[#F1F5F9] mb-2 font-medium">Name</label><input type="text" id="name" name="name" required placeholder="Your name" class="input-field"><p id="name-error" class="text-red-500 text-sm mt-1 hidden">Please enter your name</p></div><div class="mb-5"><label for="email" class="block text-[#F1F5F9] mb-2 font-medium">Email</label><input type="email" id="email" name="email" required placeholder="Your email" class="input-field"><p id="email-error" class="text-red-500 text-sm mt-1 hidden">Please enter a valid email</p></div><div class="mb-5"><label for="subject" class="block text-[#F1F5F9] mb-2 font-medium">Subject</label><input type="text" id="subject" name="subject" required placeholder="Subject" class="input-field"><p id="subject-error" class="text-red-500 text-sm mt-1 hidden">Please enter a subject</p></div><div class="mb-5"><label for="message" class="block text-[#F1F5F9] mb-2 font-medium">Message</label><textarea id="message" name="message" rows="4" required placeholder="Your message" class="input-field"></textarea><p id="message-error" class="text-red-500 text-sm mt-1 hidden">Please enter a message</p></div><button type="submit" class="w-full glow-button px-6 py-3 rounded-lg font-semibold text-white gradient-bg flex items-center justify-center gap-2"><i class="fas fa-paper-plane"></i> Send Message</button><p id="form-status" class="mt-3 text-sm text-center"></p></form></div></div>
+          <div><div class="holographic-effect rounded-xl p-6 h-full"><h3 class="text-xl font-bold text-white mb-4">Get In Touch</h3><div class="space-y-4"><div class="flex items-start"><i class="fas fa-map-marker-alt mt-1 text-[#3B82F6] mr-3"></i><div><h4 class="text-white font-medium">Address</h4><p class="text-[#94A3B8] text-sm">Howrah,WEST BENGAL</p></div></div><div class="flex items-center"><i class="fas fa-envelope text-[#3B82F6] mr-3"></i><div><h4 class="text-white font-medium">Email</h4><a href="mailto:support@gamingodyssey.in" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition">support@gamingodyssey.in</a></div></div><div class="flex items-center"><i class="fas fa-phone text-[#3B82F6] mr-3"></i><div><h4 class="text-white font-medium">Phone</h4><p class="text-[#94A3B8] text-sm">+91-6289119156</p></div></div><div class="flex items-center"><i class="fas fa-server text-[#3B82F6] mr-3"></i><div><h4 class="text-white font-medium">Minecraft Server</h4><p class="text-[#94A3B8] text-sm">play.gamingodyssey.in</p></div></div></div><div class="mt-8"><h3 class="text-xl font-bold text-white mb-4">Follow Us</h3><div class="flex space-x-4"><a href="https://www.instagram.com/noticedveil" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#E1306C]"><i class="fab fa-instagram text-2xl"></i></a><a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#FF0000]"><i class="fab fa-youtube text-2xl"></i></a><a href="https://www.facebook.com" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#1877F2]"><i class="fab fa-facebook text-2xl"></i></a><a href="https://www.twitter.com" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#1DA1F2]"><i class="fab fa-twitter text-2xl"></i></a></div></div></div></div>
+          <div><div class="holographic-effect rounded-xl p-6"><form id="contact-form"><div class="mb-5"><label for="name" class="block text-[#F1F5F9] mb-2 font-medium">Name</label><input type="text" id="name" name="name" required placeholder="Your name" class="input-field"><p id="name-error" class="text-red-500 text-sm mt-1 hidden">Please enter your name</p></div><div class="mb-5"><label for="email" class="block text-[#F1F5F9] mb-2 font-medium">Email</label><input type="email" id="email" name="email" required placeholder="Your email" class="input-field"><p id="email-error" class="text-red-500 text-sm mt-1 hidden">Please enter a valid email</p></div><div class="mb-5"><label for="subject" class="block text-[#F1F5F9] mb-2 font-medium">Subject</label><input type="text" id="subject" name="subject" required placeholder="Subject" class="input-field"><p id="subject-error" class="text-red-500 text-sm mt-1 hidden">Please enter a subject</p></div><div class="mb-5"><label for="message" class="block text-[#F1F5F9] mb-2 font-medium">Message</label><textarea id="message" name="message" rows="4" required placeholder="Your message" class="input-field"></textarea><p id="message-error" class="text-red-500 text-sm mt-1 hidden">Please enter a message</p></div><button type="submit" class="w-full glow-button px-6 py-3 rounded-lg font-semibold text-white gradient-bg flex items-center justify-center gap-2"><i class="fas fa-paper-plane"></i> Send Message</button><p id="form-status" class="mt-3 text-sm text-center"></p></form></div></div>
         </div>
       </div>
     </section>
@@ -1435,8 +1447,29 @@
         const mobileMenu = document.getElementById('mobile-menu');
         hamburger.addEventListener('click', () => { mobileMenu.classList.remove('hidden', '-translate-x-full'); });
         document.getElementById('close-menu').addEventListener('click', () => { mobileMenu.classList.add('-translate-x-full'); });
-        const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); }); }, { threshold: 0.1 });
+        
+        // --- ANIMATION OBSERVERS ---
+        // Observer for initial fade-in (hero content)
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.1 });
         document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+        
+        // New observer for immersive section zoom
+        const immersiveObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target); // Animate only once
+                }
+            });
+        }, { threshold: 0.15 });
+        document.querySelectorAll('.immersive-section').forEach(el => {
+            immersiveObserver.observe(el);
+        });
+
         const whatsappBubble = document.getElementById('whatsapp-bubble');
         const whatsappChatBox = document.getElementById('whatsapp-chat-box');
         whatsappBubble.addEventListener('click', () => whatsappChatBox.classList.toggle('active'));
@@ -1591,6 +1624,3 @@
   </script>
 </body>
 </html>
-
-
-
