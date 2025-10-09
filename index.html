@@ -82,20 +82,6 @@
       100% { background-position: 0% 50%; }
     }
     
-    .holographic-card {
-      perspective: 1000px;
-      transform-style: preserve-3d;
-    }
-    
-    .holographic-card-inner {
-      transition: transform 0.6s;
-      transform-style: preserve-3d;
-    }
-    
-    .holographic-card:hover .holographic-card-inner {
-      transform: rotateY(15deg) rotateX(5deg) translateY(-10px);
-    }
-    
     .sidebar {
       background: linear-gradient(180deg, var(--mid) 0%, var(--dark) 100%);
       box-shadow: 4px 0 15px rgba(59, 130, 246, 0.2);
@@ -308,73 +294,56 @@
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
     }
     
-    .holographic-product {
+    /* --- NEW PRODUCT CARD STYLES --- */
+    .product-card {
+      background-color: rgba(30, 41, 59, 0.6);
+      backdrop-filter: blur(10px);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
       position: relative;
-      transform-style: preserve-3d;
-      transition: all 0.5s ease;
-      perspective: 1000px;
-      height: 100%; /* Ensure consistent height in slider */
-    }
-    
-    .holographic-product:hover {
-      transform: translateY(-10px) rotateX(5deg);
-    }
-    
-    .holographic-product::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(
-        135deg,
-        rgba(59, 130, 246, 0.1) 0%,
-        rgba(217, 70, 239, 0.1) 50%,
-        rgba(59, 130, 246, 0.1) 100%
-      );
-      animation: holographic 8s ease infinite;
+      overflow: hidden;
+      transition: transform 0.3s ease;
       z-index: 1;
-      pointer-events: none;
+      height: 100%;
     }
-    
-    .holographic-product::after {
+    .product-card::before {
       content: '';
       position: absolute;
-      top: -2px;
-      left: -2px;
-      right: -2px;
-      bottom: -2px;
-      background: linear-gradient(
-        45deg,
-        var(--primary),
-        var(--secondary),
-        var(--primary)
-      );
+      top: 0; right: 0; bottom: 0; left: 0;
       z-index: -1;
-      filter: blur(5px);
-      opacity: 0.7;
-      transition: all 0.3s ease;
+      margin: -1px;
+      border-radius: inherit;
+      background: conic-gradient(from 180deg at 50% 50%, rgba(59, 130, 246, 0.8) 0deg, rgba(217, 70, 239, 0.8) 180deg, rgba(59, 130, 246, 0.8) 360deg);
+      opacity: 0;
+      transition: opacity 0.4s ease;
     }
-    
-    .holographic-product:hover::after {
-      opacity: 0.9;
+    .product-card::after {
+        content: '';
+        position: absolute;
+        top: 0; right: 0; bottom: 0; left: 0;
+        background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" transform="rotate(25)" opacity="0.05" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><g fill="%23ffffff"><path d="m-25 50 25-50 25 50-25 50z"/><path d="m25 50 25-50 25 50-25 50z"/><path d="m75 50 25-50 25 50-25 50z"/></g></svg>');
+        z-index: -2;
     }
-    
-    .price-tag {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: linear-gradient(45deg, var(--primary), var(--secondary));
-      color: var(--dark);
-      font-weight: bold;
-      padding: 0.25rem 0.5rem;
-      border-radius: 0.25rem;
-      font-size: 0.875rem;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-      z-index: 2;
+    .product-card:hover {
+        transform: translateY(-8px);
     }
-    
+    .product-card:hover::before {
+        opacity: 1;
+    }
+    .card-button {
+        background-color: rgba(59, 130, 246, 0.2);
+        border: 1px solid var(--primary);
+        color: var(--light);
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    .card-button:hover {
+        background-color: var(--primary);
+        box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+    }
+
     .section-title {
       position: relative;
       display: inline-block;
@@ -584,7 +553,7 @@
     
     /* --- LATEST DEALS SLIDER STYLES --- */
     .latest-deals-swiper {
-      padding-bottom: 50px !important; /* Space for pagination */
+      padding-bottom: 50px !important;
     }
     .latest-deals-swiper .swiper-button-next,
     .latest-deals-swiper .swiper-button-prev {
@@ -616,6 +585,9 @@
         font-size: 0.875rem;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         z-index: 2;
+    }
+    .swiper-slide {
+        height: auto;
     }
 
     /* --- PC BUILDER WIZARD STYLES --- */
@@ -986,64 +958,48 @@
       <div class="max-w-7xl mx-auto">
         <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Featured Gaming Gear</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          <div class="holographic-product rounded-xl p-6 fade-in">
-            <div class="price-tag">$149.99</div>
+          <div class="product-card fade-in">
             <div class="h-48 flex items-center justify-center mb-6">
-              <img src="https://m.media-amazon.com/images/I/81L4FpeS3VL.jpg" alt="Razer BlackWidow V4 Pro" class="max-h-full object-contain">
+              <img src="https://resource.logitechg.com/w_692,c_lpad,ar_4:3,q_auto,f_auto,dpr_1.0/d_transparent.gif/content/dam/gaming/en/products/pro-x-superlight/pro-x-superlight-black-gallery-1.png?v=1" alt="Logitech G PRO X Superlight" class="max-h-full object-contain drop-shadow-2xl">
             </div>
-            <h3 class="text-xl font-bold text-white mb-2">Razer BlackWidow V4 Pro</h3>
-            <p class="text-[#94A3B8] text-sm mb-4">Mechanical Gaming Keyboard with Razer™ Yellow Mechanical Switches</p>
-            <div class="flex justify-between items-center">
-              <div class="flex text-yellow-400 text-sm">
-                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
-                <span class="text-[#94A3B8] ml-1">(428)</span>
-              </div>
-              <a href="store.html" class="text-[#3B82F6] hover:text-[#D946EF] transition"><i class="fas fa-shopping-cart"></i></a>
+            <h3 class="text-xl font-bold text-white mb-2 tech-font">PRO X SUPERLIGHT</h3>
+            <p class="text-[#94A3B8] text-sm mb-4 flex-grow">Ultra-lightweight engineering at <63 grams.</p>
+            <div class="flex justify-between items-center mt-auto">
+              <p class="text-2xl font-semibold text-white">$159.99</p>
+              <a href="store.html" class="card-button"><i class="fas fa-shopping-cart"></i></a>
             </div>
           </div>
-          <div class="holographic-product rounded-xl p-6 fade-in">
-            <div class="price-tag">$199.99</div>
+          <div class="product-card fade-in">
             <div class="h-48 flex items-center justify-center mb-6">
-              <img src="https://m.media-amazon.com/images/I/61UIHG3egGL._AC_SL1500_.jpg" alt="Razer Cobra Pro" class="max-h-full object-contain">
+              <img src="https://www.corsair.com/medias/sys_master/images/images/h67/h31/9595604140062/base-k100-rgb/Gallery/K100_RGB_01.png" alt="Corsair K100 RGB Keyboard" class="max-h-full object-contain drop-shadow-2xl">
             </div>
-            <h3 class="text-xl font-bold text-white mb-2">Razer Cobra Pro</h3>
-            <p class="text-[#94A3B8] text-sm mb-4">Wireless Gaming Mouse with Chroma™ RGB</p>
-            <div class="flex justify-between items-center">
-              <div class="flex text-yellow-400 text-sm">
-                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                <span class="text-[#94A3B8] ml-1">(512)</span>
-              </div>
-              <a href="store.html" class="text-[#3B82F6] hover:text-[#D946EF] transition"><i class="fas fa-shopping-cart"></i></a>
+            <h3 class="text-xl font-bold text-white mb-2 tech-font">CORSAIR K100 RGB</h3>
+            <p class="text-[#94A3B8] text-sm mb-4 flex-grow">Optical-mechanical keyboard with AXON Hyper-Processing.</p>
+            <div class="flex justify-between items-center mt-auto">
+              <p class="text-2xl font-semibold text-white">$229.99</p>
+              <a href="store.html" class="card-button"><i class="fas fa-shopping-cart"></i></a>
             </div>
           </div>
-          <div class="holographic-product rounded-xl p-6 fade-in">
-            <div class="price-tag">$299.99</div>
+          <div class="product-card fade-in">
             <div class="h-48 flex items-center justify-center mb-6">
-              <img src="https://m.media-amazon.com/images/I/71NZawTvdDL._AC_SL1500_.jpg" alt="HyperX Cloud III" class="max-h-full object-contain">
+              <img src="https://media.steelseriescdn.com/thumbs/filer_public/3b/22/3b22035b-1181-452f-b1e6-37050a6e0c60/buy_arctis-nova-pro-wireless_black_001.png__1920x1080_q100_crop-fit_optimize_auto-webp_.png" alt="SteelSeries Arctis Nova Pro" class="max-h-full object-contain drop-shadow-2xl">
             </div>
-            <h3 class="text-xl font-bold text-white mb-2">HyperX Cloud III</h3>
-            <p class="text-[#94A3B8] text-sm mb-4">Wireless Gaming Headset with DTS Headphone:X</p>
-            <div class="flex justify-between items-center">
-              <div class="flex text-yellow-400 text-sm">
-                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
-                <span class="text-[#94A3B8] ml-1">(387)</span>
-              </div>
-              <a href="store.html" class="text-[#3B82F6] hover:text-[#D946EF] transition"><i class="fas fa-shopping-cart"></i></a>
+            <h3 class="text-xl font-bold text-white mb-2 tech-font">ARCTIS NOVA PRO</h3>
+            <p class="text-[#94A3B8] text-sm mb-4 flex-grow">High fidelity audio with 360° Spatial Audio.</p>
+            <div class="flex justify-between items-center mt-auto">
+              <p class="text-2xl font-semibold text-white">$349.99</p>
+              <a href="store.html" class="card-button"><i class="fas fa-shopping-cart"></i></a>
             </div>
           </div>
-          <div class="holographic-product rounded-xl p-6 fade-in">
-            <div class="price-tag">$249.99</div>
+          <div class="product-card fade-in">
             <div class="h-48 flex items-center justify-center mb-6">
-              <img src="https://m.media-amazon.com/images/I/71LCmvrndjL._AC_SL1500_.jpg" alt="FIFINE Gaming Microphone" class="max-h-full object-contain">
+              <img src="https://media.ldlc.com/r1600/ld/products/00/05/88/26/LD0005882606_1.png" alt="Shure MV7 Microphone" class="max-h-full object-contain drop-shadow-2xl">
             </div>
-            <h3 class="text-xl font-bold text-white mb-2">FIFINE AmpliGame AM8</h3>
-            <p class="text-[#94A3B8] text-sm mb-4">Professional USB Condenser Streaming Microphone</p>
-            <div class="flex justify-between items-center">
-              <div class="flex text-yellow-400 text-sm">
-                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
-                <span class="text-[#94A3B8] ml-1">(276)</span>
-              </div>
-              <a href="store.html" class="text-[#3B82F6] hover:text-[#D946EF] transition"><i class="fas fa-shopping-cart"></i></a>
+            <h3 class="text-xl font-bold text-white mb-2 tech-font">SHURE MV7 PODCAST MIC</h3>
+            <p class="text-[#94A3B8] text-sm mb-4 flex-grow">Professional quality dynamic microphone with USB/XLR.</p>
+            <div class="flex justify-between items-center mt-auto">
+              <p class="text-2xl font-semibold text-white">$249.00</p>
+              <a href="store.html" class="card-button"><i class="fas fa-shopping-cart"></i></a>
             </div>
           </div>
         </div>
@@ -1056,70 +1012,70 @@
             <div class="swiper latest-deals-swiper fade-in">
                 <div class="swiper-wrapper">
                     <div class="swiper-slide">
-                        <div class="holographic-product rounded-xl p-6 flex flex-col">
+                        <div class="product-card flex flex-col">
                             <div class="deal-badge">-20%</div>
                             <div class="h-48 flex items-center justify-center mb-4">
-                                <img src="https://images.unsplash.com/photo-1624555130581-1d907871b391?q=80&w=2070&auto=format&fit=crop" alt="Curved Gaming Monitor" class="max-h-full object-contain">
+                                <img src="https://images.samsung.com/is/image/samsung/p6pim/sg/ls49cg954sexs/gallery/sg-odyssey-oled-g9-g95sc-ls49cg954sexs-537965990?$650_519_PNG$" alt="Samsung Odyssey OLED G9" class="max-h-full object-contain drop-shadow-2xl">
                             </div>
-                            <h3 class="text-xl font-bold text-white mb-2">Odyssey G7 32" Curved</h3>
-                            <p class="text-[#94A3B8] text-sm mb-4 flex-grow">1000R curved screen for maximum immersion.</p>
+                            <h3 class="text-xl font-bold text-white mb-2 tech-font">Odyssey OLED G9</h3>
+                            <p class="text-[#94A3B8] text-sm mb-4 flex-grow">49" dual QHD display with Quantum Dot technology.</p>
                             <div class="flex justify-between items-center mt-auto">
                                 <div class="flex items-baseline gap-2">
-                                    <p class="text-2xl font-bold gradient-text">$479.99</p>
-                                    <p class="text-lg text-slate-500 line-through">$599.99</p>
+                                    <p class="text-2xl font-bold gradient-text">$1099.99</p>
+                                    <p class="text-lg text-slate-500 line-through">$1399.99</p>
                                 </div>
-                                <a href="store.html" class="glow-button px-4 py-2 rounded-lg font-semibold text-sm text-white gradient-bg">View Deal</a>
+                                <a href="store.html" class="card-button">View Deal</a>
                             </div>
                         </div>
                     </div>
                     <div class="swiper-slide">
-                        <div class="holographic-product rounded-xl p-6 flex flex-col">
+                        <div class="product-card flex flex-col">
                             <div class="deal-badge">-15%</div>
                             <div class="h-48 flex items-center justify-center mb-4">
-                                <img src="https://images.unsplash.com/photo-1598550476439-6847785f5533?q=80&w=1887&auto=format&fit=crop" alt="Ergonomic Gaming Chair" class="max-h-full object-contain">
+                                <img src="https://secretlab.co/cdn/shop/files/e-shop-2024-02-subcat-TTEVO-luminous-lumbar-final-490x550.png?v=1708570397" alt="Secretlab TITAN Evo" class="max-h-full object-contain drop-shadow-2xl">
                             </div>
-                            <h3 class="text-xl font-bold text-white mb-2">Nexus Pro Gaming Chair</h3>
-                            <p class="text-[#94A3B8] text-sm mb-4 flex-grow">Ergonomic design with 4D armrests for peak comfort.</p>
+                            <h3 class="text-xl font-bold text-white mb-2 tech-font">Secretlab TITAN Evo</h3>
+                            <p class="text-[#94A3B8] text-sm mb-4 flex-grow">Next-level ergonomic support for serious gamers.</p>
                             <div class="flex justify-between items-center mt-auto">
                                 <div class="flex items-baseline gap-2">
-                                    <p class="text-2xl font-bold gradient-text">$339.99</p>
-                                    <p class="text-lg text-slate-500 line-through">$399.99</p>
+                                    <p class="text-2xl font-bold gradient-text">$549.00</p>
+                                    <p class="text-lg text-slate-500 line-through">$649.00</p>
                                 </div>
-                                <a href="store.html" class="glow-button px-4 py-2 rounded-lg font-semibold text-sm text-white gradient-bg">View Deal</a>
+                                <a href="store.html" class="card-button">View Deal</a>
                             </div>
                         </div>
                     </div>
                     <div class="swiper-slide">
-                        <div class="holographic-product rounded-xl p-6 flex flex-col">
+                        <div class="product-card flex flex-col">
                             <div class="deal-badge">-25%</div>
                             <div class="h-48 flex items-center justify-center mb-4">
-                                <img src="https://images.unsplash.com/photo-1627815335882-9a4f8b2d75e0?q=80&w=2070&auto=format&fit=crop" alt="RTX 4070 Graphics Card" class="max-h-full object-contain">
+                                <img src="https://assets.nvidia.partners/images/png/nvidia-geforce-rtx-4090.png" alt="GeForce RTX 4090" class="max-h-full object-contain drop-shadow-2xl">
                             </div>
-                            <h3 class="text-xl font-bold text-white mb-2">Aura RTX 4070 OC Edition</h3>
-                            <p class="text-[#94A3B8] text-sm mb-4 flex-grow">Unleash next-gen performance and ray tracing.</p>
+                            <h3 class="text-xl font-bold text-white mb-2 tech-font">GeForce RTX 4090</h3>
+                            <p class="text-[#94A3B8] text-sm mb-4 flex-grow">The ultimate GeForce GPU for enthusiasts and creators.</p>
                             <div class="flex justify-between items-center mt-auto">
                                 <div class="flex items-baseline gap-2">
-                                    <p class="text-2xl font-bold gradient-text">$599.99</p>
-                                    <p class="text-lg text-slate-500 line-through">$799.99</p>
+                                    <p class="text-2xl font-bold gradient-text">$1599.99</p>
+                                    <p class="text-lg text-slate-500 line-through">$1999.99</p>
                                 </div>
-                                <a href="store.html" class="glow-button px-4 py-2 rounded-lg font-semibold text-sm text-white gradient-bg">View Deal</a>
+                                <a href="store.html" class="card-button">View Deal</a>
                             </div>
                         </div>
                     </div>
                     <div class="swiper-slide">
-                        <div class="holographic-product rounded-xl p-6 flex flex-col">
+                        <div class="product-card flex flex-col">
                             <div class="deal-badge">-30%</div>
                             <div class="h-48 flex items-center justify-center mb-4">
-                                <img src="https://images.unsplash.com/photo-1629429408209-1f912262dbd8?q=80&w=2070&auto=format&fit=crop" alt="RGB Mousepad" class="max-h-full object-contain">
+                                <img src="https://d3fa68hw0r2v1z.cloudfront.net/736/275330368.png" alt="Razer Goliathus Chroma 3XL" class="max-h-full object-contain drop-shadow-2xl">
                             </div>
-                            <h3 class="text-xl font-bold text-white mb-2">Spectra XL Mousepad</h3>
-                            <p class="text-[#94A3B8] text-sm mb-4 flex-grow">Full-desk size with customizable RGB lighting.</p>
+                            <h3 class="text-xl font-bold text-white mb-2 tech-font">Goliathus Chroma 3XL</h3>
+                            <p class="text-[#94A3B8] text-sm mb-4 flex-grow">Soft gaming mouse mat powered by Razer Chroma™ RGB.</p>
                             <div class="flex justify-between items-center mt-auto">
                                 <div class="flex items-baseline gap-2">
-                                    <p class="text-2xl font-bold gradient-text">$48.99</p>
-                                    <p class="text-lg text-slate-500 line-through">$69.99</p>
+                                    <p class="text-2xl font-bold gradient-text">$89.99</p>
+                                    <p class="text-lg text-slate-500 line-through">$129.99</p>
                                 </div>
-                                <a href="store.html" class="glow-button px-4 py-2 rounded-lg font-semibold text-sm text-white gradient-bg">View Deal</a>
+                                <a href="store.html" class="card-button">View Deal</a>
                             </div>
                         </div>
                     </div>
