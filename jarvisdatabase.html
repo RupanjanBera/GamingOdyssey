@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>J.A.R.V.I.S. - Music Database</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-blue: #00d9ff;
+            --dark-blue: #0a192f;
+            --glow-color: rgba(0, 217, 255, 0.75);
+            --bg-color: #00050a;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--neon-blue);
+            font-family: 'Orbitron', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            padding: 20px;
+        }
+        .container {
+            background: rgba(10, 25, 47, 0.8);
+            border: 1px solid var(--neon-blue);
+            box-shadow: 0 0 15px var(--glow-color);
+            backdrop-filter: blur(5px);
+            border-radius: 10px;
+            padding: 30px;
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+        }
+        h1 {
+            text-shadow: 0 0 10px var(--glow-color);
+            margin-bottom: 25px;
+        }
+        p {
+            margin-bottom: 20px;
+            color: rgba(0, 217, 255, 0.8);
+        }
+        input[type="file"] {
+            display: none;
+        }
+        .upload-label {
+            border: 2px dashed var(--neon-blue);
+            padding: 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: block;
+            margin-bottom: 20px;
+            transition: background 0.3s ease;
+        }
+        .upload-label:hover {
+            background: rgba(0, 217, 255, 0.1);
+        }
+        #file-name {
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+        button {
+            background: var(--dark-blue);
+            border: 2px solid var(--neon-blue);
+            color: var(--neon-blue);
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px var(--glow-color);
+            width: 100%;
+        }
+        button:hover {
+            background: var(--neon-blue);
+            color: var(--dark-blue);
+        }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            animation: none;
+        }
+        #song-list {
+            margin-top: 30px;
+            text-align: left;
+        }
+        .song-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid rgba(0, 217, 255, 0.2);
+        }
+        .delete-btn {
+            background: #ff0033;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Music Database Management</h1>
+        <p>Upload .mp3 files here to make them available to J.A.R.V.I.S. (Max Storage ~5-10MB)</p>
+
+        <input type="file" id="mp3-upload" accept=".mp3" onchange="displayFileName()">
+        <label for="mp3-upload" class="upload-label">Click to Select MP3 File</label>
+        <p id="file-name">No file selected</p>
+
+        <button id="add-song-btn" disabled>Add Song to Database</button>
+
+        <div id="song-list">
+            <h2>Current Song Library</h2>
+            <div id="songs"></div>
+        </div>
+    </div>
+
+    <script>
+        const uploadInput = document.getElementById('mp3-upload');
+        const fileNameDisplay = document.getElementById('file-name');
+        const addSongBtn = document.getElementById('add-song-btn');
+        const songsContainer = document.getElementById('songs');
+        let selectedFile = null;
+
+        function displayFileName() {
+            if (uploadInput.files.length > 0) {
+                selectedFile = uploadInput.files[0];
+                fileNameDisplay.textContent = `Selected: ${selectedFile.name}`;
+                addSongBtn.disabled = false;
+            }
+        }
+
+        function loadSongs() {
+            const songs = JSON.parse(localStorage.getItem('jarvis-songs') || '[]');
+            songsContainer.innerHTML = ''; // Clear current list
+            if (songs.length === 0) {
+                songsContainer.innerHTML = '<p>No songs in database.</p>';
+                return;
+            }
+            songs.forEach((song, index) => {
+                const songEl = document.createElement('div');
+                songEl.className = 'song-item';
+                songEl.innerHTML = `
+                    <span>${song.name.replace('.mp3', '')}</span>
+                    <button class="delete-btn" onclick="deleteSong(${index})">Delete</button>
+                `;
+                songsContainer.appendChild(songEl);
+            });
+        }
+
+        function deleteSong(index) {
+            let songs = JSON.parse(localStorage.getItem('jarvis-songs') || '[]');
+            songs.splice(index, 1);
+            localStorage.setItem('jarvis-songs', JSON.stringify(songs));
+            loadSongs();
+        }
+
+        addSongBtn.addEventListener('click', () => {
+            if (!selectedFile) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const songDataUrl = event.target.result;
+                const songs = JSON.parse(localStorage.getItem('jarvis-songs') || '[]');
+                
+                const newSong = {
+                    name: selectedFile.name,
+                    data: songDataUrl
+                };
+                
+                songs.push(newSong);
+                localStorage.setItem('jarvis-songs', JSON.stringify(songs));
+                
+                alert(`${selectedFile.name} has been added to the database.`);
+                fileNameDisplay.textContent = 'No file selected';
+                addSongBtn.disabled = true;
+                selectedFile = null;
+                uploadInput.value = ''; // Reset file input
+                loadSongs();
+            };
+            
+            reader.readAsDataURL(selectedFile);
+        });
+
+        // Initial load
+        loadSongs();
+    </script>
+
+</body>
+</html>
