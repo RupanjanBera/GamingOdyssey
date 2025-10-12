@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>J.A.R.V.I.S. AI Interface</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+
+    <style>
+        /* --- Basic Setup & Theme --- */
+        :root {
+            --neon-blue: #00d9ff;
+            --dark-blue: #0a192f;
+            --glow-color: rgba(0, 217, 255, 0.75);
+            --bg-color: #00050a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--neon-blue);
+            font-family: 'Orbitron', sans-serif;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* --- Start Overlay --- */
+        #start-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 5, 10, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 100;
+            cursor: pointer;
+            transition: opacity 0.5s ease;
+        }
+        
+        #start-overlay h1 {
+            font-size: 3rem;
+            text-shadow: 0 0 15px var(--glow-color);
+            margin-bottom: 20px;
+        }
+
+        #start-overlay p {
+            font-size: 1.2rem;
+            animation: pulse-text 2s infinite;
+        }
+        
+        @keyframes pulse-text {
+            0% { opacity: 1; }
+            50% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+
+        /* --- Background Effects --- */
+        .jarvis-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><defs><pattern id="p" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M50 0 L50 100 M0 50 L100 50" stroke="%230a192f" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23p)"/></svg>');
+            opacity: 0.2;
+            z-index: -2;
+        }
+
+        .scan-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(10, 25, 47, 0.5) 50%, rgba(0,0,0,0) 100%);
+            background-size: 100% 4px;
+            animation: scan 7.5s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes scan {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 100vh; }
+        }
+
+        /* --- Main Layout --- */
+        .jarvis-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* --- Central 3D Core & HUD Rings --- */
+        #jarvis-core {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .hud-ring {
+            position: absolute;
+            border: 2px solid var(--neon-blue);
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--glow-color), inset 0 0 10px var(--glow-color);
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .ring-1 { width: 400px; height: 400px; }
+        .ring-2 { width: 450px; height: 450px; border-style: dashed; }
+        .ring-3 { width: 500px; height: 500px; }
+
+        /* --- Chat Window --- */
+        .chat-container {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            width: 350px;
+            height: calc(100vh - 180px); /* Adjust height based on input area */
+            background: rgba(10, 25, 47, 0.5);
+            border: 1px solid var(--neon-blue);
+            box-shadow: 0 0 10px var(--glow-color);
+            backdrop-filter: blur(5px);
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            border-radius: 10px;
+        }
+
+        #chat-box {
+            flex-grow: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Custom scrollbar for chat */
+        #chat-box::-webkit-scrollbar { width: 6px; }
+        #chat-box::-webkit-scrollbar-track { background: transparent; }
+        #chat-box::-webkit-scrollbar-thumb { background: var(--neon-blue); border-radius: 3px; }
+
+        .chat-message {
+            padding: 10px 15px;
+            border-radius: 8px;
+            max-width: 85%;
+            word-wrap: break-word;
+            line-height: 1.4;
+        }
+
+        .user-message {
+            background: rgba(0, 217, 255, 0.1);
+            border: 1px solid var(--neon-blue);
+            align-self: flex-end;
+            text-align: right;
+            box-shadow: 0 0 8px rgba(0, 217, 255, 0.3);
+        }
+        
+        .jarvis-message {
+            background: rgba(10, 25, 47, 0.8);
+            border: 1px solid var(--neon-blue);
+            align-self: flex-start;
+            box-shadow: 0 0 8px rgba(0, 217, 255, 0.3);
+        }
+
+        .jarvis-message.thinking {
+             font-style: italic;
+             color: rgba(0, 217, 255, 0.6);
+        }
+        
+        /* --- Input Area & Mic Button --- */
+        .input-container {
+            position: absolute;
+            bottom: 30px;
+            width: 50%;
+            max-width: 600px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        #user-input {
+            flex-grow: 1;
+            background: rgba(10, 25, 47, 0.7);
+            border: 1px solid var(--neon-blue);
+            border-radius: 5px;
+            padding: 15px;
+            color: var(--neon-blue);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 16px;
+            outline: none;
+            box-shadow: 0 0 10px var(--glow-color);
+            transition: box-shadow 0.3s ease;
+        }
+
+        #user-input:focus { box-shadow: 0 0 20px var(--glow-color); }
+
+        #mic-btn {
+            width: 60px;
+            height: 60px;
+            background: var(--dark-blue);
+            border: 2px solid var(--neon-blue);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 15px var(--glow-color);
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+        
+        #mic-btn.listening {
+            background: var(--neon-blue);
+            box-shadow: 0 0 25px var(--glow-color), 0 0 35px var(--glow-color);
+            animation: none;
+        }
+
+        #mic-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            animation: none;
+        }
+
+        #mic-btn svg {
+            width: 28px;
+            height: 28px;
+            fill: var(--neon-blue);
+            transition: fill 0.3s ease;
+        }
+        
+        #mic-btn.listening svg { fill: var(--bg-color); }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 15px var(--glow-color); }
+            50% { box-shadow: 0 0 25px var(--glow-color); }
+            100% { box-shadow: 0 0 15px var(--glow-color); }
+        }
+
+        /* --- Waveform Visualization --- */
+        #waveform-canvas {
+            position: absolute;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            height: 50px;
+            z-index: 5;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        #waveform-canvas.visible { opacity: 0.7; }
+
+        /* --- Status Indicator --- */
+        #status-indicator {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(10, 25, 47, 0.8);
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid var(--neon-blue);
+            box-shadow: 0 0 10px var(--glow-color);
+            z-index: 20;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #00ff00;
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.offline {
+            background: #ff0000;
+        }
+
+        .status-dot.warning {
+            background: #ffff00;
+        }
+
+        /* --- System Info Panel --- */
+        #system-info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(10, 25, 47, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid var(--neon-blue);
+            box-shadow: 0 0 10px var(--glow-color);
+            z-index: 20;
+            max-width: 250px;
+        }
+
+        .system-item {
+            margin: 5px 0;
+            font-size: 0.9rem;
+        }
+
+        /* --- Microphone Permission Overlay --- */
+        #mic-permission-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 5, 10, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 150;
+            text-align: center;
+            padding: 20px;
+        }
+
+        #mic-permission-overlay h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px var(--glow-color);
+        }
+
+        #mic-permission-overlay p {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            max-width: 500px;
+        }
+
+        #grant-mic-btn {
+            background: var(--dark-blue);
+            border: 2px solid var(--neon-blue);
+            color: var(--neon-blue);
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px var(--glow-color);
+        }
+
+        #grant-mic-btn:hover {
+            background: var(--neon-blue);
+            color: var(--dark-blue);
+            box-shadow: 0 0 25px var(--glow-color);
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 768px) {
+            .chat-container {
+                width: 100%;
+                height: 50%;
+                top: 0; right: 0;
+                border-radius: 0; border-left: none; border-right: none;
+            }
+            .input-container { width: 90%; bottom: 20px; }
+            .hud-ring { display: none; }
+            #waveform-canvas { bottom: 100px; }
+            #status-indicator { top: 10px; }
+            #system-info { display: none; }
+            #mic-permission-overlay { padding: 15px; }
+            #mic-permission-overlay h2 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div id="start-overlay">
+        <h1>J.A.R.V.I.S.</h1>
+        <p>Click to Initialize</p>
+    </div>
+
+    <div id="mic-permission-overlay" style="display: none;">
+        <h2>Microphone Access Required</h2>
+        <p>To use voice commands with J.A.R.V.I.S., please grant microphone access. This permission will be remembered and you won't be asked again.</p>
+        <button id="grant-mic-btn">Grant Microphone Access</button>
+    </div>
+
+    <div class="jarvis-container">
+        <div class="scan-lines"></div>
+
+        <canvas id="jarvis-core"></canvas>
+
+        <div class="hud-ring ring-1"></div>
+        <div class="hud-ring ring-2"></div>
+        <div class="hud-ring ring-3"></div>
+
+        <div id="status-indicator">
+            <div class="status-dot" id="status-dot"></div>
+            <span id="status-text">System Ready</span>
+        </div>
+
+        <div id="system-info">
+            <div class="system-item" id="current-time">Time: Loading...</div>
+            <div class="system-item" id="current-date">Date: Loading...</div>
+            <div class="system-item">Memory: <span id="memory-count">0</span> items</div>
+            <div class="system-item">Conversation: <span id="chat-count">0</span> messages</div>
+            <div class="system-item">Microphone: <span id="mic-status">Checking...</span></div>
+        </div>
+
+        <div class="chat-container">
+            <div id="chat-box"></div>
+        </div>
+
+        <canvas id="waveform-canvas"></canvas>
+
+        <div class="input-container">
+            <input type="text" id="user-input" placeholder="Type or press mic to talk...">
+            <button id="mic-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M192 0C139 0 96 43 96 96V256c0 53 43 96 96 96s96-43 96-96V96c0-53-43-96-96-96zM64 216c0-21.2 11.1-40.1 28.6-51.4l1.2-1.2c-12.3-17.7-19.8-38.6-19.8-61.4C74 42.6 126.6 0 192 0s118 42.6 118 102c0 22.8-7.5 43.7-19.8 61.4l1.2 1.2C308.9 175.9 320 194.8 320 216v40c0 13.3-10.7 24-24 24s-24-10.7-24-24V216c0-13.2-5.4-25.2-14.1-33.9C249.2 173.4 238.4 168 224 168c-14.4 0-25.2 5.4-33.9 14.1C181.4 190.8 176 202.8 176 216v40c0 13.3-10.7 24-24 24s-24-10.7-24-24V216zM192 480c35.3 0 64-28.7 64-64H128c0 35.3 28.7 64 64 64z"/></svg>
+            </button>
+        </div>
+    </div>
+    
+    <audio id="intro-voice" preload="auto"></audio>
+    <audio id="start-sound" preload="auto"></audio>
+    <audio id="end-sound" preload="auto"></audio>
+
+    <script type="module">
+        // --- API Configuration ---
+        const API_KEY = 'AIzaSyCqix33_QHkTaVS8XAd46aHzVMmMh1zEOg';
+        const MODEL_NAME = 'gemini-2.0-flash';
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${API_KEY}`;
+
+        // --- Memory and Conversation Storage ---
+        let conversationHistory = JSON.parse(localStorage.getItem('jarvis-conversation') || '[]');
+        let savedMemory = JSON.parse(localStorage.getItem('jarvis-memory') || '[]');
+        let systemContext = {
+            userPreferences: {},
+            importantFacts: [],
+            reminders: [],
+            lastInteraction: new Date().toISOString(),
+            microphonePermission: localStorage.getItem('jarvis-mic-permission') || 'unknown'
+        };
+
+        // Load system context from localStorage
+        try {
+            const savedContext = localStorage.getItem('jarvis-context');
+            if (savedContext) {
+                systemContext = { ...systemContext, ...JSON.parse(savedContext) };
+            }
+        } catch (e) {
+            console.error('Error loading system context:', e);
+        }
+
+        // --- DOM Elements ---
+        const chatBox = document.getElementById('chat-box');
+        const userInput = document.getElementById('user-input');
+        const micBtn = document.getElementById('mic-btn');
+        const waveformCanvas = document.getElementById('waveform-canvas');
+        const startOverlay = document.getElementById('start-overlay');
+        const micPermissionOverlay = document.getElementById('mic-permission-overlay');
+        const grantMicBtn = document.getElementById('grant-mic-btn');
+        const statusDot = document.getElementById('status-dot');
+        const statusText = document.getElementById('status-text');
+        const currentTime = document.getElementById('current-time');
+        const currentDate = document.getElementById('current-date');
+        const memoryCount = document.getElementById('memory-count');
+        const chatCount = document.getElementById('chat-count');
+        const micStatus = document.getElementById('mic-status');
+        
+        const introVoice = document.getElementById('intro-voice');
+        const startSound = document.getElementById('start-sound');
+        const endSound = document.getElementById('end-sound');
+
+        // --- Microphone Permission Management ---
+        let audioStream = null;
+        let microphoneGranted = false;
+
+        // Check microphone permission status
+        async function checkMicrophonePermission() {
+            try {
+                const permissionStatus = await navigator.permissions.query({ name: 'microphone' });
+                updateMicStatus(permissionStatus.state);
+                
+                permissionStatus.onchange = () => {
+                    updateMicStatus(permissionStatus.state);
+                };
+                
+                return permissionStatus.state === 'granted';
+            } catch (error) {
+                console.error('Error checking microphone permission:', error);
+                return false;
+            }
+        }
+
+        function updateMicStatus(status) {
+            micStatus.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+            
+            if (status === 'granted') {
+                microphoneGranted = true;
+                micBtn.disabled = false;
+                systemContext.microphonePermission = 'granted';
+                localStorage.setItem('jarvis-mic-permission', 'granted');
+                localStorage.setItem('jarvis-context', JSON.stringify(systemContext));
+            } else if (status === 'denied') {
+                microphoneGranted = false;
+                micBtn.disabled = true;
+                statusDot.classList.add('warning');
+            } else {
+                microphoneGranted = false;
+                micBtn.disabled = false;
+            }
+        }
+
+        // Request microphone access
+        async function requestMicrophoneAccess() {
+            try {
+                updateStatus("Requesting microphone access...");
+                
+                // Store the stream globally to prevent garbage collection
+                audioStream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true
+                    } 
+                });
+                
+                microphoneGranted = true;
+                systemContext.microphonePermission = 'granted';
+                localStorage.setItem('jarvis-mic-permission', 'granted');
+                localStorage.setItem('jarvis-context', JSON.stringify(systemContext));
+                
+                updateMicStatus('granted');
+                updateStatus("Microphone access granted");
+                
+                // Initialize audio visualizer with the stream
+                setupAudioVisualizer(audioStream);
+                
+                return true;
+            } catch (error) {
+                console.error('Error accessing microphone:', error);
+                microphoneGranted = false;
+                updateMicStatus('denied');
+                updateStatus("Microphone access denied", false);
+                
+                // Show error message to user
+                addMessage("Sir, I was unable to access the microphone. Please check your browser permissions.", 'jarvis');
+                
+                setTimeout(() => updateStatus("System Ready"), 3000);
+                return false;
+            }
+        }
+
+        // Update system info display
+        function updateSystemInfo() {
+            memoryCount.textContent = savedMemory.length;
+            chatCount.textContent = conversationHistory.length;
+        }
+
+        // Update time and date display
+        function updateDateTime() {
+            const now = new Date();
+            currentTime.textContent = `Time: ${now.toLocaleTimeString()}`;
+            currentDate.textContent = `Date: ${now.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            })}`;
+        }
+
+        // Initialize time display
+        setInterval(updateDateTime, 1000);
+        updateDateTime();
+        
+        // --- Speech & Voice ---
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition;
+        
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.lang = 'en-US';
+            recognition.interimResults = false;
+        } else {
+            console.error("Speech Recognition not supported in this browser.");
+            micBtn.disabled = true;
+            micStatus.textContent = "Not Supported";
+        }
+        
+        // --- 3D Core Animation (Three.js) ---
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('jarvis-core'), alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        const geometry = new THREE.IcosahedronGeometry(1.5, 1);
+        const material = new THREE.MeshBasicMaterial({ color: 0x00d9ff, wireframe: true });
+        const core = new THREE.Mesh(geometry, material);
+        scene.add(core);
+        camera.position.z = 5;
+
+        function animateCore() {
+            requestAnimationFrame(animateCore);
+            core.rotation.x += 0.001;
+            core.rotation.y += 0.002;
+            renderer.render(scene, camera);
+        }
+        animateCore();
+        
+        // --- HUD Rings Animation (GSAP) ---
+        gsap.to(".ring-1", { rotation: 360, duration: 40, repeat: -1, ease: "none" });
+        gsap.to(".ring-2", { rotation: -360, duration: 30, repeat: -1, ease: "none" });
+        gsap.to(".ring-3", { rotation: 360, duration: 20, repeat: -1, ease: "none" });
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        // --- Audio Visualizer ---
+        let audioContext, analyser, dataArray, source;
+        const waveformCtx = waveformCanvas.getContext('2d');
+        
+        function setupAudioVisualizer(stream = null) {
+            if (!stream) return;
+            
+            try {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                analyser = audioContext.createAnalyser();
+                source = audioContext.createMediaStreamSource(stream);
+                source.connect(analyser);
+                
+                analyser.fftSize = 256;
+                const bufferLength = analyser.frequencyBinCount;
+                dataArray = new Uint8Array(bufferLength);
+                drawWaveform();
+            } catch (err) {
+                console.error(`Audio visualizer error: ${err}`);
+            }
+        }
+        
+        function drawWaveform() {
+            if (!analyser) return;
+            requestAnimationFrame(drawWaveform);
+            analyser.getByteFrequencyData(dataArray);
+            waveformCtx.clearRect(0, 0, waveformCanvas.width, waveformCanvas.height);
+            const barWidth = (waveformCanvas.width / dataArray.length) * 1.5;
+            let x = 0;
+            const gradient = waveformCtx.createLinearGradient(0, 0, 0, waveformCanvas.height);
+            gradient.addColorStop(0, "rgba(0, 217, 255, 0.8)");
+            gradient.addColorStop(0.5, "rgba(0, 217, 255, 0.5)");
+            gradient.addColorStop(1, "rgba(0, 217, 255, 0.2)");
+            waveformCtx.fillStyle = gradient;
+            for(let i = 0; i < dataArray.length; i++) {
+                const barHeight = dataArray[i] / 2;
+                waveformCtx.fillRect(x, waveformCanvas.height - barHeight, barWidth, barHeight);
+                x += barWidth + 1;
+            }
+        }
+
+        // --- Core Functions ---
+        let jarvisVoice = null;
+        let voicesLoaded = false;
+
+        function loadVoices() {
+            const voices = speechSynthesis.getVoices();
+            if (voices.length > 0) {
+                // Try to find a male voice
+                jarvisVoice = voices.find(voice => 
+                    voice.name.includes('Google UK English Male') || 
+                    voice.name.includes('Microsoft David') ||
+                    voice.name.includes('Alex') ||
+                    voice.name.toLowerCase().includes('male')
+                );
+                
+                // If no male voice found, use any available voice
+                if (!jarvisVoice && voices.length > 0) {
+                    jarvisVoice = voices[0];
+                }
+                
+                voicesLoaded = true;
+                console.log("J.A.R.V.I.S. voice selected:", jarvisVoice ? jarvisVoice.name : "Default voice");
+            }
+        }
+
+        function updateStatus(status, isOnline = true) {
+            statusText.textContent = status;
+            if (isOnline) {
+                statusDot.classList.remove('offline', 'warning');
+            } else {
+                statusDot.classList.add('offline');
+                statusDot.classList.remove('warning');
+            }
+        }
+
+        function cleanTextForSpeech(text) {
+            // Remove markdown formatting, asterisks, and other special characters
+            return text
+                .replace(/\*\*/g, '') // Remove bold markers
+                .replace(/\*/g, '')   // Remove asterisks
+                .replace(/#/g, '')    // Remove hash symbols
+                .replace(/_/g, '')    // Remove underscores
+                .replace(/`/g, '')    // Remove backticks
+                .replace(/\[.*?\]/g, '') // Remove square brackets and content
+                .replace(/\(.*?\)/g, '') // Remove parentheses and content
+                .replace(/\n/g, ' ')  // Replace newlines with spaces
+                .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+                .trim();
+        }
+
+        function speak(text) {
+            speechSynthesis.cancel();
+            if (!voicesLoaded) loadVoices();
+
+            // Clean the text for speech (remove asterisks and formatting)
+            const cleanText = cleanTextForSpeech(text);
+            
+            // Add "Sir" at the beginning of responses (except for the initial greeting)
+            let finalText = cleanText;
+            if (!text.includes("At your service") && !text.toLowerCase().startsWith("sir")) {
+                finalText = "Sir, " + cleanText;
+            }
+
+            const utterance = new SpeechSynthesisUtterance(finalText);
+            if (jarvisVoice) utterance.voice = jarvisVoice;
+            
+            // Configure for male J.A.R.V.I.S. voice
+            utterance.pitch = 0.8;  // Lower pitch for male voice
+            utterance.rate = 0.9;   // Slightly slower rate for clarity
+            utterance.volume = 1.0;
+            
+            utterance.onstart = () => {
+                updateStatus("Speaking");
+                if (endSound) endSound.play().catch(e => console.error("End sound error:", e));
+            };
+            
+            utterance.onend = () => {
+                updateStatus("System Ready");
+            };
+            
+            speechSynthesis.speak(utterance);
+        }
+
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('chat-message', `${sender}-message`);
+            
+            // Clean text for display (remove excessive formatting but keep some structure)
+            const displayText = text
+                .replace(/\*\*/g, '') // Remove bold markers
+                .replace(/\*/g, '')   // Remove asterisks
+                .trim();
+                
+            messageDiv.textContent = displayText;
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+            return messageDiv;
+        }
+
+        // Save information to memory
+        function saveToMemory(info, category = 'general') {
+            const memoryItem = {
+                id: Date.now(),
+                content: info,
+                category: category,
+                timestamp: new Date().toISOString()
+            };
+            
+            savedMemory.push(memoryItem);
+            localStorage.setItem('jarvis-memory', JSON.stringify(savedMemory));
+            updateSystemInfo();
+            
+            return memoryItem;
+        }
+
+        // Get information from memory
+        function getFromMemory(query = '') {
+            if (!query) return savedMemory.slice(-5); // Return last 5 items
+            
+            const searchTerm = query.toLowerCase();
+            return savedMemory.filter(item => 
+                item.content.toLowerCase().includes(searchTerm) ||
+                item.category.toLowerCase().includes(searchTerm)
+            );
+        }
+
+        // Process special commands
+        function processSpecialCommands(prompt) {
+            const lowerPrompt = prompt.toLowerCase();
+            
+            // Save to memory command
+            if (lowerPrompt.includes('save this') || lowerPrompt.includes('remember this') || lowerPrompt.includes('store this')) {
+                const content = prompt.replace(/save this|remember this|store this/gi, '').trim();
+                if (content) {
+                    const saved = saveToMemory(content, 'user-request');
+                    return `Sir, I've saved that information to my memory system. Reference ID: ${saved.id}`;
+                }
+            }
+            
+            // Recall from memory command
+            if (lowerPrompt.includes('what did i tell you about') || lowerPrompt.includes('recall') || lowerPrompt.includes('tell me about')) {
+                const searchTerm = prompt.replace(/what did i tell you about|recall|tell me about/gi, '').trim();
+                const memories = getFromMemory(searchTerm);
+                
+                if (memories.length > 0) {
+                    const memoryText = memories.map(m => `On ${new Date(m.timestamp).toLocaleDateString()}: ${m.content}`).join('\n');
+                    return `Sir, here's what I recall about "${searchTerm}":\n${memoryText}`;
+                } else {
+                    return `Sir, I don't have any saved information about "${searchTerm}" in my memory.`;
+                }
+            }
+            
+            // Time and date queries
+            if (lowerPrompt.includes('time') || lowerPrompt.includes('what time is it')) {
+                return `Sir, the current time is ${new Date().toLocaleTimeString()}.`;
+            }
+            
+            if (lowerPrompt.includes('date') || lowerPrompt.includes('what day is it') || lowerPrompt.includes('what is today')) {
+                return `Sir, today is ${new Date().toLocaleDateString('en-US', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                })}.`;
+            }
+            
+            // List all memories
+            if (lowerPrompt.includes('list all memories') || lowerPrompt.includes('show all saved information')) {
+                if (savedMemory.length === 0) {
+                    return "Sir, my memory system is currently empty.";
+                }
+                const memoryList = savedMemory.map(m => `- ${m.content} (${new Date(m.timestamp).toLocaleDateString()})`).join('\n');
+                return `Sir, here are all items in my memory system:\n${memoryList}`;
+            }
+            
+            return null; // No special command processed
+        }
+
+        async function getAIResponse(prompt) {
+            updateStatus("Processing...");
+            const thinkingMessage = addMessage("Analyzing...", 'jarvis');
+            thinkingMessage.classList.add('thinking');
+            
+            // Check for special commands first
+            const specialResponse = processSpecialCommands(prompt);
+            if (specialResponse) {
+                chatBox.removeChild(thinkingMessage);
+                addMessage(specialResponse, 'jarvis');
+                speak(specialResponse);
+                // Save to conversation history
+                conversationHistory.push({ role: 'user', content: prompt });
+                conversationHistory.push({ role: 'assistant', content: specialResponse });
+                localStorage.setItem('jarvis-conversation', JSON.stringify(conversationHistory));
+                updateSystemInfo();
+                return;
+            }
+
+            try {
+                // Build context from memory and conversation history
+                const recentConversation = conversationHistory.slice(-10); // Last 10 exchanges
+                const relevantMemories = getFromMemory(prompt).slice(0, 3); // Top 3 relevant memories
+                
+                let context = "You are J.A.R.V.I.S. from Iron Man. Respond in a clear, professional manner without using markdown formatting, asterisks, or special characters. Keep responses concise and natural for speech synthesis.\n\n";
+                
+                // Add relevant memories to context
+                if (relevantMemories.length > 0) {
+                    context += "Relevant information from my memory:\n";
+                    relevantMemories.forEach(memory => {
+                        context += `- ${memory.content}\n`;
+                    });
+                    context += "\n";
+                }
+                
+                // Add conversation context
+                if (recentConversation.length > 0) {
+                    context += "Recent conversation context:\n";
+                    recentConversation.forEach(msg => {
+                        context += `${msg.role === 'user' ? 'User' : 'J.A.R.V.I.S.'}: ${msg.content}\n`;
+                    });
+                    context += "\n";
+                }
+                
+                // Add current date and time context
+                context += `Current date and time: ${new Date().toLocaleString()}\n\n`;
+                
+                const fullPrompt = `${context}Current user query: ${prompt}`;
+
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        contents: [{ 
+                            parts: [{ text: fullPrompt }] 
+                        }],
+                        generationConfig: {
+                            temperature: 0.7,
+                            topK: 40,
+                            topP: 0.95,
+                            maxOutputTokens: 1024,
+                        }
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error.message || `API error: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                let aiText = data.candidates[0].content.parts[0].text;
+                
+                // Remove any remaining markdown artifacts
+                aiText = aiText.replace(/\*\*/g, '').replace(/\*/g, '').trim();
+                
+                chatBox.removeChild(thinkingMessage);
+                addMessage(aiText, 'jarvis');
+                speak(aiText);
+
+                // Save to conversation history
+                conversationHistory.push({ role: 'user', content: prompt });
+                conversationHistory.push({ role: 'assistant', content: aiText });
+                
+                // Keep conversation history manageable (last 50 exchanges)
+                if (conversationHistory.length > 100) {
+                    conversationHistory = conversationHistory.slice(-100);
+                }
+                
+                localStorage.setItem('jarvis-conversation', JSON.stringify(conversationHistory));
+                updateSystemInfo();
+
+            } catch (error) {
+                console.error("Error fetching AI response:", error);
+                chatBox.removeChild(thinkingMessage);
+                const errorMessage = `Sir, there was a communication error. Details: ${error.message}`;
+                addMessage(errorMessage, 'jarvis');
+                speak(errorMessage);
+                updateStatus("API Error", false);
+                
+                // Reset status after 3 seconds
+                setTimeout(() => updateStatus("System Ready"), 3000);
+            }
+        }
+        
+        function handleUserInput() {
+            const text = userInput.value.trim();
+            if (text) {
+                addMessage(text, 'user');
+                getAIResponse(text);
+                userInput.value = '';
+            }
+        }
+
+        // Handle microphone button click
+        async function handleMicClick() {
+            if (!recognition) {
+                addMessage("Sir, speech recognition is not supported in your browser.", 'jarvis');
+                return;
+            }
+
+            if (micBtn.classList.contains('listening')) {
+                // Stop listening
+                recognition.stop();
+                return;
+            }
+
+            // Check if we already have microphone access
+            if (!microphoneGranted) {
+                // Show permission overlay
+                micPermissionOverlay.style.display = 'flex';
+                return;
+            }
+
+            // Start listening
+            try {
+                recognition.start();
+            } catch (error) {
+                console.error("Error starting speech recognition:", error);
+                addMessage("Sir, there was an error starting voice recognition.", 'jarvis');
+            }
+        }
+
+        // --- Event Listeners ---
+        if(recognition) {
+            micBtn.addEventListener('click', handleMicClick);
+
+            recognition.onstart = () => {
+                micBtn.classList.add('listening');
+                waveformCanvas.classList.add('visible');
+                updateStatus("Listening...");
+                if (startSound) startSound.play().catch(e => console.error("Start sound error:", e));
+            };
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                addMessage(transcript, 'user');
+                getAIResponse(transcript);
+            };
+
+            recognition.onend = () => {
+                micBtn.classList.remove('listening');
+                waveformCanvas.classList.remove('visible');
+                updateStatus("Processing voice input...");
+            };
+            
+            recognition.onerror = (event) => {
+                console.error("Speech recognition error:", event.error);
+                addMessage(`Sir, recognition error: ${event.error}`, 'jarvis');
+                updateStatus("Speech Error", false);
+                
+                // Reset status after 3 seconds
+                setTimeout(() => updateStatus("System Ready"), 3000);
+            };
+        }
+        
+        userInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') handleUserInput();
+        });
+
+        // Grant microphone access button
+        grantMicBtn.addEventListener('click', async () => {
+            const granted = await requestMicrophoneAccess();
+            if (granted) {
+                micPermissionOverlay.style.display = 'none';
+                // Now start listening
+                if (recognition) {
+                    recognition.start();
+                }
+            }
+        });
+        
+        // --- Initialization on User Interaction ---
+        startOverlay.addEventListener('click', async () => {
+            startOverlay.style.opacity = '0';
+            setTimeout(() => startOverlay.style.display = 'none', 500);
+
+            loadVoices();
+            if (speechSynthesis.onvoiceschanged !== undefined) {
+                speechSynthesis.onvoiceschanged = loadVoices;
+            }
+            
+            updateSystemInfo();
+
+            // Check microphone permission status
+            const hasPermission = await checkMicrophonePermission();
+            
+            // If we don't have permission and it's not explicitly denied, show the permission overlay
+            if (!hasPermission && systemContext.microphonePermission !== 'denied') {
+                setTimeout(() => {
+                    micPermissionOverlay.style.display = 'flex';
+                }, 1000);
+            }
+
+            // Load previous conversation
+            if (conversationHistory.length > 0) {
+                // Show last 5 messages from previous session
+                const recentMessages = conversationHistory.slice(-10);
+                recentMessages.forEach(msg => {
+                    addMessage(msg.content, msg.role === 'user' ? 'user' : 'jarvis');
+                });
+                
+                const welcomeBackText = "Sir, welcome back. I've loaded our previous conversation.";
+                addMessage(welcomeBackText, 'jarvis');
+                speak(welcomeBackText);
+            } else {
+                const introText = "At your service, sir. System initialized and ready.";
+                addMessage(introText, 'jarvis');
+                speak(introText);
+            }
+            
+        }, { once: true });
+
+    </script>
+</body>
+</html>
