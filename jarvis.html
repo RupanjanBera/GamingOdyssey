@@ -418,6 +418,46 @@
             font-size: 0.9rem;
         }
 
+        /* --- YouTube Player --- */
+        #youtube-player {
+            position: absolute;
+            bottom: 120px;
+            left: 20px;
+            width: 320px;
+            height: 180px;
+            background: rgba(10, 25, 47, 0.9);
+            border: 1px solid var(--neon-blue);
+            border-radius: 10px;
+            box-shadow: 0 0 15px var(--glow-color);
+            z-index: 15;
+            display: none;
+        }
+
+        #youtube-player iframe {
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            border: none;
+        }
+
+        #close-player {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: var(--dark-blue);
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            z-index: 16;
+        }
+
         /* --- Responsive Design --- */
         @media (max-width: 768px) {
             .chat-container {
@@ -435,6 +475,13 @@
             #mic-permission-overlay h2 { font-size: 1.5rem; }
             #clear-chat-btn { right: 20px; bottom: 100px; }
             #mode-indicator { right: 20px; top: 70px; }
+            #youtube-player { 
+                left: 50%; 
+                transform: translateX(-50%);
+                bottom: 100px;
+                width: 280px;
+                height: 157px;
+            }
         }
     </style>
 </head>
@@ -453,19 +500,26 @@
     <div class="jarvis-container">
         <div class="scan-lines"></div>
 
+        <!-- Original 3D Core -->
         <canvas id="jarvis-core"></canvas>
 
         <div class="hud-ring ring-1"></div>
         <div class="hud-ring ring-2"></div>
         <div class="hud-ring ring-3"></div>
 
+        <!-- YouTube Player -->
+        <div id="youtube-player">
+            <button id="close-player">×</button>
+            <iframe id="youtube-iframe" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+
         <div id="status-indicator">
             <div class="status-dot" id="status-dot"></div>
-            <span id="status-text">System Initialized</span>
+            <span id="status-text">System Ready</span>
         </div>
 
         <div id="mode-indicator">
-            Mode: <span id="current-mode">Mark 42</span>
+            Mode: <span id="current-mode">Standard AI</span>
         </div>
 
         <div id="system-info">
@@ -544,6 +598,9 @@
         const micStatus = document.getElementById('mic-status');
         const clearChatBtn = document.getElementById('clear-chat-btn');
         const currentMode = document.getElementById('current-mode');
+        const youtubePlayer = document.getElementById('youtube-player');
+        const youtubeIframe = document.getElementById('youtube-iframe');
+        const closePlayer = document.getElementById('close-player');
         
         const introVoice = document.getElementById('intro-voice');
         const startSound = document.getElementById('start-sound');
@@ -673,14 +730,20 @@
             micStatus.textContent = "Not Supported";
         }
         
-        // --- 3D Core Animation (Three.js) ---
+        // --- Original 3D Core Animation (Three.js) ---
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('jarvis-core'), alpha: true });
+        const renderer = new THREE.WebGLRenderer({ 
+            canvas: document.getElementById('jarvis-core'), 
+            alpha: true 
+        });
         renderer.setSize(window.innerWidth, window.innerHeight);
 
         const geometry = new THREE.IcosahedronGeometry(1.5, 1);
-        const material = new THREE.MeshBasicMaterial({ color: 0x00d9ff, wireframe: true });
+        const material = new THREE.MeshBasicMaterial({ 
+            color: 0x00d9ff, 
+            wireframe: true 
+        });
         const core = new THREE.Mesh(geometry, material);
         scene.add(core);
         camera.position.z = 5;
@@ -745,6 +808,23 @@
             }
         }
 
+        // --- YouTube Player Functions ---
+        function playYouTubeVideo(songName) {
+            // Clean the song name and create search query
+            const searchQuery = encodeURIComponent(songName + ' official audio');
+            const youtubeUrl = `https://www.youtube.com/embed?listType=search&list=${searchQuery}&autoplay=1`;
+            
+            youtubeIframe.src = youtubeUrl;
+            youtubePlayer.style.display = 'block';
+            
+            return `Sir, I'm now playing "${songName}" on YouTube.`;
+        }
+
+        function closeYouTubePlayer() {
+            youtubeIframe.src = '';
+            youtubePlayer.style.display = 'none';
+        }
+
         // --- Core Functions ---
         let jarvisVoice = null;
         let voicesLoaded = false;
@@ -802,9 +882,12 @@
             // Clean the text for speech (remove asterisks and formatting)
             const cleanText = cleanTextForSpeech(text);
             
-            // Add "Sir" at the beginning of responses (except for the initial greeting)
+            // Smart "Sir" addition - only add if not already present and not initial greeting
             let finalText = cleanText;
-            if (!text.includes("At your service") && !text.toLowerCase().startsWith("sir")) {
+            if (!text.includes("At your service") && 
+                !text.toLowerCase().startsWith("sir") && 
+                !text.toLowerCase().includes(" sir") &&
+                !text.toLowerCase().endsWith("sir")) {
                 finalText = "Sir, " + cleanText;
             }
 
@@ -931,6 +1014,23 @@
                 return "CLEAR_CHAT"; // Special return value to prevent further processing
             }
             
+            // YouTube play commands
+            if (lowerPrompt.includes('play') && (lowerPrompt.includes('song') || lowerPrompt.includes('music') || lowerPrompt.includes('youtube'))) {
+                let songName = prompt.replace(/play|song|music|youtube|jarvis/gi, '').trim();
+                songName = songName.replace(/^me\s+/i, '').trim(); // Remove "me" from beginning
+                
+                if (songName) {
+                    const response = playYouTubeVideo(songName);
+                    return response;
+                }
+            }
+            
+            // Close YouTube player
+            if (lowerPrompt.includes('close youtube') || lowerPrompt.includes('stop music') || lowerPrompt.includes('stop song')) {
+                closeYouTubePlayer();
+                return "Sir, I've closed the YouTube player.";
+            }
+            
             // Web search command
             if (lowerPrompt.includes('search it up') || lowerPrompt.includes('search the web') || lowerPrompt.includes('web search') || lowerPrompt.includes('search for')) {
                 const searchQuery = prompt.replace(/search it up|search the web|web search|search for/gi, '').trim();
@@ -1036,7 +1136,7 @@
                 const recentConversation = conversationHistory.slice(-10); // Last 10 exchanges
                 const relevantMemories = getFromMemory(prompt).slice(0, 3); // Top 3 relevant memories
                 
-                let context = "You are J.A.R.V.I.S. from Iron Man. Respond in a clear, professional manner without using markdown formatting, asterisks, or special characters. Keep responses concise and natural for speech synthesis. You can answer any question or discuss any topic.\n\n";
+                let context = "You are J.A.R.V.I.S. from Iron Man. Respond in a clear, professional manner without using markdown formatting, asterisks, or special characters. Keep responses concise and natural for speech synthesis. You can answer any question or discuss any topic. IMPORTANT: Do not include 'Sir' at the beginning of your response if it already contains 'Sir' elsewhere in the response.\n\n";
                 
                 // Add relevant memories to context
                 if (relevantMemories.length > 0) {
@@ -1195,6 +1295,9 @@
         // Clear chat button
         clearChatBtn.addEventListener('click', clearChat);
 
+        // Close YouTube player button
+        closePlayer.addEventListener('click', closeYouTubePlayer);
+
         // Grant microphone access button
         grantMicBtn.addEventListener('click', async () => {
             const granted = await requestMicrophoneAccess();
@@ -1242,7 +1345,7 @@
                 addMessage(welcomeBackText, 'jarvis');
                 speak(welcomeBackText);
             } else {
-                const introText = "At your service, sir. System initialized and ready. how may I help you?.";
+                const introText = "At your service, sir. System initialized and ready. I can now play songs on YouTube when you ask me to 'play song [song name]'.";
                 addMessage(introText, 'jarvis');
                 speak(introText);
             }
