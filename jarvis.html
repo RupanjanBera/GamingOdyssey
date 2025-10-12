@@ -461,11 +461,11 @@
 
         <div id="status-indicator">
             <div class="status-dot" id="status-dot"></div>
-            <span id="status-text">System Ready</span>
+            <span id="status-text">System Initialized</span>
         </div>
 
         <div id="mode-indicator">
-            Mode: <span id="current-mode">Standard AI</span>
+            Mode: <span id="current-mode">Mark 42</span>
         </div>
 
         <div id="system-info">
@@ -1242,7 +1242,7 @@
                 addMessage(welcomeBackText, 'jarvis');
                 speak(welcomeBackText);
             } else {
-                const introText = "At your service, sir. System initialized and ready. I can now answer any question and perform web searches when you ask me to 'search it up'.";
+                const introText = "At your service, sir. System initialized and ready. how may I help you?.";
                 addMessage(introText, 'jarvis');
                 speak(introText);
             }
