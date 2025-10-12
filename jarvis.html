@@ -418,70 +418,6 @@
             font-size: 0.9rem;
         }
 
-        /* --- Music Player --- */
-        #music-player {
-            position: absolute;
-            left: 20px;
-            bottom: 30px;
-            width: 350px;
-            background: rgba(10, 25, 47, 0.9);
-            border: 1px solid var(--neon-blue);
-            box-shadow: 0 0 15px var(--glow-color);
-            backdrop-filter: blur(8px);
-            z-index: 50;
-            border-radius: 10px;
-            padding: 15px;
-            cursor: move;
-            display: flex; /* Changed from none to flex */
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        #player-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(0, 217, 255, 0.3);
-        }
-
-        #close-player-btn {
-            background: transparent;
-            border: none;
-            color: var(--neon-blue);
-            font-size: 24px;
-            cursor: pointer;
-            padding: 0 5px;
-        }
-
-        #song-title {
-            font-size: 1.1rem;
-            text-shadow: 0 0 8px var(--glow-color);
-            text-align: center;
-            padding: 10px 0;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        #audio-player {
-            width: 100%;
-        }
-
-        /* Custom Audio Player Styles */
-        #audio-player::-webkit-media-controls-panel {
-            background-color: rgba(10, 25, 47, 0.8);
-        }
-        #audio-player::-webkit-media-controls-play-button,
-        #audio-player::-webkit-media-controls-volume-slider,
-        #audio-player::-webkit-media-controls-mute-button,
-        #audio-player::-webkit-media-controls-timeline,
-        #audio-player::-webkit-media-controls-current-time-display,
-        #audio-player::-webkit-media-controls-time-remaining-display {
-            filter: invert(1) brightness(1.5) drop-shadow(0 0 5px var(--glow-color));
-        }
-
         /* --- Responsive Design --- */
         @media (max-width: 768px) {
             .chat-container {
@@ -495,7 +431,6 @@
             #waveform-canvas { bottom: 100px; }
             #status-indicator { top: 10px; }
             #system-info { display: none; }
-            #music-player { width: 90%; left: 5%; bottom: 100px;}
             #mic-permission-overlay { padding: 15px; }
             #mic-permission-overlay h2 { font-size: 1.5rem; }
             #clear-chat-btn { right: 20px; bottom: 100px; }
@@ -548,15 +483,6 @@
         <button id="clear-chat-btn">Clear Chat</button>
 
         <canvas id="waveform-canvas"></canvas>
-
-        <div id="music-player" style="display: none;">
-            <div id="player-header">
-                <span>Now Playing...</span>
-                <button id="close-player-btn">&times;</button>
-            </div>
-            <div id="song-title">Song Title</div>
-            <audio id="audio-player" controls></audio>
-        </div>
 
         <div class="input-container">
             <input type="text" id="user-input" placeholder="Type or press mic to talk...">
@@ -618,10 +544,6 @@
         const micStatus = document.getElementById('mic-status');
         const clearChatBtn = document.getElementById('clear-chat-btn');
         const currentMode = document.getElementById('current-mode');
-        const musicPlayer = document.getElementById('music-player');
-        const audioPlayer = document.getElementById('audio-player');
-        const songTitle = document.getElementById('song-title');
-        const closePlayerBtn = document.getElementById('close-player-btn');
         
         const introVoice = document.getElementById('intro-voice');
         const startSound = document.getElementById('start-sound');
@@ -964,31 +886,6 @@
             );
         }
 
-        function findSong(songName) {
-            const songs = JSON.parse(localStorage.getItem('jarvis-songs') || '[]');
-            if (songs.length === 0) return null;
-
-            const searchTerm = songName.toLowerCase().trim();
-            // Find a song where the name includes the search term
-            const foundSong = songs.find(song => 
-                song.name.toLowerCase().replace('.mp3', '').includes(searchTerm)
-            );
-            return foundSong || null;
-        }
-
-        function playSong(song) {
-            songTitle.textContent = song.name.replace('.mp3', '');
-            audioPlayer.src = song.data;
-            musicPlayer.style.display = 'flex';
-            audioPlayer.play();
-        }
-
-        function stopSong() {
-            audioPlayer.pause();
-            audioPlayer.currentTime = 0;
-            musicPlayer.style.display = 'none';
-        }
-
         async function performWebSearch(query) {
             try {
                 updateStatus("Searching web...");
@@ -1073,23 +970,7 @@
                 return "CLEAR_CHAT";
             }
             
-            const playMatch = lowerPrompt.match(/play\s+(.*)/);
-            if (playMatch && playMatch[1]) {
-                const songToPlay = playMatch[1];
-                const song = findSong(songToPlay);
-                if (song) {
-                    playSong(song);
-                    return `Of course, sir. Playing ${song.name.replace('.mp3', '')}.`;
-                } else {
-                    return `Sir, I could not find a song matching "${songToPlay}" in my database.`;
-                }
-            }
-            
-            if (lowerPrompt.includes('stop music') || lowerPrompt.includes('stop the song')) {
-                stopSong();
-                return "As you wish, sir. Music stopped.";
-            }
-
+            // NEW: Support query command
             if (lowerPrompt.includes('contact support') || lowerPrompt.includes('support query')) {
                 isAwaitingSupportQuery = true;
                 return "Sure sir, please tell me your query.";
@@ -1356,37 +1237,6 @@
             }
         });
         
-        closePlayerBtn.addEventListener('click', stopSong);
-
-        // Draggable Music Player Logic
-        let isDragging = false;
-        let offset = { x: 0, y: 0 };
-
-        musicPlayer.addEventListener('mousedown', (e) => {
-            // Only drag if the mousedown is on the player itself or the header, not controls
-            if (e.target.id === 'audio-player' || e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT') {
-                return;
-            }
-            isDragging = true;
-            offset.x = e.clientX - musicPlayer.offsetLeft;
-            offset.y = e.clientY - musicPlayer.offsetTop;
-            musicPlayer.style.opacity = '0.8';
-        });
-
-        document.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-            e.preventDefault();
-            const newX = e.clientX - offset.x;
-            const newY = e.clientY - offset.y;
-            musicPlayer.style.left = `${newX}px`;
-            musicPlayer.style.top = `${newY}px`;
-        });
-
-        document.addEventListener('mouseup', () => {
-            isDragging = false;
-            musicPlayer.style.opacity = '1';
-        });
-
         // --- Initialization on User Interaction ---
         startOverlay.addEventListener('click', async () => {
             startOverlay.style.opacity = '0';
@@ -1418,7 +1268,7 @@
                 addMessage(welcomeBackText, 'jarvis');
                 speak(welcomeBackText);
             } else {
-                const introText = "At your service, sir. System initialized and ready. How may I help you?";
+                const introText = "At your service, sir. System initialized and ready. How may I help you '.";
                 addMessage(introText, 'jarvis');
                 speak(introText);
             }
