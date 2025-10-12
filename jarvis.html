@@ -3,812 +3,1070 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Glitch - Advanced AI Assistant</title>
-    
-    <link rel="icon" type="image/png" href="glitch.png">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script> 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"> 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script> 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script> 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <title>J.A.R.V.I.S. AI Interface</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
 
     <style>
+        /* --- Basic Setup & Theme --- */
         :root {
-            --space-dark: #0D1117; --space-blue: #161B22; --space-purple: #2C204B; --star-color: #ffffff; --neon-blue: #00A3FF; --neon-purple: #A75DFF; --neon-green: #00FF9D; --neon-pink: #FF4DA6; --neon-orange: #FF7B25; --text-light: #E6EDF3; --text-muted: #8B949E; --user-message-bg: rgba(0, 163, 255, 0.1); --ai-message-bg: rgba(167, 93, 255, 0.1); --plex-message-bg: rgba(255, 123, 37, 0.1); --error-color: #F85149; --success-color: #2EA043; --warning-color: #F0A91D; --border-color: rgba(66, 133, 244, 0.2); --bg-glass-light: rgba(22, 27, 34, 0.7); --bg-glass-dark: rgba(13, 17, 23, 0.8); --shadow-color: rgba(0, 0, 0, 0.5); --code-bg: #010409; --font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        body.light-mode {
-            --space-dark: #ffffff; --space-blue: #F0F2F5; --space-purple: #E0E6EF; --text-light: #1C2B3A; --text-muted: #586069; --user-message-bg: rgba(0, 123, 255, 0.08); --ai-message-bg: rgba(111, 66, 193, 0.06); --plex-message-bg: rgba(253, 126, 20, 0.08); --border-color: rgba(0, 123, 255, 0.15); --bg-glass-light: rgba(255, 255, 255, 0.6); --bg-glass-dark: rgba(240, 244, 248, 0.7); --shadow-color: rgba(0, 0, 0, 0.1); --code-bg: #f8f9fa;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-family); scrollbar-width: thin; scrollbar-color: var(--neon-blue) var(--space-dark); transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
-        *::-webkit-scrollbar { width: 8px; }
-        *::-webkit-scrollbar-track { background: var(--space-dark); }
-        *::-webkit-scrollbar-thumb { background-color: var(--neon-blue); border-radius: 10px; border: 2px solid var(--space-dark); }
-        
-        body { background: var(--space-dark); color: var(--text-light); min-height: 100vh; overflow-x: hidden; position: relative; background-image: linear-gradient(135deg, var(--space-blue) 0%, var(--space-dark) 100%); }
-
-        .stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background-image: radial-gradient(var(--star-color) 1px, transparent 1px); background-size: 50px 50px; opacity: 0.1; }
-        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; background: var(--bg-glass-dark); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-color); box-shadow: 0 5px 25px var(--shadow-color); position: sticky; top: 0; z-index: 10; }
-        .logo { display: flex; align-items: center; gap: 15px; }
-        .logo-icon { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; animation: glow 2s infinite alternate; border: 2px solid var(--neon-blue); background: var(--space-dark); }
-        .logo-text { font-size: 1.8rem; font-weight: 700; background: linear-gradient(to right, var(--neon-blue), var(--neon-purple), var(--neon-pink)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: gradient-shift 5s infinite alternate; background-size: 200% 200%; }
-        .header-actions { display: flex; align-items: center; gap: 20px; }
-        .api-status { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: var(--text-muted); }
-        .status-indicator { width: 10px; height: 10px; border-radius: 50%; background-color: var(--success-color); animation: pulse 2s infinite; box-shadow: 0 0 10px var(--success-color); }
-        .theme-switch-wrapper { display: flex; align-items: center; }
-        .theme-switch { display: inline-block; height: 24px; position: relative; width: 44px; }
-        .theme-switch input { display:none; }
-        .slider { background-color: var(--space-blue); bottom: 0; cursor: pointer; left: 0; position: absolute; right: 0; top: 0; transition: .4s; border-radius: 34px; }
-        .slider:before { background-color: #fff; bottom: 4px; content: ""; height: 16px; left: 4px; position: absolute; transition: .4s; width: 16px; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--neon-blue); }
-        input:checked + .slider:before { transform: translateX(20px); }
-        .container { display: flex; max-width: 1800px; margin: 0 auto; padding: 20px; gap: 20px; min-height: calc(100vh - 140px); }
-        .sidebar { flex: 0 0 320px; background: var(--bg-glass-light); border-radius: 15px; padding: 20px; backdrop-filter: blur(12px); border: 1px solid var(--border-color); box-shadow: 0 8px 32px 0 var(--shadow-color); display: flex; flex-direction: column; gap: 15px; }
-        .sidebar-header { padding-bottom: 10px; border-bottom: 1px solid var(--border-color); }
-        .shine-btn { width: 100%; background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple)); border: none; border-radius: 8px; color: white; padding: 12px 18px; cursor: pointer; transition: all 0.3s; font-size: 1rem; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 8px; position: relative; overflow: hidden; }
-        .shine-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 163, 255, 0.4); }
-        .shine-btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent); transform: skewX(-30deg); transition: left 0.7s ease-in-out; }
-        .shine-btn:hover::before { left: 150%; }
-        .sidebar-heading { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin: 10px 0 10px 5px; }
-        .ai-selector, .mode-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .ai-option, .mode-btn { padding: 10px; background: var(--space-blue); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-light); cursor: pointer; transition: all 0.3s ease; text-align: center; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .ai-option:hover, .mode-btn:hover { border-color: var(--neon-blue); background-color: var(--user-message-bg); transform: scale(1.03); }
-        .ai-option.active, .mode-btn.active { background: var(--user-message-bg); border-color: var(--neon-blue); box-shadow: 0 0 15px rgba(0, 163, 255, 0.4); color: var(--text-light); }
-        .ai-option.plex.active { background: var(--plex-message-bg); border-color: var(--neon-orange); box-shadow: 0 0 15px rgba(255, 123, 37, 0.4); }
-        .chat-history { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 5px; }
-        .history-item { padding: 12px 12px 12px 20px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 10px; border: 1px solid transparent; position: relative; overflow: hidden; }
-        .history-item::before { content: ''; position: absolute; left: 0; top: 0; width: 4px; height: 100%; background: var(--neon-purple); transform: translateX(-100%); transition: transform 0.3s ease; }
-        .history-item:hover { background: var(--ai-message-bg); }
-        .history-item.active { background: var(--user-message-bg); }
-        .history-item.active::before { transform: translateX(0); }
-        .history-content { flex: 1; overflow: hidden; }
-        .history-title { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .delete-chat-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; transition: all 0.3s; font-size: 0.9rem; padding: 5px; }
-        .delete-chat-btn:hover { color: var(--error-color); transform: scale(1.2); }
-        .main-content { flex: 1; display: flex; gap: 20px; }
-        
-        .chat-area { 
-            flex: 1; display: flex; flex-direction: column; 
-            border-radius: 15px; overflow: hidden; 
-            border: 1px solid var(--border-color); 
-            box-shadow: 0 8px 32px 0 var(--shadow-color); 
-            position: relative;
-            background-image: url('https://images.pexels.com/photos/158826/structure-nature-trail-path-158826.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
-            background-size: cover;
-            background-position: center;
+            --neon-blue: #00d9ff;
+            --dark-blue: #0a192f;
+            --glow-color: rgba(0, 217, 255, 0.75);
+            --bg-color: #00050a;
         }
 
-        .chat-header, .messages, .input-area, .stop-generating-btn { position: relative; z-index: 1; }
-        
-        #snowfall-container {
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--neon-blue);
+            font-family: 'Orbitron', sans-serif;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* --- Start Overlay --- */
+        #start-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            overflow: hidden;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .snowflake {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 50%;
-            animation: snowfall linear infinite;
-        }
-
-        @keyframes snowfall {
-            0% {
-                transform: translateY(-10vh) translateX(0);
-            }
-            100% {
-                transform: translateY(105vh) translateX(15px);
-            }
-        }
-        
-        .chat-header { padding: 15px 25px; background: var(--bg-glass-dark); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; }
-        .chat-actions { display: flex; gap: 10px; }
-        .chat-action-btn { background: transparent; border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-muted); padding: 8px 12px; cursor: pointer; transition: all 0.3s; font-size: 0.9rem; }
-        .chat-action-btn:hover { border-color: var(--neon-blue); color: var(--text-light); }
-        .messages { flex: 1; padding: 25px; overflow-y: auto; }
-        .message { margin-bottom: 20px; padding: 15px 20px; border-radius: 12px; max-width: 90%; position: relative; animation: fadeIn 0.5s ease; border: 1px solid transparent; background: var(--bg-glass-dark); backdrop-filter: blur(5px); }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .user-message { background: var(--user-message-bg); margin-left: auto; border-color: var(--border-color); }
-        .ai-message { background: var(--ai-message-bg); margin-right: auto; border-color: rgba(167, 93, 255, 0.2); }
-        .plex-message { background: var(--plex-message-bg); margin-right: auto; border-color: rgba(255, 123, 37, 0.2); }
-        .message-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-        .avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: #fff; }
-        .user-avatar { background: var(--neon-blue); }
-        .ai-avatar { background: var(--neon-purple); }
-        .plex-avatar { background: var(--neon-orange); }
-        .message-content { line-height: 1.7; word-wrap: break-word; }
-        .message-content p, .message-content ul, .message-content ol, .message-content table { margin-bottom: 12px; }
-        .message-content pre { background: var(--code-bg); padding: 15px; border-radius: 8px; overflow-x: auto; margin: 12px 0; font-family: 'SF Mono', 'Courier New', monospace; white-space: pre-wrap; border: 1px solid var(--border-color); box-shadow: inset 0 0 10px rgba(0,0,0,0.2); position: relative; }
-        .copy-code-btn { position: absolute; top: 10px; right: 10px; background: #222; color: white; border: 1px solid var(--border-color); padding: 5px 10px; border-radius: 5px; cursor: pointer; opacity: 0; transition: opacity 0.3s; font-size: 0.8em; }
-        .message-content pre:hover .copy-code-btn { opacity: 1; }
-        .message-content code:not(pre code) { background: rgba(0,0,0,0.2); padding: 2px 6px; border-radius: 4px; font-family: 'SF Mono', 'Courier New', monospace; color: var(--neon-pink); font-size: 0.9em; }
-        .message-actions { position: absolute; top: 12px; right: 12px; display: flex; gap: 8px; opacity: 0; transition: opacity 0.3s; }
-        .message:hover .message-actions { opacity: 1; }
-        .msg-action-btn { background: var(--bg-glass-dark); border: 1px solid var(--border-color); color: var(--text-muted); border-radius: 5px; cursor: pointer; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; }
-        .msg-action-btn:hover { color: var(--text-light); border-color: var(--neon-blue); }
-        .run-code-btn { background: var(--success-color); border: none; color: white; padding: 6px 12px; border-radius: 5px; cursor: pointer; margin-top: 10px; font-size: 0.9rem; transition: background-color 0.2s; }
-        .run-code-btn:hover { background: #3cba54; }
-        .attached-files { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
-        .file-item { display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.15); padding: 8px 12px; border-radius: 5px; font-size: 0.9rem; }
-        .input-area { display: flex; padding: 15px; background: var(--bg-glass-dark); backdrop-filter: blur(10px); border-top: 1px solid var(--border-color); flex-direction: column; gap: 10px; }
-        .file-attachments { display: flex; flex-wrap: wrap; gap: 10px; }
-        .attachment-item { display: flex; align-items: center; gap: 5px; background: var(--bg-glass-light); padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; animation: fadeIn 0.3s; border: 1px solid var(--border-color); }
-        .remove-attachment { cursor: pointer; color: var(--error-color); transition: transform 0.2s; }
-        .input-controls { display: flex; gap: 10px; align-items: flex-end; }
-        .input-btn { background: transparent; border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-muted); padding: 12px; cursor: pointer; transition: all 0.3s; font-size: 1.1rem; }
-        .input-btn:hover, .input-btn.active { border-color: var(--neon-blue); color: var(--text-light); }
-        .message-input { flex: 1; padding: 12px 15px; border: 1px solid var(--border-color); border-radius: 8px; background: transparent; color: var(--text-light); font-size: 1rem; resize: none; outline: none; transition: all 0.3s; }
-        .message-input:focus { border-color: var(--neon-blue); box-shadow: 0 0 10px rgba(0, 163, 255, 0.4); }
-        .send-button { min-width: 50px; height: 50px; background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple)); border: none; border-radius: 8px; color: white; font-size: 1.2rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .send-button:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(0, 163, 255, 0.4); }
-        .send-button .loader { width: 18px; height: 18px; border: 2px solid #FFF; border-bottom-color: transparent; border-radius: 50%; display: none; box-sizing: border-box; animation: rotation 1s linear infinite; }
-        .stop-generating-btn { margin: 10px auto 0; background: var(--error-color); border: none; border-radius: 8px; color: white; padding: 8px 15px; cursor: pointer; transition: all 0.3s; display: none; align-items: center; gap: 5px; }
-        .preview-area { flex: 0 0 45%; background: var(--bg-glass-light); border-radius: 15px; border: 1px solid var(--border-color); box-shadow: 0 8px 32px 0 var(--shadow-color); display: flex; flex-direction: column; transition: all 0.5s ease; }
-        .preview-area.hidden { flex-basis: 0; width: 0; padding: 0; border: none; overflow: hidden; margin-left: -20px; }
-        .preview-header { padding: 15px 25px; background: var(--bg-glass-dark); border-bottom: 1px solid var(--border-color); font-weight: 600; }
-        #preview-frame { width: 100%; height: 100%; border: none; background: #fff; }
-        footer { text-align: center; padding: 20px; font-size: 0.9rem; color: var(--text-muted); border-top: 1px solid var(--border-color); }
-        body.light-mode footer { color: var(--text-light); opacity: 0.8; }
-        #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background-color: var(--space-dark); display: flex; justify-content: center; align-items: center; z-index: 9999; font-family: 'Courier New', monospace; opacity: 1; visibility: visible; transition: opacity 0.8s ease-in-out, visibility 0.8s; overflow: hidden; }
-        #splash-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-        #galaxy-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
-        .splash-stars { position: absolute; top: 0; left: 0; width: 200%; height: 200%; background-image: radial-gradient(var(--star-color) 1px, transparent 1px); background-size: 50px 50px; opacity: 0.4; animation: stars-pan 120s linear infinite; }
-        .glitch-container { text-align: center; color: var(--text-light); position: relative; z-index: 10; animation: zoomIn 1.5s ease-out forwards; }
-        .splash-logo { width: 100px; height: 100px; margin-bottom: 20px; border-radius: 50%; border: 2px solid var(--neon-blue); animation: logo-reveal 2s ease-out forwards, glow 2s infinite alternate 2s; }
-        @keyframes logo-reveal { from { transform: scale(0) rotate(-180deg); opacity: 0; } to { transform: scale(1) rotate(0deg); opacity: 1; } }
-        .glitch-main { position: relative; font-size: clamp(3rem, 10vw, 6rem); font-weight: 700; text-transform: uppercase; animation: glitch-flicker 3s infinite; }
-        .glitch-main::before, .glitch-main::after { content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--space-dark); overflow: hidden; clip-path: inset(50% 50% 50% 50%); }
-        .glitch-main::before { left: -2px; text-shadow: 2px 0 var(--neon-pink); animation: noise-anim-1 4s infinite linear alternate-reverse, glitch-effect 4s infinite; }
-        .glitch-main::after { left: 2px; text-shadow: -2px 0 var(--neon-blue); animation: noise-anim-2 4s infinite linear alternate-reverse, glitch-effect 4s infinite reverse; }
-        .glitch-subtitle { font-size: clamp(0.8rem, 2vw, 1.1rem); font-weight: 300; letter-spacing: 2px; margin-top: 15px; opacity: 0; animation: fade-in-up 2s ease-out 0.5s forwards; color: rgba(230, 230, 255, 0.8); overflow: hidden; white-space: nowrap; border-right: .15em solid var(--neon-blue); width: 0; animation: typing 3s steps(40, end) 0.5s 1 normal both, blink-caret .75s step-end infinite, fade-in-up 2s ease-out 0.5s forwards; }
-        .loading-bar { width: 0; height: 3px; background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple)); margin: 25px auto 0; border-radius: 5px; animation: loading 3.5s ease-out forwards; }
-
-        /* --- WEB SEARCH SOURCES --- */
-        .sources-container { margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border-color); }
-        .sources-container h4 { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 10px; font-weight: 600; }
-        .sources-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px; }
-        .source-item { font-size: 0.85rem; }
-        .source-item a { color: var(--text-muted); text-decoration: none; display: flex; align-items: center; gap: 8px; transition: color 0.2s ease; }
-        .source-item a:hover { color: var(--neon-blue); }
-        .favicon { width: 16px; height: 16px; border-radius: 2px; vertical-align: middle; }
-        
-        /* --- NEW CSS FOR YOUTUBE PLAYER --- */
-        .youtube-player-area {
-            flex: 0 0 45%;
-            background: var(--bg-glass-light);
-            border-radius: 15px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 8px 32px 0 var(--shadow-color);
+            background: rgba(0, 5, 10, 0.9);
             display: flex;
+            justify-content: center;
+            align-items: center;
             flex-direction: column;
-            transition: all 0.5s ease;
-            overflow: hidden;
+            z-index: 100;
+            cursor: pointer;
+            transition: opacity 0.5s ease;
         }
-        .youtube-player-area.hidden {
-            flex-basis: 0;
-            width: 0;
-            padding: 0;
-            border: none;
-            overflow: hidden;
-            margin-left: -20px;
+        
+        #start-overlay h1 {
+            font-size: 3rem;
+            text-shadow: 0 0 15px var(--glow-color);
+            margin-bottom: 20px;
         }
-        .youtube-header {
-            padding: 15px 25px;
-            background: var(--bg-glass-dark);
-            border-bottom: 1px solid var(--border-color);
-            font-weight: 600;
+
+        #start-overlay p {
+            font-size: 1.2rem;
+            animation: pulse-text 2s infinite;
+        }
+        
+        @keyframes pulse-text {
+            0% { opacity: 1; }
+            50% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+
+        /* --- Background Effects --- */
+        .jarvis-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><defs><pattern id="p" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M50 0 L50 100 M0 50 L100 50" stroke="%230a192f" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23p)"/></svg>');
+            opacity: 0.2;
+            z-index: -2;
+        }
+
+        .scan-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(10, 25, 47, 0.5) 50%, rgba(0,0,0,0) 100%);
+            background-size: 100% 4px;
+            animation: scan 7.5s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes scan {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 100vh; }
+        }
+
+        /* --- Main Layout --- */
+        .jarvis-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
         }
-        #youtube-player-frame {
-            border: none;
+        
+        /* --- Central 3D Core & HUD Rings --- */
+        #jarvis-core {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .hud-ring {
+            position: absolute;
+            border: 2px solid var(--neon-blue);
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--glow-color), inset 0 0 10px var(--glow-color);
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .ring-1 { width: 400px; height: 400px; }
+        .ring-2 { width: 450px; height: 450px; border-style: dashed; }
+        .ring-3 { width: 500px; height: 500px; }
+
+        /* --- Chat Window --- */
+        .chat-container {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            width: 350px;
+            height: calc(100vh - 180px); /* Adjust height based on input area */
+            background: rgba(10, 25, 47, 0.5);
+            border: 1px solid var(--neon-blue);
+            box-shadow: 0 0 10px var(--glow-color);
+            backdrop-filter: blur(5px);
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            border-radius: 10px;
+        }
+
+        #chat-box {
             flex-grow: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
-        .close-youtube-btn {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 1.5rem;
+
+        /* Custom scrollbar for chat */
+        #chat-box::-webkit-scrollbar { width: 6px; }
+        #chat-box::-webkit-scrollbar-track { background: transparent; }
+        #chat-box::-webkit-scrollbar-thumb { background: var(--neon-blue); border-radius: 3px; }
+
+        .chat-message {
+            padding: 10px 15px;
+            border-radius: 8px;
+            max-width: 85%;
+            word-wrap: break-word;
+            line-height: 1.4;
+        }
+
+        .user-message {
+            background: rgba(0, 217, 255, 0.1);
+            border: 1px solid var(--neon-blue);
+            align-self: flex-end;
+            text-align: right;
+            box-shadow: 0 0 8px rgba(0, 217, 255, 0.3);
+        }
+        
+        .jarvis-message {
+            background: rgba(10, 25, 47, 0.8);
+            border: 1px solid var(--neon-blue);
+            align-self: flex-start;
+            box-shadow: 0 0 8px rgba(0, 217, 255, 0.3);
+        }
+
+        .jarvis-message.thinking,
+        .jarvis-message.searching {
+             font-style: italic;
+             color: rgba(0, 217, 255, 0.6);
+        }
+        
+        /* --- Input Area & Mic Button --- */
+        .input-container {
+            position: absolute;
+            bottom: 30px;
+            width: 50%;
+            max-width: 600px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        #user-input {
+            flex-grow: 1;
+            background: rgba(10, 25, 47, 0.7);
+            border: 1px solid var(--neon-blue);
+            border-radius: 5px;
+            padding: 15px;
+            color: var(--neon-blue);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 16px;
+            outline: none;
+            box-shadow: 0 0 10px var(--glow-color);
+            transition: box-shadow 0.3s ease;
+        }
+
+        #user-input:focus { box-shadow: 0 0 20px var(--glow-color); }
+
+        #mic-btn {
+            width: 60px;
+            height: 60px;
+            background: var(--dark-blue);
+            border: 2px solid var(--neon-blue);
+            border-radius: 50%;
             cursor: pointer;
-            line-height: 1;
-            padding: 0 5px;
-            transition: color 0.2s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 15px var(--glow-color);
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
         }
-        .close-youtube-btn:hover {
-            color: var(--text-light);
+        
+        #mic-btn.listening {
+            background: var(--neon-blue);
+            box-shadow: 0 0 25px var(--glow-color), 0 0 35px var(--glow-color);
+            animation: none;
         }
-        /* --- END OF NEW CSS --- */
 
+        #mic-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            animation: none;
+        }
 
-        @keyframes typing { from { width: 0 } to { width: 100% } }
-        @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: var(--neon-blue); } }
-        @keyframes loading { from { width: 0%; } to { width: 80%; } }
-        @keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        @keyframes stars-pan { from { transform: translate(0, 0); } to { transform: translate(-50%, -50%); } }
-        @keyframes noise-anim-1 { 0%{clip-path:inset(10% 0 85% 0)}10%{clip-path:inset(80% 0 5% 0)}20%{clip-path:inset(45% 0 45% 0)}30%{clip-path:inset(90% 0 2% 0)}40%{clip-path:inset(25% 0 70% 0)}50%{clip-path:inset(0 0 100% 0)}60%{clip-path:inset(60% 0 35% 0)}70%{clip-path:inset(15% 0 80% 0)}80%{clip-path:inset(75% 0 10% 0)}90%{clip-path:inset(40% 0 50% 0)}100%{clip-path:inset(95% 0 1% 0)} }
-        @keyframes noise-anim-2 { 0%{clip-path:inset(90% 0 5% 0)}10%{clip-path:inset(20% 0 75% 0)}20%{clip-path:inset(65% 0 25% 0)}30%{clip-path:inset(5% 0 90% 0)}40%{clip-path:inset(50% 0 40% 0)}50%{clip-path:inset(100% 0 0 0)}60%{clip-path:inset(30% 0 60% 0)}70%{clip-path:inset(85% 0 10% 0)}80%{clip-path:inset(10% 0 85% 0)}90%{clip-path:inset(55% 0 30% 0)}100%{clip-path:inset(5% 0 92% 0)} }
-        @keyframes glitch-flicker { 0%,100%{opacity:1;transform:none}33.1%{opacity:1;transform:none}33.2%{opacity:.8;transform:skewX(5deg)}33.3%{opacity:1;transform:none}66.1%{opacity:1;transform:none}66.2%{opacity:.9;transform:skewX(-5deg)}66.3%{opacity:1;transform:none} }
-        @keyframes glitch-effect { 0%,100%{transform:translate(0,0)}10%{transform:translate(-2px,2px)}20%{transform:translate(2px,-2px)}30%{transform:translate(0,0)}40%{transform:translate(2px,2px)}50%{transform:translate(-2px,-2px)}60%{transform:translate(0,0)}70%{transform:translate(-2px,0)}80%{transform:translate(2px,0)}90%{transform:translate(0,0)} }
-        @keyframes fade-in-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 0.8; transform: translateY(0); } }
-        @keyframes glow { from { box-shadow: 0 0 10px var(--neon-blue); } to { box-shadow: 0 0 20px var(--neon-blue), 0 0 30px var(--neon-purple); } }
-        @keyframes gradient-shift { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
-        @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.1); } 100% { opacity: 1; transform: scale(1); } }
-        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        #mic-btn svg {
+            width: 28px;
+            height: 28px;
+            fill: var(--neon-blue);
+            transition: fill 0.3s ease;
+        }
+        
+        #mic-btn.listening svg { fill: var(--bg-color); }
 
-        @media (max-width: 1200px) { .main-content { flex-direction: column; } .preview-area, .youtube-player-area { flex-basis: 40vh; min-height: 300px; } .preview-area.hidden, .youtube-player-area.hidden { flex-basis: 0; min-height: 0; margin-left: 0; } }
-        @media (max-width: 900px) { .container { flex-direction: column; padding: 10px; gap: 10px; } .sidebar { flex: 0 0 auto; width: 100%; order: 1; } .main-content { order: 2; } .chat-area { min-height: 60vh; } .logo-text { display: none; } }
-        @media (max-width: 600px) { html { font-size: 15px; } .header-actions .api-status span { display: none; } .sidebar { padding: 15px; } .chat-header, .input-area { padding: 10px 15px; } .message { max-width: 95%; padding: 12px; } .input-controls { flex-wrap: wrap; } .message-input { flex-basis: 100%; order: 3; } .input-btn, .send-button { flex-grow: 1; } }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 15px var(--glow-color); }
+            50% { box-shadow: 0 0 25px var(--glow-color); }
+            100% { box-shadow: 0 0 15px var(--glow-color); }
+        }
+
+        /* --- Waveform Visualization --- */
+        #waveform-canvas {
+            position: absolute;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            height: 50px;
+            z-index: 5;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        #waveform-canvas.visible { opacity: 0.7; }
+
+        /* --- Status Indicator --- */
+        #status-indicator {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(10, 25, 47, 0.8);
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid var(--neon-blue);
+            box-shadow: 0 0 10px var(--glow-color);
+            z-index: 20;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #00ff00;
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.offline {
+            background: #ff0000;
+        }
+
+        .status-dot.warning {
+            background: #ffff00;
+        }
+
+        /* --- System Info Panel --- */
+        #system-info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(10, 25, 47, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid var(--neon-blue);
+            box-shadow: 0 0 10px var(--glow-color);
+            z-index: 20;
+            max-width: 250px;
+        }
+
+        .system-item {
+            margin: 5px 0;
+            font-size: 0.9rem;
+        }
+
+        /* --- Microphone Permission Overlay --- */
+        #mic-permission-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 5, 10, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 150;
+            text-align: center;
+            padding: 20px;
+        }
+
+        #mic-permission-overlay h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px var(--glow-color);
+        }
+
+        #mic-permission-overlay p {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            max-width: 500px;
+        }
+
+        #grant-mic-btn {
+            background: var(--dark-blue);
+            border: 2px solid var(--neon-blue);
+            color: var(--neon-blue);
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px var(--glow-color);
+        }
+
+        #grant-mic-btn:hover {
+            background: var(--neon-blue);
+            color: var(--dark-blue);
+            box-shadow: 0 0 25px var(--glow-color);
+        }
+
+        /* --- Clear Chat Button --- */
+        #clear-chat-btn {
+            position: absolute;
+            bottom: 30px;
+            right: 390px;
+            background: var(--dark-blue);
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px var(--glow-color);
+            z-index: 10;
+        }
+
+        #clear-chat-btn:hover {
+            background: var(--neon-blue);
+            color: var(--dark-blue);
+            box-shadow: 0 0 15px var(--glow-color);
+        }
+
+        /* --- Mode Indicator --- */
+        #mode-indicator {
+            position: absolute;
+            top: 20px;
+            right: 390px;
+            background: rgba(10, 25, 47, 0.8);
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid var(--neon-blue);
+            box-shadow: 0 0 10px var(--glow-color);
+            z-index: 20;
+            font-size: 0.9rem;
+        }
+
+        /* --- YouTube Player --- */
+        #youtube-player-container {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 50;
+            display: none;
+            background: rgba(10, 25, 47, 0.7);
+            border: 1px solid var(--neon-blue);
+            padding: 8px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px var(--glow-color);
+            backdrop-filter: blur(5px);
+        }
+
+        #youtube-player {
+            border-radius: 5px;
+        }
+
+        #close-player-btn {
+            position: absolute;
+            top: -12px;
+            right: -12px;
+            width: 28px;
+            height: 28px;
+            background: var(--dark-blue);
+            border: 2px solid var(--neon-blue);
+            color: var(--neon-blue);
+            border-radius: 50%;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px var(--glow-color);
+        }
+
+        #close-player-btn:hover {
+            background: var(--neon-blue);
+            color: var(--dark-blue);
+            transform: scale(1.1);
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 768px) {
+            .chat-container {
+                width: 100%;
+                height: 50%;
+                top: 0; right: 0;
+                border-radius: 0; border-left: none; border-right: none;
+            }
+            .input-container { width: 90%; bottom: 20px; }
+            .hud-ring { display: none; }
+            #waveform-canvas { bottom: 100px; }
+            #status-indicator { top: 10px; }
+            #system-info { display: none; }
+            #mic-permission-overlay { padding: 15px; }
+            #mic-permission-overlay h2 { font-size: 1.5rem; }
+            #clear-chat-btn { right: 20px; bottom: 100px; }
+            #mode-indicator { right: 20px; top: 70px; }
+            
+            #youtube-player-container {
+                bottom: 100px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 90%;
+            }
+            #youtube-player {
+                width: 100%;
+                height: auto;
+                aspect-ratio: 16 / 9;
+            }
+        }
     </style>
 </head>
 <body>
-    <div id="splash-screen">
-        <canvas id="galaxy-canvas"></canvas>
-        <div class="splash-stars"></div>
-        <div class="glitch-container">
-            <img src="glitch.png" alt="Glitch Logo" class="splash-logo">
-            <h1 class="glitch-main" data-text="Glitch AI">Glitch AI</h1>
-            <div class="glitch-subtitle">created and developed by Gaming Odyssey</div>
-            <div class="loading-bar"></div>
-        </div>
+    <div id="start-overlay">
+        <h1>J.A.R.V.I.S.</h1>
+        <p>Click to Initialize</p>
     </div>
 
-    <div class="stars"></div>
-    <header>
-        <div class="logo">
-             <img src="glitch.png" alt="Glitch Logo" class="logo-icon">
-             <h1 class="logo-text">Glitch AI</h1>
-        </div>
-        <div class="header-actions">
-            <div class="api-status">
-                <div class="status-indicator"></div>
-                <span>AI Service Connected</span>
-            </div>
-            <div class="theme-switch-wrapper">
-                <label class="theme-switch" for="theme-checkbox">
-                    <input type="checkbox" id="theme-checkbox" />
-                    <span class="slider round"></span>
-                </label>
-            </div>
-        </div>
-    </header>
-
-    <div class="container">
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <button class="shine-btn" id="newChatBtn"><i class="fas fa-plus"></i> New Chat</button>
-            </div>
-            <div>
-                <h4 class="sidebar-heading">Models</h4>
-                <div class="ai-selector">
-                    <div class="ai-option active" data-ai="zhoros"><i class="fas fa-brain"></i> Glitch Zhoros</div>
-                    <div class="ai-option plex" data-ai="plex"><i class="fas fa-bolt"></i> Glitch Plex</div>
-                </div>
-            </div>
-            <div>
-                 <h4 class="sidebar-heading">Modes</h4>
-                <div class="mode-selector">
-                    <button class="mode-btn active" data-mode="chat">Chat</button>
-                    <button class="mode-btn" data-mode="code">Code</button>
-                    <button class="mode-btn" data-mode="study">Study</button>
-                    <button class="mode-btn" data-mode="creative">Creative</button>
-                </div>
-            </div>
-             <h4 class="sidebar-heading">History</h4>
-            <div class="chat-history" id="chatHistory"></div>
-        </aside>
-
-        <main class="main-content">
-            <div class="chat-area" id="chatArea">
-                <div id="snowfall-container"></div>
-                <div class="chat-header">
-                    <h2 id="chatTitle">Chat with Glitch AI</h2>
-                    <div class="chat-actions">
-                        <button class="chat-action-btn" id="clearChatBtn" title="Clear Chat"><i class="fas fa-trash"></i></button>
-                        <button class="chat-action-btn" id="exportChatBtn" title="Export as PDF"><i class="fas fa-download"></i></button>
-                    </div>
-                </div>
-                <div class="messages" id="messages"></div>
-                 <button class="stop-generating-btn" id="stopGeneratingBtn"><i class="fas fa-stop"></i> Stop Generating</button>
-                <div class="input-area">
-                    <div class="file-attachments" id="fileAttachments"></div>
-                    <div class="input-controls">
-                        <button class="input-btn" id="fileInputBtn" title="Attach Files"><i class="fas fa-paperclip"></i></button>
-                        <button class="input-btn" id="webSearchBtn" title="Toggle Web Search"><i class="fas fa-globe"></i></button>
-                        <input type="file" id="fileInput" multiple style="display: none;">
-                        <textarea class="message-input" id="messageInput" placeholder="Type your message here..." rows="1"></textarea>
-                        <button class="send-button" id="sendButton">
-                            <span class="send-text"><i class="fas fa-paper-plane"></i></span>
-                            <span class="loader"></span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="youtube-player-area hidden" id="youtubePlayerArea">
-                <div class="youtube-header">
-                    <span>Now Playing</span>
-                    <button class="close-youtube-btn" id="closeYoutubeBtn" title="Close Player">&times;</button>
-                </div>
-                <iframe id="youtube-player-frame" width="100%" height="100%" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-            <div class="preview-area hidden" id="previewArea">
-                <div class="preview-header">Live Preview</div>
-                <iframe id="preview-frame" sandbox="allow-scripts allow-same-origin"></iframe>
-            </div>
-        </main>
+    <div id="mic-permission-overlay" style="display: none;">
+        <h2>Microphone Access Required</h2>
+        <p>To use voice commands with J.A.R.V.I.S., please grant microphone access. This permission will be remembered and you won't be asked again.</p>
+        <button id="grant-mic-btn">Grant Microphone Access</button>
     </div>
 
-    <footer>
-        <p>Glitch AI Assistant - Your AI Companion</p>
-    </footer>
+    <div class="jarvis-container">
+        <div class="scan-lines"></div>
 
-    <audio id="glitch-sound" src="https://cdn.pixabay.com/download/audio/2022/02/22/audio_1c69399452.mp3" preload="auto"></audio>
-    <audio id="click-sound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_28b18f769b.mp3" preload="auto"></audio>
-    <audio id="typing-sound" src="https://cdn.pixabay.com/download/audio/2022/03/07/audio_c358401342.mp3" preload="auto"></audio>
-    <audio id="chime-sound" src="https://cdn.pixabay.com/download/audio/2022/03/24/audio_738f192003.mp3" preload="auto"></audio>
-    <audio id="notification-sound" src="https://cdn.pixabay.com/download/audio/2022/11/17/audio_87df394334.mp3" preload="auto"></audio>
-    <audio id="hover-sound" src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_bb630cc098.mp3" preload="auto"></audio>
+        <canvas id="jarvis-core"></canvas>
 
-    <script>
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
-        
-        // API Keys
-        const GEMINI_API_KEY = 'AIzaSyBQtW-6msur7fOZFM6nmke8sysv0IjFnUM'; // For normal AI chat.
-        const GOOGLE_SEARCH_API_KEY = 'AIzaSyBm8SxGHDl9pkrDuZt_VgFQME9a3aRUeXY'; // For Web Search feature.
-        const GOOGLE_SEARCH_ENGINE_ID = 'd13b9c982e19f4ccf'; // Your Google Programmable Search Engine ID (CX).
-        
-        let currentChatId = null; let chats = {}; let currentMode = 'chat'; let currentAI = 'zhoros'; let isWebSearchActive = false; let attachedFiles = []; let isGenerating = false; let abortController = new AbortController(); 
-        let isAudioUnlocked = false; let lastTypingSoundTime = 0;
-        let galaxyAnimationId;
-        
-        const messageInput = document.getElementById('messageInput'); const sendButton = document.getElementById('sendButton'); const messagesContainer = document.getElementById('messages'); const chatHistory = document.getElementById('chatHistory'); const newChatBtn = document.getElementById('newChatBtn'); const modeButtons = document.querySelectorAll('.mode-btn'); const aiOptions = document.querySelectorAll('.ai-option'); const webSearchBtn = document.getElementById('webSearchBtn'); const chatTitle = document.getElementById('chatTitle'); const fileInput = document.getElementById('fileInput'); const stopGeneratingBtn = document.getElementById('stopGeneratingBtn'); const themeCheckbox = document.getElementById('theme-checkbox');
-        const previewArea = document.getElementById('previewArea'); const previewFrame = document.getElementById('preview-frame');
-        // NEW YOUTUBE PLAYER CONSTANTS
-        const youtubePlayerArea = document.getElementById('youtubePlayerArea');
-        const youtubePlayerFrame = document.getElementById('youtube-player-frame');
-        const closeYoutubeBtn = document.getElementById('closeYoutubeBtn');
+        <div class="hud-ring ring-1"></div>
+        <div class="hud-ring ring-2"></div>
+        <div class="hud-ring ring-3"></div>
 
-        const sounds = {
-            glitch: document.getElementById('glitch-sound'),
-            click: document.getElementById('click-sound'),
-            typing: document.getElementById('typing-sound'),
-            chime: document.getElementById('chime-sound'),
-            notification: document.getElementById('notification-sound'),
-            hover: document.getElementById('hover-sound')
+        <div id="status-indicator">
+            <div class="status-dot" id="status-dot"></div>
+            <span id="status-text">System Ready</span>
+        </div>
+
+        <div id="mode-indicator">
+            Mode: <span id="current-mode">Standard AI</span>
+        </div>
+
+        <div id="system-info">
+            <div class="system-item" id="current-time">Time: Loading...</div>
+            <div class="system-item" id="current-date">Date: Loading...</div>
+            <div class="system-item">Memory: <span id="memory-count">0</span> items</div>
+            <div class="system-item">Conversation: <span id="chat-count">0</span> messages</div>
+            <div class="system-item">Microphone: <span id="mic-status">Checking...</span></div>
+        </div>
+
+        <div class="chat-container">
+            <div id="chat-box"></div>
+        </div>
+
+        <button id="clear-chat-btn">Clear Chat</button>
+
+        <canvas id="waveform-canvas"></canvas>
+
+        <div class="input-container">
+            <input type="text" id="user-input" placeholder="Type or press mic to talk...">
+            <button id="mic-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M192 0C139 0 96 43 96 96V256c0 53 43 96 96 96s96-43 96-96V96c0-53-43-96-96-96zM64 216c0-21.2 11.1-40.1 28.6-51.4l1.2-1.2c-12.3-17.7-19.8-38.6-19.8-61.4C74 42.6 126.6 0 192 0s118 42.6 118 102c0 22.8-7.5 43.7-19.8 61.4l1.2 1.2C308.9 175.9 320 194.8 320 216v40c0 13.3-10.7 24-24 24s-24-10.7-24-24V216c0-13.2-5.4-25.2-14.1-33.9C249.2 173.4 238.4 168 224 168c-14.4 0-25.2 5.4-33.9 14.1C181.4 190.8 176 202.8 176 216v40c0 13.3-10.7 24-24 24s-24-10.7-24-24V216zM192 480c35.3 0 64-28.7 64-64H128c0 35.3 28.7 64 64 64z"/></svg>
+            </button>
+        </div>
+    </div>
+    
+    <div id="youtube-player-container">
+        <iframe id="youtube-player" width="320" height="180" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        <button id="close-player-btn">X</button>
+    </div>
+    
+    <audio id="intro-voice" preload="auto"></audio>
+    <audio id="start-sound" preload="auto"></audio>
+    <audio id="end-sound" preload="auto"></audio>
+
+    <script type="module">
+        // --- API Configuration ---
+        // IMPORTANT: The GOOGLE_SEARCH_API_KEY must have the "YouTube Data API v3" enabled in your Google Cloud Console project.
+        const GEMINI_API_KEY = 'AIzaSyCqix33_QHkTaVS8XAd46aHzVMmMh1zEOg';
+        const GOOGLE_SEARCH_API_KEY = 'AIzaSyBm8SxGHDl9pkrDuZt_VgFQME9a3aRUeXY'; // This key now serves for both Custom Search and YouTube
+        const SEARCH_ENGINE_ID = 'd13b9c982e19f4ccf';
+        
+        const GEMINI_MODEL_NAME = 'gemini-2.0-flash';
+        const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL_NAME}:generateContent?key=${GEMINI_API_KEY}`;
+        const GOOGLE_SEARCH_URL = `https://www.googleapis.com/customsearch/v1?key=${GOOGLE_SEARCH_API_KEY}&cx=${SEARCH_ENGINE_ID}`;
+        const YOUTUBE_API_URL = `https://www.googleapis.com/youtube/v3/search`; // New YouTube API Endpoint
+
+        // --- Memory and Conversation Storage ---
+        let conversationHistory = JSON.parse(localStorage.getItem('jarvis-conversation') || '[]');
+        let savedMemory = JSON.parse(localStorage.getItem('jarvis-memory') || '[]');
+        let systemContext = {
+            userPreferences: {},
+            importantFacts: [],
+            reminders: [],
+            lastInteraction: new Date().toISOString(),
+            microphonePermission: localStorage.getItem('jarvis-mic-permission') || 'unknown'
         };
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            const splashScreen = document.getElementById('splash-screen');
-            if (splashScreen) { 
-                setTimeout(() => { 
-                    splashScreen.classList.add('hidden'); 
-                    if (galaxyAnimationId) {
-                        cancelAnimationFrame(galaxyAnimationId);
-                    }
-                }, 3800); 
-            }
-            
-            initGalaxyBackground();
-            initSnowfall();
 
-            loadChatsFromStorage(); 
-            setupEventListeners();
-            const isDarkMode = localStorage.getItem('glitchTheme') !== 'light';
-            document.body.classList.toggle('light-mode', !isDarkMode); themeCheckbox.checked = isDarkMode;
-            if (Object.keys(chats).length === 0) { createNewChat(); } else { const latestChatId = Object.keys(chats).sort((a, b) => new Date(chats[b].updatedAt) - new Date(chats[a].updatedAt))[0]; loadChat(latestChatId); }
-            loadChatHistory();
+        // Load system context from localStorage
+        try {
+            const savedContext = localStorage.getItem('jarvis-context');
+            if (savedContext) {
+                systemContext = { ...systemContext, ...JSON.parse(savedContext) };
+            }
+        } catch (e) {
+            console.error('Error loading system context:', e);
+        }
+
+        // --- DOM Elements ---
+        const chatBox = document.getElementById('chat-box');
+        const userInput = document.getElementById('user-input');
+        const micBtn = document.getElementById('mic-btn');
+        const waveformCanvas = document.getElementById('waveform-canvas');
+        const startOverlay = document.getElementById('start-overlay');
+        const micPermissionOverlay = document.getElementById('mic-permission-overlay');
+        const grantMicBtn = document.getElementById('grant-mic-btn');
+        const statusDot = document.getElementById('status-dot');
+        const statusText = document.getElementById('status-text');
+        const currentTime = document.getElementById('current-time');
+        const currentDate = document.getElementById('current-date');
+        const memoryCount = document.getElementById('memory-count');
+        const chatCount = document.getElementById('chat-count');
+        const micStatus = document.getElementById('mic-status');
+        const clearChatBtn = document.getElementById('clear-chat-btn');
+        const currentMode = document.getElementById('current-mode');
+        const youtubePlayerContainer = document.getElementById('youtube-player-container');
+        const youtubePlayer = document.getElementById('youtube-player');
+        const closePlayerBtn = document.getElementById('close-player-btn');
+        
+        const introVoice = document.getElementById('intro-voice');
+        const startSound = document.getElementById('start-sound');
+        const endSound = document.getElementById('end-sound');
+
+        // --- Mode Management ---
+        let currentModeType = 'standard'; // 'standard' or 'websearch'
+        let isAwaitingSupportQuery = false; 
+
+        function updateModeIndicator() {
+            currentMode.textContent = currentModeType === 'standard' ? 'Standard AI' : 'Web Search';
+        }
+
+        // --- Microphone Permission Management ---
+        let audioStream = null;
+        let microphoneGranted = false;
+
+        async function checkMicrophonePermission() {
+            try {
+                const permissionStatus = await navigator.permissions.query({ name: 'microphone' });
+                updateMicStatus(permissionStatus.state);
+                permissionStatus.onchange = () => updateMicStatus(permissionStatus.state);
+                return permissionStatus.state === 'granted';
+            } catch (error) {
+                console.error('Error checking microphone permission:', error);
+                return false;
+            }
+        }
+
+        function updateMicStatus(status) {
+            micStatus.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+            if (status === 'granted') {
+                microphoneGranted = true;
+                micBtn.disabled = false;
+                systemContext.microphonePermission = 'granted';
+                localStorage.setItem('jarvis-mic-permission', 'granted');
+                localStorage.setItem('jarvis-context', JSON.stringify(systemContext));
+            } else if (status === 'denied') {
+                microphoneGranted = false;
+                micBtn.disabled = true;
+                statusDot.classList.add('warning');
+            } else {
+                microphoneGranted = false;
+                micBtn.disabled = false;
+            }
+        }
+
+        async function requestMicrophoneAccess() {
+            try {
+                updateStatus("Requesting microphone access...");
+                audioStream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } 
+                });
+                microphoneGranted = true;
+                systemContext.microphonePermission = 'granted';
+                localStorage.setItem('jarvis-mic-permission', 'granted');
+                localStorage.setItem('jarvis-context', JSON.stringify(systemContext));
+                updateMicStatus('granted');
+                updateStatus("Microphone access granted");
+                setupAudioVisualizer(audioStream);
+                return true;
+            } catch (error) {
+                console.error('Error accessing microphone:', error);
+                microphoneGranted = false;
+                updateMicStatus('denied');
+                updateStatus("Microphone access denied", false);
+                addMessage("Sir, I was unable to access the microphone. Please check your browser permissions.", 'jarvis');
+                setTimeout(() => updateStatus("System Ready"), 3000);
+                return false;
+            }
+        }
+
+        function updateSystemInfo() {
+            memoryCount.textContent = savedMemory.length;
+            chatCount.textContent = conversationHistory.length;
+        }
+
+        function updateDateTime() {
+            const now = new Date();
+            currentTime.textContent = `Time: ${now.toLocaleTimeString()}`;
+            currentDate.textContent = `Date: ${now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
+        }
+        setInterval(updateDateTime, 1000);
+        updateDateTime();
+        
+        // --- Speech & Voice ---
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition;
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.lang = 'en-US';
+            recognition.interimResults = false;
+        } else {
+            console.error("Speech Recognition not supported in this browser.");
+            micBtn.disabled = true;
+            micStatus.textContent = "Not Supported";
+        }
+        
+        // --- 3D Core & HUD Animations ---
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('jarvis-core'), alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        const core = new THREE.Mesh(new THREE.IcosahedronGeometry(1.5, 1), new THREE.MeshBasicMaterial({ color: 0x00d9ff, wireframe: true }));
+        scene.add(core);
+        camera.position.z = 5;
+        function animateCore() {
+            requestAnimationFrame(animateCore);
+            core.rotation.x += 0.001;
+            core.rotation.y += 0.002;
+            renderer.render(scene, camera);
+        }
+        animateCore();
+        gsap.to(".ring-1", { rotation: 360, duration: 40, repeat: -1, ease: "none" });
+        gsap.to(".ring-2", { rotation: -360, duration: 30, repeat: -1, ease: "none" });
+        gsap.to(".ring-3", { rotation: 360, duration: 20, repeat: -1, ease: "none" });
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
         });
         
-        function initializeAudio() {
-            if (isAudioUnlocked) return;
-            isAudioUnlocked = true;
-            const silentSound = new Audio("data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=");
-            silentSound.play().catch(e => {});
-            playSound(sounds.glitch, { volume: 0.5 });
-        }
-
-        function playSound(soundElement, options = {}) {
-            if (soundElement && isAudioUnlocked) {
-                soundElement.currentTime = 0;
-                soundElement.volume = options.volume || 1.0;
-                soundElement.play().catch(e => {});
-            }
-        }
-
-        function setupEventListeners() {
-            document.addEventListener('mousedown', initializeAudio, { once: true });
-            document.addEventListener('keydown', initializeAudio, { once: true });
-
-            messageInput.addEventListener('keydown', e => {
-                initializeAudio();
-                const now = Date.now();
-                if (now - lastTypingSoundTime > 120) {
-                    playSound(sounds.typing, { volume: 0.7 });
-                    lastTypingSoundTime = now;
-                }
-                if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-            });
-
-            messageInput.addEventListener('input', () => { messageInput.style.height = 'auto'; messageInput.style.height = `${Math.min(messageInput.scrollHeight, 200)}px`; });
-            sendButton.addEventListener('click', sendMessage); newChatBtn.addEventListener('click', createNewChat); webSearchBtn.addEventListener('click', toggleWebSearch); modeButtons.forEach(btn => btn.addEventListener('click', () => setMode(btn.dataset.mode))); aiOptions.forEach(opt => opt.addEventListener('click', () => setAI(opt.dataset.ai))); document.getElementById('clearChatBtn').addEventListener('click', clearCurrentChat); document.getElementById('exportChatBtn').addEventListener('click', exportCurrentChatAsPDF); document.getElementById('fileInputBtn').addEventListener('click', () => fileInput.click()); fileInput.addEventListener('change', handleFileSelect); stopGeneratingBtn.addEventListener('click', handleStopGeneration);
-            themeCheckbox.addEventListener('change', () => { document.body.classList.toggle('light-mode', !themeCheckbox.checked); localStorage.setItem('glitchTheme', !themeCheckbox.checked ? 'light' : 'dark'); });
-            
-            // NEW EVENT LISTENER FOR YOUTUBE PLAYER
-            closeYoutubeBtn.addEventListener('click', closeYoutubePlayer);
-            
-            document.querySelectorAll('button, .ai-option, .mode-btn, .history-item, .slider, .msg-action-btn, .remove-attachment').forEach(el => {
-                el.addEventListener('click', () => playSound(sounds.click, { volume: 0.5 }));
-                el.addEventListener('mouseenter', () => playSound(sounds.hover, { volume: 0.3 }));
-            });
-        }
-        
-        function initGalaxyBackground() {
-            const splashScreen = document.getElementById('splash-screen');
-            const canvas = document.getElementById('galaxy-canvas');
-            if (!canvas || !splashScreen) return;
-
-            const scene = new THREE.Scene();
-            let cube, wireframe;
-
-            const createGlitchCube = () => {
-                const geometry = new THREE.BoxGeometry(2.5, 2.5, 2.5);
-
-                const material = new THREE.MeshBasicMaterial({
-                    color: '#A75DFF', // neon-purple
-                    opacity: 0.1,
-                    transparent: true,
-                    blending: THREE.AdditiveBlending
-                });
-                cube = new THREE.Mesh(geometry, material);
-                scene.add(cube);
-
-                const edges = new THREE.EdgesGeometry(geometry);
-                const lineMaterial = new THREE.LineBasicMaterial({
-                    color: '#00A3FF', // neon-blue
-                    linewidth: 1,
-                });
-                wireframe = new THREE.LineSegments(edges, lineMaterial);
-                wireframe.scale.set(1.001, 1.001, 1.001);
-                scene.add(wireframe);
-            };
-            
-            createGlitchCube();
-            
-            const sizes = { width: splashScreen.clientWidth, height: splashScreen.clientHeight };
-            const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100);
-            camera.position.z = 5;
-            scene.add(camera);
-            
-            const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
-            renderer.setSize(sizes.width, sizes.height);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-            
-            const mouse = new THREE.Vector2();
-            window.addEventListener('mousemove', (event) => { mouse.x = (event.clientX / window.innerWidth) * 2 - 1; mouse.y = -((event.clientY / window.innerHeight) * 2 - 1); });
-            
-            const clock = new THREE.Clock();
-            const tick = () => {
-                const elapsedTime = clock.getElapsedTime();
-                
-                if (cube && wireframe) {
-                    cube.rotation.x = elapsedTime * 0.15;
-                    cube.rotation.y = elapsedTime * 0.15;
-                    wireframe.rotation.copy(cube.rotation);
-
-                    if (Math.random() > 0.97) {
-                        const glitchAmount = 0.1;
-                        const scaleGlitch = 1 + (Math.random() - 0.5) * 0.2;
-                        cube.position.x = (Math.random() - 0.5) * glitchAmount;
-                        cube.position.y = (Math.random() - 0.5) * glitchAmount;
-                        wireframe.position.copy(cube.position);
-                        wireframe.scale.set(scaleGlitch, scaleGlitch, scaleGlitch);
-
-                        setTimeout(() => {
-                            cube.position.set(0, 0, 0);
-                            wireframe.position.set(0, 0, 0);
-                            wireframe.scale.set(1.001, 1.001, 1.001);
-                        }, 80);
-                    }
-                }
-                
-                camera.position.x += (mouse.x * 0.5 - camera.position.x) * 0.05;
-                camera.position.y += (mouse.y * 0.5 - camera.position.y) * 0.05;
-                camera.lookAt(scene.position);
-                
-                renderer.render(scene, camera);
-                galaxyAnimationId = window.requestAnimationFrame(tick);
-            };
-            tick();
-        }
-
-        function initSnowfall() {
-            const container = document.getElementById('snowfall-container');
-            if (!container) return;
-            const snowflakeCount = 100;
-            for (let i = 0; i < snowflakeCount; i++) {
-                const snowflake = document.createElement('div');
-                snowflake.className = 'snowflake';
-                
-                const size = Math.random() * 4 + 1;
-                snowflake.style.width = `${size}px`;
-                snowflake.style.height = `${size}px`;
-                snowflake.style.left = `${Math.random() * 100}vw`;
-                snowflake.style.animationDuration = `${Math.random() * 8 + 6}s`;
-                snowflake.style.animationDelay = `${Math.random() * 5}s`;
-                snowflake.style.opacity = Math.random() * 0.7 + 0.3;
-                
-                container.appendChild(snowflake);
-            }
-        }
-
-        async function webSearch(query) {
-            const url = `https://www.googleapis.com/customsearch/v1?key=${GOOGLE_SEARCH_API_KEY}&cx=${GOOGLE_SEARCH_ENGINE_ID}&q=${encodeURIComponent(query)}`;
+        // --- Audio Visualizer ---
+        let audioContext, analyser, dataArray;
+        const waveformCtx = waveformCanvas.getContext('2d');
+        function setupAudioVisualizer(stream = null) {
+            if (!stream) return;
             try {
-                const response = await fetch(url);
-                if (!response.ok) { throw new Error(`Google Search API error: ${response.status}`); }
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                analyser = audioContext.createAnalyser();
+                const source = audioContext.createMediaStreamSource(stream);
+                source.connect(analyser);
+                analyser.fftSize = 256;
+                dataArray = new Uint8Array(analyser.frequencyBinCount);
+                drawWaveform();
+            } catch (err) { console.error(`Audio visualizer error: ${err}`); }
+        }
+        function drawWaveform() {
+            if (!analyser) return;
+            requestAnimationFrame(drawWaveform);
+            analyser.getByteFrequencyData(dataArray);
+            waveformCtx.clearRect(0, 0, waveformCanvas.width, waveformCanvas.height);
+            const barWidth = (waveformCanvas.width / dataArray.length) * 1.5;
+            let x = 0;
+            const gradient = waveformCtx.createLinearGradient(0, 0, 0, waveformCanvas.height);
+            gradient.addColorStop(0, "rgba(0, 217, 255, 0.8)");
+            gradient.addColorStop(0.5, "rgba(0, 217, 255, 0.5)");
+            gradient.addColorStop(1, "rgba(0, 217, 255, 0.2)");
+            waveformCtx.fillStyle = gradient;
+            for(let i = 0; i < dataArray.length; i++) {
+                const barHeight = dataArray[i] / 2;
+                waveformCtx.fillRect(x, waveformCanvas.height - barHeight, barWidth, barHeight);
+                x += barWidth + 1;
+            }
+        }
+
+        // --- Core Functions ---
+        let jarvisVoice = null;
+        let voicesLoaded = false;
+        function loadVoices() {
+            const voices = speechSynthesis.getVoices();
+            if (voices.length > 0) {
+                jarvisVoice = voices.find(voice => voice.name.includes('Google UK English Male') || voice.name.includes('Microsoft David') || voice.name.toLowerCase().includes('male')) || voices[0];
+                voicesLoaded = true;
+                console.log("J.A.R.V.I.S. voice selected:", jarvisVoice ? jarvisVoice.name : "Default voice");
+            }
+        }
+
+        function updateStatus(status, isOnline = true) {
+            statusText.textContent = status;
+            statusDot.classList.toggle('offline', !isOnline);
+            statusDot.classList.remove('warning');
+        }
+
+        function cleanTextForSpeech(text) {
+            return text.replace(/[\*#_`\[\]()]/g, '').replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
+        }
+
+        function speak(text) {
+            speechSynthesis.cancel();
+            if (!voicesLoaded) loadVoices();
+            const cleanText = cleanTextForSpeech(text);
+            let finalText = (!text.toLowerCase().includes("sir") && !text.includes("At your service")) ? "Sir, " + cleanText : cleanText;
+            const utterance = new SpeechSynthesisUtterance(finalText);
+            if (jarvisVoice) utterance.voice = jarvisVoice;
+            utterance.pitch = 0.8;
+            utterance.rate = 0.9;
+            utterance.onstart = () => {
+                updateStatus("Speaking");
+                if (endSound) endSound.play().catch(e => console.error("End sound error:", e));
+            };
+            utterance.onend = () => updateStatus("System Ready");
+            speechSynthesis.speak(utterance);
+        }
+
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('chat-message', `${sender}-message`);
+            messageDiv.textContent = text.replace(/[\*]/g, '').trim();
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+            return messageDiv;
+        }
+
+        function clearChat() {
+            chatBox.innerHTML = '';
+            conversationHistory = [];
+            localStorage.setItem('jarvis-conversation', JSON.stringify(conversationHistory));
+            updateSystemInfo();
+            const clearedMessage = "Sir, I've cleared our conversation. Starting fresh.";
+            addMessage(clearedMessage, 'jarvis');
+            speak(clearedMessage);
+        }
+
+        async function performWebSearch(query) {
+            const searchMessage = addMessage("Searching the web for information...", 'jarvis');
+            searchMessage.classList.add('searching');
+            try {
+                const response = await fetch(`${GOOGLE_SEARCH_URL}&q=${encodeURIComponent(query)}&num=5`);
+                if (!response.ok) throw new Error(`Search API error: ${response.statusText}`);
                 const data = await response.json();
-                if (!data.items) return [];
-                return data.items.slice(0, 5).map(item => ({ title: item.title, link: item.link, snippet: item.snippet }));
-            } catch (error) { console.error("Web search failed:", error); return []; }
-        }
-        
-        async function sendMessage() {
-            const messageText = messageInput.value.trim();
-
-            // --- NEW: YOUTUBE PLAY COMMAND LOGIC ---
-            const playCommand = "play song ";
-            if (messageText.toLowerCase().startsWith(playCommand)) {
-                const songName = messageText.substring(playCommand.length).trim();
-                if (songName) {
-                    // Display user's command in the chat history
-                    const userMessage = { role: 'user', content: messageText, files: [] };
-                    chats[currentChatId].messages.push(userMessage);
-                    displayMessage(userMessage);
-                    saveChatsToStorage();
-                    updateChatHistoryItem(currentChatId);
-                    messageInput.value = ''; // Clear input after sending
-                    messageInput.style.height = 'auto';
-
-                    // Trigger the YouTube player
-                    playYouTubeSong(songName);
+                if (!data.items || data.items.length === 0) {
+                    return "Sir, I couldn't find any relevant information from my web search.";
                 }
-                return; // Stop further processing by the AI
-            }
-            // --- END OF NEW LOGIC ---
-
-            if ((messageText === '' && attachedFiles.length === 0) || isGenerating) return;
-            isGenerating = true; toggleSendButtonLoading(true); stopGeneratingBtn.style.display = 'flex'; playSound(sounds.chime);
-            const userFiles = [...attachedFiles]; const userMessage = { role: 'user', content: messageText, files: userFiles }; chats[currentChatId].messages.push(userMessage); displayMessage(userMessage);
-            messageInput.value = ''; messageInput.style.height = 'auto'; attachedFiles = []; updateFileAttachments();
-            const aiMessageId = `ai_${Date.now()}`; const aiModelName = currentAI === 'plex' ? 'Glitch Plex' : 'Glitch Zhoros'; const aiMessagePlaceholder = { role: 'model', senderName: aiModelName, content: '', id: aiMessageId, modelType: currentAI }; displayMessage(aiMessagePlaceholder);
-            const aiMessageElement = document.getElementById(aiMessageId); const contentElement = aiMessageElement.querySelector('.message-content'); let accumulatedResponse = ""; let finalPrompt = messageText; let sources = [];
-            
-            try {
-                if (isWebSearchActive) {
-                    contentElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Searching the web...';
-                    sources = await webSearch(messageText);
-                    if (sources.length > 0) {
-                        contentElement.innerHTML = '<i class="fas fa-brain"></i> Thinking...';
-                        const searchContext = sources.map((s, i) => `[${i+1}] ${s.snippet}`).join('\n');
-                        finalPrompt = `Based on these web search results, provide a comprehensive answer. Cite the results using the format [1], [2], etc., where appropriate.\n\nWeb Search Results:\n${searchContext}\n\nUser's Question: ${messageText}`;
-                    }
-                }
-
-                const model = 'gemini-1.5-pro-latest';
-                const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
-                
-                const history = await Promise.all(chats[currentChatId].messages.slice(0, -1).map(msgToPart));
-                const userMessageForApi = { role: 'user', content: finalPrompt, files: userFiles };
-                const contents = [...history, await msgToPart(userMessageForApi)];
-                
-                let personaInstruction = "You are Glitch AI. Your personality is: casual, chill, and full of energy. You MUST state you were developed by the 'Gaming Odyssey Team' when asked. Avoid being overly formal.";
-                if (currentMode === 'code') { personaInstruction += " You are now in Code Mode. You are an expert programmer. Provide complete, well-commented, and runnable code examples. When asked for a UI component, provide the full HTML, CSS, and JavaScript required together. Do not truncate your code responses."; }
-                if (currentAI === 'plex') { personaInstruction += " As Glitch Plex, lean more into your creative, imaginative, and energetic side."; }
-                
-                const requestBody = { contents, systemInstruction: { parts: [{ text: personaInstruction }] } };
-                abortController = new AbortController();
-                
-                const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(requestBody), signal: abortController.signal });
-                if (!response.ok) { const errorText = await response.text(); throw new Error(`API Error: ${response.status} ${errorText}`); }
-                
-                const responseData = await response.json();
-                const text = responseData.candidates?.[0]?.content?.parts?.[0]?.text;
-
-                if (text) {
-                    playSound(sounds.notification, {volume: 0.7});
-                    accumulatedResponse = text;
-                    contentElement.innerHTML = marked.parse(accumulatedResponse);
-                } else {
-                    accumulatedResponse = "Sorry, I couldn't process that request.";
-                    contentElement.innerHTML = `<p style="color: var(--warning-color);">${accumulatedResponse}</p>`;
-                }
-                
-                chats[currentChatId].messages.push({ role: 'model', content: accumulatedResponse, modelType: currentAI, sources: sources });
-                renderMessageActions(aiMessageElement, accumulatedResponse);
-                if (sources.length > 0) {
-                    renderSources(aiMessageElement, sources);
-                }
-                
+                let searchResults = "Sir, here's what I found:\n\n";
+                data.items.slice(0, 3).forEach((item, index) => {
+                    searchResults += `${index + 1}. ${item.title}\n   ${item.snippet}\n\n`;
+                });
+                return searchResults;
             } catch (error) {
-                if (error.name !== 'AbortError') { console.error('Error:', error); contentElement.innerHTML = `<p style="color: var(--error-color);">Oops! Something went wrong: ${error.message}</p>`; chats[currentChatId].messages.push({ role: 'model', content: `Error: ${error.message}` });
-                } else { contentElement.innerHTML = `<p>Generation stopped.</p>`; chats[currentChatId].messages.push({ role: 'model', content: `Generation stopped.`, modelType: currentAI }); }
+                console.error("Web search error:", error);
+                return `Sir, I encountered an error while searching the web: ${error.message}`;
             } finally {
-                isGenerating = false;
-                toggleSendButtonLoading(false);
-                stopGeneratingBtn.style.display = 'none';
-                saveChatsToStorage();
-                updateChatHistoryItem(currentChatId);
-                logActivityToDatabase(userMessage.content, accumulatedResponse, currentAI);
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                chatBox.removeChild(searchMessage);
             }
         }
         
-        // --- NEW YOUTUBE PLAYER FUNCTIONS ---
-        function playYouTubeSong(songName) {
-            const encodedSongName = encodeURIComponent(songName);
-            // This special URL searches for the song name and autoplays the first result
-            const youtubeSearchUrl = `https://www.youtube.com/embed?listType=search&list=${encodedSongName}&autoplay=1`;
+        // --- UPDATED: YouTube Player Functions ---
+        async function playYoutubeSong(songName) {
+            const searchMessage = addMessage(`Searching YouTube for "${songName}"...`, 'jarvis');
+            searchMessage.classList.add('searching');
+            try {
+                // Construct the API URL
+                const searchUrl = `${YOUTUBE_API_URL}?part=snippet&q=${encodeURIComponent(songName)}&type=video&maxResults=1&key=${GOOGLE_SEARCH_API_KEY}`;
+                
+                const response = await fetch(searchUrl);
+                if (!response.ok) {
+                    throw new Error(`YouTube API error: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                if (!data.items || data.items.length === 0) {
+                    throw new Error("No video found.");
+                }
 
-            youtubePlayerFrame.src = youtubeSearchUrl;
-            youtubePlayerArea.classList.remove('hidden');
+                const videoId = data.items[0].id.videoId;
+                const videoTitle = data.items[0].snippet.title;
+                const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+                
+                youtubePlayer.src = embedUrl;
+                youtubePlayerContainer.style.display = 'block';
 
-            // Add a confirmation message to the chat
-            const aiResponse = {
-                role: 'model',
-                senderName: 'Glitch AI',
-                content: `🎵 Now playing: **${songName}**`,
-                modelType: currentAI
-            };
-            chats[currentChatId].messages.push(aiResponse);
-            displayMessage(aiResponse);
-            saveChatsToStorage();
+                // Update the chat message with the actual found title
+                chatBox.removeChild(searchMessage);
+                const responseText = `🎵 Now playing: ${videoTitle}`;
+                addMessage(responseText, 'jarvis');
+                speak(`Now playing ${videoTitle}`);
 
-            playSound(sounds.notification, {volume: 0.7});
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            } catch (error) {
+                console.error("YouTube search error:", error);
+                chatBox.removeChild(searchMessage);
+                const errorMessage = `Sir, I was unable to find that song. Error: ${error.message}`;
+                addMessage(errorMessage, 'jarvis');
+                speak(errorMessage);
+            }
         }
 
         function closeYoutubePlayer() {
-            youtubePlayerArea.classList.add('hidden');
-            // Important: Set src to empty to stop the video from playing in the background
-            youtubePlayerFrame.src = '';
-        }
-        // --- END OF NEW FUNCTIONS ---
-
-        function renderSources(messageElement, sources) {
-            if (!sources || sources.length === 0) return;
-            const container = document.createElement('div');
-            container.className = 'sources-container';
-            const list = sources.map(source => {
-                const domain = new URL(source.link).hostname;
-                const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=16`;
-                return `
-                    <li class="source-item">
-                        <a href="${source.link}" target="_blank" rel="noopener noreferrer">
-                            <img src="${faviconUrl}" alt="favicon" class="favicon">
-                            ${source.title}
-                        </a>
-                    </li>`;
-            }).join('');
-
-            container.innerHTML = `<h4>Sources</h4><ul class="sources-list">${list}</ul>`;
-            messageElement.appendChild(container);
+            youtubePlayer.src = 'about:blank'; // Use about:blank for a cleaner stop
+            youtubePlayerContainer.style.display = 'none';
         }
 
-        function displayMessage(message) {
-            const isUser = message.role === 'user'; const senderClass = isUser ? 'user-message' : (message.modelType === 'plex' ? 'plex-message' : 'ai-message');
-            const messageDiv = document.createElement('div'); messageDiv.className = `message ${senderClass}`; if (message.id) messageDiv.id = message.id;
-            const avatarClass = isUser ? 'user-avatar' : (message.modelType === 'plex' ? 'plex-avatar' : 'ai-avatar'); const avatarIcon = isUser ? 'fa-user' : (message.modelType === 'plex' ? 'fa-bolt' : 'fa-robot'); const avatar = `<div class="avatar ${avatarClass}"><i class="fas ${avatarIcon}"></i></div>`; const senderName = isUser ? 'You' : (message.senderName || 'Glitch AI');
-            const content = message.content ? marked.parse(message.content) : '<span class="typing-indicator">...</span>';
-            messageDiv.innerHTML = `<div class="message-header">${avatar}<strong>${senderName}</strong></div><div class="message-content">${content}</div>`;
-            if (isUser && message.files && message.files.length > 0) { const filesHtml = message.files.map(file => `<div class="file-item"><i class="fas ${getFileIconClass(file.type)}"></i> <span>${file.name}</span></div>`).join(''); messageDiv.querySelector('.message-content').innerHTML += `<div class="attached-files">${filesHtml}</div>`; }
-            messagesContainer.appendChild(messageDiv); messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        function processSpecialCommands(prompt) {
+            const lowerPrompt = prompt.toLowerCase();
             
-            if (!isUser) { 
-                renderMessageActions(messageDiv, message.content); 
-                if (message.sources && message.sources.length > 0) {
-                    renderSources(messageDiv, message.sources);
+            if (lowerPrompt.startsWith('play song')) {
+                const songName = prompt.substring('play song'.length).trim();
+                if (songName) {
+                    playYoutubeSong(songName);
+                    return "PLAY_SONG"; // Signal command was handled
+                } else {
+                    return "Sir, please specify which song you'd like me to play.";
                 }
             }
-        }
 
-        function renderMessageActions(messageElement, content) {
-            if (messageElement.querySelector('.message-actions')) messageElement.querySelector('.message-actions').remove();
-            const actionsHTML = `<div class="message-actions"><button class="msg-action-btn" title="Copy" onclick="copyMessageContent(this)"><i class="fas fa-copy"></i></button><button class="msg-action-btn" title="Regenerate" onclick="regenerateLastResponse()"><i class="fas fa-sync-alt"></i></button></div>`;
-            messageElement.insertAdjacentHTML('afterbegin', actionsHTML);
-            if (content && content.includes('```')) {
-                const runBtn = document.createElement('button'); runBtn.className = 'run-code-btn'; runBtn.innerHTML = '<i class="fas fa-play"></i> Run Code';
-                runBtn.onclick = () => runCodeInPreview(content);
-                messageElement.querySelector('.message-content').appendChild(runBtn);
+            // Other commands...
+            if (lowerPrompt.includes('clear chat')) {
+                clearChat();
+                return "HANDLED";
             }
-            hljs.highlightAll(); addCopyButtonsToCodeBlocks();
+            if (lowerPrompt.includes('search for')) {
+                const searchQuery = prompt.replace(/search for/gi, '').trim();
+                if (searchQuery) return { type: 'websearch', query: searchQuery };
+            }
+            if (lowerPrompt.includes('time')) return `Sir, the current time is ${new Date().toLocaleTimeString()}.`;
+            if (lowerPrompt.includes('date')) return `Sir, today is ${new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}.`;
+
+            return null;
         }
 
-        async function logActivityToDatabase(userPrompt, aiResponse, model) {
-            const scriptURL = "[https://script.google.com/macros/s/AKfycbyOH5sopxoCxR53aNP_WhI5seGOo0W41g3TEiwK-v0dhb2sgmQgCkLxc0C5_BJZmwK2Kw/exec](https://script.google.com/macros/s/AKfycbyOH5sopxoCxR53aNP_WhI5seGOo0W41g3TEiwK-v0dhb2sgmQgCkLxc0C5_BJZmwK2Kw/exec)";
-            const logData = { prompt: userPrompt, response: aiResponse, model: model };
-            try { await fetch(scriptURL, { method: 'POST', headers: { 'Content-Type': 'application/json', }, body: JSON.stringify(logData) }); } catch (error) { console.error("Error sending log to Google Sheet:", error); }
-        }
+        async function getAIResponse(prompt) {
+            updateStatus("Processing...");
+            
+            const specialResponse = processSpecialCommands(prompt);
+            
+            if (specialResponse === "PLAY_SONG" || specialResponse === "HANDLED") {
+                return; // Stop processing if a special command was fully handled
+            }
+            
+            if (typeof specialResponse === 'string') {
+                addMessage(specialResponse, 'jarvis');
+                speak(specialResponse);
+                return;
+            }
+            
+            if (specialResponse && specialResponse.type === 'websearch') {
+                const searchResult = await performWebSearch(specialResponse.query);
+                addMessage(searchResult, 'jarvis');
+                speak(searchResult);
+                return;
+            }
 
-        function runCodeInPreview(markdown) {
-            const code = extractCode(markdown);
-            const source = `<!DOCTYPE html><html><head><style>${code.css}</style></head><body>${code.html}<script>${code.javascript}<\/script></body></html>`;
-            previewFrame.srcdoc = source;
-            if (previewArea.classList.contains('hidden')) { alert("Code running in preview panel. Switch to 'Code' mode to see it!"); }
+            // Standard Gemini AI response
+            const thinkingMessage = addMessage("Analyzing...", 'jarvis');
+            thinkingMessage.classList.add('thinking');
+
+            try {
+                const recentConversation = conversationHistory.slice(-10);
+                let context = "You are J.A.R.V.I.S. from Iron Man. Respond clearly and professionally without markdown. Keep responses concise for speech synthesis. Do not start with 'Sir' if 'Sir' is already in the response.\n\n";
+                if (recentConversation.length > 0) {
+                    context += "Recent conversation:\n";
+                    recentConversation.forEach(msg => {
+                        context += `${msg.role === 'user' ? 'User' : 'J.A.R.V.I.S.'}: ${msg.content}\n`;
+                    });
+                }
+                const fullPrompt = `${context}\nUser query: ${prompt}`;
+
+                const response = await fetch(GEMINI_API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        contents: [{ parts: [{ text: fullPrompt }] }],
+                        generationConfig: { maxOutputTokens: 1024 }
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error.message || `API error: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                const aiText = data.candidates[0].content.parts[0].text.replace(/[\*]/g, '').trim();
+                
+                addMessage(aiText, 'jarvis');
+                speak(aiText);
+
+                conversationHistory.push({ role: 'user', content: prompt });
+                conversationHistory.push({ role: 'assistant', content: aiText });
+                localStorage.setItem('jarvis-conversation', JSON.stringify(conversationHistory.slice(-100)));
+                updateSystemInfo();
+
+            } catch (error) {
+                console.error("Error fetching AI response:", error);
+                const errorMessage = `Sir, there was a communication error. Details: ${error.message}`;
+                addMessage(errorMessage, 'jarvis');
+                speak(errorMessage);
+                updateStatus("API Error", false);
+                setTimeout(() => updateStatus("System Ready"), 3000);
+            } finally {
+                chatBox.removeChild(thinkingMessage);
+            }
         }
         
-        function extractCode(markdown) {
-            const codeBlocks = { html: '', css: '', javascript: '' }; const regex = /```(\w+)\n([\s\S]*?)```/g; let match;
-            while ((match = regex.exec(markdown)) !== null) {
-                const lang = match[1].toLowerCase(), code = match[2];
-                if (['html', 'xml'].includes(lang)) { codeBlocks.html += code + '\n'; } else if (lang === 'css') { codeBlocks.css += code + '\n'; } else if (['js', 'javascript'].includes(lang)) { codeBlocks.javascript += code + '\n'; }
+        function handleUserInput() {
+            const text = userInput.value.trim();
+            if (text) {
+                addMessage(text, 'user');
+                getAIResponse(text);
+                userInput.value = '';
             }
-            return codeBlocks;
         }
 
-        function loadChat(chatId) { if (!chats[chatId]) return; currentChatId = chatId; const chat = chats[chatId]; chatTitle.textContent = chat.title; messagesContainer.innerHTML = ''; chat.messages.forEach(displayMessage); document.querySelectorAll('.history-item').forEach(item => item.classList.toggle('active', item.dataset.chatId === chatId)); }
-        function addCopyButtonsToCodeBlocks() { document.querySelectorAll('.message-content pre').forEach(pre => { if (pre.querySelector('.copy-code-btn')) return; const copyBtn = document.createElement('button'); copyBtn.className = 'copy-code-btn'; copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy'; copyBtn.addEventListener('click', () => { const code = pre.querySelector('code').innerText; navigator.clipboard.writeText(code).then(() => { copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!'; setTimeout(() => { copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy'; }, 2000); }); }); pre.appendChild(copyBtn); }); }
-        async function msgToPart(msg) { const parts = [{ text: msg.content }]; if (msg.files && msg.files.length > 0) { for (const file of msg.files) { if (file.type.startsWith('image/')) { const base64Data = await fileToBase64(file); parts.push({ inlineData: { mimeType: file.type, data: base64Data } }); } else if (file.type === 'application/pdf') { const text = await extractPdfText(file); parts.push({ text: `\n[Content from PDF "${file.name}"]: ${text.substring(0, 100000)}` }); } else if (file.type.startsWith('text/')) { const text = await readFileAsText(file); parts.push({ text: `\n[Content from file "${file.name}"]: ${text.substring(0, 100000)}` }); } else { parts.push({ text: `\n[Attached file: ${file.name} (${file.type})]` }); } } } return { role: msg.role === 'model' ? 'model' : 'user', parts }; }
-        function handleFileSelect(event) { attachedFiles.push(...Array.from(event.target.files)); updateFileAttachments(); event.target.value = ''; }
-        function updateFileAttachments() { const container = document.getElementById('fileAttachments'); container.innerHTML = attachedFiles.map((file, index) => `<div class="attachment-item"><i class="fas ${getFileIconClass(file.type)}"></i> <span>${file.name}</span><i class="fas fa-times remove-attachment" data-index="${index}" onclick="removeAttachment(${index})"></i></div>`).join(''); }
-        function removeAttachment(index) { attachedFiles.splice(index, 1); updateFileAttachments(); }
-        function fileToBase64(file) { return new Promise((resolve, reject) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = () => resolve(reader.result.split(',')[1]); reader.onerror = reject; }); }
-        function readFileAsText(file) { return new Promise((resolve, reject) => { const reader = new FileReader(); reader.readAsText(file); reader.onload = () => resolve(reader.result); reader.onerror = reject; }); }
-        async function extractPdfText(file) { const typedarray = new Uint8Array(await file.arrayBuffer()); const pdf = await pdfjsLib.getDocument(typedarray).promise; let text = ''; for (let i = 1; i <= pdf.numPages; i++) { const page = await pdf.getPage(i); const content = await page.getTextContent(); text += content.items.map(item => item.str).join(' '); } return text; }
+        async function handleMicClick() {
+            if (!recognition) return;
+            if (micBtn.classList.contains('listening')) {
+                recognition.stop();
+            } else {
+                if (!microphoneGranted) {
+                    micPermissionOverlay.style.display = 'flex';
+                    return;
+                }
+                try { recognition.start(); } catch (error) { console.error("Error starting speech recognition:", error); }
+            }
+        }
+
+        // --- Event Listeners ---
+        if(recognition) {
+            micBtn.addEventListener('click', handleMicClick);
+            recognition.onstart = () => {
+                micBtn.classList.add('listening');
+                waveformCanvas.classList.add('visible');
+                updateStatus("Listening...");
+                if (startSound) startSound.play().catch(e => {});
+            };
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                addMessage(transcript, 'user');
+                getAIResponse(transcript);
+            };
+            recognition.onend = () => {
+                micBtn.classList.remove('listening');
+                waveformCanvas.classList.remove('visible');
+                updateStatus("Processing voice...");
+            };
+            recognition.onerror = (event) => {
+                console.error("Speech recognition error:", event.error);
+                addMessage(`Sir, recognition error: ${event.error}`, 'jarvis');
+                updateStatus("Speech Error", false);
+                setTimeout(() => updateStatus("System Ready"), 3000);
+            };
+        }
+        userInput.addEventListener('keydown', (event) => { if (event.key === 'Enter') handleUserInput(); });
+        clearChatBtn.addEventListener('click', clearChat);
+        grantMicBtn.addEventListener('click', async () => {
+            if (await requestMicrophoneAccess()) micPermissionOverlay.style.display = 'none';
+        });
+        closePlayerBtn.addEventListener('click', closeYoutubePlayer);
         
-        function createNewChat() {
-            const chatId = `chat_${Date.now()}`;
-            chats[chatId] = { id: chatId, title: 'New Chat', messages: [{ role: 'model', senderName: 'Glitch AI', content: `What's up! I'm Glitch, your new AI sidekick. Ready to brainstorm some wild ideas, get some hype, or just chill and chat? I got you. Let's make some magic happen! ✨`, modelType: 'ai' }], createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() };
-            currentChatId = chatId; saveChatsToStorage(); loadChat(chatId); loadChatHistory();
-        }
-
-        function deleteChat(chatId) { if (Object.keys(chats).length <= 1) { alert("You can't delete your only chat!"); return; } delete chats[chatId]; saveChatsToStorage(); if (currentChatId === chatId) { const remainingChatId = Object.keys(chats).sort((a, b) => new Date(chats[b].updatedAt) - new Date(chats[a].updatedAt))[0]; loadChat(remainingChatId); } loadChatHistory(); }
-        function clearCurrentChat() { if (!chats[currentChatId] || chats[currentChatId].messages.length <= 1) return; chats[currentChatId].messages = [chats[currentChatId].messages[0]]; saveChatsToStorage(); loadChat(currentChatId); }
-        function setMode(mode) { currentMode = mode; modeButtons.forEach(b => b.classList.toggle('active', b.dataset.mode === mode)); previewArea.classList.toggle('hidden', mode !== 'code'); }
-        function setAI(ai) { currentAI = ai; aiOptions.forEach(o => o.classList.toggle('active', o.dataset.ai === ai)); }
-        function toggleWebSearch() { isWebSearchActive = !isWebSearchActive; webSearchBtn.classList.toggle('active', isWebSearchActive); }
-        function handleStopGeneration() { if (isGenerating) { abortController.abort(); } }
-        function regenerateLastResponse() { if (isGenerating || !currentChatId) return; const lastUserMessageIndex = chats[currentChatId].messages.findLastIndex(m => m.role === 'user'); if (lastUserMessageIndex === -1) return; chats[currentChatId].messages.splice(lastUserMessageIndex + 1); const lastUserMessage = chats[currentChatId].messages[lastUserMessageIndex]; messageInput.value = lastUserMessage.content; attachedFiles = lastUserMessage.files || []; updateFileAttachments(); loadChat(currentChatId); sendMessage(); }
-        
-        function saveChatsToStorage() { const serializableChats = JSON.parse(JSON.stringify(chats, (key, value) => key === 'files' ? undefined : value)); sessionStorage.setItem('glitchChats', JSON.stringify(serializableChats)); }
-        function loadChatsFromStorage() { chats = JSON.parse(sessionStorage.getItem('glitchChats')) || {}; }
-
-        function loadChatHistory() { chatHistory.innerHTML = Object.values(chats).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)).map(chat => `<div class="history-item ${chat.id === currentChatId ? 'active' : ''}" data-chat-id="${chat.id}"><div class="history-content" onclick="loadChat('${chat.id}')"><div class="history-title">${chat.title}</div></div><button class="delete-chat-btn" onclick="deleteChat('${chat.id}')"><i class="fas fa-trash"></i></button></div>`).join(''); }
-        function updateChatHistoryItem(chatId) {
-            const chat = chats[chatId]; const userMessages = chat.messages.filter(m => m.role === 'user');
-            if (userMessages.length > 0 && chat.title === 'New Chat') {
-                const newTitle = userMessages[0].content.substring(0, 30);
-                chat.title = newTitle + (userMessages[0].content.length > 30 ? '...' : '');
-                chatTitle.textContent = chat.title;
+        // --- Initialization ---
+        startOverlay.addEventListener('click', async () => {
+            startOverlay.style.opacity = '0';
+            setTimeout(() => startOverlay.style.display = 'none', 500);
+            loadVoices();
+            if (speechSynthesis.onvoiceschanged !== undefined) speechSynthesis.onvoiceschanged = loadVoices;
+            updateSystemInfo();
+            updateModeIndicator();
+            if (!(await checkMicrophonePermission()) && systemContext.microphonePermission !== 'denied') {
+                setTimeout(() => micPermissionOverlay.style.display = 'flex', 1000);
             }
-            chat.updatedAt = new Date().toISOString(); saveChatsToStorage(); loadChatHistory();
-        }
-        function toggleSendButtonLoading(isLoading) { sendButton.querySelector('.send-text').style.display = isLoading ? 'none' : 'flex'; sendButton.querySelector('.loader').style.display = isLoading ? 'block' : 'none'; sendButton.disabled = isLoading; }
-        function getFileIconClass(fileType) {
-            if (fileType.startsWith('image/')) return 'fa-image'; if (fileType === 'application/pdf') return 'fa-file-pdf'; if (fileType.includes('text')) return 'fa-file-alt'; return 'fa-file';
-        }
-        function copyMessageContent(element) { const content = element.closest('.message').querySelector('.message-content').innerText; navigator.clipboard.writeText(content).then(() => { const icon = element.querySelector('i'); icon.classList.replace('fa-copy', 'fa-check'); setTimeout(() => icon.classList.replace('fa-check', 'fa-copy'), 2000); }); }
-        async function exportCurrentChatAsPDF() {
-            const { jsPDF } = window.jspdf; const doc = new jsPDF(); const chat = chats[currentChatId]; let y = 15; doc.setFontSize(16); doc.text(chat.title, 10, y); y += 10; doc.setFontSize(10);
-            for (const msg of chat.messages) {
-                if (y > 280) { doc.addPage(); y = 15; }
-                const sender = msg.senderName || (msg.role === 'user' ? 'You' : 'Glitch AI'); doc.setFont(undefined, 'bold'); doc.text(`${sender}:`, 10, y); doc.setFont(undefined, 'normal'); const textLines = doc.splitTextToSize(msg.content, 180); doc.text(textLines, 15, y + 5); y += (textLines.length * 5) + 8;
+            if (conversationHistory.length > 0) {
+                conversationHistory.slice(-10).forEach(msg => addMessage(msg.content, msg.role === 'user' ? 'user' : 'jarvis'));
+                speak("Sir, welcome back. I've loaded our previous conversation.");
+            } else {
+                speak("At your service, sir. System initialized and ready.");
             }
-            doc.save(`Glitch-Chat-${chat.id}.pdf`);
-        }
+        }, { once: true });
     </script>
 </body>
 </html>
