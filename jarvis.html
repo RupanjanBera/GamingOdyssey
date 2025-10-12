@@ -424,38 +424,91 @@
             bottom: 120px;
             left: 20px;
             width: 320px;
-            height: 180px;
-            background: rgba(10, 25, 47, 0.9);
+            height: 200px;
+            background: rgba(10, 25, 47, 0.95);
             border: 1px solid var(--neon-blue);
             border-radius: 10px;
-            box-shadow: 0 0 15px var(--glow-color);
+            box-shadow: 0 0 20px var(--glow-color);
             z-index: 15;
             display: none;
+            flex-direction: column;
         }
 
         #youtube-player iframe {
             width: 100%;
-            height: 100%;
-            border-radius: 10px;
+            height: 180px;
+            border-radius: 10px 10px 0 0;
             border: none;
         }
 
+        .player-controls {
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 0 0 10px 10px;
+        }
+
         #close-player {
-            position: absolute;
-            top: -10px;
-            right: -10px;
             background: var(--dark-blue);
             border: 1px solid var(--neon-blue);
             color: var(--neon-blue);
-            width: 25px;
-            height: 25px;
-            border-radius: 50%;
+            padding: 5px 10px;
+            border-radius: 5px;
             cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 14px;
-            z-index: 16;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+        }
+
+        .now-playing {
+            font-size: 0.8rem;
+            color: var(--neon-blue);
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        /* --- Music Search Results --- */
+        #music-results {
+            position: absolute;
+            bottom: 120px;
+            left: 20px;
+            width: 320px;
+            max-height: 200px;
+            background: rgba(10, 25, 47, 0.95);
+            border: 1px solid var(--neon-blue);
+            border-radius: 10px;
+            box-shadow: 0 0 20px var(--glow-color);
+            z-index: 15;
+            display: none;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .music-result {
+            padding: 10px;
+            border-bottom: 1px solid rgba(0, 217, 255, 0.3);
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .music-result:hover {
+            background: rgba(0, 217, 255, 0.1);
+        }
+
+        .music-result:last-child {
+            border-bottom: none;
+        }
+
+        .music-title {
+            font-size: 0.9rem;
+            color: var(--neon-blue);
+            margin-bottom: 5px;
+        }
+
+        .music-artist {
+            font-size: 0.7rem;
+            color: rgba(0, 217, 255, 0.7);
         }
 
         /* --- Responsive Design --- */
@@ -475,12 +528,11 @@
             #mic-permission-overlay h2 { font-size: 1.5rem; }
             #clear-chat-btn { right: 20px; bottom: 100px; }
             #mode-indicator { right: 20px; top: 70px; }
-            #youtube-player { 
+            #youtube-player, #music-results { 
                 left: 50%; 
                 transform: translateX(-50%);
                 bottom: 100px;
                 width: 280px;
-                height: 157px;
             }
         }
     </style>
@@ -509,9 +561,15 @@
 
         <!-- YouTube Player -->
         <div id="youtube-player">
-            <button id="close-player">×</button>
-            <iframe id="youtube-iframe" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            <iframe id="youtube-iframe" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <div class="player-controls">
+                <div class="now-playing" id="now-playing">Select a song to play</div>
+                <button id="close-player">Close</button>
+            </div>
         </div>
+
+        <!-- Music Search Results -->
+        <div id="music-results"></div>
 
         <div id="status-indicator">
             <div class="status-dot" id="status-dot"></div>
@@ -601,10 +659,67 @@
         const youtubePlayer = document.getElementById('youtube-player');
         const youtubeIframe = document.getElementById('youtube-iframe');
         const closePlayer = document.getElementById('close-player');
+        const nowPlaying = document.getElementById('now-playing');
+        const musicResults = document.getElementById('music-results');
         
         const introVoice = document.getElementById('intro-voice');
         const startSound = document.getElementById('start-sound');
         const endSound = document.getElementById('end-sound');
+
+        // Popular songs database as fallback
+        const popularSongs = {
+            'shape of you': '3KvgOYh2G1Z3n7i1W2UySw',
+            'despacito': 'kJQP7kiw5Fk',
+            'blinding lights': '4NRXx6UABRq3YPR5zZFh0d',
+            'dance monkey': 'q0hyYWKXF0Q',
+            'rockstar': 'UceaB4D0jpo',
+            'someone you loved': 'zABLecsR5UE',
+            'bad guy': 'DyDfgMOUjCI',
+            'believer': '7wtPhoNk3qR8qNLsf7qgXh',
+            'perfect': '2VfbCXk8BQr',
+            'havana': 'HCjNJDNzw8Y',
+            'uptown funk': 'OPf0YbXqDm0',
+            'see you again': 'RgKAFK5djSk',
+            'thinking out loud': 'lp-EO5I60KA',
+            'sorry': 'fRh_vgS2dFE',
+            'cheap thrills': 'nYh-n7EOtMA',
+            'closer': '0zGvAhrrKtk',
+            'love yourself': 'oyEuk8j8imI',
+            'hotline bling': 'uxpDa-c-4Mc',
+            'hello': 'YQHsXMglC9A',
+            'all of me': '450p7goxZqg',
+            'counting stars': 'hT_nvWreIhg',
+            'radioactive': 'ktvTqknDobU',
+            'royals': 'nlcIKh6sBtc',
+            'dark horse': '0KS6OQfXh7Y',
+            'happy': 'ZbZSe6N_BXs',
+            'get lucky': '5NV6Rdv1a3I',
+            'rolling in the deep': 'rYEDA3JcQqw',
+            'firework': 'QGJuMBdaqIw',
+            'just the way you are': 'LjhCEhWiKXk',
+            'poker face': 'bESGLojNYSo',
+            'baby': 'kffacxfA7G4',
+            'bad romance': 'qrO4YZeyl0I',
+            'boom boom pow': '4m7wkYwqsp0',
+            'low': 'yGQKZb6nVlw',
+            'yeah': 'GxBSyx85Kp8',
+            'gold digger': '6vwNcNOTVzY',
+            'hollaback girl': 'Kgjkth6BRRY',
+            'since u been gone': 'lS8cojC1t2c',
+            'toxic': 'LOZuxwVk7TU',
+            'in da club': '5qm8PH4xAss',
+            'hot in herre': 'o1Rqy9U2uC0',
+            'dilemma': 'Gzz1m2gQeZE',
+            'family affair': 'v9cVYJp6hU8',
+            'fallin': 'eGj7Y7Y7Y7Y',
+            'lose yourself': '_Yhyp-_hX2s',
+            'cry me a river': 'DksSPZTZES0',
+            'crazy in love': 'ViwtNLUqkMY',
+            'ignition': 'y6y_4_b6RS8',
+            'in the end': 'eVTXPUF4Oz4',
+            'smooth': '6Whgn_iUE5E',
+            'no scrubs': 'FrLequ6dUdM'
+        };
 
         // --- Mode Management ---
         let currentModeType = 'standard'; // 'standard' or 'websearch'
@@ -809,20 +924,81 @@
         }
 
         // --- YouTube Player Functions ---
-        function playYouTubeVideo(songName) {
-            // Clean the song name and create search query
-            const searchQuery = encodeURIComponent(songName + ' official audio');
-            const youtubeUrl = `https://www.youtube.com/embed?listType=search&list=${searchQuery}&autoplay=1`;
-            
+        async function searchAndPlayYouTube(songName) {
+            try {
+                updateStatus("Searching for music...");
+                
+                // First try to find in our popular songs database
+                const normalizedSongName = songName.toLowerCase().trim();
+                if (popularSongs[normalizedSongName]) {
+                    const videoId = popularSongs[normalizedSongName];
+                    playYouTubeVideo(videoId, songName);
+                    return `Sir, I'm now playing "${songName}" on YouTube.`;
+                }
+
+                // If not in database, use YouTube search
+                const searchUrl = `${GOOGLE_SEARCH_URL}&q=${encodeURIComponent(songName + ' official audio site:youtube.com')}&num=5`;
+                const response = await fetch(searchUrl);
+                
+                if (!response.ok) {
+                    throw new Error(`Search API error: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                if (!data.items || data.items.length === 0) {
+                    return "Sir, I couldn't find that song on YouTube. Please try a different song name.";
+                }
+                
+                // Show search results to user
+                showMusicResults(data.items, songName);
+                return `Sir, I found multiple results for "${songName}". Please select one from the list.`;
+                
+            } catch (error) {
+                console.error("YouTube search error:", error);
+                return `Sir, I encountered an error while searching for music: ${error.message}`;
+            }
+        }
+
+        function showMusicResults(items, searchQuery) {
+            musicResults.innerHTML = '';
+            items.forEach((item, index) => {
+                const resultDiv = document.createElement('div');
+                resultDiv.className = 'music-result';
+                resultDiv.innerHTML = `
+                    <div class="music-title">${item.title.replace(/ - YouTube$/, '')}</div>
+                    <div class="music-artist">${item.displayLink}</div>
+                `;
+                resultDiv.addEventListener('click', () => {
+                    // Extract video ID from YouTube URL
+                    const videoId = extractVideoId(item.link);
+                    if (videoId) {
+                        playYouTubeVideo(videoId, item.title);
+                        musicResults.style.display = 'none';
+                    }
+                });
+                musicResults.appendChild(resultDiv);
+            });
+            musicResults.style.display = 'flex';
+        }
+
+        function extractVideoId(url) {
+            const match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+            return match ? match[1] : null;
+        }
+
+        function playYouTubeVideo(videoId, songTitle = 'Unknown Song') {
+            const youtubeUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
             youtubeIframe.src = youtubeUrl;
-            youtubePlayer.style.display = 'block';
-            
-            return `Sir, I'm now playing "${songName}" on YouTube.`;
+            nowPlaying.textContent = `Now Playing: ${songTitle.replace(/ - YouTube$/, '')}`;
+            youtubePlayer.style.display = 'flex';
+            musicResults.style.display = 'none';
         }
 
         function closeYouTubePlayer() {
             youtubeIframe.src = '';
             youtubePlayer.style.display = 'none';
+            musicResults.style.display = 'none';
         }
 
         // --- Core Functions ---
@@ -1020,13 +1196,12 @@
                 songName = songName.replace(/^me\s+/i, '').trim(); // Remove "me" from beginning
                 
                 if (songName) {
-                    const response = playYouTubeVideo(songName);
-                    return response;
+                    return { type: 'youtube', query: songName };
                 }
             }
             
             // Close YouTube player
-            if (lowerPrompt.includes('close youtube') || lowerPrompt.includes('stop music') || lowerPrompt.includes('stop song')) {
+            if (lowerPrompt.includes('close youtube') || lowerPrompt.includes('stop music') || lowerPrompt.includes('stop song') || lowerPrompt.includes('close player')) {
                 closeYouTubePlayer();
                 return "Sir, I've closed the YouTube player.";
             }
@@ -1118,6 +1293,17 @@
             
             if (specialResponse && specialResponse.type === 'websearch') {
                 const searchResult = await performWebSearch(specialResponse.query);
+                addMessage(searchResult, 'jarvis');
+                speak(searchResult);
+                conversationHistory.push({ role: 'user', content: prompt });
+                conversationHistory.push({ role: 'assistant', content: searchResult });
+                localStorage.setItem('jarvis-conversation', JSON.stringify(conversationHistory));
+                updateSystemInfo();
+                return;
+            }
+
+            if (specialResponse && specialResponse.type === 'youtube') {
+                const searchResult = await searchAndPlayYouTube(specialResponse.query);
                 addMessage(searchResult, 'jarvis');
                 speak(searchResult);
                 conversationHistory.push({ role: 'user', content: prompt });
