@@ -876,14 +876,20 @@
             return memoryItem;
         }
 
+        // --- FIXED FUNCTION ---
         function getFromMemory(query = '') {
             if (!query) return savedMemory.slice(-5);
-            
+
             const searchTerm = query.toLowerCase();
-            return savedMemory.filter(item => 
-                item.content.toLowerCase().includes(searchTerm) ||
-                item.category.toLowerCase().includes(searchTerm)
-            );
+            return savedMemory.filter(item => {
+                // Safely check if content exists and is a string before searching
+                const contentMatch = item && typeof item.content === 'string' && item.content.toLowerCase().includes(searchTerm);
+                
+                // Safely check if category exists and is a string before searching
+                const categoryMatch = item && typeof item.category === 'string' && item.category.toLowerCase().includes(searchTerm);
+                
+                return contentMatch || categoryMatch;
+            });
         }
 
         async function performWebSearch(query) {
@@ -1268,7 +1274,8 @@
                 addMessage(welcomeBackText, 'jarvis');
                 speak(welcomeBackText);
             } else {
-                const introText = "At your service, sir. System initialized and ready. How may I help you '.";
+                // --- FIXED INTRO TEXT ---
+                const introText = "At your service, sir. System initialized and ready. How may I help you?";
                 addMessage(introText, 'jarvis');
                 speak(introText);
             }
