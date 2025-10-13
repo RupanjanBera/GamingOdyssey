@@ -735,7 +735,6 @@
             updateStatus("System Ready");
         }
         
-        // *** NEW: Function to open a YouTube Channel ***
         async function openYouTubeChannel(channelName) {
              updateStatus("Searching for channel...");
              const searchMessage = addMessage(`Searching for the channel "${channelName}"...`, 'jarvis');
@@ -1130,7 +1129,6 @@
         function processSpecialCommands(prompt) {
             const lowerPrompt = prompt.toLowerCase();
             
-            // *** UPDATED: Unified "Play" command ***
             if (lowerPrompt.startsWith('play ')) {
                 const query = prompt.substring('play'.length).trim();
                 if (query) {
@@ -1138,7 +1136,6 @@
                 }
             }
 
-            // *** NEW: "Open Channel" command ***
             if (lowerPrompt.includes('open the youtube channel of')) {
                 const channelName = prompt.replace(/open the youtube channel of/i, '').trim();
                 if (channelName) {
@@ -1187,7 +1184,8 @@
             }
             
             // Other Site Commands
-            if (lowerPrompt.includes('open gmail') && lowerPrompt.includes('draft')) {
+            // *** FIXED: More flexible Gmail "compose" command ***
+            if (lowerPrompt.includes('open gmail') && (lowerPrompt.includes('compose') || lowerPrompt.includes('draft') || lowerPrompt.includes('new mail') || lowerPrompt.includes('new email'))) {
                 window.open('https://mail.google.com/mail/?view=cm&fs=1&to=&su=&body=', '_blank');
                 return "Opening Gmail's compose window, sir.";
             } else if (lowerPrompt === 'open gmail') {
@@ -1246,7 +1244,6 @@
                 return;
             }
 
-            // *** UPDATED: Route special commands to their async functions ***
             if (specialResponse && specialResponse.type === 'play_media') {
                 await playMedia(specialResponse.query);
                 conversationHistory.push({ role: 'user', content: prompt });
