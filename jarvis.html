@@ -8,6 +8,7 @@
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="https://www.youtube.com/iframe_api"></script>
 
     <style>
         /* --- Basic Setup & Theme --- */
@@ -418,6 +419,71 @@
             font-size: 0.9rem;
         }
 
+        /* --- Media Player --- */
+        #media-player-container {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: 300px;
+            background: rgba(10, 25, 47, 0.8);
+            border: 1px solid var(--neon-blue);
+            box-shadow: 0 0 10px var(--glow-color);
+            backdrop-filter: blur(5px);
+            z-index: 25;
+            border-radius: 10px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            transform: translateY(200%);
+        }
+
+        #media-player-container.visible {
+            transform: translateY(0);
+        }
+
+        #media-info {
+            font-size: 0.9rem;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        #player-wrapper {
+            width: 100%;
+            height: 150px; /* Increased height for general videos */
+            background: #000;
+            border-radius: 5px;
+            position: relative;
+        }
+
+        #youtube-player {
+            width: 100%;
+            height: 100%;
+            opacity: 0.9;
+        }
+
+        #close-player-btn {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 24px;
+            height: 24px;
+            background: var(--dark-blue);
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: sans-serif;
+            font-weight: bold;
+            box-shadow: 0 0 8px var(--glow-color);
+        }
+
         /* --- Responsive Design --- */
         @media (max-width: 768px) {
             .chat-container {
@@ -431,6 +497,7 @@
             #waveform-canvas { bottom: 100px; }
             #status-indicator { top: 10px; }
             #system-info { display: none; }
+            #media-player-container { display: none; } /* Hide media player on small screens for simplicity */
             #mic-permission-overlay { padding: 15px; }
             #mic-permission-overlay h2 { font-size: 1.5rem; }
             #clear-chat-btn { right: 20px; bottom: 100px; }
@@ -481,6 +548,14 @@
         </div>
 
         <button id="clear-chat-btn">Clear Chat</button>
+
+        <div id="media-player-container">
+            <button id="close-player-btn">X</button>
+            <div id="media-info">Now Playing...</div>
+            <div id="player-wrapper">
+                <div id="youtube-player"></div>
+            </div>
+        </div>
 
         <canvas id="waveform-canvas"></canvas>
 
@@ -544,6 +619,9 @@
         const micStatus = document.getElementById('mic-status');
         const clearChatBtn = document.getElementById('clear-chat-btn');
         const currentMode = document.getElementById('current-mode');
+        const mediaPlayerContainer = document.getElementById('media-player-container');
+        const mediaInfo = document.getElementById('media-info');
+        const closePlayerBtn = document.getElementById('close-player-btn');
         
         const introVoice = document.getElementById('intro-voice');
         const startSound = document.getElementById('start-sound');
@@ -557,6 +635,150 @@
 
         function updateModeIndicator() {
             currentMode.textContent = currentModeType === 'standard' ? 'Standard AI' : 'Web Search';
+        }
+
+        // --- YouTube Player Logic ---
+        let ytPlayer;
+        let isPlayerReady = false;
+
+        function onPlayerError(event) {
+            console.error("YouTube Player Error:", event.data);
+            stopMediaPlayer(); 
+            const videoUrl = ytPlayer.getVideoUrl();
+            if (videoUrl && videoUrl.includes('watch?v=')) {
+                window.open(videoUrl, '_blank'); 
+                const errorMessage = "Sir, that video is restricted from playing here. I have opened it for you in a new tab on YouTube instead.";
+                addMessage(errorMessage, 'jarvis');
+                speak(errorMessage);
+            } else {
+                 const genericError = "Sir, an unknown error occurred with the media player.";
+                 addMessage(genericError, 'jarvis');
+                 speak(genericError);
+            }
+        }
+
+        function onPlayerStateChange(event) {
+            if (event.data == YT.PlayerState.ENDED) {
+                stopMediaPlayer();
+                const endMessage = "Media finished, sir. Closing the player.";
+                addMessage(endMessage, 'jarvis');
+                speak(endMessage);
+            }
+        }
+
+        window.onYouTubeIframeAPIReady = function() {
+            ytPlayer = new YT.Player('youtube-player', {
+                height: '100%',
+                width: '100%',
+                playerVars: { 'playsinline': 1, 'autoplay': 1, 'controls': 1 },
+                events: {
+                    'onReady': () => { isPlayerReady = true; },
+                    'onStateChange': onPlayerStateChange,
+                    'onError': onPlayerError
+                }
+            });
+        };
+
+        async function findYouTubeMedia(query) {
+            try {
+                // Perform a general search restricted to youtube.com
+                const searchUrl = `${GOOGLE_SEARCH_URL}&q=${encodeURIComponent(query + " site:youtube.com")}&num=1`;
+                const response = await fetch(searchUrl);
+                if (!response.ok) throw new Error(`Search API error: ${response.statusText}`);
+                const data = await response.json();
+
+                if (data.items && data.items.length > 0) {
+                    const item = data.items[0];
+                    const url = new URL(item.link);
+                    // Ensure it's a video link and not a channel or playlist
+                    if (item.link.includes("watch?v=")) {
+                         const videoId = url.searchParams.get('v');
+                         if (videoId) {
+                            return { id: videoId, title: item.title, url: item.link };
+                        }
+                    }
+                }
+                return null;
+            } catch (error) {
+                console.error("YouTube media search error:", error);
+                return null;
+            }
+        }
+
+        async function playMedia(query) {
+            if (!isPlayerReady) {
+                const waitMsg = "Sir, the media player is still initializing. Please try again in a moment.";
+                addMessage(waitMsg, 'jarvis');
+                speak(waitMsg);
+                return;
+            }
+
+            updateStatus("Searching YouTube...");
+            const searchMessage = addMessage(`Searching YouTube for "${query}"...`, 'jarvis');
+            searchMessage.classList.add('searching');
+            
+            const media = await findYouTubeMedia(query);
+            chatBox.removeChild(searchMessage);
+
+            if (media && ytPlayer) {
+                mediaPlayerContainer.classList.add('visible');
+                mediaInfo.textContent = media.title.replace(/ - YouTube$/, '');
+                ytPlayer.loadVideoById(media.id);
+                const successMsg = `Attempting to play: ${media.title.replace(/ - YouTube$/, '')}`;
+                addMessage(successMsg, 'jarvis');
+                speak(successMsg);
+            } else {
+                const errorMsg = `Sir, I was unable to find a suitable video for "${query}".`;
+                addMessage(errorMsg, 'jarvis');
+                speak(errorMsg);
+            }
+            updateStatus("System Ready");
+        }
+        
+        // *** NEW: Function to open a YouTube Channel ***
+        async function openYouTubeChannel(channelName) {
+             updateStatus("Searching for channel...");
+             const searchMessage = addMessage(`Searching for the channel "${channelName}"...`, 'jarvis');
+             searchMessage.classList.add('searching');
+
+             try {
+                // A very specific search to find a channel page
+                const searchQuery = `${channelName} YouTube channel page site:youtube.com`;
+                const searchUrl = `${GOOGLE_SEARCH_URL}&q=${encodeURIComponent(searchQuery)}&num=1`;
+                const response = await fetch(searchUrl);
+                if (!response.ok) throw new Error(`Search API error: ${response.statusText}`);
+                const data = await response.json();
+                chatBox.removeChild(searchMessage);
+
+                if (data.items && data.items.length > 0) {
+                    const item = data.items[0];
+                    // Verify it's likely a channel link
+                    if (item.link.includes('/channel/') || item.link.includes('/c/') || item.link.includes('/@')) {
+                        window.open(item.link, '_blank');
+                        const successMsg = `Opening the channel for ${channelName}, sir.`;
+                        addMessage(successMsg, 'jarvis');
+                        speak(successMsg);
+                    } else {
+                         throw new Error("Best result was not a channel page.");
+                    }
+                } else {
+                    throw new Error("No results found.");
+                }
+             } catch (error) {
+                chatBox.removeChild(searchMessage);
+                console.error("Channel search error:", error);
+                const errorMsg = `Sir, I was unable to locate the YouTube channel for "${channelName}".`;
+                addMessage(errorMsg, 'jarvis');
+                speak(errorMsg);
+             }
+             updateStatus("System Ready");
+        }
+
+        function stopMediaPlayer() {
+            if (ytPlayer && typeof ytPlayer.stopVideo === 'function') {
+                ytPlayer.stopVideo();
+            }
+            mediaPlayerContainer.classList.remove('visible');
         }
 
         // --- Microphone Permission Management ---
@@ -905,10 +1127,30 @@
             }
         }
         
-        // **FINAL & INTELLIGENT SEARCH** special commands function
         function processSpecialCommands(prompt) {
             const lowerPrompt = prompt.toLowerCase();
             
+            // *** UPDATED: Unified "Play" command ***
+            if (lowerPrompt.startsWith('play ')) {
+                const query = prompt.substring('play'.length).trim();
+                if (query) {
+                    return { type: 'play_media', query: query };
+                }
+            }
+
+            // *** NEW: "Open Channel" command ***
+            if (lowerPrompt.includes('open the youtube channel of')) {
+                const channelName = prompt.replace(/open the youtube channel of/i, '').trim();
+                if (channelName) {
+                    return { type: 'open_channel', query: channelName };
+                }
+            }
+            
+            if (lowerPrompt === 'stop music' || lowerPrompt === 'stop video' || lowerPrompt === 'stop the music' || lowerPrompt === 'close player') {
+                stopMediaPlayer();
+                return "As you wish, sir. The player is closed.";
+            }
+
             // System Commands
             if (lowerPrompt.includes('clear chat') || lowerPrompt.includes('clear conversation') || lowerPrompt.includes('start over')) {
                 clearChat();
@@ -925,33 +1167,17 @@
                 return `Sir, today is ${new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}.`;
             }
 
-            // --- RECALIBRATED BROWSER & SEARCH COMMANDS ---
-
-            // YouTube: Now understands intent by looking for "youtube" and "play" keywords.
-            if ((lowerPrompt.includes('youtube') && lowerPrompt.includes('play')) || lowerPrompt.startsWith('play ')) {
-                // Extract the song name by finding 'play' and taking the rest of the string.
-                const playIndex = lowerPrompt.indexOf('play');
-                let query = prompt.substring(playIndex + 'play'.length).trim();
-                
-                if (query) {
-                    // **NEW:** Refine the search query for better results.
-                    const refinedQuery = `${query} official audio`;
-                    window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(refinedQuery)}`, '_blank');
-                    return `Pulling up the best match for "${query}" on YouTube, sir.`;
-                }
-            } else if (lowerPrompt === 'open youtube') {
+            if (lowerPrompt === 'open youtube') {
                 window.open('https://www.youtube.com', '_blank');
                 return "Opening YouTube, sir.";
             }
 
             // Google Search & New Tab Commands
             if (lowerPrompt.startsWith('google search for ') || lowerPrompt.startsWith('search up ') || lowerPrompt.startsWith('search for ')) {
-                if (!lowerPrompt.includes(' on youtube')) { // Prevents conflict
-                    const query = prompt.replace(/^(google search for|search up|search for)\s*/i, '').trim();
-                    if (query) {
-                        window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, '_blank');
-                        return `Searching Google for "${query}", sir.`;
-                    }
+                const query = prompt.replace(/^(google search for|search up|search for)\s*/i, '').trim();
+                if (query) {
+                    window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, '_blank');
+                    return `Searching Google for "${query}", sir.`;
                 }
             }
             
@@ -1019,8 +1245,24 @@
                 updateSystemInfo();
                 return;
             }
+
+            // *** UPDATED: Route special commands to their async functions ***
+            if (specialResponse && specialResponse.type === 'play_media') {
+                await playMedia(specialResponse.query);
+                conversationHistory.push({ role: 'user', content: prompt });
+                localStorage.setItem('jarvis-conversation', JSON.stringify(conversationHistory));
+                updateSystemInfo();
+                return;
+            }
+
+            if (specialResponse && specialResponse.type === 'open_channel') {
+                await openYouTubeChannel(specialResponse.query);
+                conversationHistory.push({ role: 'user', content: prompt });
+                localStorage.setItem('jarvis-conversation', JSON.stringify(conversationHistory));
+                updateSystemInfo();
+                return;
+            }
             
-            // This handles the web search object returned from the command processor
             if (specialResponse && specialResponse.type === 'websearch') {
                 const searchResult = await performWebSearch(specialResponse.query);
                 addMessage(searchResult, 'jarvis');
@@ -1158,6 +1400,13 @@
         
         userInput.addEventListener('keydown', (event) => { if (event.key === 'Enter') handleUserInput(); });
         clearChatBtn.addEventListener('click', clearChat);
+        closePlayerBtn.addEventListener('click', () => {
+            stopMediaPlayer();
+            const closeMessage = "Player closed, sir.";
+            addMessage(closeMessage, 'jarvis');
+            speak(closeMessage);
+        });
+
         grantMicBtn.addEventListener('click', async () => {
             const granted = await requestMicrophoneAccess();
             if (granted) {
@@ -1187,7 +1436,7 @@
 
             if (conversationHistory.length > 0) {
                 conversationHistory.slice(-10).forEach(msg => addMessage(msg.content, msg.role === 'user' ? 'user' : 'jarvis'));
-                const welcomeBackText = "Sir, welcome back. I've loaded our previous conversation.";
+                const welcomeBackText = "Sir, welcome back. I have loaded our previous conversation.";
                 addMessage(welcomeBackText, 'jarvis');
                 speak(welcomeBackText);
             } else {
