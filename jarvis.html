@@ -71,6 +71,67 @@
             100% { opacity: 1; }
         }
 
+        /* --- NEW: Face Authentication Overlay --- */
+        #face-auth-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: none; /* Start hidden */
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 200;
+            transition: opacity 0.5s ease;
+        }
+
+        #video-wrapper {
+            position: relative;
+            width: 480px;
+            height: 360px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            overflow: hidden;
+            border-radius: 10px;
+            border: 2px solid var(--neon-blue);
+            box-shadow: 0 0 20px var(--glow-color);
+        }
+
+        #webcam-feed {
+            width: 100%;
+            height: 100%;
+            transform: scaleX(-1); /* Mirror effect */
+            object-fit: cover;
+        }
+
+        #scan-line {
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to right, transparent, var(--neon-blue), transparent);
+            box-shadow: 0 0 10px var(--glow-color);
+            top: 0;
+            left: 0;
+            opacity: 0;
+        }
+
+        @keyframes scan-vertical {
+            0% { top: 0; opacity: 1; }
+            100% { top: 100%; opacity: 1; }
+        }
+
+        #auth-status {
+            font-size: 1.2rem;
+            margin-top: 20px;
+            text-shadow: 0 0 10px var(--glow-color);
+            animation: pulse-text 2s infinite;
+        }
+
+
         /* --- Background Effects --- */
         .jarvis-container::before {
             content: '';
@@ -496,6 +557,10 @@
 
         /* --- Responsive Design --- */
         @media (max-width: 768px) {
+            #video-wrapper { width: 90vw; height: 67.5vw; }
+            #webcam-feed { width: 100%; height: 100%; }
+            #scan-line { width: 100%; }
+
             .chat-container {
                 width: 100%;
                 height: 50%;
@@ -519,6 +584,14 @@
     <div id="start-overlay">
         <h1>J.A.R.V.I.S.</h1>
         <p>Click to Initialize</p>
+    </div>
+
+    <div id="face-auth-overlay">
+        <div id="video-wrapper">
+            <video id="webcam-feed" autoplay playsinline muted></video>
+            <div id="scan-line"></div>
+        </div>
+        <p id="auth-status">Initializing Biometric Scan...</p>
     </div>
 
     <div id="mic-permission-overlay" style="display: none;">
@@ -618,6 +691,12 @@
         const mediaInfo = document.getElementById('media-info');
         const closePlayerBtn = document.getElementById('close-player-btn');
         
+        // --- NEW: Face Auth DOM Elements ---
+        const faceAuthOverlay = document.getElementById('face-auth-overlay');
+        const webcamFeed = document.getElementById('webcam-feed');
+        const scanLine = document.getElementById('scan-line');
+        const authStatus = document.getElementById('auth-status');
+
         const startSound = document.getElementById('start-sound');
         const endSound = document.getElementById('end-sound');
         
@@ -983,27 +1062,33 @@
             if (speakingAnimation) speakingAnimation.kill();
 
             const cleanText = cleanTextForSpeech(text);
-            const finalText = (!text.includes("At your service") && !text.toLowerCase().startsWith("sir") && !text.toLowerCase().includes(" sir") && !text.toLowerCase().endsWith("sir")) ? "Sir, " + cleanText : cleanText;
+            const finalText = (!text.includes("At your service") && !text.toLowerCase().startsWith("sir") && !text.toLowerCase().includes(" sir") && !text.toLowerCase().endsWith("sir") && !text.toLowerCase().includes("welcome back")) ? "Sir, " + cleanText : cleanText;
             const utterance = new SpeechSynthesisUtterance(finalText);
             if (jarvisVoice) utterance.voice = jarvisVoice;
             utterance.pitch = 1.0;
             utterance.rate = 1.05;
             utterance.volume = 1.0;
-            utterance.onstart = () => {
-                updateStatus("Speaking");
-                if (endSound) endSound.play().catch(e => console.error("End sound error:", e));
-                speakingAnimation = gsap.to(particleSystem.scale, { x: 1.2, y: 1.2, z: 1.2, duration: 0.5, yoyo: true, repeat: -1, ease: "power1.inOut" });
-            };
-            utterance.onend = () => {
-                updateStatus("System Ready");
-                if (speakingAnimation) speakingAnimation.kill();
-                gsap.to(particleSystem.scale, { x: 1, y: 1, z: 1, duration: 0.3 });
-            };
-            utterance.onerror = (e) => {
-                console.error("Speech synthesis error:", e);
-                updateStatus("Speech Error", false);
-            };
-            speechSynthesis.speak(utterance);
+            
+            // Return a promise that resolves when speech ends
+            return new Promise((resolve, reject) => {
+                utterance.onstart = () => {
+                    updateStatus("Speaking");
+                    if (endSound) endSound.play().catch(e => console.error("End sound error:", e));
+                    speakingAnimation = gsap.to(particleSystem.scale, { x: 1.2, y: 1.2, z: 1.2, duration: 0.5, yoyo: true, repeat: -1, ease: "power1.inOut" });
+                };
+                utterance.onend = () => {
+                    updateStatus("System Ready");
+                    if (speakingAnimation) speakingAnimation.kill();
+                    gsap.to(particleSystem.scale, { x: 1, y: 1, z: 1, duration: 0.3 });
+                    resolve();
+                };
+                utterance.onerror = (e) => {
+                    console.error("Speech synthesis error:", e);
+                    updateStatus("Speech Error", false);
+                    reject(e);
+                };
+                speechSynthesis.speak(utterance);
+            });
         }
 
         function addMessage(text, sender) {
@@ -1316,24 +1401,96 @@
             }
         });
         
-        // --- Initialization on User Interaction ---
-        startOverlay.addEventListener('click', async () => {
-            startOverlay.style.opacity = '0';
-            setTimeout(() => startOverlay.style.display = 'none', 500);
-            initializeSpeech(); // Pre-load voices
+        // --- NEW: Face Authentication and App Initialization ---
+        async function startFaceAuthentication() {
+            faceAuthOverlay.style.display = 'flex';
+            gsap.fromTo(faceAuthOverlay, {opacity: 0}, {opacity: 1, duration: 0.5});
+            
+            let stream;
+            try {
+                // 1. Pre-load voices while asking for camera
+                initializeSpeech();
+                
+                // 2. Request Camera Access
+                stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+                webcamFeed.srcObject = stream;
+                
+                // 3. Start Scan
+                authStatus.textContent = "Verifying Identity...";
+                await speak("Initializing biometric scan. Verifying identity."); // Wait for speech
+                
+                // 4. Start Animation
+                scanLine.style.opacity = '1';
+                scanLine.style.animation = 'scan-vertical 3s ease-in-out forwards';
+                
+                // 5. Mock Authentication (3 seconds)
+                await new Promise(resolve => setTimeout(resolve, 3000)); // Wait for animation
+                
+                // 6. Success
+                authStatus.textContent = "Authentication Successful.";
+                await speak("Identity confirmed. Access granted.");
+                
+                // Stop webcam
+                stream.getTracks().forEach(track => track.stop());
+                
+                // 7. Transition to Main App
+                await new Promise(resolve => setTimeout(resolve, 500)); // Short delay
+                
+                gsap.to(faceAuthOverlay, {opacity: 0, duration: 0.5, onComplete: () => {
+                    faceAuthOverlay.style.display = 'none';
+                }});
+                
+                await initializeMainApp(true); // Pass true for authenticated
+                
+            } catch (error) {
+                // 8. Handle Failure
+                console.error("Face authentication error:", error);
+                authStatus.textContent = "Biometric scan failed. Camera access denied.";
+                await speak("Biometric scan failed. Camera access denied. Proceeding with standard initialization.");
+                
+                // Stop webcam if stream was partially acquired
+                if (stream) stream.getTracks().forEach(track => track.stop());
+                
+                await new Promise(resolve => setTimeout(resolve, 3000)); // Wait for speech
+                
+                gsap.to(faceAuthOverlay, {opacity: 0, duration: 0.5, onComplete: () => {
+                    faceAuthOverlay.style.display = 'none';
+                }});
+                
+                await initializeMainApp(false); // Pass false for non-authenticated
+            }
+        }
+
+        async function initializeMainApp(isAuthenticated = false) {
             updateSystemInfo();
             const hasPermission = await checkMicrophonePermission();
             if (!hasPermission) {
                 setTimeout(() => { micPermissionOverlay.style.display = 'flex'; }, 1000);
             }
-            if (conversationHistory.length > 0) {
+
+            // --- NEW GREETING LOGIC ---
+            if (isAuthenticated) {
+                const welcomeMsg = "Welcome back, sir! How may I serve you today?";
+                addMessage(welcomeMsg, 'jarvis');
+                await speak(welcomeMsg);
+            } else if (conversationHistory.length > 0) {
                 conversationHistory.slice(-10).forEach(msg => addMessage(msg.content, msg.role === 'user' ? 'user' : 'jarvis'));
                 addMessage("Sir, welcome back. I have loaded our previous conversation.", 'jarvis');
-                speak("Sir, welcome back. I have loaded our previous conversation.");
+                await speak("Sir, welcome back. I have loaded our previous conversation.");
             } else {
                 addMessage("At your service, sir. System initialized and ready. How may I help you?", 'jarvis');
-                speak("At your service, sir. System initialized and ready. How may I help you?");
+                await speak("At your service, sir. System initialized and ready. How may I help you?");
             }
+        }
+
+        // --- Initialization on User Interaction ---
+        startOverlay.addEventListener('click', async () => {
+            startOverlay.style.opacity = '0';
+            setTimeout(() => startOverlay.style.display = 'none', 500);
+            
+            // Call the new face auth function instead of directly initializing
+            await startFaceAuthentication();
+
         }, { once: true });
 
     </script>
