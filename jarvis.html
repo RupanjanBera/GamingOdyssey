@@ -6,8 +6,6 @@
     <title>J.A.R.V.I.S. AI Interface</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/face-api.js/0.22.2/face-api.min.js"></script>
-    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
@@ -19,8 +17,6 @@
             --dark-blue: #0a192f;
             --glow-color: rgba(0, 217, 255, 0.75);
             --bg-color: #00050a;
-            --warning-color: #ff9900;
-            --error-color: #ff0000;
         }
 
         * {
@@ -76,7 +72,7 @@
         }
 
         /* --- NEW: Face Authentication Overlay --- */
-        #auth-overlay {
+        #face-auth-overlay {
             position: absolute;
             top: 0;
             left: 0;
@@ -91,7 +87,7 @@
             transition: opacity 0.5s ease;
         }
 
-        #auth-video-wrapper {
+        #video-wrapper {
             position: relative;
             width: 480px;
             height: 360px;
@@ -105,22 +101,14 @@
             box-shadow: 0 0 20px var(--glow-color);
         }
 
-        #auth-webcam-feed {
+        #webcam-feed {
             width: 100%;
             height: 100%;
             transform: scaleX(-1); /* Mirror effect */
             object-fit: cover;
         }
-        
-        #auth-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
 
-        #auth-scan-line {
+        #scan-line {
             position: absolute;
             width: 100%;
             height: 4px;
@@ -129,57 +117,20 @@
             top: 0;
             left: 0;
             opacity: 0;
-            animation: scan-vertical 3s linear infinite;
-        }
-        
-        #auth-scan-line.scanning {
-            opacity: 1;
         }
 
         @keyframes scan-vertical {
-            0% { top: 0; }
-            50% { top: 100%; }
-            100% { top: 0; }
+            0% { top: 0; opacity: 1; }
+            100% { top: 100%; opacity: 1; }
         }
 
         #auth-status {
             font-size: 1.2rem;
             margin-top: 20px;
             text-shadow: 0 0 10px var(--glow-color);
-            text-align: center;
-            max-width: 480px;
-        }
-        
-        #register-btn {
-            background: var(--dark-blue);
-            border: 2px solid var(--neon-blue);
-            color: var(--neon-blue);
-            padding: 15px 30px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 15px var(--glow-color);
-            margin-top: 20px;
-            display: none; /* Hide by default */
+            animation: pulse-text 2s infinite;
         }
 
-        #register-btn:hover {
-            background: var(--neon-blue);
-            color: var(--dark-blue);
-            box-shadow: 0 0 25px var(--glow-color);
-        }
-
-        /* --- Main JARVIS Container (Hidden by default) --- */
-        .jarvis-container {
-            display: none; /* Hide main UI until authenticated */
-            position: relative;
-            width: 100%;
-            height: 100%;
-            justify-content: center;
-            align-items: center;
-        }
 
         /* --- Background Effects --- */
         .jarvis-container::before {
@@ -209,6 +160,16 @@
         @keyframes scan {
             0% { background-position: 0 0; }
             100% { background-position: 0 100vh; }
+        }
+
+        /* --- Main Layout --- */
+        .jarvis-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         
         /* --- Central 3D Core & HUD Rings --- */
@@ -441,7 +402,7 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 5, 10, 0.95);
-            display: none; /* Hidden by default */
+            display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
@@ -505,7 +466,7 @@
             box-shadow: 0 0 15px var(--glow-color);
         }
 
-        /* --- Model Toggle Button --- */
+        /* --- NEW: Model Toggle Button --- */
         #model-toggle-btn {
             position: absolute;
             top: 70px;
@@ -596,9 +557,9 @@
 
         /* --- Responsive Design --- */
         @media (max-width: 768px) {
-            #auth-video-wrapper { width: 90vw; height: 67.5vw; }
-            #auth-webcam-feed { width: 100%; height: 100%; }
-            #auth-scan-line { width: 100%; }
+            #video-wrapper { width: 90vw; height: 67.5vw; }
+            #webcam-feed { width: 100%; height: 100%; }
+            #scan-line { width: 100%; }
 
             .chat-container {
                 width: 100%;
@@ -625,17 +586,15 @@
         <p>Click to Initialize</p>
     </div>
 
-    <div id="auth-overlay">
-        <div id="auth-video-wrapper">
-            <video id="auth-webcam-feed" autoplay playsinline muted></video>
-            <canvas id="auth-canvas"></canvas>
-            <div id="auth-scan-line"></div>
+    <div id="face-auth-overlay">
+        <div id="video-wrapper">
+            <video id="webcam-feed" autoplay playsinline muted></video>
+            <div id="scan-line"></div>
         </div>
-        <p id="auth-status">Initializing Biometric System...</p>
-        <button id="register-btn">Register My Face</button>
+        <p id="auth-status">Initializing Biometric Scan...</p>
     </div>
 
-    <div id="mic-permission-overlay">
+    <div id="mic-permission-overlay" style="display: none;">
         <h2>Microphone Access Required</h2>
         <p>To use voice commands with J.A.R.V.I.S., please grant microphone access. This permission will be remembered and you won't be asked again.</p>
         <button id="grant-mic-btn">Grant Microphone Access</button>
@@ -700,7 +659,7 @@
         const SEARCH_ENGINE_ID = 'd13b9c982e19f4ccf';
         const GOOGLE_SEARCH_URL = `https://www.googleapis.com/customsearch/v1?key=${GOOGLE_SEARCH_API_KEY}&cx=${SEARCH_ENGINE_ID}`;
         
-        // --- Model Selection Logic ---
+        // --- NEW: Model Selection Logic ---
         const MODELS = {
             'JARVIS Pro': 'gemini-2.5-pro',
             'JARVIS Flash': 'gemini-2.5-flash'
@@ -711,8 +670,7 @@
         let conversationHistory = JSON.parse(localStorage.getItem('jarvis-conversation') || '[]');
         let savedMemory = JSON.parse(localStorage.getItem('jarvis-memory') || '[]');
         
-        // --- Main DOM Elements ---
-        const jarvisContainer = document.querySelector('.jarvis-container');
+        // --- DOM Elements ---
         const chatBox = document.getElementById('chat-box');
         const userInput = document.getElementById('user-input');
         const micBtn = document.getElementById('mic-btn');
@@ -734,146 +692,16 @@
         const closePlayerBtn = document.getElementById('close-player-btn');
         
         // --- NEW: Face Auth DOM Elements ---
-        const authOverlay = document.getElementById('auth-overlay');
-        const authWebcamFeed = document.getElementById('auth-webcam-feed');
-        const authCanvas = document.getElementById('auth-canvas');
-        const authScanLine = document.getElementById('auth-scan-line');
+        const faceAuthOverlay = document.getElementById('face-auth-overlay');
+        const webcamFeed = document.getElementById('webcam-feed');
+        const scanLine = document.getElementById('scan-line');
         const authStatus = document.getElementById('auth-status');
-        const registerBtn = document.getElementById('register-btn');
 
-        // --- Audio Elements ---
         const startSound = document.getElementById('start-sound');
         const endSound = document.getElementById('end-sound');
         
         let speakingAnimation = null;
         let isAwaitingSupportQuery = false;
-        let authInterval = null;
-        let webcamStream = null;
-
-        // --- NEW: Face-api.js setup ---
-        const MODEL_URL = 'https://cdnjs.cloudflare.com/ajax/libs/face-api.js/0.22.2/weights';
-        const FACE_MATCH_THRESHOLD = 0.4; // Lower is more strict. 0.4 is a good balance.
-
-        async function loadFaceModels() {
-            authStatus.textContent = "Loading biometric models...";
-            await Promise.all([
-                faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
-                faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
-                faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL)
-            ]);
-            authStatus.textContent = "Models loaded. Initializing camera...";
-        }
-
-        async function startWebcam() {
-            if (webcamStream) webcamStream.getTracks().forEach(track => track.stop());
-            try {
-                webcamStream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { width: 480, height: 360 }, 
-                    audio: false 
-                });
-                authWebcamFeed.srcObject = webcamStream;
-                return true;
-            } catch (err) {
-                console.error("Error starting webcam:", err);
-                authStatus.textContent = "Camera access denied. Please grant permission and refresh.";
-                authStatus.style.color = 'var(--error-color)';
-                return false;
-            }
-        }
-        
-        function stopWebcam() {
-            if (webcamStream) {
-                webcamStream.getTracks().forEach(track => track.stop());
-                webcamStream = null;
-            }
-        }
-
-        async function getFaceDescriptor(videoElement) {
-            const detection = await faceapi.detectSingleFace(videoElement, new faceapi.TinyFaceDetectorOptions())
-                                        .withFaceLandmarks()
-                                        .withFaceDescriptor();
-            return detection ? detection.descriptor : null;
-        }
-
-        async function runRegistration() {
-            authStatus.textContent = "Please look at the camera for registration.";
-            registerBtn.style.display = 'block';
-            
-            registerBtn.onclick = async () => {
-                authStatus.textContent = "Scanning... Please hold still.";
-                authScanLine.classList.add('scanning');
-                await speak("Scanning... Please hold still.");
-
-                const descriptor = await getFaceDescriptor(authWebcamFeed);
-                
-                authScanLine.classList.remove('scanning');
-
-                if (descriptor) {
-                    localStorage.setItem('jarvis_face_descriptor', JSON.stringify(Array.from(descriptor)));
-                    authStatus.textContent = "Registration complete. Access granted.";
-                    await speak("Registration complete. Access granted.");
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                    transitionToMainApp(true);
-                } else {
-                    authStatus.textContent = "Could not detect a clear face. Please try again.";
-                    await speak("Sir, I could not detect a clear face. Please try again.");
-                }
-            };
-        }
-
-        async function runLogin() {
-            let savedDescriptor;
-            try {
-                savedDescriptor = new Float32Array(JSON.parse(localStorage.getItem('jarvis_face_descriptor')));
-            } catch (e) {
-                console.error("Failed to parse saved descriptor. Forcing re-registration.", e);
-                localStorage.removeItem('jarvis_face_descriptor');
-                runRegistration();
-                return;
-            }
-
-            if (!savedDescriptor) return runRegistration();
-            
-            const faceMatcher = new faceapi.FaceMatcher([savedDescriptor], FACE_MATCH_THRESHOLD);
-            
-            authStatus.textContent = "Welcome back. Verifying identity...";
-            await speak("Welcome back. Verifying identity.");
-            authScanLine.classList.add('scanning');
-
-            authInterval = setInterval(async () => {
-                const descriptor = await getFaceDescriptor(authWebcamFeed);
-                
-                if (descriptor) {
-                    const match = faceMatcher.findBestMatch(descriptor);
-                    if (match.label !== 'unknown') {
-                        // MATCH FOUND
-                        clearInterval(authInterval);
-                        authScanLine.classList.remove('scanning');
-                        authStatus.textContent = "Identity confirmed. Access granted.";
-                        await speak("Identity confirmed. Access granted.");
-                        await new Promise(resolve => setTimeout(resolve, 500));
-                        transitionToMainApp(true); // Pass true for authenticated
-                    } else {
-                        // NO MATCH
-                        authStatus.textContent = "Identity not recognized. Scanning...";
-                    }
-                } else {
-                    authStatus.textContent = "No face detected. Please position yourself in frame.";
-                }
-            }, 1000); // Check every second
-        }
-        
-        async function transitionToMainApp(isAuthenticated = false) {
-            stopWebcam();
-            gsap.to(authOverlay, { opacity: 0, duration: 0.5, onComplete: () => {
-                authOverlay.style.display = 'none';
-            }});
-            
-            jarvisContainer.style.display = 'flex';
-            gsap.fromTo(jarvisContainer, { opacity: 0 }, { opacity: 1, duration: 0.5 });
-            
-            await initializeMainApp(isAuthenticated);
-        }
 
         // --- YouTube Player Logic ---
         let ytPlayer;
@@ -1095,7 +923,7 @@
             micStatus.textContent = "Not Supported";
         }
         
-        // --- Dynamic, Voice-Reactive 3D Particle Core ---
+        // --- NEW: Dynamic, Voice-Reactive 3D Particle Core ---
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('jarvis-core'), alpha: true });
@@ -1105,10 +933,11 @@
         const particleCount = 10000;
         const positions = new Float32Array(particleCount * 3);
         for (let i = 0; i < particleCount; i++) {
+            // Create a random point in a sphere using Fibonacci lattice for even distribution
             const iFloat = i + 0.5;
             const phi = Math.acos(1 - 2 * iFloat / particleCount);
             const theta = Math.PI * (1 + Math.sqrt(5)) * iFloat;
-            const r = 2.5; 
+            const r = 2.5; // Radius of the sphere
             positions[i * 3] = r * Math.cos(theta) * Math.sin(phi);
             positions[i * 3 + 1] = r * Math.sin(theta) * Math.sin(phi);
             positions[i * 3 + 2] = r * Math.cos(phi);
@@ -1166,9 +995,10 @@
             requestAnimationFrame(drawWaveform);
             analyser.getByteFrequencyData(dataArray);
             
+            // Voice Reactivity for Particle Core
             if (micBtn.classList.contains('listening')) {
                 const average = dataArray.reduce((acc, val) => acc + val, 0) / dataArray.length;
-                const scale = 1 + (average / 256) * 0.5; 
+                const scale = 1 + (average / 256) * 0.5; // Scale up to 50% based on volume
                 gsap.to(particleSystem.scale, { x: scale, y: scale, z: scale, duration: 0.1 });
             } else if (particleSystem.scale.x !== 1) {
                  gsap.to(particleSystem.scale, { x: 1, y: 1, z: 1, duration: 0.5, ease: "power2.out" });
@@ -1190,6 +1020,7 @@
         }
 
         // --- Core Functions ---
+        // *** REBUILT: Robust Voice Loading and Speaking logic ***
         let jarvisVoice = null;
         let voiceInitializationPromise = null;
 
@@ -1225,7 +1056,7 @@
         }
 
         async function speak(text) {
-            await initializeSpeech(); 
+            await initializeSpeech(); // Ensure voices are loaded before speaking
             speechSynthesis.cancel();
             
             if (speakingAnimation) speakingAnimation.kill();
@@ -1238,25 +1069,22 @@
             utterance.rate = 1.05;
             utterance.volume = 1.0;
             
+            // Return a promise that resolves when speech ends
             return new Promise((resolve, reject) => {
                 utterance.onstart = () => {
-                    if (jarvisContainer.style.display === 'flex') { // Only pulse core if main UI is visible
-                        updateStatus("Speaking");
-                        if (endSound) endSound.play().catch(e => console.error("End sound error:", e));
-                        speakingAnimation = gsap.to(particleSystem.scale, { x: 1.2, y: 1.2, z: 1.2, duration: 0.5, yoyo: true, repeat: -1, ease: "power1.inOut" });
-                    }
+                    updateStatus("Speaking");
+                    if (endSound) endSound.play().catch(e => console.error("End sound error:", e));
+                    speakingAnimation = gsap.to(particleSystem.scale, { x: 1.2, y: 1.2, z: 1.2, duration: 0.5, yoyo: true, repeat: -1, ease: "power1.inOut" });
                 };
                 utterance.onend = () => {
-                    if (jarvisContainer.style.display === 'flex') {
-                        updateStatus("System Ready");
-                        if (speakingAnimation) speakingAnimation.kill();
-                        gsap.to(particleSystem.scale, { x: 1, y: 1, z: 1, duration: 0.3 });
-                    }
+                    updateStatus("System Ready");
+                    if (speakingAnimation) speakingAnimation.kill();
+                    gsap.to(particleSystem.scale, { x: 1, y: 1, z: 1, duration: 0.3 });
                     resolve();
                 };
                 utterance.onerror = (e) => {
                     console.error("Speech synthesis error:", e);
-                    if (jarvisContainer.style.display === 'flex') updateStatus("Speech Error", false);
+                    updateStatus("Speech Error", false);
                     reject(e);
                 };
                 speechSynthesis.speak(utterance);
@@ -1398,11 +1226,6 @@
                 } else {
                     return `Sir, I have no saved information about "${searchTerm}".`;
                 }
-            }
-            // --- NEW: Reset Face Registration ---
-            if (['reset face id', 'reset my face', 'register new face'].includes(lowerPrompt)) {
-                 localStorage.removeItem('jarvis_face_descriptor');
-                 return "Sir, I have cleared your saved biometric data. Please refresh the page to begin re-registration.";
             }
             return null;
         }
@@ -1578,21 +1401,75 @@
             }
         });
         
-        // --- App Initialization Logic ---
-        
+        // --- NEW: Face Authentication and App Initialization ---
+        async function startFaceAuthentication() {
+            faceAuthOverlay.style.display = 'flex';
+            gsap.fromTo(faceAuthOverlay, {opacity: 0}, {opacity: 1, duration: 0.5});
+            
+            let stream;
+            try {
+                // 1. Pre-load voices while asking for camera
+                initializeSpeech();
+                
+                // 2. Request Camera Access
+                stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+                webcamFeed.srcObject = stream;
+                
+                // 3. Start Scan
+                authStatus.textContent = "Verifying Identity...";
+                await speak("Initializing biometric scan. Verifying identity."); // Wait for speech
+                
+                // 4. Start Animation
+                scanLine.style.opacity = '1';
+                scanLine.style.animation = 'scan-vertical 3s ease-in-out forwards';
+                
+                // 5. Mock Authentication (3 seconds)
+                await new Promise(resolve => setTimeout(resolve, 3000)); // Wait for animation
+                
+                // 6. Success
+                authStatus.textContent = "Authentication Successful.";
+                await speak("Identity confirmed. Access granted.");
+                
+                // Stop webcam
+                stream.getTracks().forEach(track => track.stop());
+                
+                // 7. Transition to Main App
+                await new Promise(resolve => setTimeout(resolve, 500)); // Short delay
+                
+                gsap.to(faceAuthOverlay, {opacity: 0, duration: 0.5, onComplete: () => {
+                    faceAuthOverlay.style.display = 'none';
+                }});
+                
+                await initializeMainApp(true); // Pass true for authenticated
+                
+            } catch (error) {
+                // 8. Handle Failure
+                console.error("Face authentication error:", error);
+                authStatus.textContent = "Biometric scan failed. Camera access denied.";
+                await speak("Biometric scan failed. Camera access denied. Proceeding with standard initialization.");
+                
+                // Stop webcam if stream was partially acquired
+                if (stream) stream.getTracks().forEach(track => track.stop());
+                
+                await new Promise(resolve => setTimeout(resolve, 3000)); // Wait for speech
+                
+                gsap.to(faceAuthOverlay, {opacity: 0, duration: 0.5, onComplete: () => {
+                    faceAuthOverlay.style.display = 'none';
+                }});
+                
+                await initializeMainApp(false); // Pass false for non-authenticated
+            }
+        }
+
         async function initializeMainApp(isAuthenticated = false) {
             updateSystemInfo();
-            // Pre-load voices for the main app
-            initializeSpeech(); 
-            
             const hasPermission = await checkMicrophonePermission();
             if (!hasPermission) {
                 setTimeout(() => { micPermissionOverlay.style.display = 'flex'; }, 1000);
             }
 
-            // --- GREETING LOGIC ---
+            // --- NEW GREETING LOGIC ---
             if (isAuthenticated) {
-                // This is the specific greeting you requested after a successful face scan
                 const welcomeMsg = "Welcome back, sir! How may I serve you today?";
                 addMessage(welcomeMsg, 'jarvis');
                 await speak(welcomeMsg);
@@ -1606,33 +1483,13 @@
             }
         }
 
-        // --- Master Initialization on User Click ---
+        // --- Initialization on User Interaction ---
         startOverlay.addEventListener('click', async () => {
-            gsap.to(startOverlay, { opacity: 0, duration: 0.5, onComplete: () => {
-                startOverlay.style.display = 'none';
-            }});
+            startOverlay.style.opacity = '0';
+            setTimeout(() => startOverlay.style.display = 'none', 500);
             
-            // Show the auth overlay
-            authOverlay.style.display = 'flex';
-            gsap.fromTo(authOverlay, { opacity: 0 }, { opacity: 1, duration: 0.5 });
-            
-            // Pre-load JARVIS voice for auth screen
-            await initializeSpeech();
-
-            // Load face models
-            await loadFaceModels();
-            
-            // Start the webcam
-            const cameraStarted = await startWebcam();
-            if (!cameraStarted) return; // Stop if camera fails
-            
-            // Check if user is registered
-            const savedDescriptor = localStorage.getItem('jarvis_face_descriptor');
-            if (savedDescriptor) {
-                await runLogin();
-            } else {
-                await runRegistration();
-            }
+            // Call the new face auth function instead of directly initializing
+            await startFaceAuthentication();
 
         }, { once: true });
 
