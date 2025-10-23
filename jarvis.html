@@ -565,7 +565,7 @@
             cursor: pointer;
             display: flex;
             justify-content: center;
-            align: center;
+            align-items: center;
             font-family: sans-serif;
             font-weight: bold;
             box-shadow: 0 0 8px var(--glow-color);
@@ -964,7 +964,7 @@
                 microphoneGranted = true;
                 micBtn.disabled = false;
             } else if (status === 'denied') {
-                microphoneGranted = false;
+                microphoneGrasnted = false;
                 micBtn.disabled = true;
                 statusDot.classList.add('warning');
             } else {
@@ -1024,7 +1024,7 @@
             micStatus.textContent = "Not Supported";
         }
         
-        // --- NEW: 3D Arc Reactor Core ---
+        // --- NEW: High-Detail 3D Arc Reactor Core ---
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('jarvis-core'), alpha: true });
@@ -1032,88 +1032,118 @@
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // For sharp edges
         camera.position.z = 4;
 
-        // Add a subtle ambient light and a point light
-        const ambientLight = new THREE.AmbientLight(0x00d9ff, 0.3);
-        scene.add(ambientLight);
+        // --- NEW: Lighting (Crucial for realism) ---
+        // Soft ambient light
+        const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x444444, 0.4);
+        scene.add(hemisphereLight);
+        // Main bright light from top-right
+        const mainLight = new THREE.PointLight(0xffffff, 0.8, 100);
+        mainLight.position.set(5, 5, 5);
+        scene.add(mainLight);
+        // Blue light cast *from* the core
+        const coreLight = new THREE.PointLight(0x00d9ff, 1.0, 50);
+        coreLight.position.set(0, 0, 0.5);
+        scene.add(coreLight);
+
+        // --- NEW: Textures (Embedded as Data URLs) ---
+        const loader = new THREE.TextureLoader();
         
-        // Create a group to hold all parts
-        const arcReactorGroup = new THREE.Group();
-        scene.add(arcReactorGroup);
-
-        // Materials
-        const coreGlowMaterial = new THREE.MeshBasicMaterial({
-            color: 0xffffff, // White hot center
-            blending: THREE.AdditiveBlending,
-            transparent: true,
-            opacity: 1.0
-        });
-
-        const innerGlowMaterial = new THREE.MeshBasicMaterial({ 
-            color: 0x00d9ff,
-            blending: THREE.AdditiveBlending,
-            transparent: true,
-            opacity: 0.7
-        });
+        // Texture for soft glow sprite
+        const glowTexture = loader.load('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAFnSURBVHic7d1NCoAwEAXQC83/f2wdhB3ETuysmWZzljOvu1BwmlhrrQ1gREiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABM1BTJ21/2P6PqWAAAAAElFTkSuQmCC');
         
-        const outerGlowMaterial = new THREE.MeshBasicMaterial({ 
-            color: 0x00d9ff,
-            blending: THREE.AdditiveBlending,
-            transparent: true,
-            opacity: 0.4
-        });
+        // Texture for copper windings (vertical stripes)
+        const windingTexture = loader.load('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAACACAYAAADsJ+Y/AAAAAXNSR0IArs4c6QAAADBJREFUOEpicPz48X8GZoAYQGyYFBgaGv6j0M4YirFBbJgUGBoa/qPQzhgKsUFsmBQYGhp+bAAAFwYGAJc+wBYAAAAASUVORK5CYII=');
+        windingTexture.wrapS = THREE.RepeatWrapping;
+        windingTexture.wrapT = THREE.RepeatWrapping;
+        windingTexture.repeat.set(8, 1); // Repeat stripes 8 times around
 
-        const darkMetalMaterial = new THREE.MeshBasicMaterial({ 
-            color: 0x1a1a1a, // Darker metal
+        // --- NEW: Realistic Materials ---
+        const darkMetalMaterial = new THREE.MeshStandardMaterial({
+            color: 0x1a1a1a,
+            metalness: 0.9,
+            roughness: 0.4,
             side: THREE.DoubleSide
         });
-
-        // 1. Central Core (Bright)
-        const coreGeometry = new THREE.CylinderGeometry(0.5, 0.5, 0.15, 32);
-        const coreMesh = new THREE.Mesh(coreGeometry, coreGlowMaterial);
-        coreMesh.rotation.x = Math.PI / 2;
-        arcReactorGroup.add(coreMesh);
-
-        // 2. Inner Ring (Glow)
-        const innerRingGeometry = new THREE.TorusGeometry(0.8, 0.08, 16, 100);
-        const innerRingMesh = new THREE.Mesh(innerRingGeometry, innerGlowMaterial);
-        arcReactorGroup.add(innerRingMesh);
         
-        // 3. Outer Glow Ring (Fainter)
-        const outerGlowRingGeometry = new THREE.TorusGeometry(1.6, 0.05, 16, 100);
-        const outerGlowRingMesh = new THREE.Mesh(outerGlowRingGeometry, outerGlowMaterial);
-        arcReactorGroup.add(outerGlowRingMesh);
+        const copperMaterial = new THREE.MeshStandardMaterial({
+            color: 0xb87333,
+            metalness: 1.0,
+            roughness: 0.3,
+            map: windingTexture // Apply the stripe texture
+        });
 
-        // 4. Outer Ring (Dark Metal)
-        const outerRingGeometry = new THREE.TorusGeometry(2.0, 0.2, 16, 100);
-        const outerRingMesh = new THREE.Mesh(outerRingGeometry, darkMetalMaterial);
-        arcReactorGroup.add(outerRingMesh);
+        // --- NEW: Glow Sprite Materials ---
+        const coreGlowMaterial = new THREE.SpriteMaterial({
+            map: glowTexture,
+            color: 0xffffff, // Bright white center
+            blending: THREE.AdditiveBlending,
+            transparent: true,
+            opacity: 0.9
+        });
         
-        // 5. "Coil" Wrappers (Dark Metal) - based on the image
+        const outerGlowMaterial = new THREE.SpriteMaterial({
+            map: glowTexture,
+            color: 0x00d9ff, // Neon blue aura
+            blending: THREE.AdditiveBlending,
+            transparent: true,
+            opacity: 0.5,
+            sizeAttenuation: true
+        });
+
+        // --- NEW: Build Reactor Geometry ---
+        const arcReactorGroup = new THREE.Group();
+        const coilGroup = new THREE.Group();
+        arcReactorGroup.add(coilGroup);
+        scene.add(arcReactorGroup);
+
+        // 1. Backing Plate (Dark Metal)
+        const backingPlateGeo = new THREE.CylinderGeometry(2.4, 2.4, 0.1, 64);
+        const backingPlate = new THREE.Mesh(backingPlateGeo, darkMetalMaterial);
+        backingPlate.rotation.x = Math.PI / 2;
+        backingPlate.position.z = -0.1;
+        arcReactorGroup.add(backingPlate);
+
+        // 2. Outer Ring (Dark Metal)
+        const outerRingGeo = new THREE.TorusGeometry(2.0, 0.2, 16, 100);
+        const outerRing = new THREE.Mesh(outerRingGeo, darkMetalMaterial);
+        arcReactorGroup.add(outerRing);
+
+        // 3. Inner Ring (Dark Metal)
+        const innerRingGeo = new THREE.TorusGeometry(0.8, 0.08, 16, 100);
+        const innerRing = new THREE.Mesh(innerRingGeo, darkMetalMaterial);
+        arcReactorGroup.add(innerRing);
+        
+        // 4. Copper Windings (The 10 coils)
         const numCoils = 10;
-        const coilGeometry = new THREE.BoxGeometry(0.4, 0.7, 0.4); // width, height, depth
-        
+        const coilRadius = 1.25; // Distance from center
+        const coilTubeRadius = 0.15; // Thickness of the coil bundle
+        const coilSegmentAngle = (Math.PI * 2 * 0.8) / numCoils; // 80% of segment, leaves gap
+        const coilGeometry = new THREE.TorusGeometry(coilRadius, coilTubeRadius, 16, 100, coilSegmentAngle);
+
         for (let i = 0; i < numCoils; i++) {
-            const coil = new THREE.Mesh(coilGeometry, darkMetalMaterial);
-            const angle = (i / numCoils) * Math.PI * 2;
-            
-            const radius = 1.25; // Position them between the inner and outer rings
-            coil.position.x = Math.sin(angle) * radius;
-            coil.position.y = Math.cos(angle) * radius;
-            coil.position.z = 0;
-            
-            // Point the coil towards the center
-            coil.lookAt(0, 0, 0);
-            coil.rotation.z += Math.PI / 2; // Adjust orientation
-            
-            arcReactorGroup.add(coil);
+            const coil = new THREE.Mesh(coilGeometry, copperMaterial);
+            // Rotate each segment into place
+            coil.rotation.z = (i / numCoils) * Math.PI * 2;
+            coilGroup.add(coil);
         }
+
+        // 5. Layered Glow Sprites
+        const coreGlow = new THREE.Sprite(coreGlowMaterial);
+        coreGlow.scale.set(1.5, 1.5, 1.5); // Small, bright white
+        arcReactorGroup.add(coreGlow);
+
+        const outerGlow = new THREE.Sprite(outerGlowMaterial);
+        outerGlow.scale.set(7, 7, 7); // Large, blue aura
+        arcReactorGroup.add(outerGlow);
 
         // Animation Loop
         function animateCore() {
             requestAnimationFrame(animateCore);
             
-            // Rotate the whole reactor
+            // Rotate the whole reactor slowly
             arcReactorGroup.rotation.z -= 0.005;
+            // Rotate the inner coils faster
+            coilGroup.rotation.z += 0.01;
             
             renderer.render(scene, camera);
         }
@@ -1167,7 +1197,7 @@
                 } else if (analyser && micBtn.classList.contains('listening')) {
                     drawMicrophoneWaveform();
                 } else if (!isMusicPlaying && !micBtn.classList.contains('listening')) {
-                    // Fade out particle system if it was reacting
+                    // Fade out reactor scale if it was reacting
                     if (arcReactorGroup.scale.x !== 1.0) {
                         gsap.to(arcReactorGroup.scale, { x: 1.0, y: 1.0, z: 1.0, duration: 0.5, ease: "power2.out" });
                     }
@@ -1177,7 +1207,6 @@
         }
 
         // --- REPLACED: New Procedural "Equalizer" Music Visualizer ---
-        // Note: This is procedural, not truly audio-reactive, due to YouTube iframe security limitations.
         function drawMusicWaveform() {
             waveTime += 0.03; // Slower, smoother speed
             const width = waveformCanvas.width;
@@ -1193,35 +1222,26 @@
             waveformCtx.fillStyle = gradient;
 
             for (let i = 0; i < numBars; i++) {
-                // Create a "bouncing" effect using sin waves
-                // Each bar gets a slightly different phase and frequency
                 let barHeight = Math.abs(Math.sin(i * 0.2 + waveTime) * height * 0.6) +
                                 Math.abs(Math.sin(i * 0.05 + waveTime * 0.5) * height * 0.4);
-                
-                // Add a global pulse
-                let globalPulse = Math.sin(waveTime * 2.0) * 0.2 + 0.8; // Pulses between 0.6 and 1.0
+                let globalPulse = Math.sin(waveTime * 2.0) * 0.2 + 0.8;
                 barHeight *= globalPulse;
-                
-                // Ensure minimum height
                 barHeight = Math.max(2, barHeight); 
-
-                // Draw bars mirrored from the center, with a small gap (barWidth * 0.8)
-                waveformCtx.fillRect(halfWidth + i * barWidth, height - barHeight, barWidth * 0.8, barHeight); // Right side
-                waveformCtx.fillRect(halfWidth - (i + 1) * barWidth, height - barHeight, barWidth * 0.8, barHeight); // Left side
+                waveformCtx.fillRect(halfWidth + i * barWidth, height - barHeight, barWidth * 0.8, barHeight);
+                waveformCtx.fillRect(halfWidth - (i + 1) * barWidth, height - barHeight, barWidth * 0.8, barHeight);
             }
             
             // Also pulse the 3D core
             const musicScale = 1.0 + Math.abs(Math.sin(waveTime * 2.0)) * 0.2; // 1.0 to 1.2
-            gsap.to(arcReactorGroup.scale, { value: musicScale, duration: 0.1 });
+            gsap.to(arcReactorGroup.scale, { x: musicScale, y: musicScale, z: musicScale, duration: 0.1 });
         }
         // --- End Visualizer Replacement ---
 
-        // Renamed from drawWaveform
         function drawMicrophoneWaveform() {
             if (!analyser) return;
             analyser.getByteFrequencyData(dataArray);
             
-            // Voice Reactivity for Particle Core
+            // Voice Reactivity for Arc Reactor
             const average = dataArray.reduce((acc, val) => acc + val, 0) / dataArray.length;
             const scale = 1 + (average / 256) * 0.5; // Scale up to 50% based on volume
             
@@ -1247,7 +1267,6 @@
 
 
         // --- Core Functions ---
-        // *** REBUILT: Robust Voice Loading and Speaking logic ***
         let jarvisVoice = null;
         let voiceInitializationPromise = null;
 
@@ -1283,7 +1302,7 @@
         }
 
         async function speak(text) {
-            await initializeSpeech(); // Ensure voices are loaded before speaking
+            await initializeSpeech();
             speechSynthesis.cancel();
             
             if (speakingAnimation) speakingAnimation.kill();
@@ -1296,7 +1315,6 @@
             utterance.rate = 1.05;
             utterance.volume = 1.0;
             
-            // Return a promise that resolves when speech ends
             return new Promise((resolve, reject) => {
                 utterance.onstart = () => {
                     updateStatus("Speaking");
@@ -1701,9 +1719,6 @@
             if (!hasPermission) {
                 setTimeout(() => { micPermissionOverlay.style.display = 'flex'; }, 1000);
             } else {
-                // If permission is already granted, set up the visualizer
-                // We need *a* stream, even a dummy one, to start the visualizer loop.
-                // Let's change logic: request access silently if granted.
                 if (microphoneGranted) {
                     try {
                         audioStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } });
