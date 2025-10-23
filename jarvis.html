@@ -25,16 +25,13 @@
             box-sizing: border-box;
         }
 
-        body {
+        html, body {
             background-color: var(--bg-color);
             color: var(--neon-blue);
             font-family: 'Orbitron', sans-serif;
             overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             width: 100vw;
+            height: 100vh;
         }
 
         /* --- Start Overlay --- */
@@ -55,13 +52,13 @@
         }
         
         #start-overlay h1 {
-            font-size: 3rem;
+            font-size: clamp(2.5rem, 5vw, 3rem); /* Responsive font */
             text-shadow: 0 0 15px var(--glow-color);
             margin-bottom: 20px;
         }
 
         #start-overlay p {
-            font-size: 1.2rem;
+            font-size: clamp(1rem, 3vw, 1.2rem);
             animation: pulse-text 2s infinite;
         }
         
@@ -89,8 +86,9 @@
 
         #video-wrapper {
             position: relative;
-            width: 480px;
-            height: 360px;
+            /* Responsive wrapper */
+            width: clamp(280px, 90vw, 480px); 
+            height: clamp(210px, 67.5vw, 360px);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -177,6 +175,8 @@
             position: absolute;
             width: 100%;
             height: 100%;
+            top: 0;
+            left: 0;
             z-index: 1;
         }
 
@@ -189,16 +189,28 @@
             pointer-events: none;
         }
 
-        .ring-1 { width: 400px; height: 400px; }
-        .ring-2 { width: 450px; height: 450px; border-style: dashed; }
-        .ring-3 { width: 500px; height: 500px; }
+        /* RESPONSIVE: Use viewport units with a max size */
+        .ring-1 { 
+            width: min(400px, 50vmax); 
+            height: min(400px, 50vmax); 
+        }
+        .ring-2 { 
+            width: min(450px, 55vmax); 
+            height: min(450px, 55vmax); 
+            border-style: dashed; 
+        }
+        .ring-3 { 
+            width: min(500px, 60vmax); 
+            height: min(500px, 60vmax); 
+        }
 
         /* --- Chat Window --- */
         .chat-container {
             position: absolute;
             right: 20px;
             top: 20px;
-            width: 350px;
+            /* RESPONSIVE: Use clamp for flexible width */
+            width: clamp(320px, 30vw, 400px);
             height: calc(100vh - 180px); /* Adjust height based on input area */
             background: rgba(10, 25, 47, 0.5);
             border: 1px solid var(--neon-blue);
@@ -261,8 +273,9 @@
         .input-container {
             position: absolute;
             bottom: 30px;
-            width: 50%;
-            max-width: 600px;
+            /* RESPONSIVE: Flexible width */
+            width: clamp(300px, 50vw, 700px);
+            max-width: 90vw; /* Ensure it doesn't overflow on small screens */
             display: flex;
             align-items: center;
             gap: 10px;
@@ -298,6 +311,7 @@
             box-shadow: 0 0 15px var(--glow-color);
             transition: all 0.3s ease;
             animation: pulse 2s infinite;
+            flex-shrink: 0; /* Prevent button from shrinking */
         }
         
         #mic-btn.listening {
@@ -402,7 +416,7 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 5, 10, 0.95);
-            display: flex;
+            display: none; /* Changed from flex */
             justify-content: center;
             align-items: center;
             flex-direction: column;
@@ -446,7 +460,8 @@
         #clear-chat-btn {
             position: absolute;
             bottom: 30px;
-            right: 390px;
+            /* RESPONSIVE: Position right of chat window, or adapt on mobile */
+            right: calc(clamp(320px, 30vw, 400px) + 30px);
             background: var(--dark-blue);
             border: 1px solid var(--neon-blue);
             color: var(--neon-blue);
@@ -470,7 +485,8 @@
         #model-toggle-btn {
             position: absolute;
             top: 70px;
-            right: 390px;
+            /* RESPONSIVE: Position right of chat window, or adapt on mobile */
+            right: calc(clamp(320px, 30vw, 400px) + 30px);
             background: rgba(10, 25, 47, 0.8);
             padding: 8px 15px;
             border-radius: 20px;
@@ -549,34 +565,105 @@
             cursor: pointer;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align: center;
             font-family: sans-serif;
             font-weight: bold;
             box-shadow: 0 0 8px var(--glow-color);
         }
 
         /* --- Responsive Design --- */
+        
+        /* Tablet and smaller */
+        @media (max-width: 1024px) {
+            #clear-chat-btn, #model-toggle-btn {
+                right: 20px; /* Move buttons to screen edge */
+                bottom: 120px; /* Stack clear button */
+            }
+            #model-toggle-btn {
+                top: auto;
+                bottom: 170px; /* Stack model button */
+            }
+        }
+        
+        /* Mobile */
         @media (max-width: 768px) {
-            #video-wrapper { width: 90vw; height: 67.5vw; }
-            #webcam-feed { width: 100%; height: 100%; }
-            #scan-line { width: 100%; }
-
             .chat-container {
                 width: 100%;
-                height: 50%;
-                top: 0; right: 0;
-                border-radius: 0; border-left: none; border-right: none;
+                height: 50%; /* Take top 50% of screen */
+                top: 0; 
+                right: 0;
+                bottom: auto;
+                border-radius: 0; 
+                border-left: none; 
+                border-right: none;
+                border-top: none;
             }
-            .input-container { width: 90%; bottom: 20px; }
-            .hud-ring { display: none; }
-            #waveform-canvas { bottom: 100px; }
-            #status-indicator { top: 10px; }
-            #system-info { display: none; }
-            #media-player-container { display: none; } /* Hide media player on small screens for simplicity */
-            #mic-permission-overlay { padding: 15px; }
-            #mic-permission-overlay h2 { font-size: 1.5rem; }
-            #clear-chat-btn { right: 20px; bottom: 100px; }
-            #model-toggle-btn { right: 20px; top: 70px; }
+            .input-container { 
+                width: 90%; 
+                bottom: 20px; 
+            }
+            .hud-ring { 
+                display: none; /* Hide rings on mobile */
+            }
+            #waveform-canvas { 
+                bottom: 100px; /* Position above input */
+                width: 70vw;
+            }
+            #status-indicator { 
+                top: calc(50% + 10px); /* Position below chatbox */
+                font-size: 0.8rem;
+            }
+            #system-info { 
+                display: none; /* Hide for space */
+            }
+            #media-player-container { 
+                display: none; /* Hide media player for simplicity */
+            }
+            #mic-permission-overlay { 
+                padding: 15px; 
+            }
+            #mic-permission-overlay h2 { 
+                font-size: 1.5rem; 
+            }
+            #clear-chat-btn, #model-toggle-btn { 
+                right: 20px; 
+                bottom: 100px; /* Position above input */
+                font-size: 0.8rem;
+                padding: 8px 12px;
+            }
+            #model-toggle-btn {
+                bottom: 150px; /* Stack above clear button */
+            }
+        }
+
+        /* Small Mobile */
+        @media (max-width: 480px) {
+            #user-input {
+                font-size: 14px;
+                padding: 12px;
+            }
+            #mic-btn {
+                width: 50px;
+                height: 50px;
+            }
+            #mic-btn svg {
+                width: 24px;
+                height: 24px;
+            }
+            .chat-message {
+                padding: 8px 12px;
+                line-height: 1.3;
+                max-width: 90%;
+            }
+            #clear-chat-btn, #model-toggle-btn {
+                bottom: 85px; /* Adjust for smaller input */
+            }
+            #model-toggle-btn {
+                 bottom: 135px;
+            }
+            #waveform-canvas {
+                 bottom: 85px;
+            }
         }
     </style>
 </head>
@@ -937,107 +1024,114 @@
             micStatus.textContent = "Not Supported";
         }
         
-        // --- UPDATED: Dynamic Shader-Based 3D Particle Core ---
+        // --- NEW: 3D Arc Reactor Core ---
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('jarvis-core'), alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        camera.position.z = 5;
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // For sharp edges
+        camera.position.z = 4;
 
-        // --- NEW: Shader Code ---
-        const vertexShaderSource = `
-            uniform float u_time;
-            uniform float u_scale;
-
-            void main() {
-                vec3 pos = position;
-                
-                // Add a complex, time-based warp to the particles
-                float warp = sin(pos.y * 2.0 + u_time * 0.5) * 0.3 + 
-                             cos(pos.x * 2.0 + u_time * 0.3) * 0.3;
-                
-                pos.z += warp;
-                pos.x += cos(pos.z * 1.5 + u_time * 0.2) * 0.2;
-                
-                // Apply the scale animation (for speaking/listening)
-                vec3 animatedPos = pos * u_scale;
-
-                vec4 modelViewPosition = modelViewMatrix * vec4(animatedPos, 1.0);
-                gl_Position = projectionMatrix * modelViewPosition;
-                
-                // Make particles smaller further away
-                gl_PointSize = (10.0 / -modelViewPosition.z) * (u_scale * 0.5); 
-            }
-        `;
-
-        const fragmentShaderSource = `
-            uniform vec3 u_color;
-
-            void main() {
-                // Create a soft, glowing dot
-                float strength = 1.0 - (distance(gl_PointCoord, vec2(0.5)) * 2.0);
-                gl_FragColor = vec4(u_color, strength * 0.8);
-            }
-        `;
-
-        // --- NEW: Shader Uniforms ---
-        const uniforms = {
-            u_time: { value: 0.0 },
-            u_color: { value: new THREE.Color(0x00d9ff) }, // --neon-blue
-            u_scale: { value: 1.0 }
-        };
-
-        const particleCount = 10000;
-        const positions = new Float32Array(particleCount * 3);
-        for (let i = 0; i < particleCount; i++) {
-            // Create a random point in a sphere (Fibonacci lattice)
-            const iFloat = i + 0.5;
-            const phi = Math.acos(1 - 2 * iFloat / particleCount);
-            const theta = Math.PI * (1 + Math.sqrt(5)) * iFloat;
-            const r = 2.5; // Radius of the sphere
-            positions[i * 3] = r * Math.cos(theta) * Math.sin(phi);
-            positions[i * 3 + 1] = r * Math.sin(theta) * Math.sin(phi);
-            positions[i * 3 + 2] = r * Math.cos(phi);
-        }
-        const particleGeometry = new THREE.BufferGeometry();
-        particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        // Add a subtle ambient light and a point light
+        const ambientLight = new THREE.AmbientLight(0x00d9ff, 0.3);
+        scene.add(ambientLight);
         
-        // --- NEW: Shader Material ---
-        const particleMaterial = new THREE.ShaderMaterial({
-            uniforms: uniforms,
-            vertexShader: vertexShaderSource,
-            fragmentShader: fragmentShaderSource,
+        // Create a group to hold all parts
+        const arcReactorGroup = new THREE.Group();
+        scene.add(arcReactorGroup);
+
+        // Materials
+        const coreGlowMaterial = new THREE.MeshBasicMaterial({
+            color: 0xffffff, // White hot center
             blending: THREE.AdditiveBlending,
             transparent: true,
-            depthWrite: false
+            opacity: 1.0
         });
 
-        const particleSystem = new THREE.Points(particleGeometry, particleMaterial);
-        scene.add(particleSystem);
+        const innerGlowMaterial = new THREE.MeshBasicMaterial({ 
+            color: 0x00d9ff,
+            blending: THREE.AdditiveBlending,
+            transparent: true,
+            opacity: 0.7
+        });
+        
+        const outerGlowMaterial = new THREE.MeshBasicMaterial({ 
+            color: 0x00d9ff,
+            blending: THREE.AdditiveBlending,
+            transparent: true,
+            opacity: 0.4
+        });
 
+        const darkMetalMaterial = new THREE.MeshBasicMaterial({ 
+            color: 0x1a1a1a, // Darker metal
+            side: THREE.DoubleSide
+        });
+
+        // 1. Central Core (Bright)
+        const coreGeometry = new THREE.CylinderGeometry(0.5, 0.5, 0.15, 32);
+        const coreMesh = new THREE.Mesh(coreGeometry, coreGlowMaterial);
+        coreMesh.rotation.x = Math.PI / 2;
+        arcReactorGroup.add(coreMesh);
+
+        // 2. Inner Ring (Glow)
+        const innerRingGeometry = new THREE.TorusGeometry(0.8, 0.08, 16, 100);
+        const innerRingMesh = new THREE.Mesh(innerRingGeometry, innerGlowMaterial);
+        arcReactorGroup.add(innerRingMesh);
+        
+        // 3. Outer Glow Ring (Fainter)
+        const outerGlowRingGeometry = new THREE.TorusGeometry(1.6, 0.05, 16, 100);
+        const outerGlowRingMesh = new THREE.Mesh(outerGlowRingGeometry, outerGlowMaterial);
+        arcReactorGroup.add(outerGlowRingMesh);
+
+        // 4. Outer Ring (Dark Metal)
+        const outerRingGeometry = new THREE.TorusGeometry(2.0, 0.2, 16, 100);
+        const outerRingMesh = new THREE.Mesh(outerRingGeometry, darkMetalMaterial);
+        arcReactorGroup.add(outerRingMesh);
+        
+        // 5. "Coil" Wrappers (Dark Metal) - based on the image
+        const numCoils = 10;
+        const coilGeometry = new THREE.BoxGeometry(0.4, 0.7, 0.4); // width, height, depth
+        
+        for (let i = 0; i < numCoils; i++) {
+            const coil = new THREE.Mesh(coilGeometry, darkMetalMaterial);
+            const angle = (i / numCoils) * Math.PI * 2;
+            
+            const radius = 1.25; // Position them between the inner and outer rings
+            coil.position.x = Math.sin(angle) * radius;
+            coil.position.y = Math.cos(angle) * radius;
+            coil.position.z = 0;
+            
+            // Point the coil towards the center
+            coil.lookAt(0, 0, 0);
+            coil.rotation.z += Math.PI / 2; // Adjust orientation
+            
+            arcReactorGroup.add(coil);
+        }
+
+        // Animation Loop
         function animateCore() {
             requestAnimationFrame(animateCore);
             
-            // Update shader time for animation
-            uniforms.u_time.value += 0.01;
-            
-            // No longer need to rotate the whole system
-            // particleSystem.rotation.x += 0.0005; 
-            // particleSystem.rotation.y += 0.001;
+            // Rotate the whole reactor
+            arcReactorGroup.rotation.z -= 0.005;
             
             renderer.render(scene, camera);
         }
         animateCore();
-        // --- End 3D Core Update ---
+        // --- End 3D Arc Reactor Core ---
         
         gsap.to(".ring-1", { rotation: 360, duration: 40, repeat: -1, ease: "none" });
         gsap.to(".ring-2", { rotation: -360, duration: 30, repeat: -1, ease: "none" });
         gsap.to(".ring-3", { rotation: 360, duration: 20, repeat: -1, ease: "none" });
 
         window.addEventListener('resize', () => {
+            // Update camera
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
+
+            // Update renderer
             renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         });
         
         // --- UPDATED: Audio Visualizer (Mic + Music) ---
@@ -1074,8 +1168,8 @@
                     drawMicrophoneWaveform();
                 } else if (!isMusicPlaying && !micBtn.classList.contains('listening')) {
                     // Fade out particle system if it was reacting
-                    if (uniforms.u_scale.value !== 1.0) {
-                        gsap.to(uniforms.u_scale, { value: 1.0, duration: 0.5, ease: "power2.out" });
+                    if (arcReactorGroup.scale.x !== 1.0) {
+                        gsap.to(arcReactorGroup.scale, { x: 1.0, y: 1.0, z: 1.0, duration: 0.5, ease: "power2.out" });
                     }
                 }
             }
@@ -1118,7 +1212,7 @@
             
             // Also pulse the 3D core
             const musicScale = 1.0 + Math.abs(Math.sin(waveTime * 2.0)) * 0.2; // 1.0 to 1.2
-            gsap.to(uniforms.u_scale, { value: musicScale, duration: 0.1 });
+            gsap.to(arcReactorGroup.scale, { value: musicScale, duration: 0.1 });
         }
         // --- End Visualizer Replacement ---
 
@@ -1131,8 +1225,8 @@
             const average = dataArray.reduce((acc, val) => acc + val, 0) / dataArray.length;
             const scale = 1 + (average / 256) * 0.5; // Scale up to 50% based on volume
             
-            // UPDATED: Animate shader uniform
-            gsap.to(uniforms.u_scale, { value: scale, duration: 0.1 });
+            // UPDATED: Animate the Arc Reactor Group
+            gsap.to(arcReactorGroup.scale, { x: scale, y: scale, z: scale, duration: 0.1 });
 
             // Draw mic waveform
             const barWidth = (waveformCanvas.width / dataArray.length) * 1.5;
@@ -1208,15 +1302,15 @@
                     updateStatus("Speaking");
                     if (endSound) endSound.play().catch(e => console.error("End sound error:", e));
                     
-                    // UPDATED: Animate shader uniform
-                    speakingAnimation = gsap.to(uniforms.u_scale, { value: 1.2, duration: 0.5, yoyo: true, repeat: -1, ease: "power1.inOut" });
+                    // UPDATED: Animate Arc Reactor Group
+                    speakingAnimation = gsap.to(arcReactorGroup.scale, { x: 1.2, y: 1.2, z: 1.2, duration: 0.5, yoyo: true, repeat: -1, ease: "power1.inOut" });
                 };
                 utterance.onend = () => {
                     updateStatus("System Ready");
                     if (speakingAnimation) speakingAnimation.kill();
                     
-                    // UPDATED: Animate shader uniform
-                    gsap.to(uniforms.u_scale, { value: 1, duration: 0.3 });
+                    // UPDATED: Animate Arc Reactor Group
+                    gsap.to(arcReactorGroup.scale, { x: 1, y: 1, z: 1, duration: 0.3 });
                     resolve();
                 };
                 utterance.onerror = (e) => {
@@ -1608,7 +1702,6 @@
                 setTimeout(() => { micPermissionOverlay.style.display = 'flex'; }, 1000);
             } else {
                 // If permission is already granted, set up the visualizer
-                // but don't ask for the mic stream again, requestMicrophoneAccess will handle it.
                 // We need *a* stream, even a dummy one, to start the visualizer loop.
                 // Let's change logic: request access silently if granted.
                 if (microphoneGranted) {
