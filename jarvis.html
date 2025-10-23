@@ -6,6 +6,11 @@
     <title>J.A.R.V.I.S. AI Interface</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
 
@@ -764,12 +769,8 @@
     <audio id="start-sound" preload="auto"></audio>
     <audio id="end-sound" preload="auto"></audio>
 
-    <script type="module">
-        // --- NEW: Import Three.js and Post-Processing ---
-        import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.min.js';
-        import { EffectComposer } from 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/jsm/postprocessing/EffectComposer.js';
-        import { RenderPass } from 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/jsm/postprocessing/RenderPass.js';
-        import { UnrealBloomPass } from 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/jsm/postprocessing/UnrealBloomPass.js';
+    <script>
+        // --- REMOVED: All 'import' statements ---
 
         // --- API Configuration ---
         const GEMINI_API_KEY = 'AIzaSyC52UBIsb0jWyjZJVLgYGz7nzaE1RpChdM';
@@ -1122,14 +1123,15 @@
             scene.add(reactor);
             
             // Post-Processing (Bloom)
-            const renderScene = new RenderPass(scene, camera);
+            // UPDATED: Use THREE. syntax
+            const renderScene = new THREE.RenderPass(scene, camera);
             
-            bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
+            bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
             bloomPass.threshold = 0; // Glow everything with a material
             bloomPass.strength = 1.8; // How strong the glow is
             bloomPass.radius = 0.5;   // How far the glow spreads
 
-            composer = new EffectComposer(renderer);
+            composer = new THREE.EffectComposer(renderer);
             composer.addPass(renderScene);
             composer.addPass(bloomPass);
             
