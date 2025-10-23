@@ -68,7 +68,7 @@
             100% { opacity: 1; }
         }
 
-        /* --- NEW: Face Authentication Overlay --- */
+        /* --- Face Authentication Overlay --- */
         #face-auth-overlay {
             position: absolute;
             top: 0;
@@ -179,31 +179,7 @@
             left: 0;
             z-index: 1;
         }
-
-        .hud-ring {
-            position: absolute;
-            border: 2px solid var(--neon-blue);
-            border-radius: 50%;
-            box-shadow: 0 0 15px var(--glow-color), inset 0 0 10px var(--glow-color);
-            opacity: 0.7;
-            pointer-events: none;
-        }
-
-        /* RESPONSIVE: Use viewport units with a max size */
-        .ring-1 { 
-            width: min(400px, 50vmax); 
-            height: min(400px, 50vmax); 
-        }
-        .ring-2 { 
-            width: min(450px, 55vmax); 
-            height: min(450px, 55vmax); 
-            border-style: dashed; 
-        }
-        .ring-3 { 
-            width: min(500px, 60vmax); 
-            height: min(500px, 60vmax); 
-        }
-
+        
         /* --- Chat Window --- */
         .chat-container {
             position: absolute;
@@ -602,9 +578,6 @@
                 width: 90%; 
                 bottom: 20px; 
             }
-            .hud-ring { 
-                display: none; /* Hide rings on mobile */
-            }
             #waveform-canvas { 
                 bottom: 100px; /* Position above input */
                 width: 70vw;
@@ -691,10 +664,6 @@
         <div class="scan-lines"></div>
 
         <canvas id="jarvis-core"></canvas>
-
-        <div class="hud-ring ring-1"></div>
-        <div class="hud-ring ring-2"></div>
-        <div class="hud-ring ring-3"></div>
 
         <div id="status-indicator">
             <div class="status-dot" id="status-dot"></div>
@@ -1024,24 +993,24 @@
             micStatus.textContent = "Not Supported";
         }
         
-        // --- NEW: High-Detail 3D Arc Reactor Core ---
+        // --- NEW: High-Detail PROCEDURAL 3D Arc Reactor (Blueprint Version) ---
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('jarvis-core'), alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // For sharp edges
-        camera.position.z = 4;
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        camera.position.z = 4.0; // Zoomed in a little
 
-        // --- NEW: Lighting (Crucial for realism) ---
-        // Soft ambient light
-        const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x444444, 0.4);
+        // --- NEW: Lighting ---
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+        scene.add(ambientLight);
+        const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x444444, 0.5);
         scene.add(hemisphereLight);
-        // Main bright light from top-right
-        const mainLight = new THREE.PointLight(0xffffff, 0.8, 100);
+        const mainLight = new THREE.PointLight(0xffffff, 0.6, 100);
         mainLight.position.set(5, 5, 5);
         scene.add(mainLight);
         // Blue light cast *from* the core
-        const coreLight = new THREE.PointLight(0x00d9ff, 1.0, 50);
+        const coreLight = new THREE.PointLight(0x00d9ff, 1.5, 50);
         coreLight.position.set(0, 0, 0.5);
         scene.add(coreLight);
 
@@ -1051,15 +1020,14 @@
         // Texture for soft glow sprite
         const glowTexture = loader.load('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAFnSURBVHic7d1NCoAwEAXQC83/f2wdhB3ETuysmWZzljOvu1BwmlhrrQ1gREiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABM1BTJ21/2P6PqWAAAAAElFTkSuQmCC');
         
-        // Texture for copper windings (vertical stripes)
-        const windingTexture = loader.load('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAACACAYAAADsJ+Y/AAAAAXNSR0IArs4c6QAAADBJREFUOEpicPz48X8GZoAYQGyYFBgaGv6j0M4YirFBbJgUGBoa/qPQzhgKsUFsmBQYGhp+bAAAFwYGAJc+wBYAAAAASUVORK5CYII=');
+        // Texture for copper windings (many vertical stripes)
+        const windingTexture = loader.load('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAADBJREFUOEpicPz48X8GZoAYQGyYFBgaGv6j0M4YirFBbJgUGBoa/qPQzhgKsUFsmBQYGhp+bAAAFwYGAJc+wBYAAAAASUVORK5CYII=');
         windingTexture.wrapS = THREE.RepeatWrapping;
         windingTexture.wrapT = THREE.RepeatWrapping;
-        windingTexture.repeat.set(8, 1); // Repeat stripes 8 times around
 
         // --- NEW: Realistic Materials ---
         const darkMetalMaterial = new THREE.MeshStandardMaterial({
-            color: 0x1a1a1a,
+            color: 0x1a1a1a, // Darker metal
             metalness: 0.9,
             roughness: 0.4,
             side: THREE.DoubleSide
@@ -1069,9 +1037,19 @@
             color: 0xb87333,
             metalness: 1.0,
             roughness: 0.3,
-            map: windingTexture // Apply the stripe texture
+            map: windingTexture,
+            side: THREE.DoubleSide
         });
 
+        // --- NEW: Outline Material ---
+        const outlineMaterial = new THREE.LineBasicMaterial({
+            color: 0x00d9ff,
+            linewidth: 2,
+            transparent: true,
+            opacity: 0.7,
+            blending: THREE.AdditiveBlending
+        });
+        
         // --- NEW: Glow Sprite Materials ---
         const coreGlowMaterial = new THREE.SpriteMaterial({
             map: glowTexture,
@@ -1090,70 +1068,124 @@
             sizeAttenuation: true
         });
 
-        // --- NEW: Build Reactor Geometry ---
+        // --- NEW: Build Reactor Geometry based on Blueprint ---
         const arcReactorGroup = new THREE.Group();
-        const coilGroup = new THREE.Group();
+        const spokeGroup = new THREE.Group(); // To rotate spokes separately
+        const coilGroup = new THREE.Group(); // To rotate coils separately
+        arcReactorGroup.add(spokeGroup);
         arcReactorGroup.add(coilGroup);
         scene.add(arcReactorGroup);
 
-        // 1. Backing Plate (Dark Metal)
-        const backingPlateGeo = new THREE.CylinderGeometry(2.4, 2.4, 0.1, 64);
-        const backingPlate = new THREE.Mesh(backingPlateGeo, darkMetalMaterial);
-        backingPlate.rotation.x = Math.PI / 2;
-        backingPlate.position.z = -0.1;
-        arcReactorGroup.add(backingPlate);
+        // Helper function to create outlines
+        function createOutline(geometry, material) {
+            const edges = new THREE.EdgesGeometry(geometry);
+            const line = new THREE.LineSegments(edges, material);
+            return line;
+        }
 
-        // 2. Outer Ring (Dark Metal)
-        const outerRingGeo = new THREE.TorusGeometry(2.0, 0.2, 16, 100);
+        // 1. Outer Ring
+        const outerRingGeo = new THREE.TorusGeometry(2.5, 0.1, 16, 128);
         const outerRing = new THREE.Mesh(outerRingGeo, darkMetalMaterial);
-        arcReactorGroup.add(outerRing);
+        const outerRingOutline = createOutline(outerRingGeo, outlineMaterial);
+        outerRing.add(outerRingOutline);
+        spokeGroup.add(outerRing);
 
-        // 3. Inner Ring (Dark Metal)
-        const innerRingGeo = new THREE.TorusGeometry(0.8, 0.08, 16, 100);
-        const innerRing = new THREE.Mesh(innerRingGeo, darkMetalMaterial);
-        arcReactorGroup.add(innerRing);
-        
-        // 4. Copper Windings (The 10 coils)
-        const numCoils = 10;
-        const coilRadius = 1.25; // Distance from center
-        const coilTubeRadius = 0.15; // Thickness of the coil bundle
-        const coilSegmentAngle = (Math.PI * 2 * 0.8) / numCoils; // 80% of segment, leaves gap
-        const coilGeometry = new THREE.TorusGeometry(coilRadius, coilTubeRadius, 16, 100, coilSegmentAngle);
+        // 2. Inner Ring 1 (Spoke Connector)
+        const innerRing1Geo = new THREE.TorusGeometry(1.8, 0.05, 16, 128);
+        const innerRing1 = new THREE.Mesh(innerRing1Geo, darkMetalMaterial);
+        const innerRing1Outline = createOutline(innerRing1Geo, outlineMaterial);
+        innerRing1.add(innerRing1Outline);
+        spokeGroup.add(innerRing1);
+
+        // 3. Spokes (16 of them)
+        const numSpokes = 16;
+        const spokeGeo = new THREE.BoxGeometry(0.1, 0.8, 0.1);
+        for (let i = 0; i < numSpokes; i++) {
+            const spoke = new THREE.Mesh(spokeGeo, darkMetalMaterial);
+            const angle = (i / numSpokes) * Math.PI * 2;
+            
+            // Position spoke between the two rings
+            spoke.position.x = Math.sin(angle) * 2.15; 
+            spoke.position.y = Math.cos(angle) * 2.15;
+            spoke.lookAt(0, 0, 0); // Point towards center
+            
+            const spokeOutline = createOutline(spokeGeo, outlineMaterial);
+            spoke.add(spokeOutline);
+            spokeGroup.add(spoke);
+        }
+
+        // 4. Copper Coils (8 of them, behind spokes)
+        const numCoils = 8;
+        const coilRadius = 2.15; // Same radius as spokes, but different geometry
+        const coilTube = 0.2; // Thickness of coil
+        const coilAngle = (Math.PI * 2 / numSpokes) * 0.8; // 80% of the gap between spokes
 
         for (let i = 0; i < numCoils; i++) {
-            const coil = new THREE.Mesh(coilGeometry, copperMaterial);
-            // Rotate each segment into place
-            coil.rotation.z = (i / numCoils) * Math.PI * 2;
+            const coilGeo = new THREE.TorusGeometry(coilRadius, coilTube, 16, 64, coilAngle);
+            const coilMat = copperMaterial.clone();
+            coilMat.map = windingTexture.clone();
+            coilMat.map.repeat.set(20, 1); // 20 "curls" per coil
+            
+            const coil = new THREE.Mesh(coilGeo, coilMat);
+            
+            // Offset angle to sit between spokes
+            const angle = (i / numCoils) * Math.PI * 2 + (Math.PI / numCoils); 
+            coil.rotation.z = angle;
+            coil.position.z = -0.1; // Place *behind* spokes
+            
             coilGroup.add(coil);
         }
 
-        // 5. Layered Glow Sprites
+        // 5. Bolt Circles (4 of them)
+        const numBolts = 4;
+        const boltGeo = new THREE.CylinderGeometry(0.1, 0.1, 0.15, 16);
+        for (let i = 0; i < numBolts; i++) {
+            const bolt = new THREE.Mesh(boltGeo, darkMetalMaterial);
+            const angle = (i / numBolts) * (Math.PI * 2);
+            
+            bolt.position.x = Math.sin(angle) * 1.5;
+            bolt.position.y = Math.cos(angle) * 1.5;
+            bolt.rotation.x = Math.PI / 2; // Lay flat
+            
+            const boltOutline = createOutline(boltGeo, outlineMaterial);
+            bolt.add(boltOutline);
+            arcReactorGroup.add(bolt);
+        }
+
+        // 6. Center Rings (4 of them)
+        const centerRingRadii = [0.8, 0.7, 0.6, 0.5];
+        centerRingRadii.forEach(radius => {
+            const ringGeo = new THREE.TorusGeometry(radius, 0.04, 16, 128);
+            const ring = new THREE.Mesh(ringGeo, darkMetalMaterial);
+            const ringOutline = createOutline(ringGeo, outlineMaterial);
+            ring.add(ringOutline);
+            arcReactorGroup.add(ring);
+        });
+
+        // 7. Layered Glow Sprites
         const coreGlow = new THREE.Sprite(coreGlowMaterial);
         coreGlow.scale.set(1.5, 1.5, 1.5); // Small, bright white
+        coreGlow.position.z = 0.1;
         arcReactorGroup.add(coreGlow);
 
         const outerGlow = new THREE.Sprite(outerGlowMaterial);
-        outerGlow.scale.set(7, 7, 7); // Large, blue aura
+        outerGlow.scale.set(8, 8, 8); // Large, blue aura
         arcReactorGroup.add(outerGlow);
 
         // Animation Loop
         function animateCore() {
             requestAnimationFrame(animateCore);
             
-            // Rotate the whole reactor slowly
-            arcReactorGroup.rotation.z -= 0.005;
-            // Rotate the inner coils faster
+            // Rotate the inner coils
             coilGroup.rotation.z += 0.01;
+            // Rotate the outer spoke structure
+            spokeGroup.rotation.z -= 0.005;
             
             renderer.render(scene, camera);
         }
         animateCore();
         // --- End 3D Arc Reactor Core ---
         
-        gsap.to(".ring-1", { rotation: 360, duration: 40, repeat: -1, ease: "none" });
-        gsap.to(".ring-2", { rotation: -360, duration: 30, repeat: -1, ease: "none" });
-        gsap.to(".ring-3", { rotation: 360, duration: 20, repeat: -1, ease: "none" });
-
         window.addEventListener('resize', () => {
             // Update camera
             camera.aspect = window.innerWidth / window.innerHeight;
@@ -1232,7 +1264,7 @@
             }
             
             // Also pulse the 3D core
-            const musicScale = 1.0 + Math.abs(Math.sin(waveTime * 2.0)) * 0.2; // 1.0 to 1.2
+            const musicScale = 1.0 + Math.abs(Math.sin(waveTime * 2.0)) * 0.1; // 1.0 to 1.1
             gsap.to(arcReactorGroup.scale, { x: musicScale, y: musicScale, z: musicScale, duration: 0.1 });
         }
         // --- End Visualizer Replacement ---
@@ -1243,7 +1275,7 @@
             
             // Voice Reactivity for Arc Reactor
             const average = dataArray.reduce((acc, val) => acc + val, 0) / dataArray.length;
-            const scale = 1 + (average / 256) * 0.5; // Scale up to 50% based on volume
+            const scale = 1 + (average / 256) * 0.3; // Scale up to 30% based on volume
             
             // UPDATED: Animate the Arc Reactor Group
             gsap.to(arcReactorGroup.scale, { x: scale, y: scale, z: scale, duration: 0.1 });
@@ -1321,7 +1353,7 @@
                     if (endSound) endSound.play().catch(e => console.error("End sound error:", e));
                     
                     // UPDATED: Animate Arc Reactor Group
-                    speakingAnimation = gsap.to(arcReactorGroup.scale, { x: 1.2, y: 1.2, z: 1.2, duration: 0.5, yoyo: true, repeat: -1, ease: "power1.inOut" });
+                    speakingAnimation = gsap.to(arcReactorGroup.scale, { x: 1.15, y: 1.15, z: 1.15, duration: 0.5, yoyo: true, repeat: -1, ease: "power1.inOut" });
                 };
                 utterance.onend = () => {
                     updateStatus("System Ready");
