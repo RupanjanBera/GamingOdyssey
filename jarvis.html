@@ -1082,39 +1082,47 @@
             animateWaveform();
         }
 
-        // NEW: Procedural wave for music
+        // --- REPLACED: New Procedural "Equalizer" Music Visualizer ---
+        // Note: This is procedural, not truly audio-reactive, due to YouTube iframe security limitations.
         function drawMusicWaveform() {
-            waveTime += 0.05; // Speed of the wave
+            waveTime += 0.03; // Slower, smoother speed
             const width = waveformCanvas.width;
             const height = waveformCanvas.height;
-            const halfHeight = height / 2;
+            const halfWidth = width / 2;
+            const numBars = 32; // Number of bars on each side
+            const barWidth = (width / 2) / numBars;
 
-            waveformCtx.beginPath();
-            waveformCtx.strokeStyle = 'rgba(0, 217, 255, 0.8)'; // var(--neon-blue)
-            waveformCtx.lineWidth = 2;
+            const gradient = waveformCtx.createLinearGradient(0, 0, 0, height);
+            gradient.addColorStop(0, "rgba(0, 217, 255, 0.8)"); // --neon-blue
+            gradient.addColorStop(0.5, "rgba(0, 217, 255, 0.5)");
+            gradient.addColorStop(1, "rgba(0, 217, 255, 0.2)");
+            waveformCtx.fillStyle = gradient;
 
-            for (let x = 0; x < width; x++) {
-                // Combine multiple sin waves for a complex look
-                const y1 = Math.sin(x * 0.05 + waveTime) * halfHeight * 0.3;
-                const y2 = Math.sin(x * 0.02 + waveTime * 1.5) * halfHeight * 0.4;
-                const y3 = (Math.random() - 0.5) * halfHeight * 0.1; // Jitter
+            for (let i = 0; i < numBars; i++) {
+                // Create a "bouncing" effect using sin waves
+                // Each bar gets a slightly different phase and frequency
+                let barHeight = Math.abs(Math.sin(i * 0.2 + waveTime) * height * 0.6) +
+                                Math.abs(Math.sin(i * 0.05 + waveTime * 0.5) * height * 0.4);
                 
-                const y = halfHeight + y1 + y2 + y3;
+                // Add a global pulse
+                let globalPulse = Math.sin(waveTime * 2.0) * 0.2 + 0.8; // Pulses between 0.6 and 1.0
+                barHeight *= globalPulse;
                 
-                if (x === 0) {
-                    waveformCtx.moveTo(x, y);
-                } else {
-                    waveformCtx.lineTo(x, y);
-                }
+                // Ensure minimum height
+                barHeight = Math.max(2, barHeight); 
+
+                // Draw bars mirrored from the center, with a small gap (barWidth * 0.8)
+                waveformCtx.fillRect(halfWidth + i * barWidth, height - barHeight, barWidth * 0.8, barHeight); // Right side
+                waveformCtx.fillRect(halfWidth - (i + 1) * barWidth, height - barHeight, barWidth * 0.8, barHeight); // Left side
             }
-            waveformCtx.stroke();
             
             // Also pulse the 3D core
-            const musicScale = 1.0 + Math.abs(Math.sin(waveTime * 1.5)) * 0.2; // 1.0 to 1.2
+            const musicScale = 1.0 + Math.abs(Math.sin(waveTime * 2.0)) * 0.2; // 1.0 to 1.2
             gsap.to(uniforms.u_scale, { value: musicScale, duration: 0.1 });
         }
+        // --- End Visualizer Replacement ---
 
-        // NEW: Renamed from drawWaveform
+        // Renamed from drawWaveform
         function drawMicrophoneWaveform() {
             if (!analyser) return;
             analyser.getByteFrequencyData(dataArray);
