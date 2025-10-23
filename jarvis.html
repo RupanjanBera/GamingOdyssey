@@ -25,13 +25,16 @@
             box-sizing: border-box;
         }
 
-        html, body {
+        body {
             background-color: var(--bg-color);
             color: var(--neon-blue);
             font-family: 'Orbitron', sans-serif;
             overflow: hidden;
-            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             height: 100vh;
+            width: 100vw;
         }
 
         /* --- Start Overlay --- */
@@ -52,13 +55,13 @@
         }
         
         #start-overlay h1 {
-            font-size: clamp(2.5rem, 5vw, 3rem); /* Responsive font */
+            font-size: 3rem;
             text-shadow: 0 0 15px var(--glow-color);
             margin-bottom: 20px;
         }
 
         #start-overlay p {
-            font-size: clamp(1rem, 3vw, 1.2rem);
+            font-size: 1.2rem;
             animation: pulse-text 2s infinite;
         }
         
@@ -68,7 +71,7 @@
             100% { opacity: 1; }
         }
 
-        /* --- Face Authentication Overlay --- */
+        /* --- NEW: Face Authentication Overlay --- */
         #face-auth-overlay {
             position: absolute;
             top: 0;
@@ -86,9 +89,8 @@
 
         #video-wrapper {
             position: relative;
-            /* Responsive wrapper */
-            width: clamp(280px, 90vw, 480px); 
-            height: clamp(210px, 67.5vw, 360px);
+            width: 480px;
+            height: 360px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -175,18 +177,28 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            top: 0;
-            left: 0;
             z-index: 1;
         }
-        
+
+        .hud-ring {
+            position: absolute;
+            border: 2px solid var(--neon-blue);
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--glow-color), inset 0 0 10px var(--glow-color);
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .ring-1 { width: 400px; height: 400px; }
+        .ring-2 { width: 450px; height: 450px; border-style: dashed; }
+        .ring-3 { width: 500px; height: 500px; }
+
         /* --- Chat Window --- */
         .chat-container {
             position: absolute;
             right: 20px;
             top: 20px;
-            /* RESPONSIVE: Use clamp for flexible width */
-            width: clamp(320px, 30vw, 400px);
+            width: 350px;
             height: calc(100vh - 180px); /* Adjust height based on input area */
             background: rgba(10, 25, 47, 0.5);
             border: 1px solid var(--neon-blue);
@@ -249,9 +261,8 @@
         .input-container {
             position: absolute;
             bottom: 30px;
-            /* RESPONSIVE: Flexible width */
-            width: clamp(300px, 50vw, 700px);
-            max-width: 90vw; /* Ensure it doesn't overflow on small screens */
+            width: 50%;
+            max-width: 600px;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -287,7 +298,6 @@
             box-shadow: 0 0 15px var(--glow-color);
             transition: all 0.3s ease;
             animation: pulse 2s infinite;
-            flex-shrink: 0; /* Prevent button from shrinking */
         }
         
         #mic-btn.listening {
@@ -392,7 +402,7 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 5, 10, 0.95);
-            display: none; /* Changed from flex */
+            display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
@@ -436,8 +446,7 @@
         #clear-chat-btn {
             position: absolute;
             bottom: 30px;
-            /* RESPONSIVE: Position right of chat window, or adapt on mobile */
-            right: calc(clamp(320px, 30vw, 400px) + 30px);
+            right: 390px;
             background: var(--dark-blue);
             border: 1px solid var(--neon-blue);
             color: var(--neon-blue);
@@ -461,8 +470,7 @@
         #model-toggle-btn {
             position: absolute;
             top: 70px;
-            /* RESPONSIVE: Position right of chat window, or adapt on mobile */
-            right: calc(clamp(320px, 30vw, 400px) + 30px);
+            right: 390px;
             background: rgba(10, 25, 47, 0.8);
             padding: 8px 15px;
             border-radius: 20px;
@@ -548,95 +556,27 @@
         }
 
         /* --- Responsive Design --- */
-        
-        /* Tablet and smaller */
-        @media (max-width: 1024px) {
-            #clear-chat-btn, #model-toggle-btn {
-                right: 20px; /* Move buttons to screen edge */
-                bottom: 120px; /* Stack clear button */
-            }
-            #model-toggle-btn {
-                top: auto;
-                bottom: 170px; /* Stack model button */
-            }
-        }
-        
-        /* Mobile */
         @media (max-width: 768px) {
+            #video-wrapper { width: 90vw; height: 67.5vw; }
+            #webcam-feed { width: 100%; height: 100%; }
+            #scan-line { width: 100%; }
+
             .chat-container {
                 width: 100%;
-                height: 50%; /* Take top 50% of screen */
-                top: 0; 
-                right: 0;
-                bottom: auto;
-                border-radius: 0; 
-                border-left: none; 
-                border-right: none;
-                border-top: none;
+                height: 50%;
+                top: 0; right: 0;
+                border-radius: 0; border-left: none; border-right: none;
             }
-            .input-container { 
-                width: 90%; 
-                bottom: 20px; 
-            }
-            #waveform-canvas { 
-                bottom: 100px; /* Position above input */
-                width: 70vw;
-            }
-            #status-indicator { 
-                top: calc(50% + 10px); /* Position below chatbox */
-                font-size: 0.8rem;
-            }
-            #system-info { 
-                display: none; /* Hide for space */
-            }
-            #media-player-container { 
-                display: none; /* Hide media player for simplicity */
-            }
-            #mic-permission-overlay { 
-                padding: 15px; 
-            }
-            #mic-permission-overlay h2 { 
-                font-size: 1.5rem; 
-            }
-            #clear-chat-btn, #model-toggle-btn { 
-                right: 20px; 
-                bottom: 100px; /* Position above input */
-                font-size: 0.8rem;
-                padding: 8px 12px;
-            }
-            #model-toggle-btn {
-                bottom: 150px; /* Stack above clear button */
-            }
-        }
-
-        /* Small Mobile */
-        @media (max-width: 480px) {
-            #user-input {
-                font-size: 14px;
-                padding: 12px;
-            }
-            #mic-btn {
-                width: 50px;
-                height: 50px;
-            }
-            #mic-btn svg {
-                width: 24px;
-                height: 24px;
-            }
-            .chat-message {
-                padding: 8px 12px;
-                line-height: 1.3;
-                max-width: 90%;
-            }
-            #clear-chat-btn, #model-toggle-btn {
-                bottom: 85px; /* Adjust for smaller input */
-            }
-            #model-toggle-btn {
-                 bottom: 135px;
-            }
-            #waveform-canvas {
-                 bottom: 85px;
-            }
+            .input-container { width: 90%; bottom: 20px; }
+            .hud-ring { display: none; }
+            #waveform-canvas { bottom: 100px; }
+            #status-indicator { top: 10px; }
+            #system-info { display: none; }
+            #media-player-container { display: none; } /* Hide media player on small screens for simplicity */
+            #mic-permission-overlay { padding: 15px; }
+            #mic-permission-overlay h2 { font-size: 1.5rem; }
+            #clear-chat-btn { right: 20px; bottom: 100px; }
+            #model-toggle-btn { right: 20px; top: 70px; }
         }
     </style>
 </head>
@@ -664,6 +604,10 @@
         <div class="scan-lines"></div>
 
         <canvas id="jarvis-core"></canvas>
+
+        <div class="hud-ring ring-1"></div>
+        <div class="hud-ring ring-2"></div>
+        <div class="hud-ring ring-3"></div>
 
         <div id="status-indicator">
             <div class="status-dot" id="status-dot"></div>
@@ -933,7 +877,7 @@
                 microphoneGranted = true;
                 micBtn.disabled = false;
             } else if (status === 'denied') {
-                microphoneGrasnted = false;
+                microphoneGranted = false;
                 micBtn.disabled = true;
                 statusDot.classList.add('warning');
             } else {
@@ -993,207 +937,107 @@
             micStatus.textContent = "Not Supported";
         }
         
-        // --- NEW: High-Detail PROCEDURAL 3D Arc Reactor (Blueprint Version) ---
+        // --- UPDATED: Dynamic Shader-Based 3D Particle Core ---
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('jarvis-core'), alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        camera.position.z = 4.0; // Zoomed in a little
+        camera.position.z = 5;
 
-        // --- NEW: Lighting ---
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
-        scene.add(ambientLight);
-        const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x444444, 0.5);
-        scene.add(hemisphereLight);
-        const mainLight = new THREE.PointLight(0xffffff, 0.6, 100);
-        mainLight.position.set(5, 5, 5);
-        scene.add(mainLight);
-        // Blue light cast *from* the core
-        const coreLight = new THREE.PointLight(0x00d9ff, 1.5, 50);
-        coreLight.position.set(0, 0, 0.5);
-        scene.add(coreLight);
+        // --- NEW: Shader Code ---
+        const vertexShaderSource = `
+            uniform float u_time;
+            uniform float u_scale;
 
-        // --- NEW: Textures (Embedded as Data URLs) ---
-        const loader = new THREE.TextureLoader();
-        
-        // Texture for soft glow sprite
-        const glowTexture = loader.load('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAFnSURBVHic7d1NCoAwEAXQC83/f2wdhB3ETuysmWZzljOvu1BwmlhrrQ1gREiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABEiABM1BTJ21/2P6PqWAAAAAElFTkSuQmCC');
-        
-        // Texture for copper windings (many vertical stripes)
-        const windingTexture = loader.load('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAADBJREFUOEpicPz48X8GZoAYQGyYFBgaGv6j0M4YirFBbJgUGBoa/qPQzhgKsUFsmBQYGhp+bAAAFwYGAJc+wBYAAAAASUVORK5CYII=');
-        windingTexture.wrapS = THREE.RepeatWrapping;
-        windingTexture.wrapT = THREE.RepeatWrapping;
+            void main() {
+                vec3 pos = position;
+                
+                // Add a complex, time-based warp to the particles
+                float warp = sin(pos.y * 2.0 + u_time * 0.5) * 0.3 + 
+                             cos(pos.x * 2.0 + u_time * 0.3) * 0.3;
+                
+                pos.z += warp;
+                pos.x += cos(pos.z * 1.5 + u_time * 0.2) * 0.2;
+                
+                // Apply the scale animation (for speaking/listening)
+                vec3 animatedPos = pos * u_scale;
 
-        // --- NEW: Realistic Materials ---
-        const darkMetalMaterial = new THREE.MeshStandardMaterial({
-            color: 0x1a1a1a, // Darker metal
-            metalness: 0.9,
-            roughness: 0.4,
-            side: THREE.DoubleSide
-        });
-        
-        const copperMaterial = new THREE.MeshStandardMaterial({
-            color: 0xb87333,
-            metalness: 1.0,
-            roughness: 0.3,
-            map: windingTexture,
-            side: THREE.DoubleSide
-        });
+                vec4 modelViewPosition = modelViewMatrix * vec4(animatedPos, 1.0);
+                gl_Position = projectionMatrix * modelViewPosition;
+                
+                // Make particles smaller further away
+                gl_PointSize = (10.0 / -modelViewPosition.z) * (u_scale * 0.5); 
+            }
+        `;
 
-        // --- NEW: Outline Material ---
-        const outlineMaterial = new THREE.LineBasicMaterial({
-            color: 0x00d9ff,
-            linewidth: 2,
-            transparent: true,
-            opacity: 0.7,
-            blending: THREE.AdditiveBlending
-        });
+        const fragmentShaderSource = `
+            uniform vec3 u_color;
+
+            void main() {
+                // Create a soft, glowing dot
+                float strength = 1.0 - (distance(gl_PointCoord, vec2(0.5)) * 2.0);
+                gl_FragColor = vec4(u_color, strength * 0.8);
+            }
+        `;
+
+        // --- NEW: Shader Uniforms ---
+        const uniforms = {
+            u_time: { value: 0.0 },
+            u_color: { value: new THREE.Color(0x00d9ff) }, // --neon-blue
+            u_scale: { value: 1.0 }
+        };
+
+        const particleCount = 10000;
+        const positions = new Float32Array(particleCount * 3);
+        for (let i = 0; i < particleCount; i++) {
+            // Create a random point in a sphere (Fibonacci lattice)
+            const iFloat = i + 0.5;
+            const phi = Math.acos(1 - 2 * iFloat / particleCount);
+            const theta = Math.PI * (1 + Math.sqrt(5)) * iFloat;
+            const r = 2.5; // Radius of the sphere
+            positions[i * 3] = r * Math.cos(theta) * Math.sin(phi);
+            positions[i * 3 + 1] = r * Math.sin(theta) * Math.sin(phi);
+            positions[i * 3 + 2] = r * Math.cos(phi);
+        }
+        const particleGeometry = new THREE.BufferGeometry();
+        particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
         
-        // --- NEW: Glow Sprite Materials ---
-        const coreGlowMaterial = new THREE.SpriteMaterial({
-            map: glowTexture,
-            color: 0xffffff, // Bright white center
+        // --- NEW: Shader Material ---
+        const particleMaterial = new THREE.ShaderMaterial({
+            uniforms: uniforms,
+            vertexShader: vertexShaderSource,
+            fragmentShader: fragmentShaderSource,
             blending: THREE.AdditiveBlending,
             transparent: true,
-            opacity: 0.9
-        });
-        
-        const outerGlowMaterial = new THREE.SpriteMaterial({
-            map: glowTexture,
-            color: 0x00d9ff, // Neon blue aura
-            blending: THREE.AdditiveBlending,
-            transparent: true,
-            opacity: 0.5,
-            sizeAttenuation: true
+            depthWrite: false
         });
 
-        // --- NEW: Build Reactor Geometry based on Blueprint ---
-        const arcReactorGroup = new THREE.Group();
-        const spokeGroup = new THREE.Group(); // To rotate spokes separately
-        const coilGroup = new THREE.Group(); // To rotate coils separately
-        arcReactorGroup.add(spokeGroup);
-        arcReactorGroup.add(coilGroup);
-        scene.add(arcReactorGroup);
+        const particleSystem = new THREE.Points(particleGeometry, particleMaterial);
+        scene.add(particleSystem);
 
-        // Helper function to create outlines
-        function createOutline(geometry, material) {
-            const edges = new THREE.EdgesGeometry(geometry);
-            const line = new THREE.LineSegments(edges, material);
-            return line;
-        }
-
-        // 1. Outer Ring
-        const outerRingGeo = new THREE.TorusGeometry(2.5, 0.1, 16, 128);
-        const outerRing = new THREE.Mesh(outerRingGeo, darkMetalMaterial);
-        const outerRingOutline = createOutline(outerRingGeo, outlineMaterial);
-        outerRing.add(outerRingOutline);
-        spokeGroup.add(outerRing);
-
-        // 2. Inner Ring 1 (Spoke Connector)
-        const innerRing1Geo = new THREE.TorusGeometry(1.8, 0.05, 16, 128);
-        const innerRing1 = new THREE.Mesh(innerRing1Geo, darkMetalMaterial);
-        const innerRing1Outline = createOutline(innerRing1Geo, outlineMaterial);
-        innerRing1.add(innerRing1Outline);
-        spokeGroup.add(innerRing1);
-
-        // 3. Spokes (16 of them)
-        const numSpokes = 16;
-        const spokeGeo = new THREE.BoxGeometry(0.1, 0.8, 0.1);
-        for (let i = 0; i < numSpokes; i++) {
-            const spoke = new THREE.Mesh(spokeGeo, darkMetalMaterial);
-            const angle = (i / numSpokes) * Math.PI * 2;
-            
-            // Position spoke between the two rings
-            spoke.position.x = Math.sin(angle) * 2.15; 
-            spoke.position.y = Math.cos(angle) * 2.15;
-            spoke.lookAt(0, 0, 0); // Point towards center
-            
-            const spokeOutline = createOutline(spokeGeo, outlineMaterial);
-            spoke.add(spokeOutline);
-            spokeGroup.add(spoke);
-        }
-
-        // 4. Copper Coils (8 of them, behind spokes)
-        const numCoils = 8;
-        const coilRadius = 2.15; // Same radius as spokes, but different geometry
-        const coilTube = 0.2; // Thickness of coil
-        const coilAngle = (Math.PI * 2 / numSpokes) * 0.8; // 80% of the gap between spokes
-
-        for (let i = 0; i < numCoils; i++) {
-            const coilGeo = new THREE.TorusGeometry(coilRadius, coilTube, 16, 64, coilAngle);
-            const coilMat = copperMaterial.clone();
-            coilMat.map = windingTexture.clone();
-            coilMat.map.repeat.set(20, 1); // 20 "curls" per coil
-            
-            const coil = new THREE.Mesh(coilGeo, coilMat);
-            
-            // Offset angle to sit between spokes
-            const angle = (i / numCoils) * Math.PI * 2 + (Math.PI / numCoils); 
-            coil.rotation.z = angle;
-            coil.position.z = -0.1; // Place *behind* spokes
-            
-            coilGroup.add(coil);
-        }
-
-        // 5. Bolt Circles (4 of them)
-        const numBolts = 4;
-        const boltGeo = new THREE.CylinderGeometry(0.1, 0.1, 0.15, 16);
-        for (let i = 0; i < numBolts; i++) {
-            const bolt = new THREE.Mesh(boltGeo, darkMetalMaterial);
-            const angle = (i / numBolts) * (Math.PI * 2);
-            
-            bolt.position.x = Math.sin(angle) * 1.5;
-            bolt.position.y = Math.cos(angle) * 1.5;
-            bolt.rotation.x = Math.PI / 2; // Lay flat
-            
-            const boltOutline = createOutline(boltGeo, outlineMaterial);
-            bolt.add(boltOutline);
-            arcReactorGroup.add(bolt);
-        }
-
-        // 6. Center Rings (4 of them)
-        const centerRingRadii = [0.8, 0.7, 0.6, 0.5];
-        centerRingRadii.forEach(radius => {
-            const ringGeo = new THREE.TorusGeometry(radius, 0.04, 16, 128);
-            const ring = new THREE.Mesh(ringGeo, darkMetalMaterial);
-            const ringOutline = createOutline(ringGeo, outlineMaterial);
-            ring.add(ringOutline);
-            arcReactorGroup.add(ring);
-        });
-
-        // 7. Layered Glow Sprites
-        const coreGlow = new THREE.Sprite(coreGlowMaterial);
-        coreGlow.scale.set(1.5, 1.5, 1.5); // Small, bright white
-        coreGlow.position.z = 0.1;
-        arcReactorGroup.add(coreGlow);
-
-        const outerGlow = new THREE.Sprite(outerGlowMaterial);
-        outerGlow.scale.set(8, 8, 8); // Large, blue aura
-        arcReactorGroup.add(outerGlow);
-
-        // Animation Loop
         function animateCore() {
             requestAnimationFrame(animateCore);
             
-            // Rotate the inner coils
-            coilGroup.rotation.z += 0.01;
-            // Rotate the outer spoke structure
-            spokeGroup.rotation.z -= 0.005;
+            // Update shader time for animation
+            uniforms.u_time.value += 0.01;
+            
+            // No longer need to rotate the whole system
+            // particleSystem.rotation.x += 0.0005; 
+            // particleSystem.rotation.y += 0.001;
             
             renderer.render(scene, camera);
         }
         animateCore();
-        // --- End 3D Arc Reactor Core ---
+        // --- End 3D Core Update ---
         
+        gsap.to(".ring-1", { rotation: 360, duration: 40, repeat: -1, ease: "none" });
+        gsap.to(".ring-2", { rotation: -360, duration: 30, repeat: -1, ease: "none" });
+        gsap.to(".ring-3", { rotation: 360, duration: 20, repeat: -1, ease: "none" });
+
         window.addEventListener('resize', () => {
-            // Update camera
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
-
-            // Update renderer
             renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         });
         
         // --- UPDATED: Audio Visualizer (Mic + Music) ---
@@ -1229,9 +1073,9 @@
                 } else if (analyser && micBtn.classList.contains('listening')) {
                     drawMicrophoneWaveform();
                 } else if (!isMusicPlaying && !micBtn.classList.contains('listening')) {
-                    // Fade out reactor scale if it was reacting
-                    if (arcReactorGroup.scale.x !== 1.0) {
-                        gsap.to(arcReactorGroup.scale, { x: 1.0, y: 1.0, z: 1.0, duration: 0.5, ease: "power2.out" });
+                    // Fade out particle system if it was reacting
+                    if (uniforms.u_scale.value !== 1.0) {
+                        gsap.to(uniforms.u_scale, { value: 1.0, duration: 0.5, ease: "power2.out" });
                     }
                 }
             }
@@ -1239,6 +1083,7 @@
         }
 
         // --- REPLACED: New Procedural "Equalizer" Music Visualizer ---
+        // Note: This is procedural, not truly audio-reactive, due to YouTube iframe security limitations.
         function drawMusicWaveform() {
             waveTime += 0.03; // Slower, smoother speed
             const width = waveformCanvas.width;
@@ -1254,31 +1099,40 @@
             waveformCtx.fillStyle = gradient;
 
             for (let i = 0; i < numBars; i++) {
+                // Create a "bouncing" effect using sin waves
+                // Each bar gets a slightly different phase and frequency
                 let barHeight = Math.abs(Math.sin(i * 0.2 + waveTime) * height * 0.6) +
                                 Math.abs(Math.sin(i * 0.05 + waveTime * 0.5) * height * 0.4);
-                let globalPulse = Math.sin(waveTime * 2.0) * 0.2 + 0.8;
+                
+                // Add a global pulse
+                let globalPulse = Math.sin(waveTime * 2.0) * 0.2 + 0.8; // Pulses between 0.6 and 1.0
                 barHeight *= globalPulse;
+                
+                // Ensure minimum height
                 barHeight = Math.max(2, barHeight); 
-                waveformCtx.fillRect(halfWidth + i * barWidth, height - barHeight, barWidth * 0.8, barHeight);
-                waveformCtx.fillRect(halfWidth - (i + 1) * barWidth, height - barHeight, barWidth * 0.8, barHeight);
+
+                // Draw bars mirrored from the center, with a small gap (barWidth * 0.8)
+                waveformCtx.fillRect(halfWidth + i * barWidth, height - barHeight, barWidth * 0.8, barHeight); // Right side
+                waveformCtx.fillRect(halfWidth - (i + 1) * barWidth, height - barHeight, barWidth * 0.8, barHeight); // Left side
             }
             
             // Also pulse the 3D core
-            const musicScale = 1.0 + Math.abs(Math.sin(waveTime * 2.0)) * 0.1; // 1.0 to 1.1
-            gsap.to(arcReactorGroup.scale, { x: musicScale, y: musicScale, z: musicScale, duration: 0.1 });
+            const musicScale = 1.0 + Math.abs(Math.sin(waveTime * 2.0)) * 0.2; // 1.0 to 1.2
+            gsap.to(uniforms.u_scale, { value: musicScale, duration: 0.1 });
         }
         // --- End Visualizer Replacement ---
 
+        // Renamed from drawWaveform
         function drawMicrophoneWaveform() {
             if (!analyser) return;
             analyser.getByteFrequencyData(dataArray);
             
-            // Voice Reactivity for Arc Reactor
+            // Voice Reactivity for Particle Core
             const average = dataArray.reduce((acc, val) => acc + val, 0) / dataArray.length;
-            const scale = 1 + (average / 256) * 0.3; // Scale up to 30% based on volume
+            const scale = 1 + (average / 256) * 0.5; // Scale up to 50% based on volume
             
-            // UPDATED: Animate the Arc Reactor Group
-            gsap.to(arcReactorGroup.scale, { x: scale, y: scale, z: scale, duration: 0.1 });
+            // UPDATED: Animate shader uniform
+            gsap.to(uniforms.u_scale, { value: scale, duration: 0.1 });
 
             // Draw mic waveform
             const barWidth = (waveformCanvas.width / dataArray.length) * 1.5;
@@ -1299,6 +1153,7 @@
 
 
         // --- Core Functions ---
+        // *** REBUILT: Robust Voice Loading and Speaking logic ***
         let jarvisVoice = null;
         let voiceInitializationPromise = null;
 
@@ -1334,7 +1189,7 @@
         }
 
         async function speak(text) {
-            await initializeSpeech();
+            await initializeSpeech(); // Ensure voices are loaded before speaking
             speechSynthesis.cancel();
             
             if (speakingAnimation) speakingAnimation.kill();
@@ -1347,20 +1202,21 @@
             utterance.rate = 1.05;
             utterance.volume = 1.0;
             
+            // Return a promise that resolves when speech ends
             return new Promise((resolve, reject) => {
                 utterance.onstart = () => {
                     updateStatus("Speaking");
                     if (endSound) endSound.play().catch(e => console.error("End sound error:", e));
                     
-                    // UPDATED: Animate Arc Reactor Group
-                    speakingAnimation = gsap.to(arcReactorGroup.scale, { x: 1.15, y: 1.15, z: 1.15, duration: 0.5, yoyo: true, repeat: -1, ease: "power1.inOut" });
+                    // UPDATED: Animate shader uniform
+                    speakingAnimation = gsap.to(uniforms.u_scale, { value: 1.2, duration: 0.5, yoyo: true, repeat: -1, ease: "power1.inOut" });
                 };
                 utterance.onend = () => {
                     updateStatus("System Ready");
                     if (speakingAnimation) speakingAnimation.kill();
                     
-                    // UPDATED: Animate Arc Reactor Group
-                    gsap.to(arcReactorGroup.scale, { x: 1, y: 1, z: 1, duration: 0.3 });
+                    // UPDATED: Animate shader uniform
+                    gsap.to(uniforms.u_scale, { value: 1, duration: 0.3 });
                     resolve();
                 };
                 utterance.onerror = (e) => {
@@ -1751,6 +1607,10 @@
             if (!hasPermission) {
                 setTimeout(() => { micPermissionOverlay.style.display = 'flex'; }, 1000);
             } else {
+                // If permission is already granted, set up the visualizer
+                // but don't ask for the mic stream again, requestMicrophoneAccess will handle it.
+                // We need *a* stream, even a dummy one, to start the visualizer loop.
+                // Let's change logic: request access silently if granted.
                 if (microphoneGranted) {
                     try {
                         audioStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } });
