@@ -8,8 +8,6 @@
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
-    <script src="https://www.youtube.com/iframe_api"></script>
-
     <style>
         /* --- Basic Setup & Theme --- */
         :root {
@@ -942,6 +940,8 @@
             }
         }
 
+        // --- MODIFIED: This function is now attached to the global window
+        // so the YouTube API can find it when it loads.
         window.onYouTubeIframeAPIReady = function() {
             ytPlayer = new YT.Player('youtube-player', {
                 height: '100%',
@@ -955,7 +955,10 @@
                     'modestbranding': 1 // Reduce YouTube logo
                 },
                 events: {
-                    'onReady': () => { isPlayerReady = true; },
+                    'onReady': () => { 
+                        console.log("YouTube Player is Ready.");
+                        isPlayerReady = true; 
+                    },
                     'onStateChange': onPlayerStateChange,
                     'onError': onPlayerError
                 }
@@ -1721,7 +1724,8 @@
                                     
                                     // Re-enable all inputs
                                     userInput.disabled = false;
-                                    micBtn.disabled = false;
+                                    // Re-check mic status to enable/disable
+                                    checkMicrophonePermission(); 
                                     clearChatBtn.disabled = false;
                                     modelToggleBtn.disabled = false;
                                     
@@ -2040,11 +2044,23 @@
             }
         }
 
-        // --- Initialization on User Interaction ---
+        // --- FIXED: Initialization on User Interaction ---
         startOverlay.addEventListener('click', async () => {
             startOverlay.style.opacity = '0';
             setTimeout(() => startOverlay.style.display = 'none', 500);
             
+            // --- FIX APPLIED: Manually load YouTube API ---
+            // We only load the API *after* the user clicks,
+            // which guarantees our onYouTubeIframeAPIReady function already exists.
+            if (!window.YT) { // Check if API is already loaded
+                console.log("Loading YouTube IFrame API...");
+                const tag = document.createElement('script');
+                tag.src = "https://www.youtube.com/iframe_api";
+                const firstScriptTag = document.getElementsByTagName('script')[0];
+                firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+            }
+            // --- End Fix ---
+
             // Call the new face auth function instead of directly initializing
             await startFaceAuthentication();
 
