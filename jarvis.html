@@ -17,6 +17,7 @@
             --dark-blue: #0a192f;
             --glow-color: rgba(0, 217, 255, 0.75);
             --bg-color: #00050a;
+            --neon-red: #ff004c;
         }
 
         * {
@@ -464,6 +465,12 @@
             box-shadow: 0 0 10px var(--glow-color);
             z-index: 10;
         }
+        
+        #clear-chat-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            animation: none;
+        }
 
         #clear-chat-btn:hover {
             background: var(--neon-blue);
@@ -487,6 +494,12 @@
             font-size: 0.9rem;
             cursor: pointer;
             transition: all 0.3s ease;
+        }
+        
+        #model-toggle-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            animation: none;
         }
 
         #model-toggle-btn:hover {
@@ -589,7 +602,7 @@
         }
         /* --- End Custom Media Controls --- */
 
-        /* --- NEW: Self-Destruct Effect --- */
+        /* --- NEW: Self-Destruct Effect (Upgraded) --- */
         #destruction-overlay {
             position: absolute;
             top: 0;
@@ -613,22 +626,43 @@
             animation: white-flash 0.2s ease-out;
         }
 
-        /* Glitch effect */
-        #destruction-overlay.active::before {
-            content: '';
+        .jarvis-container.shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+            transform: translate3d(0, 0, 0);
+        }
+        
+        /* NEW: Glitch Text */
+        #destruction-overlay .glitch-text {
+            position: relative;
+            font-size: 2rem;
+            color: var(--neon-red);
+            text-shadow: 0 0 10px var(--neon-red);
+            animation: glitch-skew 1s infinite linear alternate-reverse;
+        }
+        
+        #destruction-overlay .glitch-text::before,
+        #destruction-overlay .glitch-text::after {
+            content: attr(data-text);
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="none" stroke-width="10" stroke="rgba(255,0,0,0.3)" /><path d="M0 0 L100 100 M0 100 L100 0" stroke-width="5" stroke="rgba(255,255,255,0.1)" /></svg>');
-            animation: glitch 0.5s linear infinite;
-            opacity: 0.5;
+            background: #000; /* Match overlay background */
         }
         
-        .jarvis-container.shake {
-            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
-            transform: translate3d(0, 0, 0);
+        #destruction-overlay .glitch-text::before {
+            left: 2px;
+            text-shadow: -2px 0 var(--neon-blue);
+            clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+            animation: glitch-anim-1 2s infinite linear alternate-reverse;
+        }
+        
+        #destruction-overlay .glitch-text::after {
+            left: -2px;
+            text-shadow: 2px 0 var(--neon-red);
+            clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+            animation: glitch-anim-2 3s infinite linear alternate-reverse;
         }
 
         @keyframes white-flash {
@@ -644,18 +678,63 @@
           40%, 60% { transform: translate3d(4px, 0, 0); }
         }
         
-        @keyframes glitch {
-          0% { transform: translate(0); }
-          10% { transform: translate(-5px, -5px); }
-          20% { transform: translate(5px, 5px); }
-          30% { transform: translate(-5px, 5px); }
-          40% { transform: translate(5px, -5px); }
-          50% { transform: translate(-5px, -5px); }
-          60% { transform: translate(5px, 5px); }
-          70% { transform: translate(0, 5px); }
-          80% { transform: translate(0, -5px); }
-          90% { transform: translate(-5px, 0); }
-          100% { transform: translate(0); }
+        /* NEW: More advanced glitch animations */
+        @keyframes glitch-anim-1 {
+            0% { clip-path: polygon(0 40%, 100% 40%, 100% 45%, 0 45%); }
+            5% { clip-path: polygon(0 20%, 100% 20%, 100% 25%, 0 25%); }
+            10% { clip-path: polygon(0 40%, 100% 40%, 100% 50%, 0 50%); }
+            15% { clip-path: polygon(0 60%, 100% 60%, 100% 70%, 0 70%); }
+            20% { clip-path: polygon(0 80%, 100% 80%, 100% 90%, 0 90%); }
+            25% { clip-path: polygon(0 10%, 100% 10%, 100% 15%, 0 15%); }
+            30% { clip-path: polygon(0 30%, 100% 30%, 100% 35%, 0 35%); }
+            35% { clip-path: polygon(0 5%, 100% 5%, 100% 10%, 0 10%); }
+            40% { clip-path: polygon(0 90%, 100% 90%, 100% 95%, 0 95%); }
+            45% { clip-path: polygon(0 25%, 100% 25%, 100% 30%, 0 30%); }
+            50% { clip-path: polygon(0 50%, 100% 50%, 100% 55%, 0 55%); }
+            55% { clip-path: polygon(0 15%, 100% 15%, 100% 20%, 0 20%); }
+            60% { clip-path: polygon(0 75%, 100% 75%, 100% 80%, 0 80%); }
+            65% { clip-path: polygon(0 45%, 100% 45%, 100% 50%, 0 50%); }
+            70% { clip-path: polygon(0 65%, 100% 65%, 100% 70%, 0 70%); }
+            75% { clip-path: polygon(0 35%, 100% 35%, 100% 40%, 0 40%); }
+            80% { clip-path: polygon(0 85%, 100% 85%, 100% 90%, 0 90%); }
+            85% { clip-path: polygon(0 55%, 100% 55%, 100% 60%, 0 60%); }
+            90% { clip-path: polygon(0 5%, 100% 5%, 100% 15%, 0 15%); }
+            95% { clip-path: polygon(0 70%, 100% 70%, 100% 75%, 0 75%); }
+            100% { clip-path: polygon(0 50%, 100% 50%, 100% 55%, 0 55%); }
+        }
+        
+        @keyframes glitch-anim-2 {
+            0% { clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%); }
+            5% { clip-path: polygon(0 70%, 100% 70%, 100% 80%, 0 80%); }
+            10% { clip-path: polygon(0 50%, 100% 50%, 100% 60%, 0 60%); }
+            15% { clip-path: polygon(0 80%, 100% 80%, 100% 100%, 0 100%); }
+            20% { clip-path: polygon(0 60%, 100% 60%, 100% 70%, 0 70%); }
+            25% { clip-path: polygon(0 40%, 100% 40%, 100% 50%, 0 50%); }
+            30% { clip-path: polygon(0 75%, 100% 75%, 100% 85%, 0 85%); }
+            35% { clip-path: polygon(0 55%, 100% 55%, 100% 65%, 0 65%); }
+            40% { clip-path: polygon(0 45%, 100% 45%, 100% 55%, 0 55%); }
+            45% { clip-path: polygon(0 90%, 100% 90%, 100% 100%, 0 100%); }
+            50% { clip-path: polygon(0 20%, 100% 20%, 100% 30%, 0 30%); }
+            55% { clip-path: polygon(0 0, 100% 0, 100% 10%, 0 10%); }
+            60% { clip-path: polygon(0 30%, 100% 30%, 100% 40%, 0 40%); }
+            65% { clip-path: polygon(0 10%, 100% 10%, 100% 20%, 0 20%); }
+            70% { clip-path: polygon(0 85%, 100% 85%, 100% 95%, 0 95%); }
+            75% { clip-path: polygon(0 50%, 100% 50%, 100% 60%, 0 60%); }
+            80% { clip-path: polygon(0 25%, 100% 25%, 100% 35%, 0 35%); }
+            85% { clip-path: polygon(0 70%, 100% 70%, 100% 80%, 0 80%); }
+            90% { clip-path: polygon(0 40%, 100% 40%, 100% 50%, 0 50%); }
+            95% { clip-path: polygon(0 60%, 100% 60%, 100% 70%, 0 70%); }
+            100% { clip-path: polygon(0 20%, 100% 20%, 100% 30%, 0 30%); }
+        }
+        
+        @keyframes glitch-skew {
+            0% { transform: skew(0deg); }
+            10% { transform: skew(1deg); }
+            20% { transform: skew(-1deg); }
+            30% { transform: skew(2deg); }
+            40% { transform: skew(-2deg); }
+            50% { transform: skew(0deg); }
+            100% { transform: skew(0deg); }
         }
         /* --- End Self-Destruct Effect --- */
 
@@ -699,7 +778,9 @@
         <p id="auth-status">Initializing Biometric Scan...</p>
     </div>
 
-    <div id="destruction-overlay"></div>
+    <div id="destruction-overlay">
+        <span class="glitch-text" data-text="...CONNECTION TERMINATED...">...CONNECTION TERMINATED...</span>
+    </div>
 
     <div id="mic-permission-overlay" style="display: none;">
         <h2>Microphone Access Required</h2>
@@ -1581,13 +1662,17 @@
             return null;
         }
         
-        // --- NEW: Self-Destruct Function ---
+        // --- NEW: Self-Destruct Function (Upgraded with Reset) ---
         async function initiateSelfDestruct() {
             // 1. Disable all inputs
             userInput.disabled = true;
             micBtn.disabled = true;
             clearChatBtn.disabled = true;
             modelToggleBtn.disabled = true;
+
+            // Stop any media or speech
+            stopMediaPlayer();
+            speechSynthesis.cancel(); 
 
             // 2. JARVIS response
             const response = "I have been glad to serve you, sir. Initiating self-destruct sequence. Goodbye.";
@@ -1596,13 +1681,14 @@
 
             // 3. Play the audio
             try {
+                selfDestructSound.currentTime = 0; // Rewind sound
                 selfDestructSound.play();
             } catch (error) {
                 console.error("Self-destruct audio failed to play:", error);
                 addMessage("Audio playback error. Proceeding with visual destruction.", 'jarvis');
             }
 
-            // 4. Set timer for 19 seconds
+            // 4. Set timer for 19 seconds (the "boom")
             setTimeout(() => {
                 // Trigger destruction CSS
                 destructionOverlay.style.display = 'flex';
@@ -1610,17 +1696,42 @@
                     opacity: 1, 
                     duration: 0.1, 
                     onComplete: () => {
-                        // Add shake
+                        // Add shake and hide main container
                         jarvisContainer.classList.add('shake');
-                        // Show glitch/flash
                         destructionOverlay.classList.add('active');
                         
-                        // Hide the main UI after a flash
+                        // Hide the main UI
+                        jarvisContainer.style.display = 'none';
+                        
+                        // --- NEW: 5-second reboot timer ---
+                        // This starts AFTER the 19s boom
                         setTimeout(() => {
-                            jarvisContainer.style.display = 'none';
-                            // Add a "Connection Lost" message
-                            destructionOverlay.textContent = '...CONNECTION TERMINATED...';
-                        }, 1000); // 1 second after boom
+                            // Fade out the destruction overlay
+                            gsap.to(destructionOverlay, { 
+                                opacity: 0, 
+                                duration: 1.0, // Slower fade out
+                                onComplete: () => {
+                                    // Reset destruction overlay
+                                    destructionOverlay.style.display = 'none';
+                                    destructionOverlay.classList.remove('active');
+                                    
+                                    // Reset main container
+                                    jarvisContainer.classList.remove('shake');
+                                    jarvisContainer.style.display = 'flex'; // Show it again
+                                    
+                                    // Re-enable all inputs
+                                    userInput.disabled = false;
+                                    micBtn.disabled = false;
+                                    clearChatBtn.disabled = false;
+                                    modelToggleBtn.disabled = false;
+                                    
+                                    // Add reboot message
+                                    const rebootMsg = "System reboot complete. All functions back online.";
+                                    addMessage(rebootMsg, 'jarvis');
+                                    speak(rebootMsg);
+                                }
+                            });
+                        }, 5000); // 5 seconds *after* the boom
                     }
                 });
             }, 19000); // 19 seconds in milliseconds
