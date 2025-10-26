@@ -723,15 +723,15 @@
 
     <script type="module">
         // --- API Configuration ---
-        const GEMINI_API_KEY = 'YOUR_GEMINI_API_KEY'; // <-- IMPORTANT: REPLACE WITH YOUR KEY
-        const GOOGLE_SEARCH_API_KEY = 'YOUR_GOOGLE_SEARCH_API_KEY'; // <-- IMPORTANT: REPLACE WITH YOUR KEY
-        const SEARCH_ENGINE_ID = 'YOUR_SEARCH_ENGINE_ID'; // <-- IMPORTANT: REPLACE WITH YOUR KEY
+        const GEMINI_API_KEY = 'AIzaSyC52UBIsb0jWyjZJVLgYGz7nzaE1RpChdM'; // <-- IMPORTANT: REPLACE WITH YOUR KEY
+        const GOOGLE_SEARCH_API_KEY = 'AIzaSyBm8SxGHDl9pkrDuZt_VgFQME9a3aRUeXY'; // <-- IMPORTANT: REPLACE WITH YOUR KEY
+        const SEARCH_ENGINE_ID = 'd13b9c982e19f4ccf'; // <-- IMPORTANT: REPLACE WITH YOUR KEY
         const GOOGLE_SEARCH_URL = `https://www.googleapis.com/customsearch/v1?key=${GOOGLE_SEARCH_API_KEY}&cx=${SEARCH_ENGINE_ID}`;
         
         // --- NEW: Model Selection Logic ---
         const MODELS = {
-            'JARVIS Pro': 'gemini-1.5-pro-latest', // Updated to latest models
-            'JARVIS Flash': 'gemini-1.5-flash-latest'
+            'JARVIS Pro': 'gemini-2.5-pro', // Updated to latest models
+            'JARVIS Flash': 'gemini-2.5-flash'
         };
         let currentModelName = 'JARVIS Pro';
         
