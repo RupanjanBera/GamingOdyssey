@@ -1340,6 +1340,7 @@
             }
         }
         
+        // --- FULLY UPDATED FUNCTION ---
         function processSpecialCommands(prompt) {
             const lowerPrompt = prompt.toLowerCase();
             
@@ -1376,6 +1377,8 @@
             if (['date', "what's the date", "today's date"].includes(lowerPrompt)) {
                 return `Sir, today is ${new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}.`;
             }
+            
+            // --- NEW: Expanded App Opening Commands ---
             if (lowerPrompt === 'open youtube') {
                 window.open('https://www.youtube.com', '_blank');
                 return "Opening YouTube, sir.";
@@ -1394,14 +1397,81 @@
             if (lowerPrompt.includes('open gmail') && ['compose', 'draft', 'new mail', 'new email'].some(term => lowerPrompt.includes(term))) {
                 window.open('https://mail.google.com/mail/?view=cm&fs=1&to=&su=&body=', '_blank');
                 return "Opening Gmail's compose window, sir.";
-            } else if (lowerPrompt === 'open gmail') {
+            } else if (lowerPrompt.includes('open gmail')) {
                 window.open('https://mail.google.com', '_blank');
                 return "Opening Gmail for you, sir.";
             }
+
+            // Microsoft Office Suite
+            if (lowerPrompt.includes('open word')) {
+                window.open('https://word.office.com', '_blank');
+                return "Opening Microsoft Word Online, sir.";
+            }
+            if (lowerPrompt.includes('open excel')) {
+                window.open('https://excel.office.com', '_blank');
+                return "Opening Microsoft Excel Online, sir.";
+            }
+            if (lowerPrompt.includes('open powerpoint')) {
+                window.open('https://powerpoint.office.com', '_blank');
+                return "Opening Microsoft PowerPoint Online, sir.";
+            }
+            if (lowerPrompt.includes('open outlook')) {
+                window.open('https://outlook.live.com', '_blank');
+                return "Opening Outlook, sir.";
+            }
+            if (lowerPrompt.includes('open teams') || lowerPrompt.includes('open microsoft teams')) {
+                window.open('https://teams.microsoft.com', '_blank');
+                return "Opening Microsoft Teams, sir.";
+            }
+            if (lowerPrompt.includes('open onedrive')) {
+                window.open('https://onedrive.live.com', '_blank');
+                return "Opening OneDrive, sir.";
+            }
+
+            // Other Popular Web Apps
+            if (lowerPrompt.includes('open spotify')) {
+                window.open('https://open.spotify.com', '_blank');
+                return "Opening the Spotify web player, sir.";
+            }
+            if (lowerPrompt.includes('open netflix')) {
+                window.open('https://www.netflix.com', '_blank');
+                return "Opening Netflix, sir.";
+            }
+            if (lowerPrompt.includes('open maps') || lowerPrompt.includes('open google maps')) {
+                window.open('https://maps.google.com', '_blank');
+                return "Opening Google Maps, sir.";
+            }
+            if (lowerPrompt.includes('open wikipedia')) {
+                window.open('https://www.wikipedia.org', '_blank');
+                return "Opening Wikipedia, sir.";
+            }
+            if (lowerPrompt.includes('open github')) {
+                window.open('https://www.github.com', '_blank');
+                return "Opening GitHub, sir.";
+            }
+            if (lowerPrompt.includes('open facebook')) {
+                window.open('https://www.facebook.com', '_blank');
+                return "Opening Facebook, sir.";
+            }
+            if (lowerPrompt.includes('open twitter') || lowerPrompt.includes('open x.com')) {
+                window.open('https://www.x.com', '_blank');
+                return "Opening X (formerly Twitter), sir.";
+            }
+            if (lowerPrompt.includes('open instagram')) {
+                window.open('https://www.instagram.com', '_blank');
+                return "Opening Instagram, sir.";
+            }
+            if (lowerPrompt.includes('open linkedin')) {
+                window.open('https://www.linkedin.com', '_blank');
+                return "Opening LinkedIn, sir.";
+            }
+            
             if (['open a notepad', 'online notepad', 'open notepad'].includes(lowerPrompt)) {
                 window.open('https://anotepad.com/', '_blank');
                 return "I've opened an online notepad for you, sir.";
             }
+            // --- End Expanded Commands ---
+
             if (['save this', 'remember this', 'store this'].some(term => lowerPrompt.startsWith(term))) {
                 const content = prompt.replace(/^(save this|remember this|store this)\s*/i, '').trim();
                 if (content) {
