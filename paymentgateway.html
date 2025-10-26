@@ -11,11 +11,6 @@
   <script src="https://www.paypal.com/sdk/js?client-id=Abj4GKhw0aoqQes156AfApLm2wN5PAF5ncEUA_M-Dtzaj22yUzczA7tzf5LrsP7ufTj2ERxhUIEscsRF&currency=USD"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
   
-  <!-- === START: FIREBASE SDKs === -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-  <!-- === END: FIREBASE SDKs === -->
-
   <style>
     :root {
       --primary-color: #3B82F6;
@@ -125,19 +120,9 @@
       grid-template-columns: repeat(2, 1fr);
       gap: 0.75rem;
     }
-    .verification-status {
-      margin-top: 0.5rem;
-      font-size: 0.875rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .status-success { color: #10B981; }
-    .status-error { color: #EF4444; }
-    .otp-container {
-      margin-top: 1rem;
-      display: none;
-    }
+    
+    /* Removed verification-status and otp-container styles */
+
     @media (min-width: 1024px) {
       #payment-method-selector {
         grid-template-columns: repeat(4, 1fr);
@@ -146,7 +131,6 @@
   </style>
 </head>
 <body>
-  <!-- Header -->
   <header class="bg-card-background py-4 px-6 shadow-lg">
     <div class="container mx-auto flex justify-between items-center">
       <div class="flex items-center">
@@ -159,7 +143,6 @@
     </div>
   </header>
 
-  <!-- Main Content -->
   <main class="flex-grow container mx-auto px-4 py-8 md:py-12">
     <div class="max-w-5xl mx-auto">
       <div class="text-center mb-8 md:mb-12">
@@ -168,13 +151,11 @@
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
-        <!-- Payment Form -->
         <div>
           <div class="bg-card-background rounded-lg p-6 shadow-xl space-y-6">
             <div>
-              <h2 class="text-xl font-bold mb-4">1. Contact & Verification</h2>
+              <h2 class="text-xl font-bold mb-4">1. Contact Information</h2>
               
-              <!-- START: UPDATED VERIFICATION SECTION -->
               <div class="space-y-4">
                 <div>
                   <label for="customer-email" class="block text-sm font-medium text-slate-300 mb-1">Email Address</label>
@@ -184,27 +165,11 @@
                   <label for="customer-phone" class="block text-sm font-medium text-slate-300 mb-1">Phone Number (with country code)</label>
                   <input type="tel" id="customer-phone" name="customer-phone" placeholder="+919876543210" required class="input-field w-full p-3 rounded-md">
                 </div>
-                <button type="button" id="send-otp-btn" class="submit-btn w-full py-3">Send Verification Code</button>
               </div>
               
-              <div id="otp-container" class="otp-container">
-                <label for="otp-input" class="block text-sm font-medium text-slate-300 mb-1">Enter OTP</label>
-                <div class="flex gap-2">
-                  <input type="text" id="otp-input" placeholder="Enter 6-digit code" class="input-field w-full p-3 rounded-md">
-                  <button type="button" id="verify-otp-btn" class="bg-primary-color text-white px-4 rounded-md hover:bg-blue-600 transition">Verify</button>
-                </div>
               </div>
-
-              <div id="verification-status" class="verification-status hidden">
-                  <i id="status-icon" class="fas"></i>
-                  <span id="verification-status-text"></span>
-              </div>
-              <!-- END: UPDATED VERIFICATION SECTION -->
-
-            </div>
             
-            <div id="payment-section" class="hidden">
-              <h2 class="text-xl font-bold mb-4">2. Payment Method</h2>
+            <div id="payment-section"> <h2 class="text-xl font-bold mb-4">2. Payment Method</h2>
               <div id="payment-method-selector" class="mb-4">
                 <div class="payment-tab active" data-payment="Card"><i class="fas fa-credit-card text-xl mb-2"></i><span> Card</span></div>
                 <div class="payment-tab" data-payment="PayPal"><i class="fab fa-paypal text-xl mb-2"></i><span> PayPal</span></div>
@@ -236,7 +201,6 @@
           </div>
         </div>
 
-        <!-- Order Summary -->
         <div>
           <div class="bg-card-background rounded-lg p-6 h-fit lg:sticky lg:top-8 shadow-xl">
             <h2 class="text-xl font-bold border-b border-card-border pb-4 mb-4">Order Summary</h2>
@@ -257,9 +221,6 @@
     </div>
   </main>
   
-  <div id="recaptcha-container" style="position: fixed; bottom: 0; right: 0;"></div>
-
-  <!-- Confirmation Modal -->
   <div class="confirmation-modal" id="confirmation-modal">
     <div class="modal-content">
       <div class="w-16 h-16 mx-auto bg-green-500/10 rounded-full flex items-center justify-center mb-4">
@@ -272,7 +233,6 @@
     </div>
   </div>
 
-  <!-- Footer -->
   <footer class="bg-card-background py-6 px-4 mt-8">
     <div class="container mx-auto text-center">
       <p class="text-slate-400 text-sm">© 2023 Gaming Odyssey. All rights reserved.</p>
@@ -280,21 +240,8 @@
   </footer>
 
   <script>
-    // === START: FIREBASE CONFIGURATION ===
-    const firebaseConfig = {
-      apiKey: "AIzaSyDA218WauVZNgqeMgiR_5H6TLYQB5HXZkY",
-      authDomain: "gamingodyssey-2e642.firebaseapp.com",
-      databaseURL: "https://gamingodyssey-2e642-default-rtdb.firebaseio.com",
-      projectId: "gamingodyssey-2e642",
-      storageBucket: "gamingodyssey-2e642.appspot.com", // Corrected storageBucket URL
-      messagingSenderId: "964191300629",
-      appId: "1:964191300629:web:4be869d43fd0afeb00321c",
-      measurementId: "G-VS888VHFJJ"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    // === END: FIREBASE CONFIGURATION ===
+    // === START: FIREBASE CONFIGURATION (Removed) ===
+    // === END: FIREBASE CONFIGURATION (Removed) ===
 
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -306,20 +253,12 @@
       
       const emailInput = document.getElementById('customer-email');
       const phoneInput = document.getElementById('customer-phone');
-      const sendOtpBtn = document.getElementById('send-otp-btn');
-      const otpContainer = document.getElementById('otp-container');
-      const otpInput = document.getElementById('otp-input');
-      const verifyOtpBtn = document.getElementById('verify-otp-btn');
       
-      const verificationStatus = document.getElementById('verification-status');
-      const verificationStatusText = document.getElementById('verification-status-text');
-      const statusIcon = document.getElementById('status-icon');
-      const paymentSection = document.getElementById('payment-section');
+      // Removed OTP and verification elements
       
       let selectedPaymentMethod = 'Card';
-      let isVerified = false;
-      let confirmationResult = null;
-
+      // Removed isVerified and confirmationResult
+      
       // --- INITIAL CHECK ---
       if (!finalOrder) {
         document.body.innerHTML = `
@@ -363,107 +302,16 @@
         `;
       }
 
-      // --- PHONE VERIFICATION LOGIC ---
-      function setupRecaptcha() {
-        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-            'size': 'invisible',
-            'callback': (response) => {
-                // reCAPTCHA solved, allow signInWithPhoneNumber.
-            }
-        });
-      }
+      // --- PHONE VERIFICATION LOGIC (Removed) ---
+      // Removed setupRecaptcha, sendOtp, verifyOtp, showVerificationStatus
       
-      function sendOtp() {
-        const email = emailInput.value.trim();
-        const phone = phoneInput.value.trim();
-
-        if (!isValidEmail(email)) {
-            showVerificationStatus('Please enter a valid email address.', false);
-            return;
-        }
-        if (!phone) {
-            showVerificationStatus('Please enter your phone number.', false);
-            return;
-        }
-
-        sendOtpBtn.disabled = true;
-        sendOtpBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-
-        const appVerifier = window.recaptchaVerifier;
-        auth.signInWithPhoneNumber(phone, appVerifier)
-            .then((result) => {
-                confirmationResult = result;
-                showVerificationStatus('OTP sent successfully! Please check your SMS.', true);
-                otpContainer.style.display = 'block';
-                sendOtpBtn.style.display = 'none';
-            })
-            .catch((error) => {
-                console.error("Error sending OTP:", error);
-                let errorMessage = "Failed to send OTP. Please check the number or try again.";
-                if (error.code === 'auth/invalid-phone-number') {
-                    errorMessage = "Invalid phone number format. Please include the country code (e.g., +91).";
-                }
-                 if (error.code === 'auth/too-many-requests') {
-                    errorMessage = "Too many requests. Please try again later.";
-                }
-                showVerificationStatus(errorMessage, false);
-                sendOtpBtn.disabled = false;
-                sendOtpBtn.innerHTML = 'Send Verification Code';
-            });
-      }
-      
-      function verifyOtp() {
-          const code = otpInput.value.trim();
-          if (!code || code.length !== 6) {
-              showVerificationStatus('Please enter a valid 6-digit OTP.', false);
-              return;
-          }
-
-          verifyOtpBtn.disabled = true;
-          verifyOtpBtn.textContent = '...';
-
-          confirmationResult.confirm(code)
-              .then((result) => {
-                  const user = result.user;
-                  isVerified = true;
-                  showVerificationStatus('Verification successful! You can now proceed to payment.', true);
-                  otpContainer.style.display = 'none';
-                  document.getElementById('send-otp-btn').style.display = 'none';
-                  paymentSection.style.display = 'block';
-                  // Disable contact fields
-                  emailInput.disabled = true;
-                  phoneInput.disabled = true;
-
-              })
-              .catch((error) => {
-                  console.error("Error verifying OTP:", error);
-                  showVerificationStatus('Invalid OTP. Please try again.', false);
-                  verifyOtpBtn.disabled = false;
-                  verifyOtpBtn.textContent = 'Verify';
-              });
-      }
-
       function isValidEmail(email) {
         const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(String(email).toLowerCase());
       }
       
-      function showVerificationStatus(message, isSuccess) {
-        verificationStatus.classList.remove('hidden');
-        verificationStatusText.textContent = message;
-        
-        if (isSuccess) {
-          statusIcon.className = 'fas fa-check-circle status-success';
-          verificationStatusText.className = 'status-success';
-        } else {
-          statusIcon.className = 'fas fa-times-circle status-error';
-          verificationStatusText.className = 'status-error';
-        }
-      }
-      
       // --- EVENT LISTENERS ---
-      sendOtpBtn.addEventListener('click', sendOtp);
-      verifyOtpBtn.addEventListener('click', verifyOtp);
+      // Removed OTP button listeners
       
       document.querySelectorAll('.payment-tab').forEach(tab => {
         tab.addEventListener('click', () => {
@@ -479,7 +327,17 @@
       });
       
       confirmBtn.addEventListener('click', (e) => {
-        if (!isVerified) return; // Should not happen as button is inside hidden section
+        const email = emailInput.value.trim();
+        const phone = phoneInput.value.trim();
+
+        if (!isValidEmail(email)) {
+          alert('Please enter a valid email address.');
+          return;
+        }
+        if (!phone) {
+          alert('Please enter your phone number.');
+          return;
+        }
         
         if (selectedPaymentMethod === 'Card') {
           const cardNumber = document.getElementById('card-number').value;
@@ -573,7 +431,7 @@
       // --- INITIALIZATIONS ---
       renderOrderSummary();
       renderShippingDetails();
-      setupRecaptcha();
+      // Removed setupRecaptcha();
       
       const upiCanvas = document.createElement('canvas');
       QRCode.toCanvas(upiCanvas, `upi://pay?pa=your-upi-id@oksbi&pn=GamingOdyssey&am=${finalOrder.total.toFixed(2)}`, { width: 180 }, (error) => {
@@ -585,8 +443,16 @@
 
       paypal.Buttons({
         onClick: (data, actions) => {
-          if (!isVerified) {
-            alert('Please complete the phone verification before proceeding with PayPal.');
+          // Changed verification check to simple validation
+          const email = emailInput.value.trim();
+          const phone = phoneInput.value.trim();
+          
+          if (!isValidEmail(email)) {
+            alert('Please enter a valid email address.');
+            return actions.reject();
+          }
+          if (!phone) {
+            alert('Please enter your phone number.');
             return actions.reject();
           }
           return actions.resolve();
