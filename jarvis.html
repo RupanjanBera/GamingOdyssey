@@ -555,6 +555,36 @@
             box-shadow: 0 0 8px var(--glow-color);
         }
 
+        /* --- NEW: Custom Media Controls --- */
+        #custom-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding-top: 5px; /* Reduced space */
+        }
+
+        #custom-controls button {
+            background: rgba(10, 25, 47, 0.8);
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 5px var(--glow-color);
+            min-width: 60px; /* Give buttons a consistent width */
+        }
+
+        #custom-controls button:hover {
+            background: var(--neon-blue);
+            color: var(--dark-blue);
+            box-shadow: 0 0 10px var(--glow-color);
+        }
+        /* --- End Custom Media Controls --- */
+
+
         /* --- Responsive Design --- */
         @media (max-width: 768px) {
             #video-wrapper { width: 90vw; height: 67.5vw; }
@@ -636,7 +666,12 @@
             <div id="player-wrapper">
                 <div id="youtube-player"></div>
             </div>
-        </div>
+            <div id="custom-controls">
+                <button id="seek-backward-btn">« 10s</button>
+                <button id="play-pause-btn">PLAY</button>
+                <button id="seek-forward-btn">10s »</button>
+            </div>
+            </div>
 
         <canvas id="waveform-canvas"></canvas>
 
@@ -691,6 +726,11 @@
         const mediaInfo = document.getElementById('media-info');
         const closePlayerBtn = document.getElementById('close-player-btn');
         
+        // --- NEW: Custom Controls DOM Elements ---
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const seekBackwardBtn = document.getElementById('seek-backward-btn');
+        const seekForwardBtn = document.getElementById('seek-forward-btn');
+
         // --- NEW: Face Auth DOM Elements ---
         const faceAuthOverlay = document.getElementById('face-auth-overlay');
         const webcamFeed = document.getElementById('webcam-feed');
@@ -724,8 +764,13 @@
             }
         }
 
+        // --- UPDATED: Player State Change for Custom Controls ---
         function onPlayerStateChange(event) {
-            if (event.data == YT.PlayerState.ENDED) {
+            if (event.data == YT.PlayerState.PLAYING) {
+                playPauseBtn.textContent = 'PAUSE';
+            } else if (event.data == YT.PlayerState.PAUSED) {
+                playPauseBtn.textContent = 'PLAY';
+            } else if (event.data == YT.PlayerState.ENDED) {
                 stopMediaPlayer();
                 const endMessage = "Media finished, sir. Closing the player.";
                 addMessage(endMessage, 'jarvis');
@@ -737,7 +782,14 @@
             ytPlayer = new YT.Player('youtube-player', {
                 height: '100%',
                 width: '100%',
-                playerVars: { 'playsinline': 1, 'autoplay': 1, 'controls': 1 },
+                // --- UPDATED: Player Vars for Professional Look (controls: 0) ---
+                playerVars: { 
+                    'playsinline': 1, 
+                    'autoplay': 1, 
+                    'controls': 0, // Disable default controls
+                    'rel': 0, // Disable related videos
+                    'modestbranding': 1 // Reduce YouTube logo
+                },
                 events: {
                     'onReady': () => { isPlayerReady = true; },
                     'onStateChange': onPlayerStateChange,
@@ -783,6 +835,7 @@
                 mediaPlayerContainer.classList.add('visible');
                 mediaInfo.textContent = media.title.replace(/ - YouTube$/, '');
                 ytPlayer.loadVideoById(media.id);
+                playPauseBtn.textContent = 'PAUSE'; // Set button state as it will autoplay
                 
                 // --- NEW: Activate Music Visualizer ---
                 isMusicPlaying = true;
@@ -846,6 +899,7 @@
                 ytPlayer.stopVideo();
             }
             mediaPlayerContainer.classList.remove('visible');
+            playPauseBtn.textContent = 'PLAY'; // Reset button state
             
             // --- NEW: Deactivate Music Visualizer ---
             isMusicPlaying = false;
@@ -1289,7 +1343,8 @@
         function processSpecialCommands(prompt) {
             const lowerPrompt = prompt.toLowerCase();
             
-            const whatsappRegex = /send (?:a )?whatsapp(?: message)? to (\+?\d+[\d\s-]*\d) saying (.*)/i;
+            // --- UPDATED: More flexible WhatsApp Regex ---
+            const whatsappRegex = /send (?:a )?whatsapp(?: message)? to (\+?\d+[\d\s-()]*\d) (?:saying|that says|with the message|then comes the message|message) (.*)/i;
             const whatsappMatch = prompt.match(whatsappRegex);
             if (whatsappMatch) {
                 return { type: 'send_whatsapp', phone: whatsappMatch[1].trim(), message: whatsappMatch[2].trim() };
@@ -1524,6 +1579,31 @@
             addMessage("Player closed, sir.", 'jarvis');
             speak("Player closed, sir.");
         });
+
+        // --- NEW: Custom Control Event Listeners ---
+        playPauseBtn.addEventListener('click', () => {
+            if (!ytPlayer || typeof ytPlayer.getPlayerState !== 'function') return;
+            const state = ytPlayer.getPlayerState();
+            if (state === YT.PlayerState.PLAYING || state === YT.PlayerState.BUFFERING) {
+                ytPlayer.pauseVideo();
+            } else {
+                ytPlayer.playVideo();
+            }
+        });
+
+        seekBackwardBtn.addEventListener('click', () => {
+            if (!ytPlayer || typeof ytPlayer.getCurrentTime !== 'function') return;
+            const currentTime = ytPlayer.getCurrentTime();
+            ytPlayer.seekTo(Math.max(0, currentTime - 10), true);
+        });
+
+        seekForwardBtn.addEventListener('click', () => {
+            if (!ytPlayer || typeof ytPlayer.getCurrentTime !== 'function') return;
+            const currentTime = ytPlayer.getCurrentTime();
+            ytPlayer.seekTo(currentTime + 10, true);
+        });
+        // --- End Custom Control Event Listeners ---
+
 
         modelToggleBtn.addEventListener('click', () => {
             currentModelName = currentModelName === 'JARVIS Pro' ? 'JARVIS Flash' : 'JARVIS Pro';
