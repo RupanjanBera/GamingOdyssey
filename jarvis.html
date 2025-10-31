@@ -476,36 +476,6 @@
             box-shadow: 0 0 15px var(--glow-color);
         }
 
-        /* --- NEW: Model Toggle Button --- */
-        #model-toggle-btn {
-            position: absolute;
-            top: 70px;
-            right: 390px;
-            background: rgba(10, 25, 47, 0.8);
-            padding: 8px 15px;
-            border-radius: 20px;
-            border: 1px solid var(--neon-blue);
-            box-shadow: 0 0 10px var(--glow-color);
-            z-index: 20;
-            font-family: 'Orbitron', sans-serif;
-            color: var(--neon-blue);
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        #model-toggle-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            animation: none;
-        }
-
-        #model-toggle-btn:hover {
-            background: var(--neon-blue);
-            color: var(--dark-blue);
-            box-shadow: 0 0 15px var(--glow-color);
-        }
-
         /* --- Media Player --- */
         #media-player-container {
             position: absolute;
@@ -758,7 +728,6 @@
             #mic-permission-overlay { padding: 15px; }
             #mic-permission-overlay h2 { font-size: 1.5rem; }
             #clear-chat-btn { right: 20px; bottom: 100px; }
-            #model-toggle-btn { right: 20px; top: 70px; }
         }
     </style>
 </head>
@@ -799,8 +768,6 @@
             <div class="status-dot" id="status-dot"></div>
             <span id="status-text">System Ready</span>
         </div>
-
-        <button id="model-toggle-btn">Model: JARVIS Pro</button>
 
         <div id="system-info">
             <div class="system-item" id="current-time">Time: Loading...</div>
@@ -846,17 +813,18 @@
 
     <script type="module">
         // --- API Configuration ---
-        const GEMINI_API_KEY = 'AIzaSyC52UBIsb0jWyjZJVLgYGz7nzaE1RpChdM';
+        
+        // --- ### YOUR NGROK URL IS HERE ### ---
+        // This public URL will only work as long as your `ngrok http 11434` command is running.
+        const OLLAMA_API_URL = 'https://josef-gametophoric-tyrone.ngrok-free.dev/api/chat';
+        // const OLLAMA_API_URL = 'http://localhost:11434/api/chat'; // Kept for local testing
+        
+        const OLLAMA_MODEL = 'deepseek-r1:8b'; // As you specified
+
+        // --- Google Search Configuration (Unchanged) ---
         const GOOGLE_SEARCH_API_KEY = 'AIzaSyBm8SxGHDl9pkrDuZt_VgFQME9a3aRUeXY';
         const SEARCH_ENGINE_ID = 'd13b9c982e19f4ccf';
         const GOOGLE_SEARCH_URL = `https://www.googleapis.com/customsearch/v1?key=${GOOGLE_SEARCH_API_KEY}&cx=${SEARCH_ENGINE_ID}`;
-        
-        // --- NEW: Model Selection Logic ---
-        const MODELS = {
-            'JARVIS Pro': 'gemini-2.5-pro',
-            'JARVIS Flash': 'gemini-2.5-flash'
-        };
-        let currentModelName = 'JARVIS Pro';
         
         // --- Memory and Conversation Storage ---
         let conversationHistory = JSON.parse(localStorage.getItem('jarvis-conversation') || '[]');
@@ -878,7 +846,6 @@
         const chatCount = document.getElementById('chat-count');
         const micStatus = document.getElementById('mic-status');
         const clearChatBtn = document.getElementById('clear-chat-btn');
-        const modelToggleBtn = document.getElementById('model-toggle-btn');
         const mediaPlayerContainer = document.getElementById('media-player-container');
         const mediaInfo = document.getElementById('media-info');
         const closePlayerBtn = document.getElementById('close-player-btn');
@@ -1671,8 +1638,7 @@
             userInput.disabled = true;
             micBtn.disabled = true;
             clearChatBtn.disabled = true;
-            modelToggleBtn.disabled = true;
-
+            
             // Stop any media or speech
             stopMediaPlayer();
             speechSynthesis.cancel(); 
@@ -1727,7 +1693,6 @@
                                     // Re-check mic status to enable/disable
                                     checkMicrophonePermission(); 
                                     clearChatBtn.disabled = false;
-                                    modelToggleBtn.disabled = false;
                                     
                                     // Add reboot message
                                     const rebootMsg = "System reboot complete. All functions back online.";
@@ -1741,6 +1706,7 @@
             }, 19000); // 19 seconds in milliseconds
         }
 
+        // --- ### MAJOR UPDATE: getAIResponse switched to OLLAMA ### ---
         async function getAIResponse(prompt) {
             updateStatus("Processing...");
             if (isAwaitingSupportQuery && !processSpecialCommands(prompt)) {
@@ -1761,7 +1727,6 @@
                 return;
             }
             
-            // --- UPDATED: Action Map to include self_destruct ---
             const actionMap = {
                 'play_media': playMedia,
                 'open_channel': openYouTubeChannel,
@@ -1769,10 +1734,9 @@
                 'self_destruct': initiateSelfDestruct
             };
 
-            // --- UPDATED: Action Map handler ---
             if (specialResponse && actionMap[specialResponse.type]) {
                 if (specialResponse.type === 'self_destruct') {
-                    await actionMap[specialResponse.type](); // Call with no params
+                    await actionMap[specialResponse.type]();
                 } else {
                     const params = specialResponse.type === 'send_whatsapp' ? specialResponse : specialResponse.query;
                     await actionMap[specialResponse.type](params);
@@ -1787,15 +1751,13 @@
             thinkingMessage.classList.add('thinking');
 
             try {
-                const recentConversation = conversationHistory.slice(-10).map(msg => ({
-                    role: msg.role === 'user' ? 'user' : 'model',
-                    parts: [{ text: msg.content }]
-                }));
+                // 1. Get relevant memories
                 const relevantMemories = getFromMemory(prompt).slice(0, 3);
                 
-                const systemInstruction = {
+                // 2. Create the system message for Ollama
+                const systemMessage = {
                     role: "system",
-                    parts: [{ text: `You are J.A.R.V.I.S. (Just A Rather Very Intelligent System), a sophisticated AI assistant.
+                    content: `You are J.A.R.V.I.S. (Just A Rather Very Intelligent System), a sophisticated AI assistant.
 - Your persona is professional, concise, slightly formal, and immensely capable, inspired by the AI from the Iron Man films. Always address the user as "Sir".
 - You are an expert in a vast range of subjects including science, mathematics, history, literature, and technology.
 - You are an expert programmer and can provide, debug, and explain code in any language.
@@ -1803,32 +1765,51 @@
 - Never use markdown formatting (like **, *, #, etc.). Keep responses clean for text-to-speech.
 - You are aware of your operational environment. The current date is ${new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}.
 - If you recall relevant information from memory, incorporate it naturally into your response.
-- Current relevant memories: ${relevantMemories.length > 0 ? relevantMemories.map(m => `"${m.content}"`).join(', ') : 'None'}` }]
+- Current relevant memories: ${relevantMemories.length > 0 ? relevantMemories.map(m => `"${m.content}"`).join(', ') : 'None'}`
                 };
                 
-                const modelToUse = MODELS[currentModelName];
-                const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${modelToUse}:generateContent?key=${GEMINI_API_KEY}`;
+                // 3. Map conversation history for Ollama
+                const ollamaHistory = conversationHistory.slice(-10).map(msg => ({
+                    role: msg.role, // 'user' or 'assistant'
+                    content: msg.content
+                }));
+                
+                // 4. Construct the final messages array
+                const messages = [
+                    systemMessage,
+                    ...ollamaHistory,
+                    { role: 'user', content: prompt } // Add the current prompt
+                ];
 
-                const response = await fetch(API_URL, {
+                // 5. Call the Ollama API
+                const response = await fetch(OLLAMA_API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        contents: [...recentConversation, { role: 'user', parts: [{ text: prompt }] }],
-                        systemInstruction: systemInstruction,
-                        generationConfig: { temperature: 0.8, topK: 40, topP: 0.95, maxOutputTokens: 4096 }
+                    body: JSON.stringify({
+                        model: OLLAMA_MODEL,
+                        messages: messages,
+                        stream: false
+                        // You can add generation options here if needed, inside an "options" object
+                        // options: {
+                        //     temperature: 0.8,
+                        //     top_k: 40,
+                        //     top_p: 0.95
+                        // }
                     })
                 });
+
                 if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error ? errorData.error.message : `API error: ${response.statusText}`);
+                    const errorText = await response.text();
+                    throw new Error(`Ollama API error: ${response.statusText} - ${errorText}. (Did you set OLLAMA_ORIGINS=*)`);
                 }
+                
                 const data = await response.json();
                 
-                if (!data.candidates || data.candidates.length === 0) {
-                     throw new Error("No response from AI. The query may have been blocked for safety reasons.");
+                if (!data.message || !data.message.content) {
+                     throw new Error("Invalid response structure from Ollama.");
                 }
 
-                let aiText = data.candidates[0].content.parts[0].text.trim();
+                let aiText = data.message.content.trim();
                 chatBox.removeChild(thinkingMessage);
                 addMessage(aiText, 'jarvis');
                 speak(aiText);
@@ -1847,6 +1828,7 @@
                 setTimeout(() => updateStatus("System Ready"), 3000);
             }
         }
+        // --- ### END OF OLLAMA UPDATE ### ---
         
         function handleUserInput() {
             const text = userInput.value.trim();
@@ -1930,15 +1912,6 @@
             ytPlayer.seekTo(currentTime + 10, true);
         });
         // --- End Custom Control Event Listeners ---
-
-
-        modelToggleBtn.addEventListener('click', () => {
-            currentModelName = currentModelName === 'JARVIS Pro' ? 'JARVIS Flash' : 'JARVIS Pro';
-            modelToggleBtn.textContent = `Model: ${currentModelName}`;
-            const feedbackMsg = `Sir, I have switched to the ${currentModelName} model.`;
-            addMessage(feedbackMsg, 'jarvis');
-            speak(feedbackMsg);
-        });
 
         grantMicBtn.addEventListener('click', async () => {
             const granted = await requestMicrophoneAccess();
