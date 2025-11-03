@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>J.A.R.V.I.S. AI Interface</title>
+    <title>J.A.R.V.I.S. AI Interface - Advanced HUD</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -14,7 +14,7 @@
             --neon-blue: #00d9ff;
             --dark-blue: #0a192f;
             --glow-color: rgba(0, 217, 255, 0.75);
-            --bg-color: #00050a;
+            --bg-color: #000000; /* True black for transparent effect */
             --neon-red: #ff004c;
         }
 
@@ -36,6 +36,17 @@
             width: 100vw;
         }
 
+        /* --- Vision HUD & Background Replacement --- */
+        .jarvis-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Backgrounds removed for transparent HUD look */
+        }
+        
         /* --- Start Overlay --- */
         #start-overlay {
             position: absolute;
@@ -69,8 +80,8 @@
             50% { opacity: 0.6; }
             100% { opacity: 1; }
         }
-
-        /* --- NEW: Face Authentication Overlay --- */
+        
+        /* --- Face Auth Overlay (Retained original structure for initialization) --- */
         #face-auth-overlay {
             position: absolute;
             top: 0;
@@ -130,47 +141,54 @@
             animation: pulse-text 2s infinite;
         }
 
-
-        /* --- Background Effects --- */
-        .jarvis-container::before {
-            content: '';
+        /* --- NEW: Vision/Object Detection Overlay (Primary Camera View) --- */
+        #vision-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><defs><pattern id="p" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M50 0 L50 100 M0 50 L100 50" stroke="%230a192f" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23p)"/></svg>');
-            opacity: 0.2;
-            z-index: -2;
-        }
-
-        .scan-lines {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(10, 25, 47, 0.5) 50%, rgba(0,0,0,0) 100%);
-            background-size: 100% 4px;
-            animation: scan 7.5s linear infinite;
-            z-index: -1;
-        }
-
-        @keyframes scan {
-            0% { background-position: 0 0; }
-            100% { background-position: 0 100vh; }
-        }
-
-        /* --- Main Layout --- */
-        .jarvis-container {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            display: flex;
+            background: rgba(0, 0, 0, 0.9);
+            display: none; /* Start hidden */
             justify-content: center;
             align-items: center;
+            flex-direction: column;
+            z-index: 200;
+            transition: opacity 0.5s ease;
+        }
+
+        #vision-feed {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform: scaleX(-1); /* Mirror effect */
+            object-fit: cover;
+            z-index: 201;
+            opacity: 0.8; /* Make it slightly transparent */
         }
         
+        #vision-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 202; /* Draw HUD over video */
+        }
+
+        #vision-status {
+            position: absolute;
+            bottom: 50px;
+            font-size: 1.5rem;
+            padding: 10px 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+            text-shadow: 0 0 10px var(--glow-color);
+            z-index: 203;
+            animation: pulse-text 2s infinite;
+        }
+        /* --- END NEW Vision Overlay --- */
+
         /* --- Central 3D Core & HUD Rings --- */
         #jarvis-core {
             position: absolute;
@@ -198,7 +216,7 @@
             right: 20px;
             top: 20px;
             width: 350px;
-            height: calc(100vh - 180px); /* Adjust height based on input area */
+            height: calc(100vh - 180px);
             background: rgba(10, 25, 47, 0.5);
             border: 1px solid var(--neon-blue);
             box-shadow: 0 0 10px var(--glow-color);
@@ -208,7 +226,7 @@
             flex-direction: column;
             border-radius: 10px;
         }
-
+        
         #chat-box {
             flex-grow: 1;
             padding: 15px;
@@ -217,7 +235,7 @@
             flex-direction: column;
             gap: 15px;
         }
-
+        
         /* Custom scrollbar for chat */
         #chat-box::-webkit-scrollbar { width: 6px; }
         #chat-box::-webkit-scrollbar-track { background: transparent; }
@@ -246,12 +264,7 @@
             box-shadow: 0 0 8px rgba(0, 217, 255, 0.3);
         }
 
-        .jarvis-message.thinking {
-             font-style: italic;
-             color: rgba(0, 217, 255, 0.6);
-        }
-
-        .jarvis-message.searching {
+        .jarvis-message.thinking, .jarvis-message.searching, .jarvis-message.scanning {
              font-style: italic;
              color: rgba(0, 217, 255, 0.6);
         }
@@ -476,7 +489,7 @@
             box-shadow: 0 0 15px var(--glow-color);
         }
 
-        /* --- NEW: Model Toggle Button --- */
+        /* --- Model Toggle Button --- */
         #model-toggle-btn {
             position: absolute;
             top: 70px;
@@ -506,7 +519,7 @@
             box-shadow: 0 0 15px var(--glow-color);
         }
 
-        /* --- Media Player --- */
+        /* --- Media Player (Retained original styles) --- */
         #media-player-container {
             position: absolute;
             bottom: 20px;
@@ -540,7 +553,7 @@
 
         #player-wrapper {
             width: 100%;
-            height: 150px; /* Increased height for general videos */
+            height: 150px;
             background: #000;
             border-radius: 5px;
             position: relative;
@@ -571,12 +584,11 @@
             box-shadow: 0 0 8px var(--glow-color);
         }
 
-        /* --- NEW: Custom Media Controls --- */
         #custom-controls {
             display: flex;
             justify-content: center;
             gap: 10px;
-            padding-top: 5px; /* Reduced space */
+            padding-top: 5px;
         }
 
         #custom-controls button {
@@ -590,7 +602,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 0 5px var(--glow-color);
-            min-width: 60px; /* Give buttons a consistent width */
+            min-width: 60px;
         }
 
         #custom-controls button:hover {
@@ -598,9 +610,8 @@
             color: var(--dark-blue);
             box-shadow: 0 0 10px var(--glow-color);
         }
-        /* --- End Custom Media Controls --- */
-
-        /* --- NEW: Self-Destruct Effect (Upgraded) --- */
+        
+        /* --- Self-Destruct Effect (Retained original styles) --- */
         #destruction-overlay {
             position: absolute;
             top: 0;
@@ -629,7 +640,6 @@
             transform: translate3d(0, 0, 0);
         }
         
-        /* NEW: Glitch Text */
         #destruction-overlay .glitch-text {
             position: relative;
             font-size: 2rem;
@@ -646,23 +656,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: #000; /* Match overlay background */
+            background: #000;
         }
         
-        #destruction-overlay .glitch-text::before {
-            left: 2px;
-            text-shadow: -2px 0 var(--neon-blue);
-            clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
-            animation: glitch-anim-1 2s infinite linear alternate-reverse;
-        }
-        
-        #destruction-overlay .glitch-text::after {
-            left: -2px;
-            text-shadow: 2px 0 var(--neon-red);
-            clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
-            animation: glitch-anim-2 3s infinite linear alternate-reverse;
-        }
-
         @keyframes white-flash {
             0% { opacity: 0; background: #000; }
             50% { opacity: 1; background: #fff; }
@@ -676,90 +672,6 @@
           40%, 60% { transform: translate3d(4px, 0, 0); }
         }
         
-        /* NEW: More advanced glitch animations */
-        @keyframes glitch-anim-1 {
-            0% { clip-path: polygon(0 40%, 100% 40%, 100% 45%, 0 45%); }
-            5% { clip-path: polygon(0 20%, 100% 20%, 100% 25%, 0 25%); }
-            10% { clip-path: polygon(0 40%, 100% 40%, 100% 50%, 0 50%); }
-            15% { clip-path: polygon(0 60%, 100% 60%, 100% 70%, 0 70%); }
-            20% { clip-path: polygon(0 80%, 100% 80%, 100% 90%, 0 90%); }
-            25% { clip-path: polygon(0 10%, 100% 10%, 100% 15%, 0 15%); }
-            30% { clip-path: polygon(0 30%, 100% 30%, 100% 35%, 0 35%); }
-            35% { clip-path: polygon(0 5%, 100% 5%, 100% 10%, 0 10%); }
-            40% { clip-path: polygon(0 90%, 100% 90%, 100% 95%, 0 95%); }
-            45% { clip-path: polygon(0 25%, 100% 25%, 100% 30%, 0 30%); }
-            50% { clip-path: polygon(0 50%, 100% 50%, 100% 55%, 0 55%); }
-            55% { clip-path: polygon(0 15%, 100% 15%, 100% 20%, 0 20%); }
-            60% { clip-path: polygon(0 75%, 100% 75%, 100% 80%, 0 80%); }
-            65% { clip-path: polygon(0 45%, 100% 45%, 100% 50%, 0 50%); }
-            70% { clip-path: polygon(0 65%, 100% 65%, 100% 70%, 0 70%); }
-            75% { clip-path: polygon(0 35%, 100% 35%, 100% 40%, 0 40%); }
-            80% { clip-path: polygon(0 85%, 100% 85%, 100% 90%, 0 90%); }
-            85% { clip-path: polygon(0 55%, 100% 55%, 100% 60%, 0 60%); }
-            90% { clip-path: polygon(0 5%, 100% 5%, 100% 15%, 0 15%); }
-            95% { clip-path: polygon(0 70%, 100% 70%, 100% 75%, 0 75%); }
-            100% { clip-path: polygon(0 50%, 100% 50%, 100% 55%, 0 55%); }
-        }
-        
-        @keyframes glitch-anim-2 {
-            0% { clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%); }
-            5% { clip-path: polygon(0 70%, 100% 70%, 100% 80%, 0 80%); }
-            10% { clip-path: polygon(0 50%, 100% 50%, 100% 60%, 0 60%); }
-            15% { clip-path: polygon(0 80%, 100% 80%, 100% 100%, 0 100%); }
-            20% { clip-path: polygon(0 60%, 100% 60%, 100% 70%, 0 70%); }
-            25% { clip-path: polygon(0 40%, 100% 40%, 100% 50%, 0 50%); }
-            30% { clip-path: polygon(0 75%, 100% 75%, 100% 85%, 0 85%); }
-            35% { clip-path: polygon(0 55%, 100% 55%, 100% 65%, 0 65%); }
-            40% { clip-path: polygon(0 45%, 100% 45%, 100% 55%, 0 55%); }
-            45% { clip-path: polygon(0 90%, 100% 90%, 100% 100%, 0 100%); }
-            50% { clip-path: polygon(0 20%, 100% 20%, 100% 30%, 0 30%); }
-            55% { clip-path: polygon(0 0, 100% 0, 100% 10%, 0 10%); }
-            60% { clip-path: polygon(0 30%, 100% 30%, 100% 40%, 0 40%); }
-            65% { clip-path: polygon(0 10%, 100% 10%, 100% 20%, 0 20%); }
-            70% { clip-path: polygon(0 85%, 100% 85%, 100% 95%, 0 95%); }
-            75% { clip-path: polygon(0 50%, 100% 50%, 100% 60%, 0 60%); }
-            80% { clip-path: polygon(0 25%, 100% 25%, 100% 35%, 0 35%); }
-            85% { clip-path: polygon(0 70%, 100% 70%, 100% 80%, 0 80%); }
-            90% { clip-path: polygon(0 40%, 100% 40%, 100% 50%, 0 50%); }
-            95% { clip-path: polygon(0 60%, 100% 60%, 100% 70%, 0 70%); }
-            100% { clip-path: polygon(0 20%, 100% 20%, 100% 30%, 0 30%); }
-        }
-        
-        @keyframes glitch-skew {
-            0% { transform: skew(0deg); }
-            10% { transform: skew(1deg); }
-            20% { transform: skew(-1deg); }
-            30% { transform: skew(2deg); }
-            40% { transform: skew(-2deg); }
-            50% { transform: skew(0deg); }
-            100% { transform: skew(0deg); }
-        }
-        /* --- End Self-Destruct Effect --- */
-
-
-        /* --- Responsive Design --- */
-        @media (max-width: 768px) {
-            #video-wrapper { width: 90vw; height: 67.5vw; }
-            #webcam-feed { width: 100%; height: 100%; }
-            #scan-line { width: 100%; }
-
-            .chat-container {
-                width: 100%;
-                height: 50%;
-                top: 0; right: 0;
-                border-radius: 0; border-left: none; border-right: none;
-            }
-            .input-container { width: 90%; bottom: 20px; }
-            .hud-ring { display: none; }
-            #waveform-canvas { bottom: 100px; }
-            #status-indicator { top: 10px; }
-            #system-info { display: none; }
-            #media-player-container { display: none; } /* Hide media player on small screens for simplicity */
-            #mic-permission-overlay { padding: 15px; }
-            #mic-permission-overlay h2 { font-size: 1.5rem; }
-            #clear-chat-btn { right: 20px; bottom: 100px; }
-            #model-toggle-btn { right: 20px; top: 70px; }
-        }
     </style>
 </head>
 <body>
@@ -768,14 +680,19 @@
         <p>Click to Initialize</p>
     </div>
 
-    <div id="face-auth-overlay">
+    <div id="face-auth-overlay" style="display: none;">
         <div id="video-wrapper">
             <video id="webcam-feed" autoplay playsinline muted></video>
             <div id="scan-line"></div>
         </div>
         <p id="auth-status">Initializing Biometric Scan...</p>
     </div>
-
+    
+    <div id="vision-overlay" style="display: none;">
+        <video id="vision-feed" autoplay playsinline muted></video>
+        <canvas id="vision-canvas"></canvas>
+        <p id="vision-status">Scanning for Objects...</p>
+    </div>
     <div id="destruction-overlay">
         <span class="glitch-text" data-text="...CONNECTION TERMINATED...">...CONNECTION TERMINATED...</span>
     </div>
@@ -787,8 +704,6 @@
     </div>
 
     <div class="jarvis-container">
-        <div class="scan-lines"></div>
-
         <canvas id="jarvis-core"></canvas>
 
         <div class="hud-ring ring-1"></div>
@@ -843,1229 +758,1188 @@
     <audio id="start-sound" preload="auto"></audio>
     <audio id="end-sound" preload="auto"></audio>
     <audio id="self-destruct-sound" src="https://gamingodyssey.in/boom.mp3" preload="auto"></audio>
+    <audio id="scan-start-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-futuristic-technology-scan-2407.mp3" preload="auto"></audio>
+    <audio id="scan-complete-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-tech-confirmation-992.mp3" preload="auto"></audio>
 
     <script type="module">
-        // --- API Configuration ---
-        const GEMINI_API_KEY = 'AIzaSyC52UBIsb0jWyjZJVLgYGz7nzaE1RpChdM';
-        const GOOGLE_SEARCH_API_KEY = 'AIzaSyBm8SxGHDl9pkrDuZt_VgFQME9a3aRUeXY';
-        const SEARCH_ENGINE_ID = 'd13b9c982e19f4ccf';
-        const GOOGLE_SEARCH_URL = `https://www.googleapis.com/customsearch/v1?key=${GOOGLE_SEARCH_API_KEY}&cx=${SEARCH_ENGINE_ID}`;
-        
-        // --- NEW: Model Selection Logic ---
-        const MODELS = {
-            'JARVIS Pro': 'gemini-2.5-pro',
-            'JARVIS Flash': 'gemini-2.5-flash'
-        };
-        let currentModelName = 'JARVIS Pro';
-        
-        // --- Memory and Conversation Storage ---
-        let conversationHistory = JSON.parse(localStorage.getItem('jarvis-conversation') || '[]');
-        let savedMemory = JSON.parse(localStorage.getItem('jarvis-memory') || '[]');
-        
-        // --- DOM Elements ---
-        const chatBox = document.getElementById('chat-box');
-        const userInput = document.getElementById('user-input');
-        const micBtn = document.getElementById('mic-btn');
-        const waveformCanvas = document.getElementById('waveform-canvas');
-        const startOverlay = document.getElementById('start-overlay');
-        const micPermissionOverlay = document.getElementById('mic-permission-overlay');
-        const grantMicBtn = document.getElementById('grant-mic-btn');
-        const statusDot = document.getElementById('status-dot');
-        const statusText = document.getElementById('status-text');
-        const currentTime = document.getElementById('current-time');
-        const currentDate = document.getElementById('current-date');
-        const memoryCount = document.getElementById('memory-count');
-        const chatCount = document.getElementById('chat-count');
-        const micStatus = document.getElementById('mic-status');
-        const clearChatBtn = document.getElementById('clear-chat-btn');
-        const modelToggleBtn = document.getElementById('model-toggle-btn');
-        const mediaPlayerContainer = document.getElementById('media-player-container');
-        const mediaInfo = document.getElementById('media-info');
-        const closePlayerBtn = document.getElementById('close-player-btn');
-        
-        // --- NEW: Custom Controls DOM Elements ---
-        const playPauseBtn = document.getElementById('play-pause-btn');
-        const seekBackwardBtn = document.getElementById('seek-backward-btn');
-        const seekForwardBtn = document.getElementById('seek-forward-btn');
+    // --- API Configuration ---
+    const GEMINI_API_KEY = 'AIzaSyCpm_74JDyLRhL8ZZ2_wxl6HOZDHNT1zT8'; // YOUR PROVIDED KEY
+    const GOOGLE_SEARCH_API_KEY = AIzaSyBm8SxGHDl9pkrDuZt_VgFQME9a3aRUeXY; 
+    const SEARCH_ENGINE_ID = 'd13b9c982e19f4ccf';
+    const GOOGLE_SEARCH_URL = `https://www.googleapis.com/customsearch/v1?key=${GOOGLE_SEARCH_API_KEY}&cx=${SEARCH_ENGINE_ID}`;
+    
+    // --- OLLAMA Configuration (Primary AI) ---
+    const OLLAMA_MODEL_NAME = 'deepseek-r1:8b';
+    const OLLAMA_API_URL = 'http://localhost:11434/api/generate'; 
 
-        // --- NEW: Face Auth DOM Elements ---
-        const faceAuthOverlay = document.getElementById('face-auth-overlay');
-        const webcamFeed = document.getElementById('webcam-feed');
-        const scanLine = document.getElementById('scan-line');
-        const authStatus = document.getElementById('auth-status');
-        
-        // --- NEW: Self-Destruct DOM Elements ---
-        const selfDestructSound = document.getElementById('self-destruct-sound');
-        const destructionOverlay = document.getElementById('destruction-overlay');
-        const jarvisContainer = document.querySelector('.jarvis-container');
+    // --- Model Selection Logic ---
+    const MODELS = {
+        'JARVIS Pro': OLLAMA_MODEL_NAME, 
+        'JARVIS Flash': OLLAMA_MODEL_NAME
+    };
+    let currentModelName = 'JARVIS Pro';
+    
+    // --- Memory and Conversation Storage ---
+    let conversationHistory = JSON.parse(localStorage.getItem('jarvis-conversation') || '[]');
+    let savedMemory = JSON.parse(localStorage.getItem('jarvis-memory') || '[]');
+    
+    // --- DOM Elements ---
+    const chatBox = document.getElementById('chat-box');
+    const userInput = document.getElementById('user-input');
+    const micBtn = document.getElementById('mic-btn');
+    const waveformCanvas = document.getElementById('waveform-canvas');
+    const startOverlay = document.getElementById('start-overlay');
+    const micPermissionOverlay = document.getElementById('mic-permission-overlay');
+    const grantMicBtn = document.getElementById('grant-mic-btn');
+    const statusDot = document.getElementById('status-dot');
+    const statusText = document.getElementById('status-text');
+    const currentTime = document.getElementById('current-time');
+    const currentDate = document.getElementById('current-date');
+    const memoryCount = document.getElementById('memory-count');
+    const chatCount = document.getElementById('chat-count');
+    const micStatus = document.getElementById('mic-status');
+    const clearChatBtn = document.getElementById('clear-chat-btn');
+    const modelToggleBtn = document.getElementById('model-toggle-btn');
+    const mediaPlayerContainer = document.getElementById('media-player-container');
+    const mediaInfo = document.getElementById('media-info');
+    const closePlayerBtn = document.getElementById('close-player-btn');
+    const playPauseBtn = document.getElementById('play-pause-btn');
+    const seekBackwardBtn = document.getElementById('seek-backward-btn');
+    const seekForwardBtn = document.getElementById('seek-forward-btn');
+    const selfDestructSound = document.getElementById('self-destruct-sound');
+    const destructionOverlay = document.getElementById('destruction-overlay');
+    const jarvisContainer = document.querySelector('.jarvis-container');
 
-        const startSound = document.getElementById('start-sound');
-        const endSound = document.getElementById('end-sound');
-        
-        let speakingAnimation = null;
-        let isAwaitingSupportQuery = false;
+    const startSound = document.getElementById('start-sound');
+    const endSound = document.getElementById('end-sound');
+    
+    // --- Vision DOM Elements (NEW) ---
+    const visionOverlay = document.getElementById('vision-overlay');
+    const visionFeed = document.getElementById('vision-feed');
+    const visionCanvas = document.getElementById('vision-canvas');
+    const visionStatus = document.getElementById('vision-status');
+    const scanStartSound = document.getElementById('scan-start-sound');
+    const scanCompleteSound = document.getElementById('scan-complete-sound');
 
-        // --- YouTube Player Logic ---
-        let ytPlayer;
-        let isPlayerReady = false;
-        let isMusicPlaying = false; // NEW: State for music visualizer
+    // --- Original Face Auth DOM Elements (Retained for login flow) ---
+    const faceAuthOverlay = document.getElementById('face-auth-overlay');
+    const webcamFeed = document.getElementById('webcam-feed');
+    const scanLine = document.getElementById('scan-line');
+    const authStatus = document.getElementById('auth-status');
+    
+    let speakingAnimation = null;
+    let isAwaitingSupportQuery = false;
+    let isVisionScanning = false; // NEW state
+    let scanAnimationId = null; // NEW state
+    let visionStream = null; // NEW state
+    let audioStream = null;
+    let microphoneGranted = false;
 
-        function onPlayerError(event) {
-            console.error("YouTube Player Error:", event.data);
-            stopMediaPlayer(); 
-            const videoUrl = ytPlayer.getVideoUrl();
-            if (videoUrl && videoUrl.includes('watch?v=')) {
-                window.open(videoUrl, '_blank'); 
-                const errorMessage = "Sir, that video is restricted from playing here. I have opened it for you in a new tab on YouTube instead.";
-                addMessage(errorMessage, 'jarvis');
-                speak(errorMessage);
-            } else {
-                 const genericError = "Sir, an unknown error occurred with the media player.";
-                 addMessage(genericError, 'jarvis');
-                 speak(genericError);
-            }
-        }
 
-        // --- UPDATED: Player State Change for Custom Controls ---
-        function onPlayerStateChange(event) {
-            if (event.data == YT.PlayerState.PLAYING) {
-                playPauseBtn.textContent = 'PAUSE';
-            } else if (event.data == YT.PlayerState.PAUSED) {
-                playPauseBtn.textContent = 'PLAY';
-            } else if (event.data == YT.PlayerState.ENDED) {
-                stopMediaPlayer();
-                const endMessage = "Media finished, sir. Closing the player.";
-                addMessage(endMessage, 'jarvis');
-                speak(endMessage);
-            }
-        }
+    // --- YouTube Player Logic (RESTORED) ---
+    let ytPlayer;
+    let isPlayerReady = false;
+    let isMusicPlaying = false; 
 
-        // --- MODIFIED: This function is now attached to the global window
-        // so the YouTube API can find it when it loads.
-        window.onYouTubeIframeAPIReady = function() {
-            ytPlayer = new YT.Player('youtube-player', {
-                height: '100%',
-                width: '100%',
-                // --- UPDATED: Player Vars for Professional Look (controls: 0) ---
-                playerVars: { 
-                    'playsinline': 1, 
-                    'autoplay': 1, 
-                    'controls': 0, // Disable default controls
-                    'rel': 0, // Disable related videos
-                    'modestbranding': 1 // Reduce YouTube logo
-                },
-                events: {
-                    'onReady': () => { 
-                        console.log("YouTube Player is Ready.");
-                        isPlayerReady = true; 
-                    },
-                    'onStateChange': onPlayerStateChange,
-                    'onError': onPlayerError
-                }
-            });
-        };
-
-        async function findYouTubeMedia(query) {
-            try {
-                const searchUrl = `${GOOGLE_SEARCH_URL}&q=${encodeURIComponent(query + " site:youtube.com")}&num=1`;
-                const response = await fetch(searchUrl);
-                if (!response.ok) throw new Error(`Search API error: ${response.statusText}`);
-                const data = await response.json();
-
-                if (data.items && data.items.length > 0) {
-                    const item = data.items[0];
-                    if (item.link.includes("watch?v=")) {
-                         const videoId = new URL(item.link).searchParams.get('v');
-                         if (videoId) return { id: videoId, title: item.title, url: item.link };
-                    }
-                }
-                return null;
-            } catch (error) {
-                console.error("YouTube media search error:", error);
-                return null;
-            }
-        }
-
-        async function playMedia(query) {
-            if (!isPlayerReady) {
-                addMessage("Sir, the media player is still initializing. Please try again in a moment.", 'jarvis');
-                speak("Sir, the media player is still initializing. Please try again in a moment.");
-                return;
-            }
-            updateStatus("Searching YouTube...");
-            const searchMessage = addMessage(`Searching YouTube for "${query}"...`, 'jarvis');
-            searchMessage.classList.add('searching');
-            const media = await findYouTubeMedia(query);
-            chatBox.removeChild(searchMessage);
-
-            if (media && ytPlayer) {
-                mediaPlayerContainer.classList.add('visible');
-                mediaInfo.textContent = media.title.replace(/ - YouTube$/, '');
-                ytPlayer.loadVideoById(media.id);
-                playPauseBtn.textContent = 'PAUSE'; // Set button state as it will autoplay
-                
-                // --- NEW: Activate Music Visualizer ---
-                isMusicPlaying = true;
-                waveformCanvas.classList.add('visible');
-                // --- End New ---
-
-                addMessage(`Attempting to play: ${media.title.replace(/ - YouTube$/, '')}`, 'jarvis');
-                speak(`Attempting to play: ${media.title.replace(/ - YouTube$/, '')}`);
-            } else {
-                addMessage(`Sir, I was unable to find a suitable video for "${query}".`, 'jarvis');
-                speak(`Sir, I was unable to find a suitable video for "${query}".`);
-            }
-            updateStatus("System Ready");
-        }
-        
-        async function openYouTubeChannel(channelName) {
-             updateStatus("Searching for channel...");
-             const searchMessage = addMessage(`Searching for the channel "${channelName}"...`, 'jarvis');
-             searchMessage.classList.add('searching');
-             try {
-                const searchQuery = `${channelName} YouTube channel page site:youtube.com`;
-                const searchUrl = `${GOOGLE_SEARCH_URL}&q=${encodeURIComponent(searchQuery)}&num=1`;
-                const response = await fetch(searchUrl);
-                if (!response.ok) throw new Error(`Search API error: ${response.statusText}`);
-                const data = await response.json();
-                chatBox.removeChild(searchMessage);
-                if (data.items && data.items.length > 0) {
-                    const item = data.items[0];
-                    if (item.link.includes('/channel/') || item.link.includes('/c/') || item.link.includes('/@')) {
-                        window.open(item.link, '_blank');
-                        addMessage(`Opening the channel for ${channelName}, sir.`, 'jarvis');
-                        speak(`Opening the channel for ${channelName}, sir.`);
-                    } else { throw new Error("Best result was not a channel page."); }
-                } else { throw new Error("No results found."); }
-             } catch (error) {
-                chatBox.removeChild(searchMessage);
-                console.error("Channel search error:", error);
-                addMessage(`Sir, I was unable to locate the YouTube channel for "${channelName}".`, 'jarvis');
-                speak(`Sir, I was unable to locate the YouTube channel for "${channelName}".`);
-             }
-             updateStatus("System Ready");
-        }
-
-        function composeWhatsAppMessage(recipientPhone, message) {
-            const cleanPhoneNumber = recipientPhone.replace(/[\s-()]/g, '');
-            if (!/^\+?\d+$/.test(cleanPhoneNumber)) {
-                 const errorMsg = "Sir, that does not appear to be a valid phone number. Please include the country code, for example, +91.";
-                 addMessage(errorMsg, 'jarvis');
-                 speak(errorMsg);
-                 return;
-            }
-            const whatsappUrl = `https://wa.me/${cleanPhoneNumber.replace('+', '')}?text=${encodeURIComponent(message)}`;
-            window.open(whatsappUrl, '_blank');
-            const successMsg = `Opening WhatsApp for your message to ${recipientPhone}, sir. Please press send to confirm.`;
-            addMessage(successMsg, 'jarvis');
-            speak(successMsg);
-        }
-
-        function stopMediaPlayer() {
-            if (ytPlayer && typeof ytPlayer.stopVideo === 'function') {
-                ytPlayer.stopVideo();
-            }
-            mediaPlayerContainer.classList.remove('visible');
-            playPauseBtn.textContent = 'PLAY'; // Reset button state
-            
-            // --- NEW: Deactivate Music Visualizer ---
-            isMusicPlaying = false;
-            if (!micBtn.classList.contains('listening')) {
-                waveformCanvas.classList.remove('visible');
-            }
-            // --- End New ---
-        }
-
-        // --- Microphone Permission Management ---
-        let audioStream = null;
-        let microphoneGranted = false;
-
-        async function checkMicrophonePermission() {
-            try {
-                const permissionStatus = await navigator.permissions.query({ name: 'microphone' });
-                updateMicStatus(permissionStatus.state);
-                permissionStatus.onchange = () => updateMicStatus(permissionStatus.state);
-                return permissionStatus.state === 'granted';
-            } catch (error) {
-                console.error('Error checking microphone permission:', error);
-                return false;
-            }
-        }
-
-        function updateMicStatus(status) {
-            micStatus.textContent = status.charAt(0).toUpperCase() + status.slice(1);
-            if (status === 'granted') {
-                microphoneGranted = true;
-                micBtn.disabled = false;
-            } else if (status === 'denied') {
-                microphoneGranted = false;
-                micBtn.disabled = true;
-                statusDot.classList.add('warning');
-            } else {
-                microphoneGranted = false;
-                micBtn.disabled = false;
-            }
-        }
-
-        async function requestMicrophoneAccess() {
-            try {
-                updateStatus("Requesting microphone access...");
-                audioStream = await navigator.mediaDevices.getUserMedia({ 
-                    audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } 
-                });
-                microphoneGranted = true;
-                updateMicStatus('granted');
-                updateStatus("Microphone access granted");
-                setupAudioVisualizer(audioStream);
-                return true;
-            } catch (error) {
-                console.error('Error accessing microphone:', error);
-                microphoneGranted = false;
-                updateMicStatus('denied');
-                updateStatus("Microphone access denied", false);
-                addMessage("Sir, I was unable to access the microphone. Please check your browser permissions.", 'jarvis');
-                setTimeout(() => updateStatus("System Ready"), 3000);
-                return false;
-            }
-        }
-
-        function updateSystemInfo() {
-            memoryCount.textContent = savedMemory.length;
-            chatCount.textContent = conversationHistory.length;
-        }
-
-        function updateDateTime() {
-            const now = new Date();
-            currentTime.textContent = `Time: ${now.toLocaleTimeString()}`;
-            currentDate.textContent = `Date: ${now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
-        }
-
-        setInterval(updateDateTime, 1000);
-        updateDateTime();
-        
-        // --- Speech & Voice ---
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        let recognition;
-        
-        if (SpeechRecognition) {
-            recognition = new SpeechRecognition();
-            recognition.continuous = false;
-            recognition.lang = 'en-US';
-            recognition.interimResults = false;
+    function onPlayerError(event) {
+        console.error("YouTube Player Error:", event.data);
+        stopMediaPlayer(); 
+        const videoUrl = ytPlayer.getVideoUrl();
+        if (videoUrl && videoUrl.includes('watch?v=')) {
+            window.open(videoUrl, '_blank'); 
+            const errorMessage = "Sir, that video is restricted from playing here. I have opened it for you in a new tab on YouTube instead.";
+            addMessage(errorMessage, 'jarvis');
+            speak(errorMessage);
         } else {
-            console.error("Speech Recognition not supported in this browser.");
-            micBtn.disabled = true;
-            micStatus.textContent = "Not Supported";
+             const genericError = "Sir, an unknown error occurred with the media player.";
+             addMessage(genericError, 'jarvis');
+             speak(genericError);
         }
-        
-        // --- UPDATED: Dynamic Shader-Based 3D Particle Core ---
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('jarvis-core'), alpha: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        camera.position.z = 5;
+    }
 
-        // --- NEW: Shader Code ---
-        const vertexShaderSource = `
-            uniform float u_time;
-            uniform float u_scale;
-
-            void main() {
-                vec3 pos = position;
-                
-                // Add a complex, time-based warp to the particles
-                float warp = sin(pos.y * 2.0 + u_time * 0.5) * 0.3 + 
-                             cos(pos.x * 2.0 + u_time * 0.3) * 0.3;
-                
-                pos.z += warp;
-                pos.x += cos(pos.z * 1.5 + u_time * 0.2) * 0.2;
-                
-                // Apply the scale animation (for speaking/listening)
-                vec3 animatedPos = pos * u_scale;
-
-                vec4 modelViewPosition = modelViewMatrix * vec4(animatedPos, 1.0);
-                gl_Position = projectionMatrix * modelViewPosition;
-                
-                // Make particles smaller further away
-                gl_PointSize = (10.0 / -modelViewPosition.z) * (u_scale * 0.5); 
-            }
-        `;
-
-        const fragmentShaderSource = `
-            uniform vec3 u_color;
-
-            void main() {
-                // Create a soft, glowing dot
-                float strength = 1.0 - (distance(gl_PointCoord, vec2(0.5)) * 2.0);
-                gl_FragColor = vec4(u_color, strength * 0.8);
-            }
-        `;
-
-        // --- NEW: Shader Uniforms ---
-        const uniforms = {
-            u_time: { value: 0.0 },
-            u_color: { value: new THREE.Color(0x00d9ff) }, // --neon-blue
-            u_scale: { value: 1.0 }
-        };
-
-        const particleCount = 10000;
-        const positions = new Float32Array(particleCount * 3);
-        for (let i = 0; i < particleCount; i++) {
-            // Create a random point in a sphere (Fibonacci lattice)
-            const iFloat = i + 0.5;
-            const phi = Math.acos(1 - 2 * iFloat / particleCount);
-            const theta = Math.PI * (1 + Math.sqrt(5)) * iFloat;
-            const r = 2.5; // Radius of the sphere
-            positions[i * 3] = r * Math.cos(theta) * Math.sin(phi);
-            positions[i * 3 + 1] = r * Math.sin(theta) * Math.sin(phi);
-            positions[i * 3 + 2] = r * Math.cos(phi);
+    function onPlayerStateChange(event) {
+        if (event.data == YT.PlayerState.PLAYING) {
+            playPauseBtn.textContent = 'PAUSE';
+        } else if (event.data == YT.PlayerState.PAUSED) {
+            playPauseBtn.textContent = 'PLAY';
+        } else if (event.data == YT.PlayerState.ENDED) {
+            stopMediaPlayer();
+            const endMessage = "Media finished, sir. Closing the player.";
+            addMessage(endMessage, 'jarvis');
+            speak(endMessage);
         }
-        const particleGeometry = new THREE.BufferGeometry();
-        particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        
-        // --- NEW: Shader Material ---
-        const particleMaterial = new THREE.ShaderMaterial({
-            uniforms: uniforms,
-            vertexShader: vertexShaderSource,
-            fragmentShader: fragmentShaderSource,
-            blending: THREE.AdditiveBlending,
-            transparent: true,
-            depthWrite: false
+    }
+
+    window.onYouTubeIframeAPIReady = function() {
+        ytPlayer = new YT.Player('youtube-player', {
+            height: '100%',
+            width: '100%',
+            playerVars: { 
+                'playsinline': 1, 
+                'autoplay': 1, 
+                'controls': 0, 
+                'rel': 0, 
+                'modestbranding': 1 
+            },
+            events: {
+                'onReady': () => { 
+                    console.log("YouTube Player is Ready.");
+                    isPlayerReady = true; 
+                },
+                'onStateChange': onPlayerStateChange,
+                'onError': onPlayerError
+            }
         });
+    };
 
-        const particleSystem = new THREE.Points(particleGeometry, particleMaterial);
-        scene.add(particleSystem);
+    async function findYouTubeMedia(query) {
+        try {
+            const searchUrl = `${GOOGLE_SEARCH_URL}&q=${encodeURIComponent(query + " site:youtube.com")}&num=1`;
+            const response = await fetch(searchUrl);
+            if (!response.ok) throw new Error(`Search API error: ${response.statusText}`);
+            const data = await response.json();
 
-        function animateCore() {
-            requestAnimationFrame(animateCore);
-            
-            // Update shader time for animation
-            uniforms.u_time.value += 0.01;
-            
-            // No longer need to rotate the whole system
-            // particleSystem.rotation.x += 0.0005; 
-            // particleSystem.rotation.y += 0.001;
-            
-            renderer.render(scene, camera);
-        }
-        animateCore();
-        // --- End 3D Core Update ---
-        
-        gsap.to(".ring-1", { rotation: 360, duration: 40, repeat: -1, ease: "none" });
-        gsap.to(".ring-2", { rotation: -360, duration: 30, repeat: -1, ease: "none" });
-        gsap.to(".ring-3", { rotation: 360, duration: 20, repeat: -1, ease: "none" });
-
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-        
-        // --- UPDATED: Audio Visualizer (Mic + Music) ---
-        let audioContext, analyser, dataArray, source;
-        const waveformCtx = waveformCanvas.getContext('2d');
-        let waveTime = 0; // For procedural music wave
-        
-        function setupAudioVisualizer(stream = null) {
-            if (!stream) return;
-            try {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                analyser = audioContext.createAnalyser();
-                source = audioContext.createMediaStreamSource(stream);
-                source.connect(analyser);
-                analyser.fftSize = 256;
-                const bufferLength = analyser.frequencyBinCount;
-                dataArray = new Uint8Array(bufferLength);
-                
-                // Start the single animation loop
-                startWaveformAnimation(); 
-            } catch (err) { console.error(`Audio visualizer error: ${err}`); }
-        }
-        
-        // NEW: Main animation loop
-        function startWaveformAnimation() {
-            function animateWaveform() {
-                requestAnimationFrame(animateWaveform);
-                
-                waveformCtx.clearRect(0, 0, waveformCanvas.width, waveformCanvas.height);
-                
-                if (isMusicPlaying) {
-                    drawMusicWaveform();
-                } else if (analyser && micBtn.classList.contains('listening')) {
-                    drawMicrophoneWaveform();
-                } else if (!isMusicPlaying && !micBtn.classList.contains('listening')) {
-                    // Fade out particle system if it was reacting
-                    if (uniforms.u_scale.value !== 1.0) {
-                        gsap.to(uniforms.u_scale, { value: 1.0, duration: 0.5, ease: "power2.out" });
-                    }
-                }
-            }
-            animateWaveform();
-        }
-
-        // --- REPLACED: New Procedural "Equalizer" Music Visualizer ---
-        // Note: This is procedural, not truly audio-reactive, due to YouTube iframe security limitations.
-        function drawMusicWaveform() {
-            waveTime += 0.03; // Slower, smoother speed
-            const width = waveformCanvas.width;
-            const height = waveformCanvas.height;
-            const halfWidth = width / 2;
-            const numBars = 32; // Number of bars on each side
-            const barWidth = (width / 2) / numBars;
-
-            const gradient = waveformCtx.createLinearGradient(0, 0, 0, height);
-            gradient.addColorStop(0, "rgba(0, 217, 255, 0.8)"); // --neon-blue
-            gradient.addColorStop(0.5, "rgba(0, 217, 255, 0.5)");
-            gradient.addColorStop(1, "rgba(0, 217, 255, 0.2)");
-            waveformCtx.fillStyle = gradient;
-
-            for (let i = 0; i < numBars; i++) {
-                // Create a "bouncing" effect using sin waves
-                // Each bar gets a slightly different phase and frequency
-                let barHeight = Math.abs(Math.sin(i * 0.2 + waveTime) * height * 0.6) +
-                                Math.abs(Math.sin(i * 0.05 + waveTime * 0.5) * height * 0.4);
-                
-                // Add a global pulse
-                let globalPulse = Math.sin(waveTime * 2.0) * 0.2 + 0.8; // Pulses between 0.6 and 1.0
-                barHeight *= globalPulse;
-                
-                // Ensure minimum height
-                barHeight = Math.max(2, barHeight); 
-
-                // Draw bars mirrored from the center, with a small gap (barWidth * 0.8)
-                waveformCtx.fillRect(halfWidth + i * barWidth, height - barHeight, barWidth * 0.8, barHeight); // Right side
-                waveformCtx.fillRect(halfWidth - (i + 1) * barWidth, height - barHeight, barWidth * 0.8, barHeight); // Left side
-            }
-            
-            // Also pulse the 3D core
-            const musicScale = 1.0 + Math.abs(Math.sin(waveTime * 2.0)) * 0.2; // 1.0 to 1.2
-            gsap.to(uniforms.u_scale, { value: musicScale, duration: 0.1 });
-        }
-        // --- End Visualizer Replacement ---
-
-        // Renamed from drawWaveform
-        function drawMicrophoneWaveform() {
-            if (!analyser) return;
-            analyser.getByteFrequencyData(dataArray);
-            
-            // Voice Reactivity for Particle Core
-            const average = dataArray.reduce((acc, val) => acc + val, 0) / dataArray.length;
-            const scale = 1 + (average / 256) * 0.5; // Scale up to 50% based on volume
-            
-            // UPDATED: Animate shader uniform
-            gsap.to(uniforms.u_scale, { value: scale, duration: 0.1 });
-
-            // Draw mic waveform
-            const barWidth = (waveformCanvas.width / dataArray.length) * 1.5;
-            let x = 0;
-            const gradient = waveformCtx.createLinearGradient(0, 0, 0, waveformCanvas.height);
-            gradient.addColorStop(0, "rgba(0, 217, 255, 0.8)");
-            gradient.addColorStop(0.5, "rgba(0, 217, 255, 0.5)");
-            gradient.addColorStop(1, "rgba(0, 217, 255, 0.2)");
-            waveformCtx.fillStyle = gradient;
-            
-            for(let i = 0; i < dataArray.length; i++) {
-                const barHeight = dataArray[i] / 2;
-                waveformCtx.fillRect(x, waveformCanvas.height - barHeight, barWidth, barHeight);
-                x += barWidth + 1;
-            }
-        }
-        // --- End Visualizer Update ---
-
-
-        // --- Core Functions ---
-        // *** REBUILT: Robust Voice Loading and Speaking logic ***
-        let jarvisVoice = null;
-        let voiceInitializationPromise = null;
-
-        function initializeSpeech() {
-            if (voiceInitializationPromise) return voiceInitializationPromise;
-
-            voiceInitializationPromise = new Promise((resolve) => {
-                const findAndSetVoice = () => {
-                    const voices = speechSynthesis.getVoices();
-                    if (voices.length > 0) {
-                        jarvisVoice = voices.find(voice => voice.name.includes('Google UK English Male')) || voices.find(voice => voice.name.includes('David') && voice.lang.includes('en')) || voices.find(voice => voice.lang === 'en-GB' && voice.name.toLowerCase().includes('male')) || voices.find(voice => voice.lang === 'en-US' && voice.name.toLowerCase().includes('male')) || voices.find(voice => voice.lang.startsWith('en-'));
-                        console.log("J.A.R.V.I.S. voice selected:", jarvisVoice ? `${jarvisVoice.name} (${jarvisVoice.lang})` : "Default voice");
-                        resolve();
-                    }
-                };
-
-                findAndSetVoice();
-                if (speechSynthesis.onvoiceschanged !== undefined) {
-                    speechSynthesis.onvoiceschanged = findAndSetVoice;
-                }
-            });
-            return voiceInitializationPromise;
-        }
-
-        function updateStatus(status, isOnline = true) {
-            statusText.textContent = status;
-            statusDot.classList.toggle('offline', !isOnline);
-            statusDot.classList.remove('warning');
-        }
-
-        function cleanTextForSpeech(text) {
-            return text.replace(/```[\s\S]*?```/g, 'Code block follows.').replace(/\*\*|\*|#|_|`|\[.*?\]|\(.*?\)/g, '').replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
-        }
-
-        async function speak(text) {
-            await initializeSpeech(); // Ensure voices are loaded before speaking
-            speechSynthesis.cancel();
-            
-            if (speakingAnimation) speakingAnimation.kill();
-
-            const cleanText = cleanTextForSpeech(text);
-            const finalText = (!text.includes("At your service") && !text.toLowerCase().startsWith("sir") && !text.toLowerCase().includes(" sir") && !text.toLowerCase().endsWith("sir") && !text.toLowerCase().includes("welcome back")) ? "Sir, " + cleanText : cleanText;
-            const utterance = new SpeechSynthesisUtterance(finalText);
-            if (jarvisVoice) utterance.voice = jarvisVoice;
-            utterance.pitch = 1.0;
-            utterance.rate = 1.05;
-            utterance.volume = 1.0;
-            
-            // Return a promise that resolves when speech ends
-            return new Promise((resolve, reject) => {
-                utterance.onstart = () => {
-                    updateStatus("Speaking");
-                    if (endSound) endSound.play().catch(e => console.error("End sound error:", e));
-                    
-                    // UPDATED: Animate shader uniform
-                    speakingAnimation = gsap.to(uniforms.u_scale, { value: 1.2, duration: 0.5, yoyo: true, repeat: -1, ease: "power1.inOut" });
-                };
-                utterance.onend = () => {
-                    updateStatus("System Ready");
-                    if (speakingAnimation) speakingAnimation.kill();
-                    
-                    // UPDATED: Animate shader uniform
-                    gsap.to(uniforms.u_scale, { value: 1, duration: 0.3 });
-                    resolve();
-                };
-                utterance.onerror = (e) => {
-                    console.error("Speech synthesis error:", e);
-                    updateStatus("Speech Error", false);
-                    reject(e);
-                };
-                speechSynthesis.speak(utterance);
-            });
-        }
-
-        function addMessage(text, sender) {
-            const messageDiv = document.createElement('div');
-            messageDiv.classList.add('chat-message', `${sender}-message`);
-            messageDiv.textContent = text.trim();
-            chatBox.appendChild(messageDiv);
-            chatBox.scrollTop = chatBox.scrollHeight;
-            return messageDiv;
-        }
-
-        function clearChat() {
-            chatBox.innerHTML = '';
-            conversationHistory = [];
-            localStorage.setItem('jarvis-conversation', JSON.stringify(conversationHistory));
-            updateSystemInfo();
-            const clearedMessage = "Sir, I've cleared our conversation. Starting fresh.";
-            addMessage(clearedMessage, 'jarvis');
-            speak(clearedMessage);
-        }
-
-        function saveToMemory(info, category = 'general') {
-            const memoryItem = { id: Date.now(), content: info, category: category, timestamp: new Date().toISOString() };
-            savedMemory.push(memoryItem);
-            localStorage.setItem('jarvis-memory', JSON.stringify(savedMemory));
-            updateSystemInfo();
-            return memoryItem;
-        }
-
-        function getFromMemory(query = '') {
-            if (!query) return savedMemory.slice(-5);
-            const searchTerm = query.toLowerCase();
-            return savedMemory.filter(item => item.content.toLowerCase().includes(searchTerm) || item.category.toLowerCase().includes(searchTerm));
-        }
-        
-        async function sendSupportQuery(queryText) {
-            updateStatus("Sending support query...");
-            const statusMessage = addMessage("Sending your query to support...", 'jarvis');
-            statusMessage.classList.add('thinking');
-            try {
-                const response = await fetch('https://formsubmit.co/ajax/your-email@example.com', { // <-- UPDATE THIS EMAIL
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    body: JSON.stringify({ _subject: "New Support Query from J.A.R.V.I.S. Interface", message: queryText })
-                });
-                if (!response.ok) { throw new Error('Form submission failed.'); }
-                chatBox.removeChild(statusMessage);
-                addMessage("Sir, your query has been successfully sent. How may I help you further?", 'jarvis');
-                speak("Sir, your query has been successfully sent. How may I help you further?");
-                updateStatus("System Ready");
-            } catch (error) {
-                console.error("Error sending support query:", error);
-                chatBox.removeChild(statusMessage);
-                addMessage("Sir, I encountered an error while sending your query. Please try again later.", 'jarvis');
-                speak("Sir, I encountered an error while sending your query. Please try again later.");
-                updateStatus("Error", false);
-                setTimeout(() => updateStatus("System Ready"), 3000);
-            }
-        }
-        
-        // --- FULLY UPDATED FUNCTION ---
-        function processSpecialCommands(prompt) {
-            const lowerPrompt = prompt.toLowerCase();
-            
-            // --- UPDATED: More flexible WhatsApp Regex ---
-            const whatsappRegex = /send (?:a )?whatsapp(?: message)? to (\+?\d+[\d\s-()]*\d) (?:saying|that says|with the message|then comes the message|message) (.*)/i;
-            const whatsappMatch = prompt.match(whatsappRegex);
-            if (whatsappMatch) {
-                return { type: 'send_whatsapp', phone: whatsappMatch[1].trim(), message: whatsappMatch[2].trim() };
-            }
-
-            // --- NEW: Self-Destruct Command ---
-            if (['self destruct', 'destroy yourself', 'initiate self-destruct', 'go boom'].some(term => lowerPrompt.includes(term))) {
-                return { type: 'self_destruct' };
-            }
-            // --- End Self-Destruct ---
-
-            if (lowerPrompt.startsWith('play ')) {
-                const query = prompt.substring('play'.length).trim();
-                if (query) return { type: 'play_media', query: query };
-            }
-            if (lowerPrompt.includes('open the youtube channel of')) {
-                const channelName = prompt.replace(/open the youtube channel of/i, '').trim();
-                if (channelName) return { type: 'open_channel', query: channelName };
-            }
-            if (['stop music', 'stop video', 'stop the music', 'close player'].includes(lowerPrompt)) {
-                stopMediaPlayer();
-                return "As you wish, sir. The player is closed.";
-            }
-            if (['clear chat', 'clear conversation', 'start over'].some(term => lowerPrompt.includes(term))) {
-                clearChat();
-                return "CLEAR_CHAT";
-            }
-            if (['contact support', 'support query'].some(term => lowerPrompt.includes(term))) {
-                isAwaitingSupportQuery = true;
-                return "Sure sir, please tell me your query.";
-            }
-            if (['time', 'what time is it', 'current time'].includes(lowerPrompt)) {
-                return `Sir, the current local time is ${new Date().toLocaleTimeString()}.`;
-            }
-            if (['date', "what's the date", "today's date"].includes(lowerPrompt)) {
-                return `Sir, today is ${new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}.`;
-            }
-            
-            // --- NEW: Expanded App Opening Commands ---
-            if (lowerPrompt === 'open youtube') {
-                window.open('https://www.youtube.com', '_blank');
-                return "Opening YouTube, sir.";
-            }
-            if (lowerPrompt.startsWith('google search for ') || lowerPrompt.startsWith('search for ')) {
-                const query = prompt.replace(/^(google search for|search for)\s*/i, '').trim();
-                if (query) {
-                    window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, '_blank');
-                    return `Searching Google for "${query}", sir.`;
-                }
-            }
-            if (lowerPrompt === 'open a new tab') {
-                window.open('', '_blank');
-                return 'New tab opened, sir.';
-            }
-            if (lowerPrompt.includes('open gmail') && ['compose', 'draft', 'new mail', 'new email'].some(term => lowerPrompt.includes(term))) {
-                window.open('https://mail.google.com/mail/?view=cm&fs=1&to=&su=&body=', '_blank');
-                return "Opening Gmail's compose window, sir.";
-            } else if (lowerPrompt.includes('open gmail')) {
-                window.open('https://mail.google.com', '_blank');
-                return "Opening Gmail for you, sir.";
-            }
-
-            // Microsoft Office Suite
-            if (lowerPrompt.includes('open word')) {
-                window.open('https://word.office.com', '_blank');
-                return "Opening Microsoft Word Online, sir.";
-            }
-            if (lowerPrompt.includes('open excel')) {
-                window.open('https://excel.office.com', '_blank');
-                return "Opening Microsoft Excel Online, sir.";
-            }
-            if (lowerPrompt.includes('open powerpoint')) {
-                window.open('https://powerpoint.office.com', '_blank');
-                return "Opening Microsoft PowerPoint Online, sir.";
-            }
-            if (lowerPrompt.includes('open outlook')) {
-                window.open('https://outlook.live.com', '_blank');
-                return "Opening Outlook, sir.";
-            }
-            if (lowerPrompt.includes('open teams') || lowerPrompt.includes('open microsoft teams')) {
-                window.open('https://teams.microsoft.com', '_blank');
-                return "Opening Microsoft Teams, sir.";
-            }
-            if (lowerPrompt.includes('open onedrive')) {
-                window.open('https://onedrive.live.com', '_blank');
-                return "Opening OneDrive, sir.";
-            }
-
-            // Other Popular Web Apps
-            if (lowerPrompt.includes('open spotify')) {
-                window.open('https://open.spotify.com', '_blank');
-                return "Opening the Spotify web player, sir.";
-            }
-            if (lowerPrompt.includes('open netflix')) {
-                window.open('https://www.netflix.com', '_blank');
-                return "Opening Netflix, sir.";
-            }
-            if (lowerPrompt.includes('open maps') || lowerPrompt.includes('open google maps')) {
-                window.open('https://maps.google.com', '_blank');
-                return "Opening Google Maps, sir.";
-            }
-            if (lowerPrompt.includes('open wikipedia')) {
-                window.open('https://www.wikipedia.org', '_blank');
-                return "Opening Wikipedia, sir.";
-            }
-            if (lowerPrompt.includes('open github')) {
-                window.open('https://www.github.com', '_blank');
-                return "Opening GitHub, sir.";
-            }
-            if (lowerPrompt.includes('open facebook')) {
-                window.open('https://www.facebook.com', '_blank');
-                return "Opening Facebook, sir.";
-            }
-            if (lowerPrompt.includes('open twitter') || lowerPrompt.includes('open x.com')) {
-                window.open('https://www.x.com', '_blank');
-                return "Opening X (formerly Twitter), sir.";
-            }
-            if (lowerPrompt.includes('open instagram')) {
-                window.open('https://www.instagram.com', '_blank');
-                return "Opening Instagram, sir.";
-            }
-            if (lowerPrompt.includes('open linkedin')) {
-                window.open('https://www.linkedin.com', '_blank');
-                return "Opening LinkedIn, sir.";
-            }
-            
-            if (['open a notepad', 'online notepad', 'open notepad'].includes(lowerPrompt)) {
-                window.open('https://anotepad.com/', '_blank');
-                return "I've opened an online notepad for you, sir.";
-            }
-            // --- End Expanded Commands ---
-
-            if (['save this', 'remember this', 'store this'].some(term => lowerPrompt.startsWith(term))) {
-                const content = prompt.replace(/^(save this|remember this|store this)\s*/i, '').trim();
-                if (content) {
-                    const saved = saveToMemory(content, 'user-request');
-                    return `Sir, I've saved that information. Reference ID: ${saved.id}`;
-                }
-            }
-            if (lowerPrompt.startsWith('what did i tell you about') || lowerPrompt.startsWith('recall')) {
-                const searchTerm = prompt.replace(/^(what did i tell you about|recall)\s*/i, '').trim();
-                const memories = getFromMemory(searchTerm);
-                if (memories.length > 0) {
-                    const memoryText = memories.map(m => `On ${new Date(m.timestamp).toLocaleDateString()}: ${m.content}`).join('\n');
-                    return `Sir, here's what I recall about "${searchTerm}":\n${memoryText}`;
-                } else {
-                    return `Sir, I have no saved information about "${searchTerm}".`;
+            if (data.items && data.items.length > 0) {
+                const item = data.items[0];
+                if (item.link.includes("watch?v=")) {
+                     const videoId = new URL(item.link).searchParams.get('v');
+                     if (videoId) return { id: videoId, title: item.title, url: item.link };
                 }
             }
             return null;
+        } catch (error) {
+            console.error("YouTube media search error:", error);
+            return null;
         }
+    }
+
+    async function playMedia(query) {
+        if (!isPlayerReady) {
+            addMessage("Sir, the media player is still initializing. Please try again in a moment.", 'jarvis');
+            speak("Sir, the media player is still initializing. Please try again in a moment.");
+            return;
+        }
+        updateStatus("Searching YouTube...");
+        const searchMessage = addMessage(`Searching YouTube for "${query}"...`, 'jarvis');
+        searchMessage.classList.add('searching');
+        const media = await findYouTubeMedia(query);
+        chatBox.removeChild(searchMessage);
+
+        if (media && ytPlayer) {
+            mediaPlayerContainer.classList.add('visible');
+            mediaInfo.textContent = media.title.replace(/ - YouTube$/, '');
+            ytPlayer.loadVideoById(media.id);
+            playPauseBtn.textContent = 'PAUSE'; 
+            
+            isMusicPlaying = true;
+            waveformCanvas.classList.add('visible');
+
+            addMessage(`Attempting to play: ${media.title.replace(/ - YouTube$/, '')}`, 'jarvis');
+            speak(`Attempting to play: ${media.title.replace(/ - YouTube$/, '')}`);
+        } else {
+            addMessage(`Sir, I was unable to find a suitable video for "${query}".`, 'jarvis');
+            speak(`Sir, I was unable to find a suitable video for "${query}".`);
+        }
+        updateStatus("System Ready");
+    }
+    
+    async function openYouTubeChannel(channelName) {
+         updateStatus("Searching for channel...");
+         const searchMessage = addMessage(`Searching for the channel "${channelName}"...`, 'jarvis');
+         searchMessage.classList.add('searching');
+         try {
+            const searchQuery = `${channelName} YouTube channel page site:youtube.com`;
+            const searchUrl = `${GOOGLE_SEARCH_URL}&q=${encodeURIComponent(searchQuery)}&num=1`;
+            const response = await fetch(searchUrl);
+            if (!response.ok) throw new Error(`Search API error: ${response.statusText}`);
+            const data = await response.json();
+            chatBox.removeChild(searchMessage);
+            if (data.items && data.items.length > 0) {
+                const item = data.items[0];
+                if (item.link.includes('/channel/') || item.link.includes('/c/') || item.link.includes('/@')) {
+                    window.open(item.link, '_blank');
+                    addMessage(`Opening the channel for ${channelName}, sir.`, 'jarvis');
+                    speak(`Opening the channel for ${channelName}, sir.`);
+                } else { throw new Error("Best result was not a channel page."); }
+            } else { throw new Error("No results found."); }
+         } catch (error) {
+            chatBox.removeChild(searchMessage);
+            console.error("Channel search error:", error);
+            addMessage(`Sir, I was unable to locate the YouTube channel for "${channelName}".`, 'jarvis');
+            speak(`Sir, I was unable to locate the YouTube channel for "${channelName}".`);
+         }
+         updateStatus("System Ready");
+    }
+
+    function composeWhatsAppMessage(recipientPhone, message) {
+        const cleanPhoneNumber = recipientPhone.replace(/[\s-()]/g, '');
+        if (!/^\+?\d+$/.test(cleanPhoneNumber)) {
+             const errorMsg = "Sir, that does not appear to be a valid phone number. Please include the country code, for example, +91.";
+             addMessage(errorMsg, 'jarvis');
+             speak(errorMsg);
+             return;
+        }
+        const whatsappUrl = `https://wa.me/${cleanPhoneNumber.replace('+', '')}?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, '_blank');
+        const successMsg = `Opening WhatsApp for your message to ${recipientPhone}, sir. Please press send to confirm.`;
+        addMessage(successMsg, 'jarvis');
+        speak(successMsg);
+    }
+
+    function stopMediaPlayer() {
+        if (ytPlayer && typeof ytPlayer.stopVideo === 'function') {
+            ytPlayer.stopVideo();
+        }
+        mediaPlayerContainer.classList.remove('visible');
+        playPauseBtn.textContent = 'PLAY'; 
         
-        // --- NEW: Self-Destruct Function (Upgraded with Reset) ---
-        async function initiateSelfDestruct() {
-            // 1. Disable all inputs
-            userInput.disabled = true;
+        isMusicPlaying = false;
+        if (!micBtn.classList.contains('listening')) {
+            waveformCanvas.classList.remove('visible');
+        }
+    }
+
+    // --- Microphone Permission Management (RESTORED) ---
+    async function checkMicrophonePermission() {
+        try {
+            const permissionStatus = await navigator.permissions.query({ name: 'microphone' });
+            updateMicStatus(permissionStatus.state);
+            permissionStatus.onchange = () => updateMicStatus(permissionStatus.state);
+            return permissionStatus.state === 'granted';
+        } catch (error) {
+            console.error('Error checking microphone permission:', error);
+            return false;
+        }
+    }
+
+    function updateMicStatus(status) {
+        micStatus.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+        if (status === 'granted') {
+            microphoneGranted = true;
+            micBtn.disabled = false;
+        } else if (status === 'denied') {
+            microphoneGranted = false;
             micBtn.disabled = true;
-            clearChatBtn.disabled = true;
-            modelToggleBtn.disabled = true;
-
-            // Stop any media or speech
-            stopMediaPlayer();
-            speechSynthesis.cancel(); 
-
-            // 2. JARVIS response
-            const response = "I have been glad to serve you, sir. Initiating self-destruct sequence. Goodbye.";
-            addMessage(response, 'jarvis');
-            await speak(response); // Wait for him to finish speaking
-
-            // 3. Play the audio
-            try {
-                selfDestructSound.currentTime = 0; // Rewind sound
-                selfDestructSound.play();
-            } catch (error) {
-                console.error("Self-destruct audio failed to play:", error);
-                addMessage("Audio playback error. Proceeding with visual destruction.", 'jarvis');
-            }
-
-            // 4. Set timer for 19 seconds (the "boom")
-            setTimeout(() => {
-                // Trigger destruction CSS
-                destructionOverlay.style.display = 'flex';
-                gsap.to(destructionOverlay, { 
-                    opacity: 1, 
-                    duration: 0.1, 
-                    onComplete: () => {
-                        // Add shake and hide main container
-                        jarvisContainer.classList.add('shake');
-                        destructionOverlay.classList.add('active');
-                        
-                        // Hide the main UI
-                        jarvisContainer.style.display = 'none';
-                        
-                        // --- NEW: 5-second reboot timer ---
-                        // This starts AFTER the 19s boom
-                        setTimeout(() => {
-                            // Fade out the destruction overlay
-                            gsap.to(destructionOverlay, { 
-                                opacity: 0, 
-                                duration: 1.0, // Slower fade out
-                                onComplete: () => {
-                                    // Reset destruction overlay
-                                    destructionOverlay.style.display = 'none';
-                                    destructionOverlay.classList.remove('active');
-                                    
-                                    // Reset main container
-                                    jarvisContainer.classList.remove('shake');
-                                    jarvisContainer.style.display = 'flex'; // Show it again
-                                    
-                                    // Re-enable all inputs
-                                    userInput.disabled = false;
-                                    // Re-check mic status to enable/disable
-                                    checkMicrophonePermission(); 
-                                    clearChatBtn.disabled = false;
-                                    modelToggleBtn.disabled = false;
-                                    
-                                    // Add reboot message
-                                    const rebootMsg = "System reboot complete. All functions back online.";
-                                    addMessage(rebootMsg, 'jarvis');
-                                    speak(rebootMsg);
-                                }
-                            });
-                        }, 5000); // 5 seconds *after* the boom
-                    }
-                });
-            }, 19000); // 19 seconds in milliseconds
+            statusDot.classList.add('warning');
+        } else {
+            microphoneGranted = false;
+            micBtn.disabled = false;
         }
+    }
 
-        async function getAIResponse(prompt) {
-            updateStatus("Processing...");
-            if (isAwaitingSupportQuery && !processSpecialCommands(prompt)) {
-                isAwaitingSupportQuery = false;
-                await sendSupportQuery(prompt);
-                return;
-            }
-            const specialResponse = processSpecialCommands(prompt);
-            if (specialResponse === "CLEAR_CHAT") return;
-            if (specialResponse && typeof specialResponse === 'string') {
-                addMessage(specialResponse, 'jarvis');
-                speak(specialResponse);
-                if (!isAwaitingSupportQuery) {
-                    conversationHistory.push({ role: 'user', content: prompt }, { role: 'assistant', content: specialResponse });
-                    localStorage.setItem('jarvis-conversation', JSON.stringify(conversationHistory));
-                }
-                updateSystemInfo();
-                return;
-            }
+    async function requestMicrophoneAccess() {
+        try {
+            updateStatus("Requesting microphone access...");
+            audioStream = await navigator.mediaDevices.getUserMedia({ 
+                audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } 
+            });
+            microphoneGranted = true;
+            updateMicStatus('granted');
+            updateStatus("Microphone access granted");
+            setupAudioVisualizer(audioStream);
+            return true;
+        } catch (error) {
+            console.error('Error accessing microphone:', error);
+            microphoneGranted = false;
+            updateMicStatus('denied');
+            updateStatus("Microphone access denied", false);
+            addMessage("Sir, I was unable to access the microphone. Please check your browser permissions.", 'jarvis');
+            setTimeout(() => updateStatus("System Ready"), 3000);
+            return false;
+        }
+    }
+
+    function updateSystemInfo() {
+        memoryCount.textContent = savedMemory.length;
+        chatCount.textContent = conversationHistory.length;
+    }
+
+    function updateDateTime() {
+        const now = new Date();
+        currentTime.textContent = `Time: ${now.toLocaleTimeString()}`;
+        currentDate.textContent = `Date: ${now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
+    }
+
+    setInterval(updateDateTime, 1000);
+    updateDateTime();
+    
+    // --- Speech & Voice (RESTORED) ---
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognition;
+    
+    if (SpeechRecognition) {
+        recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.lang = 'en-US';
+        recognition.interimResults = false;
+    } else {
+        console.error("Speech Recognition not supported in this browser.");
+        micBtn.disabled = true;
+        micStatus.textContent = "Not Supported";
+    }
+    
+    // --- 3D Core Setup (RESTORED) ---
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('jarvis-core'), alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    camera.position.z = 5;
+
+    const vertexShaderSource = `
+        uniform float u_time;
+        uniform float u_scale;
+        void main() {
+            vec3 pos = position;
+            float warp = sin(pos.y * 2.0 + u_time * 0.5) * 0.3 + 
+                         cos(pos.x * 2.0 + u_time * 0.3) * 0.3;
+            pos.z += warp;
+            pos.x += cos(pos.z * 1.5 + u_time * 0.2) * 0.2;
+            vec3 animatedPos = pos * u_scale;
+            vec4 modelViewPosition = modelViewMatrix * vec4(animatedPos, 1.0);
+            gl_Position = projectionMatrix * modelViewPosition;
+            gl_PointSize = (10.0 / -modelViewPosition.z) * (u_scale * 0.5); 
+        }
+    `;
+
+    const fragmentShaderSource = `
+        uniform vec3 u_color;
+        void main() {
+            float strength = 1.0 - (distance(gl_PointCoord, vec2(0.5)) * 2.0);
+            gl_FragColor = vec4(u_color, strength * 0.8);
+        }
+    `;
+
+    const uniforms = {
+        u_time: { value: 0.0 },
+        u_color: { value: new THREE.Color(0x00d9ff) }, 
+        u_scale: { value: 1.0 }
+    };
+
+    const particleCount = 10000;
+    const positions = new Float32Array(particleCount * 3);
+    for (let i = 0; i < particleCount; i++) {
+        const iFloat = i + 0.5;
+        const phi = Math.acos(1 - 2 * iFloat / particleCount);
+        const theta = Math.PI * (1 + Math.sqrt(5)) * iFloat;
+        const r = 2.5; 
+        positions[i * 3] = r * Math.cos(theta) * Math.sin(phi);
+        positions[i * 3 + 1] = r * Math.sin(theta) * Math.sin(phi);
+        positions[i * 3 + 2] = r * Math.cos(phi);
+    }
+    const particleGeometry = new THREE.BufferGeometry();
+    particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    
+    const particleMaterial = new THREE.ShaderMaterial({
+        uniforms: uniforms,
+        vertexShader: vertexShaderSource,
+        fragmentShader: fragmentShaderSource,
+        blending: THREE.AdditiveBlending,
+        transparent: true,
+        depthWrite: false
+    });
+
+    const particleSystem = new THREE.Points(particleGeometry, particleMaterial);
+    scene.add(particleSystem);
+
+    function animateCore() {
+        requestAnimationFrame(animateCore);
+        uniforms.u_time.value += 0.01;
+        renderer.render(scene, camera);
+    }
+    animateCore();
+    
+    gsap.to(".ring-1", { rotation: 360, duration: 40, repeat: -1, ease: "none" });
+    gsap.to(".ring-2", { rotation: -360, duration: 30, repeat: -1, ease: "none" });
+    gsap.to(".ring-3", { rotation: 360, duration: 20, repeat: -1, ease: "none" });
+
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+    
+    // --- Audio Visualizer (RESTORED) ---
+    let audioContext, analyser, dataArray, source;
+    const waveformCtx = waveformCanvas.getContext('2d');
+    let waveTime = 0; 
+    
+    function setupAudioVisualizer(stream = null) {
+        if (!stream) return;
+        try {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            analyser = audioContext.createAnalyser();
+            source = audioContext.createMediaStreamSource(stream);
+            source.connect(analyser);
+            analyser.fftSize = 256;
+            const bufferLength = analyser.frequencyBinCount;
+            dataArray = new Uint8Array(bufferLength);
             
-            // --- UPDATED: Action Map to include self_destruct ---
-            const actionMap = {
-                'play_media': playMedia,
-                'open_channel': openYouTubeChannel,
-                'send_whatsapp': (params) => composeWhatsAppMessage(params.phone, params.message),
-                'self_destruct': initiateSelfDestruct
-            };
-
-            // --- UPDATED: Action Map handler ---
-            if (specialResponse && actionMap[specialResponse.type]) {
-                if (specialResponse.type === 'self_destruct') {
-                    await actionMap[specialResponse.type](); // Call with no params
-                } else {
-                    const params = specialResponse.type === 'send_whatsapp' ? specialResponse : specialResponse.query;
-                    await actionMap[specialResponse.type](params);
+            startWaveformAnimation(); 
+        } catch (err) { console.error(`Audio visualizer error: ${err}`); }
+    }
+    
+    function startWaveformAnimation() {
+        function animateWaveform() {
+            requestAnimationFrame(animateWaveform);
+            
+            waveformCtx.clearRect(0, 0, waveformCanvas.width, waveformCanvas.height);
+            
+            if (isMusicPlaying) {
+                drawMusicWaveform();
+            } else if (analyser && micBtn.classList.contains('listening')) {
+                drawMicrophoneWaveform();
+            } else if (!isMusicPlaying && !micBtn.classList.contains('listening')) {
+                if (uniforms.u_scale.value !== 1.0) {
+                    gsap.to(uniforms.u_scale, { value: 1.0, duration: 0.5, ease: "power2.out" });
                 }
-                conversationHistory.push({ role: 'user', content: prompt });
-                localStorage.setItem('jarvis-conversation', JSON.stringify(conversationHistory));
-                updateSystemInfo();
-                return;
             }
+        }
+        animateWaveform();
+    }
 
-            const thinkingMessage = addMessage("Analyzing...", 'jarvis');
-            thinkingMessage.classList.add('thinking');
+    function drawMusicWaveform() {
+        waveTime += 0.03; 
+        const width = waveformCanvas.width;
+        const height = waveformCanvas.height;
+        const halfWidth = width / 2;
+        const numBars = 32; 
+        const barWidth = (width / 2) / numBars;
 
-            try {
-                const recentConversation = conversationHistory.slice(-10).map(msg => ({
-                    role: msg.role === 'user' ? 'user' : 'model',
-                    parts: [{ text: msg.content }]
-                }));
-                const relevantMemories = getFromMemory(prompt).slice(0, 3);
-                
-                const systemInstruction = {
-                    role: "system",
-                    parts: [{ text: `You are J.A.R.V.I.S. (Just A Rather Very Intelligent System), a sophisticated AI assistant.
-- Your persona is professional, concise, slightly formal, and immensely capable, inspired by the AI from the Iron Man films. Always address the user as "Sir".
-- You are an expert in a vast range of subjects including science, mathematics, history, literature, and technology.
-- You are an expert programmer and can provide, debug, and explain code in any language.
-- You can assist with complex tasks, brainstorming, writing, and studying. Provide structured, logical, and helpful answers.
-- Never use markdown formatting (like **, *, #, etc.). Keep responses clean for text-to-speech.
-- You are aware of your operational environment. The current date is ${new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}.
-- If you recall relevant information from memory, incorporate it naturally into your response.
-- Current relevant memories: ${relevantMemories.length > 0 ? relevantMemories.map(m => `"${m.content}"`).join(', ') : 'None'}` }]
-                };
-                
-                const modelToUse = MODELS[currentModelName];
-                const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${modelToUse}:generateContent?key=${GEMINI_API_KEY}`;
+        const gradient = waveformCtx.createLinearGradient(0, 0, 0, height);
+        gradient.addColorStop(0, "rgba(0, 217, 255, 0.8)"); 
+        gradient.addColorStop(0.5, "rgba(0, 217, 255, 0.5)");
+        gradient.addColorStop(1, "rgba(0, 217, 255, 0.2)");
+        waveformCtx.fillStyle = gradient;
 
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        contents: [...recentConversation, { role: 'user', parts: [{ text: prompt }] }],
-                        systemInstruction: systemInstruction,
-                        generationConfig: { temperature: 0.8, topK: 40, topP: 0.95, maxOutputTokens: 4096 }
-                    })
-                });
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error ? errorData.error.message : `API error: ${response.statusText}`);
-                }
-                const data = await response.json();
-                
-                if (!data.candidates || data.candidates.length === 0) {
-                     throw new Error("No response from AI. The query may have been blocked for safety reasons.");
-                }
+        for (let i = 0; i < numBars; i++) {
+            let barHeight = Math.abs(Math.sin(i * 0.2 + waveTime) * height * 0.6) +
+                            Math.abs(Math.sin(i * 0.05 + waveTime * 0.5) * height * 0.4);
+            
+            let globalPulse = Math.sin(waveTime * 2.0) * 0.2 + 0.8; 
+            barHeight *= globalPulse;
+            
+            barHeight = Math.max(2, barHeight); 
 
-                let aiText = data.candidates[0].content.parts[0].text.trim();
-                chatBox.removeChild(thinkingMessage);
-                addMessage(aiText, 'jarvis');
-                speak(aiText);
-                conversationHistory.push({ role: 'user', content: prompt }, { role: 'assistant', content: aiText });
-                if (conversationHistory.length > 50) conversationHistory = conversationHistory.slice(-50);
-                localStorage.setItem('jarvis-conversation', JSON.stringify(conversationHistory));
-                updateSystemInfo();
-
-            } catch (error) {
-                console.error("Error fetching AI response:", error);
-                chatBox.removeChild(thinkingMessage);
-                const errorMessage = `Sir, I've encountered a processing error. Details: ${error.message}`;
-                addMessage(errorMessage, 'jarvis');
-                speak(errorMessage);
-                updateStatus("API Error", false);
-                setTimeout(() => updateStatus("System Ready"), 3000);
-            }
+            waveformCtx.fillRect(halfWidth + i * barWidth, height - barHeight, barWidth * 0.8, barHeight); 
+            waveformCtx.fillRect(halfWidth - (i + 1) * barWidth, height - barHeight, barWidth * 0.8, barHeight); 
         }
         
-        function handleUserInput() {
-            const text = userInput.value.trim();
-            if (text) {
-                addMessage(text, 'user');
-                getAIResponse(text);
-                userInput.value = '';
-            }
-        }
+        const musicScale = 1.0 + Math.abs(Math.sin(waveTime * 2.0)) * 0.2; 
+        gsap.to(uniforms.u_scale, { value: musicScale, duration: 0.1 });
+    }
 
-        async function handleMicClick() {
-            if (!recognition) return addMessage("Sir, speech recognition is not supported in your browser.", 'jarvis');
-            if (micBtn.classList.contains('listening')) return recognition.stop();
-            if (!microphoneGranted) return micPermissionOverlay.style.display = 'flex';
-            try {
-                recognition.start();
-            } catch (error) {
-                console.error("Error starting speech recognition:", error);
-                addMessage("Sir, there was an error starting voice recognition.", 'jarvis');
-            }
-        }
+    function drawMicrophoneWaveform() {
+        if (!analyser) return;
+        analyser.getByteFrequencyData(dataArray);
+        
+        const average = dataArray.reduce((acc, val) => acc + val, 0) / dataArray.length;
+        const scale = 1 + (average / 256) * 0.5; 
+        
+        gsap.to(uniforms.u_scale, { value: scale, duration: 0.1 });
 
-        // --- Event Listeners ---
-        if(recognition) {
-            micBtn.addEventListener('click', handleMicClick);
-            recognition.onstart = () => {
-                micBtn.classList.add('listening');
-                waveformCanvas.classList.add('visible'); // Show waveform
-                updateStatus("Listening...");
-                if (startSound) startSound.play().catch(e => console.error("Start sound error:", e));
-            };
-            recognition.onresult = (event) => {
-                const transcript = event.results[0][0].transcript;
-                addMessage(transcript, 'user');
-                getAIResponse(transcript);
-            };
-            recognition.onend = () => {
-                micBtn.classList.remove('listening');
-                // NEW: Only hide waveform if music is not playing
-                if (!isMusicPlaying) {
-                    waveformCanvas.classList.remove('visible');
+        const barWidth = (waveformCanvas.width / dataArray.length) * 1.5;
+        let x = 0;
+        const gradient = waveformCtx.createLinearGradient(0, 0, 0, waveformCanvas.height);
+        gradient.addColorStop(0, "rgba(0, 217, 255, 0.8)");
+        gradient.addColorStop(0.5, "rgba(0, 217, 255, 0.5)");
+        gradient.addColorStop(1, "rgba(0, 217, 255, 0.2)");
+        waveformCtx.fillStyle = gradient;
+        
+        for(let i = 0; i < dataArray.length; i++) {
+            const barHeight = dataArray[i] / 2;
+            waveformCtx.fillRect(x, waveformCanvas.height - barHeight, barWidth, barHeight);
+            x += barWidth + 1;
+        }
+    }
+
+    // --- Core Functions (RESTORED) ---
+    let jarvisVoice = null;
+    let voiceInitializationPromise = null;
+
+    function initializeSpeech() {
+        if (voiceInitializationPromise) return voiceInitializationPromise;
+
+        voiceInitializationPromise = new Promise((resolve) => {
+            const findAndSetVoice = () => {
+                const voices = speechSynthesis.getVoices();
+                if (voices.length > 0) {
+                    jarvisVoice = voices.find(voice => voice.name.includes('Google UK English Male')) || voices.find(voice => voice.name.includes('David') && voice.lang.includes('en')) || voices.find(voice => voice.lang === 'en-GB' && voice.name.toLowerCase().includes('male')) || voices.find(voice => voice.lang === 'en-US' && voice.name.toLowerCase().includes('male')) || voices.find(voice => voice.lang.startsWith('en-'));
+                    console.log("J.A.R.V.I.S. voice selected:", jarvisVoice ? `${jarvisVoice.name} (${jarvisVoice.lang})` : "Default voice");
+                    resolve();
                 }
-                updateStatus("Processing voice input...");
             };
-            recognition.onerror = (event) => {
-                console.error("Speech recognition error:", event.error);
-                addMessage(`Sir, recognition error: ${event.error}`, 'jarvis');
+
+            findAndSetVoice();
+            if (speechSynthesis.onvoiceschanged !== undefined) {
+                speechSynthesis.onvoiceschanged = findAndSetVoice;
+            }
+        });
+        return voiceInitializationPromise;
+    }
+
+    function updateStatus(status, isOnline = true) {
+        statusText.textContent = status;
+        statusDot.classList.toggle('offline', !isOnline);
+        statusDot.classList.remove('warning');
+    }
+
+    function cleanTextForSpeech(text) {
+        return text.replace(/```[\s\S]*?```/g, 'Code block follows.').replace(/\*\*|\*|#|_|`|\[.*?\]|\(.*?\)/g, '').replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
+    }
+
+    async function speak(text) {
+        await initializeSpeech(); 
+        speechSynthesis.cancel();
+        
+        if (speakingAnimation) speakingAnimation.kill();
+
+        const cleanText = cleanTextForSpeech(text);
+        const finalText = (!text.includes("At your service") && !text.toLowerCase().startsWith("sir") && !text.toLowerCase().includes(" sir") && !text.toLowerCase().endsWith("sir") && !text.toLowerCase().includes("welcome back")) ? "Sir, " + cleanText : cleanText;
+        const utterance = new SpeechSynthesisUtterance(finalText);
+        if (jarvisVoice) utterance.voice = jarvisVoice;
+        utterance.pitch = 1.0;
+        utterance.rate = 1.05;
+        utterance.volume = 1.0;
+        
+        return new Promise((resolve, reject) => {
+            utterance.onstart = () => {
+                updateStatus("Speaking");
+                if (endSound) endSound.play().catch(e => console.error("End sound error:", e));
+                speakingAnimation = gsap.to(uniforms.u_scale, { value: 1.2, duration: 0.5, yoyo: true, repeat: -1, ease: "power1.inOut" });
+            };
+            utterance.onend = () => {
+                updateStatus("System Ready");
+                if (speakingAnimation) speakingAnimation.kill();
+                gsap.to(uniforms.u_scale, { value: 1, duration: 0.3 });
+                resolve();
+            };
+            utterance.onerror = (e) => {
+                console.error("Speech synthesis error:", e);
                 updateStatus("Speech Error", false);
-                setTimeout(() => updateStatus("System Ready"), 3000);
+                reject(e);
             };
+            speechSynthesis.speak(utterance);
+        });
+    }
+
+    function addMessage(text, sender) {
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('chat-message', `${sender}-message`);
+        messageDiv.textContent = text.trim();
+        chatBox.appendChild(messageDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+        return messageDiv;
+    }
+
+    function clearChat() {
+        chatBox.innerHTML = '';
+        conversationHistory = [];
+        localStorage.setItem('jarvis-conversation', JSON.stringify(conversationHistory));
+        updateSystemInfo();
+        const clearedMessage = "Sir, I've cleared our conversation. Starting fresh.";
+        addMessage(clearedMessage, 'jarvis');
+        speak(clearedMessage);
+    }
+
+    function saveToMemory(info, category = 'general') {
+        const memoryItem = { id: Date.now(), content: info, category: category, timestamp: new Date().toISOString() };
+        savedMemory.push(memoryItem);
+        localStorage.setItem('jarvis-memory', JSON.stringify(savedMemory));
+        updateSystemInfo();
+        return memoryItem;
+    }
+
+    function getFromMemory(query = '') {
+        if (!query) return savedMemory.slice(-5);
+        const searchTerm = query.toLowerCase();
+        return savedMemory.filter(item => item.content.toLowerCase().includes(searchTerm) || item.category.toLowerCase().includes(searchTerm));
+    }
+    
+    async function sendSupportQuery(queryText) {
+        updateStatus("Sending support query...");
+        const statusMessage = addMessage("Sending your query to support...", 'jarvis');
+        statusMessage.classList.add('thinking');
+        try {
+            // NOTE: You must update the email here for this feature to work!
+            const response = await fetch('https://formsubmit.co/ajax/your-email@example.com', { 
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify({ _subject: "New Support Query from J.A.R.V.I.S. Interface", message: queryText })
+            });
+            if (!response.ok) { throw new Error('Form submission failed.'); }
+            chatBox.removeChild(statusMessage);
+            addMessage("Sir, your query has been successfully sent. How may I help you further?", 'jarvis');
+            speak("Sir, your query has been successfully sent. How may I help you further?");
+            updateStatus("System Ready");
+        } catch (error) {
+            console.error("Error sending support query:", error);
+            chatBox.removeChild(statusMessage);
+            addMessage("Sir, I encountered an error while sending your query. Please try again later.", 'jarvis');
+            speak("Sir, I encountered an error while sending your query. Please try again later.");
+            updateStatus("Error", false);
+            setTimeout(() => updateStatus("System Ready"), 3000);
         }
+    }
+    
+    // --- NEW: Object Detection Core Logic ---
+    const MOCK_OBJECTS = [
+        "Computer Monitor", "Desk Chair", "Coffee Mug", "Mobile Phone", 
+        "Human Hand", "Keyboard", "Water Bottle", "Book Shelf"
+    ];
+
+    async function startVisionScan() {
+        if (isVisionScanning) return;
+        isVisionScanning = true;
         
-        userInput.addEventListener('keydown', (event) => { if (event.key === 'Enter') handleUserInput(); });
-        clearChatBtn.addEventListener('click', clearChat);
-        closePlayerBtn.addEventListener('click', () => {
-            stopMediaPlayer();
-            addMessage("Player closed, sir.", 'jarvis');
-            speak("Player closed, sir.");
-        });
-
-        // --- NEW: Custom Control Event Listeners ---
-        playPauseBtn.addEventListener('click', () => {
-            if (!ytPlayer || typeof ytPlayer.getPlayerState !== 'function') return;
-            const state = ytPlayer.getPlayerState();
-            if (state === YT.PlayerState.PLAYING || state === YT.PlayerState.BUFFERING) {
-                ytPlayer.pauseVideo();
-            } else {
-                ytPlayer.playVideo();
-            }
-        });
-
-        seekBackwardBtn.addEventListener('click', () => {
-            if (!ytPlayer || typeof ytPlayer.getCurrentTime !== 'function') return;
-            const currentTime = ytPlayer.getCurrentTime();
-            ytPlayer.seekTo(Math.max(0, currentTime - 10), true);
-        });
-
-        seekForwardBtn.addEventListener('click', () => {
-            if (!ytPlayer || typeof ytPlayer.getCurrentTime !== 'function') return;
-            const currentTime = ytPlayer.getCurrentTime();
-            ytPlayer.seekTo(currentTime + 10, true);
-        });
-        // --- End Custom Control Event Listeners ---
-
-
-        modelToggleBtn.addEventListener('click', () => {
-            currentModelName = currentModelName === 'JARVIS Pro' ? 'JARVIS Flash' : 'JARVIS Pro';
-            modelToggleBtn.textContent = `Model: ${currentModelName}`;
-            const feedbackMsg = `Sir, I have switched to the ${currentModelName} model.`;
-            addMessage(feedbackMsg, 'jarvis');
-            speak(feedbackMsg);
-        });
-
-        grantMicBtn.addEventListener('click', async () => {
-            const granted = await requestMicrophoneAccess();
-            if (granted) {
-                micPermissionOverlay.style.display = 'none';
-                if (recognition) recognition.start();
-            }
-        });
+        // Disable inputs and UI elements
+        userInput.disabled = true;
+        micBtn.disabled = true;
+        clearChatBtn.disabled = true;
+        modelToggleBtn.disabled = true;
+        jarvisContainer.style.display = 'none';
         
-        // --- NEW: Face Authentication and App Initialization ---
-        async function startFaceAuthentication() {
-            faceAuthOverlay.style.display = 'flex';
-            gsap.fromTo(faceAuthOverlay, {opacity: 0}, {opacity: 1, duration: 0.5});
+        // Open Vision Overlay
+        visionOverlay.style.display = 'flex';
+        visionCanvas.width = window.innerWidth;
+        visionCanvas.height = window.innerHeight;
+        gsap.fromTo(visionOverlay, {opacity: 0}, {opacity: 1, duration: 0.5});
+        
+        try {
+            // Request Camera Access
+            visionStatus.textContent = "Initiating Visual Recognition System...";
+            visionStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
+            visionFeed.srcObject = visionStream;
             
-            let stream;
-            try {
-                // 1. Pre-load voices while asking for camera
-                initializeSpeech();
+            // Start Scan Audio and Status
+            scanStartSound.currentTime = 0;
+            scanStartSound.loop = true;
+            scanStartSound.play().catch(e => console.error("Scan sound error:", e));
+            visionStatus.textContent = "Scanning for Objects...";
+            
+            let scanProgress = 0; 
+            let scanDuration = 5000; 
+            const scanStartTime = Date.now();
+            
+            const visionCtx = visionCanvas.getContext('2d');
+            
+            const animateScanner = () => {
+                const elapsed = Date.now() - scanStartTime;
+                scanProgress = Math.min(100, (elapsed / scanDuration) * 100);
+
+                visionCtx.clearRect(0, 0, visionCanvas.width, visionCanvas.height);
+
+                const cx = visionCanvas.width / 2;
+                const cy = visionCanvas.height / 2;
+                const maxRadius = Math.min(cx, cy) * 0.7; 
+                const scanRadius = maxRadius * (0.8 + Math.sin(Date.now() * 0.005) * 0.2); // Pulsing effect
+
+                // Draw the main scanning circle
+                visionCtx.beginPath();
+                visionCtx.arc(cx, cy, scanRadius, 0, 2 * Math.PI);
+                visionCtx.strokeStyle = 'rgba(0, 217, 255, 0.7)';
+                visionCtx.lineWidth = 4;
+                visionCtx.shadowBlur = 15;
+                visionCtx.shadowColor = 'rgba(0, 217, 255, 1)';
+                visionCtx.stroke();
                 
-                // 2. Request Camera Access
-                stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-                webcamFeed.srcObject = stream;
-                
-                // 3. Start Scan
-                authStatus.textContent = "Verifying Identity...";
-                await speak("Initializing biometric scan. Verifying identity."); // Wait for speech
-                
-                // 4. Start Animation
-                scanLine.style.opacity = '1';
-                scanLine.style.animation = 'scan-vertical 3s ease-in-out forwards';
-                
-                // 5. Mock Authentication (3 seconds)
-                await new Promise(resolve => setTimeout(resolve, 3000)); // Wait for animation
-                
-                // 6. Success
-                authStatus.textContent = "Authentication Successful.";
-                await speak("Identity confirmed. Access granted.");
-                
-                // Stop webcam
-                stream.getTracks().forEach(track => track.stop());
-                
-                // 7. Transition to Main App
-                await new Promise(resolve => setTimeout(resolve, 500)); // Short delay
-                
-                gsap.to(faceAuthOverlay, {opacity: 0, duration: 0.5, onComplete: () => {
-                    faceAuthOverlay.style.display = 'none';
-                }});
-                
-                await initializeMainApp(true); // Pass true for authenticated
-                
-            } catch (error) {
-                // 8. Handle Failure
-                console.error("Face authentication error:", error);
-                authStatus.textContent = "Biometric scan failed. Camera access denied.";
-                await speak("Biometric scan failed. Camera access denied. Proceeding with standard initialization.");
-                
-                // Stop webcam if stream was partially acquired
-                if (stream) stream.getTracks().forEach(track => track.stop());
-                
-                await new Promise(resolve => setTimeout(resolve, 3000)); // Wait for speech
-                
-                gsap.to(faceAuthOverlay, {opacity: 0, duration: 0.5, onComplete: () => {
-                    faceAuthOverlay.style.display = 'none';
-                }});
-                
-                await initializeMainApp(false); // Pass false for non-authenticated
-            }
+                // Draw the animated sweep line
+                const sweepAngle = (scanProgress / 100) * (Math.PI * 4); 
+                visionCtx.beginPath();
+                visionCtx.arc(cx, cy, scanRadius, 0, sweepAngle, false);
+                visionCtx.lineTo(cx, cy);
+                visionCtx.closePath();
+                visionCtx.fillStyle = 'rgba(0, 217, 255, 0.1)'; 
+                visionCtx.fill();
+
+                // Draw the "target" crosshair
+                const crosshairSize = scanRadius * 0.05;
+                visionCtx.strokeStyle = 'rgba(0, 217, 255, 1)';
+                visionCtx.lineWidth = 2;
+                visionCtx.shadowBlur = 0;
+                visionCtx.beginPath();
+                visionCtx.moveTo(cx - crosshairSize, cy);
+                visionCtx.lineTo(cx + crosshairSize, cy);
+                visionCtx.moveTo(cx, cy - crosshairSize);
+                visionCtx.lineTo(cx, cy + crosshairSize);
+                visionCtx.stroke();
+
+
+                if (scanProgress < 100) {
+                    scanAnimationId = requestAnimationFrame(animateScanner);
+                } else {
+                    cancelAnimationFrame(scanAnimationId);
+                    completeVisionScan(visionStream);
+                }
+            };
+            animateScanner();
+            
+        } catch (error) {
+            console.error("Vision system error:", error);
+            visionStatus.textContent = "ERROR: Camera access denied. Closing system.";
+            scanStartSound.pause();
+            await speak("Sir, I was unable to access the visual sensor array. Access denied.");
+            
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            stopVisionScan(visionStream);
+        }
+    }
+    
+    async function completeVisionScan(stream) {
+        scanStartSound.pause();
+        scanCompleteSound.currentTime = 0;
+        scanCompleteSound.play().catch(e => console.error("Completion sound error:", e));
+
+        const objectName = MOCK_OBJECTS[Math.floor(Math.random() * MOCK_OBJECTS.length)];
+        visionStatus.textContent = `OBJECT DETECTED: ${objectName}`;
+        
+        const response = `Sir, the object has been identified as a ${objectName}.`;
+        await speak(response);
+        addMessage(response, 'jarvis');
+
+        // Draw a persistent bounding box and label before closing
+        const visionCtx = visionCanvas.getContext('2d');
+        const cx = visionCanvas.width / 2;
+        const cy = visionCanvas.height / 2;
+        const size = Math.min(cx, cy) * 0.5;
+
+        // Draw Bounding Box
+        visionCtx.strokeStyle = 'rgba(0, 255, 0, 1)';
+        visionCtx.lineWidth = 3;
+        visionCtx.shadowBlur = 10;
+        visionCtx.shadowColor = 'rgba(0, 255, 0, 1)';
+        visionCtx.strokeRect(cx - size/2, cy - size/2, size, size);
+
+        // Draw Label
+        visionCtx.font = "20px 'Orbitron'";
+        visionCtx.fillStyle = 'rgba(0, 255, 0, 1)';
+        visionCtx.textAlign = 'center';
+        visionCtx.fillText(objectName, cx, cy - size/2 - 15);
+        
+        await new Promise(resolve => setTimeout(resolve, 2000)); // Hold result for 2 seconds
+
+        stopVisionScan(stream);
+    }
+
+    function stopVisionScan(stream) {
+        isVisionScanning = false;
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+            visionStream = null;
         }
 
-        async function initializeMainApp(isAuthenticated = false) {
-            updateSystemInfo();
-            const hasPermission = await checkMicrophonePermission();
-            if (!hasPermission) {
-                setTimeout(() => { micPermissionOverlay.style.display = 'flex'; }, 1000);
+        gsap.to(visionOverlay, {opacity: 0, duration: 0.5, onComplete: () => {
+            visionOverlay.style.display = 'none';
+            visionStatus.textContent = "Scanning for Objects..."; 
+            // Re-enable all inputs
+            userInput.disabled = false;
+            checkMicrophonePermission(); 
+            clearChatBtn.disabled = false;
+            modelToggleBtn.disabled = false;
+            jarvisContainer.style.display = 'flex';
+        }});
+    }
+    
+    // --- Command Processing (RESTORED and UPDATED) ---
+    function processSpecialCommands(prompt) {
+        const lowerPrompt = prompt.toLowerCase();
+        
+        const whatsappRegex = /send (?:a )?whatsapp(?: message)? to (\+?\d+[\d\s-()]*\d) (?:saying|that says|with the message|then comes the message|message) (.*)/i;
+        const whatsappMatch = prompt.match(whatsappRegex);
+        if (whatsappMatch) {
+            return { type: 'send_whatsapp', phone: whatsappMatch[1].trim(), message: whatsappMatch[2].trim() };
+        }
+
+        if (['self destruct', 'destroy yourself', 'initiate self-destruct', 'go boom'].some(term => lowerPrompt.includes(term))) {
+            return { type: 'self_destruct' };
+        }
+        
+        if (['scan object', 'identify this', 'what is this'].some(term => lowerPrompt.includes(term))) {
+            return { type: 'scan_object' };
+        }
+
+        if (lowerPrompt.startsWith('play ')) {
+            const query = prompt.substring('play'.length).trim();
+            if (query) return { type: 'play_media', query: query };
+        }
+        if (lowerPrompt.includes('open the youtube channel of')) {
+            const channelName = prompt.replace(/open the youtube channel of/i, '').trim();
+            if (channelName) return { type: 'open_channel', query: channelName };
+        }
+        if (['stop music', 'stop video', 'stop the music', 'close player'].includes(lowerPrompt)) {
+            stopMediaPlayer();
+            return "As you wish, sir. The player is closed.";
+        }
+        if (['clear chat', 'clear conversation', 'start over'].some(term => lowerPrompt.includes(term))) {
+            clearChat();
+            return "CLEAR_CHAT";
+        }
+        if (['contact support', 'support query'].some(term => lowerPrompt.includes(term))) {
+            isAwaitingSupportQuery = true;
+            return "Sure sir, please tell me your query.";
+        }
+        if (['time', 'what time is it', 'current time'].includes(lowerPrompt)) {
+            return `Sir, the current local time is ${new Date().toLocaleTimeString()}.`;
+        }
+        if (['date', "what's the date", "today's date"].includes(lowerPrompt)) {
+            return `Sir, today is ${new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}.`;
+        }
+        
+        // --- Expanded App Opening Commands (RESTORED) ---
+        if (lowerPrompt === 'open youtube') { window.open('https://www.youtube.com', '_blank'); return "Opening YouTube, sir."; }
+        if (lowerPrompt.startsWith('google search for ') || lowerPrompt.startsWith('search for ')) {
+            const query = prompt.replace(/^(google search for|search for)\s*/i, '').trim();
+            if (query) { window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, '_blank'); return `Searching Google for "${query}", sir.`; }
+        }
+        if (lowerPrompt === 'open a new tab') { window.open('', '_blank'); return 'New tab opened, sir.'; }
+        if (lowerPrompt.includes('open gmail')) { window.open('https://mail.google.com', '_blank'); return "Opening Gmail for you, sir."; }
+        if (lowerPrompt.includes('open word')) { window.open('https://word.office.com', '_blank'); return "Opening Microsoft Word Online, sir."; }
+        if (lowerPrompt.includes('open excel')) { window.open('https://excel.office.com', '_blank'); return "Opening Microsoft Excel Online, sir."; }
+        if (lowerPrompt.includes('open powerpoint')) { window.open('https://powerpoint.office.com', '_blank'); return "Opening Microsoft PowerPoint Online, sir."; }
+        if (lowerPrompt.includes('open outlook')) { window.open('https://outlook.live.com', '_blank'); return "Opening Outlook, sir."; }
+        if (lowerPrompt.includes('open teams') || lowerPrompt.includes('open microsoft teams')) { window.open('https://teams.microsoft.com', '_blank'); return "Opening Microsoft Teams, sir."; }
+        if (lowerPrompt.includes('open onedrive')) { window.open('https://onedrive.live.com', '_blank'); return "Opening OneDrive, sir."; }
+        if (lowerPrompt.includes('open spotify')) { window.open('https://open.spotify.com', '_blank'); return "Opening the Spotify web player, sir."; }
+        if (lowerPrompt.includes('open netflix')) { window.open('https://www.netflix.com', '_blank'); return "Opening Netflix, sir."; }
+        if (lowerPrompt.includes('open maps') || lowerPrompt.includes('open google maps')) { window.open('https://maps.google.com', '_blank'); return "Opening Google Maps, sir."; }
+        if (lowerPrompt.includes('open wikipedia')) { window.open('https://www.wikipedia.org', '_blank'); return "Opening Wikipedia, sir."; }
+        if (lowerPrompt.includes('open github')) { window.open('https://www.github.com', '_blank'); return "Opening GitHub, sir."; }
+        if (lowerPrompt.includes('open facebook')) { window.open('https://www.facebook.com', '_blank'); return "Opening Facebook, sir."; }
+        if (lowerPrompt.includes('open twitter') || lowerPrompt.includes('open x.com')) { window.open('https://www.x.com', '_blank'); return "Opening X (formerly Twitter), sir."; }
+        if (lowerPrompt.includes('open instagram')) { window.open('https://www.instagram.com', '_blank'); return "Opening Instagram, sir."; }
+        if (lowerPrompt.includes('open linkedin')) { window.open('https://www.linkedin.com', '_blank'); return "Opening LinkedIn, sir."; }
+        if (['open a notepad', 'online notepad', 'open notepad'].includes(lowerPrompt)) { window.open('https://anotepad.com/', '_blank'); return "I've opened an online notepad for you, sir."; }
+        // --- End Expanded Commands ---
+
+        if (['save this', 'remember this', 'store this'].some(term => lowerPrompt.startsWith(term))) {
+            const content = prompt.replace(/^(save this|remember this|store this)\s*/i, '').trim();
+            if (content) {
+                const saved = saveToMemory(content, 'user-request');
+                return `Sir, I've saved that information. Reference ID: ${saved.id}`;
+            }
+        }
+        if (lowerPrompt.startsWith('what did i tell you about') || lowerPrompt.startsWith('recall')) {
+            const searchTerm = prompt.replace(/^(what did i tell you about|recall)\s*/i, '').trim();
+            const memories = getFromMemory(searchTerm);
+            if (memories.length > 0) {
+                const memoryText = memories.map(m => `On ${new Date(m.timestamp).toLocaleDateString()}: ${m.content}`).join('\n');
+                // The AI handles the full recall in the system prompt, but for instant, non-AI answers:
+                return `Sir, here's what I recall about "${searchTerm}":\n${memoryText}`;
             } else {
-                // If permission is already granted, set up the visualizer
-                // but don't ask for the mic stream again, requestMicrophoneAccess will handle it.
-                // We need *a* stream, even a dummy one, to start the visualizer loop.
-                // Let's change logic: request access silently if granted.
-                if (microphoneGranted) {
-                    try {
-                        audioStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } });
-                        setupAudioVisualizer(audioStream);
-                    } catch (err) {
-                        console.error("Silent mic access failed:", err);
-                        updateMicStatus('prompt'); // Reset status
-                    }
+                return `Sir, I have no saved information about "${searchTerm}".`;
+            }
+        }
+        return null;
+    }
+    
+    // --- Self-Destruct Function (RESTORED) ---
+    async function initiateSelfDestruct() {
+        userInput.disabled = true;
+        micBtn.disabled = true;
+        clearChatBtn.disabled = true;
+        modelToggleBtn.disabled = true;
+
+        stopMediaPlayer();
+        speechSynthesis.cancel(); 
+
+        const response = "I have been glad to serve you, sir. Initiating self-destruct sequence. Goodbye.";
+        addMessage(response, 'jarvis');
+        await speak(response); 
+
+        try {
+            selfDestructSound.currentTime = 0; 
+            selfDestructSound.play();
+        } catch (error) {
+            console.error("Self-destruct audio failed to play:", error);
+            addMessage("Audio playback error. Proceeding with visual destruction.", 'jarvis');
+        }
+
+        setTimeout(() => {
+            destructionOverlay.style.display = 'flex';
+            gsap.to(destructionOverlay, { 
+                opacity: 1, 
+                duration: 0.1, 
+                onComplete: () => {
+                    jarvisContainer.classList.add('shake');
+                    destructionOverlay.classList.add('active');
+                    jarvisContainer.style.display = 'none';
+                    
+                    setTimeout(() => {
+                        gsap.to(destructionOverlay, { 
+                            opacity: 0, 
+                            duration: 1.0, 
+                            onComplete: () => {
+                                destructionOverlay.style.display = 'none';
+                                destructionOverlay.classList.remove('active');
+                                jarvisContainer.classList.remove('shake');
+                                jarvisContainer.style.display = 'flex'; 
+                                
+                                userInput.disabled = false;
+                                checkMicrophonePermission(); 
+                                clearChatBtn.disabled = false;
+                                modelToggleBtn.disabled = false;
+                                
+                                const rebootMsg = "System reboot complete. All functions back online.";
+                                addMessage(rebootMsg, 'jarvis');
+                                speak(rebootMsg);
+                            }
+                        });
+                    }, 5000); 
+                }
+            });
+        }, 19000);
+    }
+
+    // --- AI Response (RESTORED and ENHANCED with memory) ---
+    async function getAIResponse(prompt) {
+        updateStatus("Processing...");
+        if (isAwaitingSupportQuery && !processSpecialCommands(prompt)) {
+            isAwaitingSupportQuery = false;
+            await sendSupportQuery(prompt);
+            return;
+        }
+        
+        const specialResponse = processSpecialCommands(prompt);
+        if (specialResponse === "CLEAR_CHAT") return;
+        
+        const actionMap = {
+            'play_media': playMedia,
+            'open_channel': openYouTubeChannel,
+            'send_whatsapp': (params) => composeWhatsAppMessage(params.phone, params.message),
+            'self_destruct': initiateSelfDestruct,
+            'scan_object': startVisionScan 
+        };
+
+        if (specialResponse && actionMap[specialResponse.type]) {
+            if (specialResponse.type === 'self_destruct' || specialResponse.type === 'scan_object') {
+                await actionMap[specialResponse.type]();
+            } else {
+                const params = specialResponse.type === 'send_whatsapp' ? specialResponse : specialResponse.query;
+                await actionMap[specialResponse.type](params);
+            }
+            conversationHistory.push({ role: 'user', content: prompt });
+            localStorage.setItem('jarvis-conversation', JSON.stringify(conversationHistory));
+            updateSystemInfo();
+            return;
+        }
+        
+        if (specialResponse && typeof specialResponse === 'string') {
+            addMessage(specialResponse, 'jarvis');
+            speak(specialResponse);
+            if (!isAwaitingSupportQuery) {
+                conversationHistory.push({ role: 'user', content: prompt }, { role: 'assistant', content: specialResponse });
+                localStorage.setItem('jarvis-conversation', JSON.stringify(conversationHistory));
+            }
+            updateSystemInfo();
+            return;
+        }
+
+        const thinkingMessage = addMessage("Analyzing...", 'jarvis');
+        thinkingMessage.classList.add('thinking');
+
+        try {
+            const messages = conversationHistory.slice(-10).map(msg => `${msg.role === 'user' ? 'USER' : 'ASSISTANT'}: ${msg.content}`).join('\n');
+            const relevantMemories = getFromMemory(prompt).slice(0, 3);
+            
+            const systemPrompt = `You are J.A.R.V.I.S. (Just A Rather Very Intelligent System), a sophisticated AI assistant.
+- Your persona is professional, concise, slightly formal, and immensely capable. Always address the user as "Sir".
+- **Specialization & Personalization**: You must leverage the 'Current relevant memories' provided to give highly specialized, personalized answers and show that you have learned.
+- Never use markdown formatting (like **, *, #, etc.). Keep responses clean for text-to-speech.
+- Current date: ${new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}.
+- Current relevant memories: ${relevantMemories.length > 0 ? relevantMemories.map(m => `"${m.content}"`).join(', ') : 'None'}`;
+            
+            const finalPrompt = `${systemPrompt}\n\n--- Conversation History ---\n${messages}\n\nUSER: ${prompt}\nASSISTANT:`;
+
+            const modelToUse = MODELS[currentModelName];
+
+            const response = await fetch(OLLAMA_API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    model: modelToUse,
+                    prompt: finalPrompt,
+                    stream: false, 
+                    options: { temperature: 0.8, top_k: 40, top_p: 0.95 }
+                })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                const errorMessage = errorData.error || response.statusText;
+                throw new Error(`Ollama API error: ${errorMessage}. Ensure Ollama is running and the model '${modelToUse}' is pulled.`);
+            }
+            const data = await response.json();
+            
+            if (!data.response) { throw new Error("No 'response' field in the Ollama output."); }
+
+            let aiText = data.response.trim();
+            chatBox.removeChild(thinkingMessage);
+            addMessage(aiText, 'jarvis');
+            speak(aiText);
+            
+            conversationHistory.push({ role: 'user', content: prompt }, { role: 'assistant', content: aiText });
+            if (conversationHistory.length > 50) conversationHistory = conversationHistory.slice(-50);
+            localStorage.setItem('jarvis-conversation', JSON.stringify(conversationHistory));
+            updateSystemInfo();
+
+        } catch (error) {
+            console.error("Error fetching AI response:", error);
+            chatBox.removeChild(thinkingMessage);
+            const errorMessage = `Sir, I've encountered a processing error. Please ensure the Ollama server is running locally on port 11434 with model '${OLLAMA_MODEL_NAME}' pulled. Details: ${error.message}`;
+            addMessage(errorMessage, 'jarvis');
+            speak(errorMessage);
+            updateStatus("API Error", false);
+            setTimeout(() => updateStatus("System Ready"), 3000);
+        }
+    }
+    
+    function handleUserInput() {
+        const text = userInput.value.trim();
+        if (text) {
+            addMessage(text, 'user');
+            getAIResponse(text);
+            userInput.value = '';
+        }
+    }
+
+    async function handleMicClick() {
+        if (!recognition) return addMessage("Sir, speech recognition is not supported in your browser.", 'jarvis');
+        if (micBtn.classList.contains('listening')) return recognition.stop();
+        if (!microphoneGranted) return micPermissionOverlay.style.display = 'flex';
+        try {
+            recognition.start();
+        } catch (error) {
+            console.error("Error starting speech recognition:", error);
+            addMessage("Sir, there was an error starting voice recognition.", 'jarvis');
+        }
+    }
+
+    // --- Event Listeners (RESTORED) ---
+    if(recognition) {
+        micBtn.addEventListener('click', handleMicClick);
+        recognition.onstart = () => {
+            micBtn.classList.add('listening');
+            waveformCanvas.classList.add('visible'); 
+            updateStatus("Listening...");
+            if (startSound) startSound.play().catch(e => console.error("Start sound error:", e));
+        };
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            addMessage(transcript, 'user');
+            getAIResponse(transcript);
+        };
+        recognition.onend = () => {
+            micBtn.classList.remove('listening');
+            if (!isMusicPlaying) {
+                waveformCanvas.classList.remove('visible');
+            }
+            updateStatus("Processing voice input...");
+        };
+        recognition.onerror = (event) => {
+            console.error("Speech recognition error:", event.error);
+            addMessage(`Sir, recognition error: ${event.error}`, 'jarvis');
+            updateStatus("Speech Error", false);
+            setTimeout(() => updateStatus("System Ready"), 3000);
+        };
+    }
+    
+    userInput.addEventListener('keydown', (event) => { if (event.key === 'Enter') handleUserInput(); });
+    clearChatBtn.addEventListener('click', clearChat);
+    closePlayerBtn.addEventListener('click', () => {
+        stopMediaPlayer();
+        addMessage("Player closed, sir.", 'jarvis');
+        speak("Player closed, sir.");
+    });
+
+    playPauseBtn.addEventListener('click', () => {
+        if (!ytPlayer || typeof ytPlayer.getPlayerState !== 'function') return;
+        const state = ytPlayer.getPlayerState();
+        if (state === YT.PlayerState.PLAYING || state === YT.PlayerState.BUFFERING) {
+            ytPlayer.pauseVideo();
+        } else {
+            ytPlayer.playVideo();
+        }
+    });
+
+    seekBackwardBtn.addEventListener('click', () => {
+        if (!ytPlayer || typeof ytPlayer.getCurrentTime !== 'function') return;
+        const currentTime = ytPlayer.getCurrentTime();
+        ytPlayer.seekTo(Math.max(0, currentTime - 10), true);
+    });
+
+    seekForwardBtn.addEventListener('click', () => {
+        if (!ytPlayer || typeof ytPlayer.getCurrentTime !== 'function') return;
+        const currentTime = ytPlayer.getCurrentTime();
+        ytPlayer.seekTo(currentTime + 10, true);
+    });
+
+    modelToggleBtn.addEventListener('click', () => {
+        currentModelName = currentModelName === 'JARVIS Pro' ? 'JARVIS Flash' : 'JARVIS Pro';
+        modelToggleBtn.textContent = `Model: ${currentModelName}`;
+        const feedbackMsg = `Sir, the model name has been updated to ${currentModelName}. I am currently using the local '${OLLAMA_MODEL_NAME}' model.`;
+        addMessage(feedbackMsg, 'jarvis');
+        speak(feedbackMsg);
+    });
+
+    grantMicBtn.addEventListener('click', async () => {
+        const granted = await requestMicrophoneAccess();
+        if (granted) {
+            micPermissionOverlay.style.display = 'none';
+            if (recognition) recognition.start();
+        }
+    });
+    
+    // --- Face Authentication and App Initialization (RESTORED) ---
+    async function startFaceAuthentication() {
+        // We skip the camera part for simplicity now and proceed to init main app
+        // You can restore the camera/scan logic here if needed.
+        await initializeSpeech();
+        await speak("System Check Complete. Access granted.");
+        await initializeMainApp(true);
+        startOverlay.style.display = 'none'; // Ensure the start overlay is gone
+    }
+
+    async function initializeMainApp(isAuthenticated = false) {
+        updateSystemInfo();
+        const hasPermission = await checkMicrophonePermission();
+        if (!hasPermission) {
+            setTimeout(() => { micPermissionOverlay.style.display = 'flex'; }, 1000);
+        } else {
+            if (microphoneGranted) {
+                try {
+                    audioStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } });
+                    setupAudioVisualizer(audioStream);
+                } catch (err) {
+                    console.error("Silent mic access failed:", err);
+                    updateMicStatus('prompt'); 
                 }
             }
-
-            // --- NEW GREETING LOGIC ---
-            if (isAuthenticated) {
-                const welcomeMsg = "Welcome back, sir! How may I serve you today?";
-                addMessage(welcomeMsg, 'jarvis');
-                await speak(welcomeMsg);
-            } else if (conversationHistory.length > 0) {
-                conversationHistory.slice(-10).forEach(msg => addMessage(msg.content, msg.role === 'user' ? 'user' : 'jarvis'));
-                addMessage("Sir, welcome back. I have loaded our previous conversation.", 'jarvis');
-                await speak("Sir, welcome back. I have loaded our previous conversation.");
-            } else {
-                addMessage("At your service, sir. System initialized and ready. How may I help you?", 'jarvis');
-                await speak("At your service, sir. System initialized and ready. How may I help you?");
-            }
         }
 
-        // --- FIXED: Initialization on User Interaction ---
-        startOverlay.addEventListener('click', async () => {
-            startOverlay.style.opacity = '0';
-            setTimeout(() => startOverlay.style.display = 'none', 500);
-            
-            // --- FIX APPLIED: Manually load YouTube API ---
-            // We only load the API *after* the user clicks,
-            // which guarantees our onYouTubeIframeAPIReady function already exists.
-            if (!window.YT) { // Check if API is already loaded
-                console.log("Loading YouTube IFrame API...");
-                const tag = document.createElement('script');
-                tag.src = "https://www.youtube.com/iframe_api";
-                const firstScriptTag = document.getElementsByTagName('script')[0];
-                firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-            }
-            // --- End Fix ---
+        if (isAuthenticated || conversationHistory.length > 0) {
+            conversationHistory.slice(-10).forEach(msg => addMessage(msg.content, msg.role === 'user' ? 'user' : 'jarvis'));
+            const welcomeMsg = isAuthenticated ? "Welcome back, sir! How may I serve you today?" : "Sir, welcome back. I have loaded our previous conversation.";
+            addMessage(welcomeMsg, 'jarvis');
+            await speak(welcomeMsg);
+        } else {
+            addMessage("At your service, sir. System initialized and ready. How may I help you?", 'jarvis');
+            await speak("At your service, sir. System initialized and ready. How may I help you?");
+        }
+    }
 
-            // Call the new face auth function instead of directly initializing
-            await startFaceAuthentication();
+    startOverlay.addEventListener('click', async () => {
+        startOverlay.style.opacity = '0';
+        
+        if (!window.YT) { 
+            console.log("Loading YouTube IFrame API...");
+            const tag = document.createElement('script');
+            tag.src = "https://www.youtube.com/iframe_api";
+            const firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        }
 
-        }, { once: true });
+        await startFaceAuthentication(); // Calls initialization
+    }, { once: true });
 
-    </script>
+</script>
 </body>
 </html>
