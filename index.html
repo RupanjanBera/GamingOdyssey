@@ -1,1626 +1,804 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" type="image/png" href="favicon.png">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gaming Odyssey | Ultimate Hub for Esports, Tournaments & Pro Gear</title>
-  <meta name="description" content="Join Gaming Odyssey – your hub for online gaming tournaments, esports events, and premium gaming gear. Level up your play with pro-quality equipment today!">
-  <meta name="keywords" content="Gaming Odyssey, gaming tournaments, esports events, buy gaming gear, pro gaming accessories, cyberpunk gaming, competitive gaming, gaming store, PC gaming gear, online esports">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
-  <style>
-    :root {
-      --primary: #3B82F6;
-      --secondary: #D946EF;
-      --accent: #10B981;
-      --dark: #0F172A;
-      --darker: #020617;
-      --light: #F1F5F9;
-      --mid: #1E293B;
-    }
-    
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: var(--dark);
-      color: var(--light);
-      scroll-behavior: smooth;
-      overflow-x: hidden;
-      -webkit-font-smoothing: antialiased;
-      background-image: 
-        radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.1) 0%, transparent 25%),
-        radial-gradient(circle at 80% 70%, rgba(217, 70, 239, 0.1) 0%, transparent 25%);
-    }
-    
-    .tech-font {
-      font-family: 'Orbitron', sans-serif;
-      letter-spacing: 1px;
-    }
-    
-    .gradient-text {
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-    
-    .gradient-bg {
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-    }
-    
-    .holographic-effect {
-      position: relative;
-      overflow: hidden;
-      background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
-      box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
-    }
-    
-    .holographic-effect::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(
-        45deg,
-        rgba(59, 130, 246, 0.1) 0%,
-        rgba(217, 70, 239, 0.1) 50%,
-        rgba(59, 130, 246, 0.1) 100%
-      );
-      background-size: 200% 200%;
-      animation: holographic 8s ease infinite;
-      z-index: 1;
-      pointer-events: none;
-    }
-    
-    @keyframes holographic {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    
-    .sidebar {
-      background: linear-gradient(180deg, var(--mid) 0%, var(--dark) 100%);
-      box-shadow: 4px 0 15px rgba(59, 130, 246, 0.2);
-    }
-
-    .sidebar nav a {
-        padding: 12px 10px;
-        font-size: 1.05rem;
-    }
-    
-    .hero-bg {
-        background-image: 
-            linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.9)),
-            url('https://static.vecteezy.com/system/resources/thumbnails/042/960/123/small_2x/ai-generated-gamepad-in-the-hands-of-a-gamer-on-a-technological-background-neon-lighting-video-games-online-with-friends-winnings-prizes-fun-entertainment-youth-culture-virtual-reality-photo.jpg?q=80&w=2070&auto=format&fit=crop');
-        background-size: cover;
-        background-position: center;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .hero-bg::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: 
-        radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.2), transparent 70%),
-        radial-gradient(circle at 80% 80%, rgba(217, 70, 239, 0.2), transparent 70%);
-      animation: glow 15s ease-in-out infinite alternate;
-      opacity: 0.5;
-      z-index: 0;
-    }
-    
-    .hero-content {
-      position: relative;
-      z-index: 1;
-    }
-    
-    .pixel-grid {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: 
-        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-      background-size: 20px 20px;
-      z-index: 0;
-      opacity: 0.5;
-    }
-    
-    .glow-button {
-      position: relative;
-      overflow: hidden;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
-    }
-    
-    .glow-button::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: linear-gradient(
-        45deg,
-        transparent 0%,
-        rgba(255, 255, 255, 0.1) 50%,
-        transparent 100%
-      );
-      transform: rotate(45deg);
-      animation: shine 3s infinite;
-      opacity: 0;
-    }
-    
-    .glow-button:hover::before {
-      opacity: 1;
-    }
-    
-    @keyframes shine {
-      0% { transform: translateX(-100%) rotate(45deg); }
-      100% { transform: translateX(100%) rotate(45deg); }
-    }
-    
-    @keyframes glow {
-      0%, 100% { opacity: 0.5; }
-      50% { opacity: 0.8; }
-    }
-    
-    .nav-link, #mobile-menu a {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      transition: all 0.3s ease;
-      font-weight: 600;
-    }
-    
-    .nav-link::after, #mobile-menu a::after {
-      content: '';
-      position: absolute;
-      width: 0;
-      height: 2px;
-      bottom: 0;
-      left: 0;
-      background: linear-gradient(to right, var(--primary), var(--secondary));
-      transition: width 0.3s ease;
-    }
-    
-    .nav-link:hover::after, #mobile-menu a:hover::after {
-      width: 100%;
-    }
-    
-    .nav-link:hover, #mobile-menu a:hover {
-      color: var(--primary);
-    }
-    
-    .fade-in {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    
-    .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* --- NEW IMMERSIVE SCROLL EFFECT --- */
-    .immersive-section {
-        opacity: 0;
-        transform: scale(0.9);
-        transition: opacity 1s ease-out, transform 1s ease-out;
-    }
-
-    .immersive-section.visible {
-        opacity: 1;
-        transform: scale(1);
-    }
-    
-    .input-field {
-      background: rgba(30, 41, 59, 0.7);
-      color: var(--light);
-      border: 1px solid rgba(59, 130, 246, 0.5);
-      border-radius: 0.5rem;
-      padding: 0.75rem;
-      width: 100%;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(5px);
-    }
-    
-    .input-field:focus {
-      outline: none;
-      border-color: var(--secondary);
-      box-shadow: 0 0 10px rgba(217, 70, 239, 0.3);
-    }
-    
-    .user-avatar {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: bold;
-      font-size: 1.2rem;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-      z-index: 1040;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    
-    .user-avatar:hover {
-      transform: scale(1.1);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-    }
-    
-    .social-icon {
-      transition: all 0.3s ease;
-    }
-    
-    .social-icon:hover {
-      transform: translateY(-3px) scale(1.1);
-    }
-    
-    .tournament-card, .category-card {
-      position: relative;
-      overflow: hidden;
-      transition: all 0.3s ease;
-    }
-    
-    .tournament-card::before, .category-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(
-        to bottom,
-        transparent 60%,
-        rgba(0, 0, 0, 0.8) 100%
-      );
-      z-index: 1;
-    }
-    
-    .tournament-card-content, .category-card-content {
-      position: relative;
-      z-index: 2;
-    }
-    
-    .tournament-card:hover, .category-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-    }
-    
-    /* --- NEW PRODUCT CARD STYLES --- */
-    .product-card {
-      background-color: rgba(30, 41, 59, 0.6);
-      backdrop-filter: blur(10px);
-      border-radius: 0.75rem;
-      padding: 1.5rem;
-      position: relative;
-      overflow: hidden;
-      transition: transform 0.3s ease;
-      z-index: 1;
-      height: 100%;
-      border: 1px solid var(--mid);
-    }
-    .product-card::before {
-      content: '';
-      position: absolute;
-      top: 0; right: 0; bottom: 0; left: 0;
-      z-index: -1;
-      margin: -2px;
-      border-radius: inherit;
-      background: conic-gradient(from 180deg at 50% 50%, rgba(59, 130, 246, 0.8) 0deg, rgba(217, 70, 239, 0.8) 180deg, rgba(59, 130, 246, 0.8) 360deg);
-      opacity: 0;
-      transition: opacity 0.4s ease;
-      animation: rotate 6s linear infinite paused;
-    }
-    .product-card::after {
-        content: '';
-        position: absolute;
-        top: 0; right: 0; bottom: 0; left: 0;
-        background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" transform="rotate(25)" opacity="0.03" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><g fill="%23ffffff"><path d="m-25 50 25-50 25 50-25 50z"/><path d="m25 50 25-50 25 50-25 50z"/><path d="m75 50 25-50 25 50-25 50z"/></g></svg>');
-        z-index: -2;
-    }
-    .product-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    }
-    .product-card:hover::before {
-        opacity: 1;
-        animation-play-state: running;
-    }
-    @keyframes rotate {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-    }
-    .card-button {
-        background-color: rgba(59, 130, 246, 0.2);
-        border: 1px solid var(--primary);
-        color: var(--light);
-        padding: 0.5rem 1rem;
-        border-radius: 0.5rem;
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
-    .card-button:hover {
-        background-color: var(--primary);
-        box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
-    }
-
-    .section-title {
-      position: relative;
-      display: inline-block;
-    }
-    
-    .section-title::after {
-      content: '';
-      position: absolute;
-      bottom: -5px;
-      left: 0;
-      width: 50%;
-      height: 3px;
-      background: linear-gradient(to right, var(--primary), var(--secondary));
-      border-radius: 3px;
-    }
-    
-    .stats-item {
-      position: relative;
-      padding: 1rem;
-      border-radius: 0.5rem;
-      overflow: hidden;
-    }
-    
-    .stats-item::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(
-        135deg,
-        rgba(59, 130, 246, 0.2),
-        rgba(217, 70, 239, 0.2)
-      );
-      z-index: -1;
-    }
-    
-    .whatsapp-widget {
-      position: fixed;
-      bottom: 30px;
-      left: 30px;
-      z-index: 1000;
-      font-family: 'Poppins', sans-serif;
-    }
-    
-    .whatsapp-bubble {
-      width: 60px;
-      height: 60px;
-      background: #25D366;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
-      transition: all 0.3s ease;
-    }
-    
-    .whatsapp-bubble:hover {
-      transform: scale(1.1);
-      box-shadow: 0 6px 25px rgba(37, 211, 102, 0.6);
-    }
-    
-    .whatsapp-bubble i {
-      color: white;
-      font-size: 28px;
-    }
-    
-    .whatsapp-chat-box {
-      position: absolute;
-      bottom: 70px;
-      left: 0;
-      width: 300px;
-      background: linear-gradient(145deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98));
-      border-radius: 12px;
-      box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
-      overflow: hidden;
-      transform: translateY(10px);
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(37, 211, 102, 0.3);
-    }
-    
-    .whatsapp-chat-box.active {
-      transform: translateY(0);
-      opacity: 1;
-      visibility: visible;
-    }
-    
-    .whatsapp-header {
-      background: #075E54;
-      padding: 15px;
-      display: flex;
-      align-items: center;
-      color: white;
-    }
-    
-    .whatsapp-header img {
-      width: 40px;
-      height: 40px;
-      margin-right: 10px;
-      border-radius: 8px;
-    }
-    
-    .whatsapp-header h3 {
-      font-size: 16px;
-      font-weight: 600;
-      margin: 0;
-    }
-    
-    .whatsapp-body {
-      padding: 15px;
-    }
-    
-    .whatsapp-message {
-      background: rgba(30, 41, 59, 0.7);
-      padding: 12px;
-      border-radius: 8px;
-      margin-bottom: 15px;
-      font-size: 14px;
-      line-height: 1.5;
-      border-left: 3px solid #25D366;
-    }
-    
-    .whatsapp-button {
-      display: block;
-      width: 100%;
-      padding: 12px;
-      background: #25D366;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-align: center;
-      text-decoration: none;
-      box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
-    }
-    
-    .whatsapp-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
-    }
-    
-    .whatsapp-close {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: transparent;
-      border: none;
-      color: white;
-      cursor: pointer;
-      font-size: 18px;
-    }
-    
-    @keyframes pulse {
-      0% {
-        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
-      }
-      70% {
-        box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
-      }
-      100% {
-        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
-      }
-    }
-
-    .slide {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        opacity: 0;
-        transition: opacity 1.5s ease-in-out;
-        background-size: cover;
-        background-position: center;
-        display: flex;
-        align-items: flex-end;
-        justify-content: center;
-        padding: 1.5rem;
-        text-align: center;
-    }
-    .slide.active {
-        opacity: 1;
-    }
-    .slide-caption {
-        background-color: rgba(15, 23, 42, 0.7);
-        backdrop-filter: blur(5px);
-        color: white;
-        padding: 0.75rem 1.25rem;
-        border-radius: 8px;
-        font-weight: 600;
-        font-size: 1rem;
-        transform: translateY(20px);
-        opacity: 0;
-        transition: transform 0.5s ease-out 0.5s, opacity 0.5s ease-out 0.5s;
-    }
-    .slide.active .slide-caption {
-        transform: translateY(0);
-        opacity: 1;
-    }
-    
-    /* --- LATEST DEALS SLIDER STYLES --- */
-    .latest-deals-swiper {
-      padding-bottom: 50px !important;
-    }
-    .latest-deals-swiper .swiper-button-next,
-    .latest-deals-swiper .swiper-button-prev {
-      color: var(--primary);
-      transition: all 0.3s ease;
-    }
-    .latest-deals-swiper .swiper-button-next:hover,
-    .latest-deals-swiper .swiper-button-prev:hover {
-      color: var(--secondary);
-      transform: scale(1.1);
-    }
-    .latest-deals-swiper .swiper-pagination-bullet {
-      background: var(--light);
-      opacity: 0.5;
-    }
-    .latest-deals-swiper .swiper-pagination-bullet-active {
-      background: var(--primary);
-      opacity: 1;
-    }
-    .deal-badge {
-        position: absolute;
-        top: -1px;
-        left: -1px;
-        background: linear-gradient(45deg, #ef4444, #f97316);
-        color: white;
-        font-weight: bold;
-        padding: 0.5rem 1rem;
-        border-top-left-radius: 0.75rem;
-        border-bottom-right-radius: 0.75rem;
-        font-size: 0.875rem;
-        z-index: 2;
-    }
-    .swiper-slide {
-        height: auto;
-    }
-
-    /* --- PC BUILDER WIZARD STYLES --- */
-    .pc-builder-step {
-        animation: step-fade-in 0.5s ease-out;
-    }
-    @keyframes step-fade-in {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    .builder-option {
-        background-color: rgba(30, 41, 59, 0.5);
-        border: 2px solid var(--mid);
-        border-radius: 0.75rem;
-        padding: 1rem;
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-    }
-    .builder-option:hover {
-        transform: translateY(-5px);
-        border-color: var(--primary);
-        box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
-    }
-    .builder-option img {
-        height: 60px;
-        margin-bottom: 0.75rem;
-        object-fit: contain;
-        filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
-    }
-    .builder-option-icon {
-        font-size: 3rem;
-        margin-bottom: 0.75rem;
-        background: linear-gradient(135deg, var(--primary), var(--secondary));
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-    }
-
-    /* --- ODYSSEY AI WIDGET STYLES --- */
-    #odyssey-ai-widget-container {
-        position: fixed;
-        bottom: 30px;
-        right: 30px;
-        z-index: 1050;
-    }
-    #odyssey-ai-toggle-bubble {
-        width: 60px;
-        height: 60px;
-        background: linear-gradient(135deg, var(--primary), var(--secondary));
-        border-radius: 50%;
-        padding: 8px;
-        cursor: pointer;
-        border: none;
-        box-shadow: 0 5px 20px rgba(59, 130, 246, 0.4);
-        transition: all 0.3s ease;
-        animation: pulse 2.5s infinite;
-    }
-    #odyssey-ai-toggle-bubble:hover {
-        transform: scale(1.1);
-        animation-play-state: paused;
-    }
-    #odyssey-ai-toggle-bubble img {
-        border-radius: 50%;
-    }
-    #odyssey-ai-chat-window {
-        position: absolute;
-        bottom: 80px;
-        right: 0;
-        width: 370px;
-        height: 500px;
-        background-color: var(--dark);
-        border-radius: 12px;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-        border: 1px solid var(--mid);
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-        transform-origin: bottom right;
-        transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-    }
-    #odyssey-ai-chat-window.hidden {
-        transform: scale(0.5);
-        opacity: 0;
-        pointer-events: none;
-    }
-    #odyssey-ai-header {
-        background-color: var(--mid);
-        padding: 12px 16px;
-        border-bottom: 1px solid var(--primary);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-shrink: 0;
-    }
-    #odyssey-ai-header-buttons button {
-        background: none;
-        border: none;
-        color: #94A3B8;
-        font-size: 20px;
-        cursor: pointer;
-        transition: color 0.2s;
-    }
-    #odyssey-ai-header-buttons button:hover {
-        color: white;
-    }
-    #odyssey-ai-close-btn {
-        font-weight: bold;
-        font-size: 24px;
-        line-height: 1;
-    }
-    #odyssey-ai-messages {
-        flex: 1;
-        padding: 16px;
-        overflow-y: auto;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        scrollbar-width: thin;
-        scrollbar-color: var(--primary) var(--dark);
-    }
-    .odyssey-message {
-        padding: 10px 15px;
-        border-radius: 12px;
-        max-width: 85%;
-        line-height: 1.6;
-        word-wrap: break-word;
-    }
-    .odyssey-user-message {
-        background-color: #3B82F6;
-        color: white;
-        align-self: flex-end;
-        border-bottom-right-radius: 2px;
-    }
-    .odyssey-ai-message {
-        background-color: var(--mid);
-        color: var(--light);
-        align-self: flex-start;
-        border-bottom-left-radius: 2px;
-    }
-    .odyssey-ai-message code {
-      background: rgba(0,0,0,0.4);
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-family: 'Courier New', monospace;
-      color: #FF4DA6;
-      font-size: 0.9em;
-    }
-    .odyssey-ai-message pre {
-      background: #010409;
-      padding: 12px;
-      border-radius: 8px;
-      overflow-x: auto;
-      margin: 10px 0;
-      font-size: 0.9em;
-      white-space: pre-wrap;
-      border: 1px solid #222;
-    }
-    #odyssey-ai-input-area {
-        display: flex;
-        gap: 10px;
-        padding: 12px;
-        border-top: 1px solid var(--mid);
-        background-color: var(--dark);
-    }
-    #odyssey-ai-input {
-        flex: 1;
-        background-color: var(--mid);
-        color: var(--light);
-        border: 1px solid transparent;
-        border-radius: 8px;
-        padding: 10px;
-        resize: none;
-        outline: none;
-        transition: border-color 0.3s ease;
-    }
-    #odyssey-ai-input:focus {
-        border-color: var(--primary);
-    }
-    #odyssey-ai-send-btn {
-        background: linear-gradient(135deg, var(--primary), var(--secondary));
-        border: none;
-        color: white;
-        width: 44px;
-        height: 44px;
-        border-radius: 8px;
-        font-size: 1rem;
-        cursor: pointer;
-        transition: transform 0.2s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    #odyssey-ai-send-btn:hover {
-        transform: scale(1.05);
-    }
-    #odyssey-ai-send-btn .loader {
-        width: 18px; height: 18px; border: 2px solid #FFF; border-bottom-color: transparent; border-radius: 50%; display: inline-block; box-sizing: border-box; animation: rotation 1s linear infinite;
-    }
-    @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-    @media (max-width: 768px) {
-        .whatsapp-widget {
-            bottom: 20px;
-            left: 20px;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>J.A.R.V.I.S. HUD V2.30</title>
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.18/mammoth.browser.min.js"></script>
+    <style>
+        /* (All CSS is identical to V2.17. No changes here) */
+        /* --- 1. Global & Fonts --- */
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400&display=swap');
+        :root {
+            --primary-glow: #00ffff; --secondary-glow: #ff00ff;
+            --warning-glow: #ffaa00; --danger-glow: #ff2200;
+            --bg-color: #0d0a1f; --glass-bg: rgba(20, 15, 40, 0.7);
+            --text-color: #e0e0e0; --text-secondary: #a0a0c0;
+            --border-color: rgba(0, 255, 255, 0.3);
         }
-    }
-    @media (max-width: 640px) {
-      .hero-bg h1 {
-        font-size: 2.5rem;
-      }
-      .hero-bg p {
-        font-size: 1rem;
-      }
-      .user-avatar {
-        width: 40px;
-        height: 40px;
-        font-size: 1rem;
-      }
-      #odyssey-ai-chat-window {
-            width: calc(100vw - 40px);
-            height: 70vh;
-            bottom: 75px;
-            right: -10px;
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body {
+            height: 100%; width: 100%; font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-color); color: var(--text-color);
+            overflow: hidden;
+            background-image: linear-gradient(45deg, #1a0b2a, #0d0a1f);
+            perspective: 1000px;
         }
-    }
-    @media (min-width: 641px) and (max-width: 768px) {
-      .hero-bg h1 {
-        font-size: 3.5rem;
-      }
-    }
-  </style>
+        
+        /* --- 2. Backgrounds & Overlays --- */
+        #particle-background {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; overflow: hidden;
+        }
+        .particle {
+            position: absolute; background: var(--primary-glow);
+            border-radius: 50%; opacity: 0.5; width: 2px; height: 2px;
+            box-shadow: 0 0 5px var(--primary-glow);
+            animation: move 20s linear infinite;
+        }
+        @keyframes move {
+            0% { transform: translateY(0) translateX(0); opacity: 0.5; }
+            100% { transform: translateY(-100vh) translateX(10vw); opacity: 0; }
+        }
+        #scanlines {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1; pointer-events: none;
+            background: linear-gradient(0deg, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0.03) 50%, rgba(255, 255, 255, 0) 50%);
+            background-size: 100% 3px;
+            animation: scanlines 5s linear infinite;
+        }
+
+        /* --- 3. HUD Panels & Boot Sequence --- */
+        .hud-panel {
+            background: var(--glass-bg); border: 1px solid var(--border-color);
+            border-radius: 15px; backdrop-filter: blur(10px);
+            padding: 1rem; box-shadow: 0 0 20px rgba(0, 255, 255, 0.2) inset;
+            transition: all 0.5s ease; position: relative; overflow: hidden;
+            opacity: 0; transform: translateY(20px) scale(0.98);
+            animation: flicker 10s linear infinite;
+        }
+        .hud-panel::before, .hud-panel::after {
+            content: ''; position: absolute; width: 2px; height: 0;
+            background: var(--primary-glow); box-shadow: 0 0 10px var(--primary-glow);
+            animation: scan-border 4s linear infinite;
+        }
+        .hud-panel::before { top: 0; left: 0; }
+        .hud-panel::after { bottom: 0; right: 0; animation-delay: 2s; }
+        @keyframes scan-border { 0% { height: 0; } 50% { height: 100%; } 100% { height: 0; opacity: 0; } }
+        @keyframes flicker {
+            0%, 100% { opacity: 1; } 50.0% { opacity: 1; } 50.1% { opacity: 0.9; }
+            50.2% { opacity: 1; } 50.3% { opacity: 0.95; } 50.4% { opacity: 1; }
+        }
+        .booted { opacity: 1; transform: translateY(0) scale(1); }
+
+        h1, h2, h3, h4 { font-family: 'Orbitron', sans-serif; color: var(--primary-glow); transition: all 0.5s ease; }
+        h3 { border-bottom: 1px solid var(--border-color); padding-bottom: 5px; margin-bottom: 10px; }
+        h4 { color: var(--text-secondary); margin-top: 10px; font-size: 0.9rem; }
+        
+        #main-title {
+            font-size: 2.5rem; text-align: center;
+            animation: glitch 5s linear infinite;
+        }
+        @keyframes glitch {
+            0%, 100% { text-shadow: 0 0 10px var(--primary-glow); }
+            49% { text-shadow: 0 0 10px var(--primary-glow); }
+            50% { text-shadow: 2px 2px 10px var(--danger-glow), -2px -2px 10px var(--secondary-glow); }
+            51% { text-shadow: 0 0 10px var(--primary-glow); }
+        }
+
+        /* --- 4. Combat Mode Theme --- */
+        body.combat-mode {
+            --primary-glow: #ff2200; --border-color: rgba(255, 34, 0, 0.3);
+            --glass-bg: rgba(40, 15, 20, 0.7);
+        }
+        body.combat-mode .hud-panel { box-shadow: 0 0 20px rgba(255, 34, 0, 0.2) inset; }
+        body.combat-mode .status-item, body.combat-mode .jarvis-message, body.combat-mode #text-input { border-color: var(--danger-glow); }
+        body.combat-mode .control-button { border-color: var(--danger-glow); color: var(--danger-glow); text-shadow: 0 0 5px var(--danger-glow); box-shadow: 0 0 10px var(--danger-glow) inset, 0 0 10px var(--danger-glow); }
+        body.combat-mode .control-button:hover { background-color: var(--danger-glow); color: var(--bg-color); }
+        body.combat-mode .web-toggle { border-color: var(--danger-glow); background: rgba(255, 34, 0, 0.1); }
+        body.combat-mode .web-toggle label { color: var(--danger-glow); }
+        body.combat-mode .status-bar-inner { background: var(--danger-glow); box-shadow: 0 0 10px var(--danger-glow); }
+        body.combat-mode #arc-reactor, body.combat-mode #suit-svg path { --primary-glow: var(--danger-glow); }
+
+        /* --- 5. Main Layout --- */
+        .jarvis-container { display: flex; height: 100vh; width: 100vw; padding: 1rem; gap: 1rem; }
+        .side-panel { flex: 0 0 300px; display: flex; flex-direction: column; gap: 1rem; z-index: 10; transition: transform 0.1s ease-out; }
+        .main-panel { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; transition: transform 0.1s ease-out; }
+        .right-panel { flex: 0 0 300px; display: flex; flex-direction: column; gap: 1rem; z-index: 10; transition: transform 0.1s ease-out; }
+
+        /* --- 6. Left Panel (Suit Status) --- */
+        #suit-status-panel { flex-grow: 1; display: flex; flex-direction: column; }
+        #suit-schematic { position: relative; display: flex; flex-direction: column; align-items: center; margin-bottom: 1rem; }
+        #suit-svg { width: 100%; opacity: 0.3; position: absolute; top: 50px; z-index: 1; }
+        #suit-svg path { stroke: var(--primary-glow); stroke-width: 0.5; fill: none; filter: drop-shadow(0 0 5px var(--primary-glow)); transition: all 0.5s ease; }
+        #arc-reactor { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--primary-glow); background: radial-gradient(circle, var(--primary-glow) 0%, rgba(0,0,0,0) 60%); box-shadow: 0 0 20px var(--primary-glow), 0 0 40px var(--primary-glow), 0 0 60px var(--primary-glow) inset; margin: 1.5rem auto; animation: pulse 2s infinite ease-in-out; transition: all 0.5s ease; z-index: 2; }
+        .status-bar { width: 100%; height: 20px; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); border-radius: 5px; padding: 2px; z-index: 2; }
+        .status-bar-inner { height: 100%; width: 90%; background: var(--primary-glow); border-radius: 3px; box-shadow: 0 0 10px var(--primary-glow); transition: all 0.5s ease; }
+        .status-text { display: flex; justify-content: space-between; font-size: 0.9rem; margin-top: 5px; z-index: 2; }
+        .status-text span:first-child { color: var(--text-secondary); }
+        .status-text span:last-child { font-weight: bold; }
+
+        /* --- 7. Right Panel (System & Logistics) --- */
+        #logistics-panel { flex-shrink: 0; }
+        #dynamic-clock { font-size: 1.5rem; text-align: center; font-family: 'Orbitron'; }
+        #dynamic-date { font-size: 0.9rem; text-align: center; color: var(--text-secondary); }
+        #logistics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        #weather-temp { font-size: 1.5rem; font-family: 'Orbitron'; }
+        #weather-desc { font-weight: bold; }
+        #camera-panel { flex-grow: 1; display: flex; flex-direction: column; padding: 0; }
+        #camera-feed { width: 100%; height: 100%; object-fit: cover; border-radius: 15px; transform: scaleX(-1); background: #000; }
+
+        /* --- 8. Main Panel (Chat) --- */
+        #core-container { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; justify-content: center; align-items: center; overflow: hidden; z-index: 1; border-radius: 15px; }
+        #web-core { width: 300px; height: 300px; border-radius: 50%; background: radial-gradient(circle, var(--primary-glow) 0%, var(--bg-color) 70%); box-shadow: 0 0 30px var(--primary-glow), 0 0 60px var(--primary-glow), 0 0 90px var(--secondary-glow); animation: pulse 3s infinite ease-in-out; position: relative; opacity: 0.2; animation-play-state: paused; transition: all 0.5s ease; }
+        body.combat-mode #web-core { background: radial-gradient(circle, var(--danger-glow) 0%, var(--bg-color) 70%); box-shadow: 0 0 30px var(--danger-glow), 0 0 60px var(--danger-glow), 0 0 90px var(--danger-glow); }
+        #web-core.listening { animation-play-state: running; opacity: 0.4; }
+        #web-core::before, #web-core::after { content: ''; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); border-radius: 50%; border: 2px solid var(--primary-glow); transition: all 0.5s ease; }
+        body.combat-mode #web-core::before, body.combat-mode #web-core::after { border-color: var(--danger-glow); }
+        #web-core::before { width: 400px; height: 400px; animation: spin 8s linear infinite; }
+        #web-core::after { width: 500px; height: 500px; animation: spin 12s linear infinite reverse; }
+        @keyframes pulse { 0% { transform: scale(0.9); } 50% { transform: scale(1); } 100% { transform: scale(0.9); } }
+        @keyframes spin { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
+
+        #chat-container { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; z-index: 2; }
+        #message-display { flex-grow: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column-reverse; scrollbar-width: none; }
+        #message-display::-webkit-scrollbar { display: none; }
+        .chat-message { max-width: 80%; padding: 0.8rem 1.2rem; border-radius: 15px; margin-bottom: 1rem; white-space: pre-wrap; word-wrap: break-word; background: rgba(20, 15, 40, 0.7); backdrop-filter: blur(5px); }
+        .user-message { background: var(--primary-glow); color: var(--bg-color); align-self: flex-end; border-bottom-right-radius: 0; font-weight: bold; }
+        body.combat-mode .user-message { background: var(--danger-glow); }
+        .jarvis-message { border: 1px solid var(--primary-glow); align-self: flex-start; border-bottom-left-radius: 0; }
+        .jarvis-message.error { border-color: var(--danger-glow); color: var(--danger-glow); }
+        .jarvis-message.status { border-color: var(--warning-glow); color: var(--warning-glow); font-style: italic; text-align: center; align-self: center; }
+        .jarvis-message pre { background: #020a17; border: 1px solid var(--primary-glow); padding: 1em; border-radius: 5px; margin: 1em 0; overflow-x: auto; font-family: 'Courier New', Courier, monospace; color: #e0e0e0; }
+        .jarvis-message code { font-family: 'Courier New', Courier, monospace; background: #020a17; padding: 2px 4px; border-radius: 3px; }
+        .jarvis-message pre code { background: none; padding: 0; border-radius: 0; }
+        .jarvis-message b, .jarvis-message strong { color: var(--primary-glow); font-weight: bold; }
+        .jarvis-message i, .jarvis-message em { color: var(--secondary-glow); font-style: italic; }
+
+        #input-area { display: flex; gap: 0.5rem; padding: 1rem; border-top: 1px solid var(--border-color); z-index: 5; background: var(--glass-bg); border-bottom-left-radius: 15px; border-bottom-right-radius: 15px; transition: all 0.5s ease; }
+        #text-input { flex-grow: 1; padding: 0.8rem 1.2rem; background: rgba(0,0,0,0.5); border: 1px solid var(--primary-glow); border-radius: 50px; color: var(--text-color); font-size: 1rem; }
+        #text-input:focus { outline: none; box-shadow: 0 0 15px var(--primary-glow); }
+
+        .control-button { font-family: 'Orbitron', sans-serif; font-size: 1rem; padding: 0.8rem 1.2rem; border: 2px solid var(--primary-glow); background-color: transparent; color: var(--primary-glow); border-radius: 50px; cursor: pointer; transition: all 0.3s ease; text-shadow: 0 0 5px var(--primary-glow); box-shadow: 0 0 10px var(--primary-glow) inset, 0 0 10px var(--primary-glow); white-space: nowrap; }
+        .control-button:hover { background-color: var(--primary-glow); color: var(--bg-color); box-shadow: 0 0 20px var(--primary-glow), 0 0 30px var(--primary-glow); }
+        .control-button.active { background-color: #ff0000; border-color: #ff0000; box-shadow: 0 0 15px #ff0000; text-shadow: none; }
+        #mute-button.active { background-color: var(--secondary-glow); border-color: var(--secondary-glow); }
+        #clear-button, #upload-button { border-color: var(--warning-glow); color: var(--warning-glow); box-shadow: 0 0 10px var(--warning-glow) inset, 0 0 10px var(--warning-glow); }
+        #clear-button:hover, #upload-button:hover { background-color: var(--warning-glow); }
+
+        /* --- 9. Toggles --- */
+        .toggle-group { display: flex; flex-direction: column; gap: 10px; }
+        .toggle-container { display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 5px; border: 1px solid; cursor: pointer; }
+        .toggle-container label { font-family: 'Orbitron'; font-weight: bold; cursor: pointer; }
+        .danger-toggle { border-color: var(--danger-glow); background: rgba(255, 34, 0, 0.1); }
+        .danger-toggle label { color: var(--danger-glow); }
+        .web-toggle { border-color: var(--primary-glow); background: rgba(0, 255, 255, 0.1); }
+        .web-toggle label { color: var(--primary-glow); }
+        
+        /* --- 10. Modals --- */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); justify-content: center; align-items: center; z-index: 200; }
+        .modal-content { background: var(--glass-bg); padding: 2rem; border-radius: 15px; border: 1px solid var(--primary-glow); box-shadow: 0 0 30px var(--primary-glow); text-align: center; }
+        body.combat-mode .modal-content { border-color: var(--danger-glow); box-shadow: 0 0 30px var(--danger-glow); }
+
+        /* --- 11. Mini Player --- */
+        #player-modal { z-index: 201; }
+        #player-container { width: 480px; height: 320px; background: #000; border-radius: 10px; overflow: hidden; }
+        #player-controls { display: flex; justify-content: center; gap: 1rem; margin-top: 1rem; }
+        /* NEW: Smaller player buttons */
+        #player-controls .control-button { font-size: 0.9rem; padding: 0.6rem 1rem; }
+        
+        /* --- 12. Self-Destruct Animation --- */
+        #destruction-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9998; background: rgba(255, 0, 0, 0.3); animation: flashRed 0.2s linear infinite; }
+        #destruction-overlay::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(0deg, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0) 50%); background-size: 100% 4px; animation: scanlines 0.2s linear infinite; }
+        #destruction-overlay.active { display: block; }
+        body.self-destruct .jarvis-container { animation: vibrate 0.1s linear infinite; }
+        @keyframes flashRed { 0%, 100% { background-color: rgba(255, 0, 0, 0.5); } 50%  { background-color: rgba(255, 255, 255, 0.3); } }
+        @keyframes scanlines { from { background-position-y: 0; } to { background-position-y: 4px; } }
+        @keyframes vibrate { 0% { transform: translate(2px, 1px); } 50% { transform: translate(-1px, -2px); } 100% { transform: translate(2px, 1px); } }
+    </style>
 </head>
 <body>
-  <div class="fixed top-0 left-0 h-full w-64 sidebar z-20 hidden md:block">
-    <div class="p-6">
-      <div class="flex items-center space-x-3">
-        <img src="favicon.png" alt="Logo" class="w-10 h-10">
-        <h1 class="text-2xl font-bold text-white leading-relaxed tech-font">GAMING ODYSSEY</h1>
-      </div>
-      <nav class="mt-12 space-y-2">
-        <a href="index.html" class="flex items-center space-x-3 text-[#3B82F6] font-semibold nav-link rounded-md">
-          <i class="fas fa-home w-5 h-5"></i>
-          <span>Home</span>
-        </a>
-        <a href="store.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link rounded-md">
-          <i class="fas fa-gamepad w-5 h-5"></i>
-          <span>Store</span>
-        </a>
-        <a href="tournaments.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link rounded-md">
-          <i class="fas fa-trophy w-5 h-5"></i>
-          <span>Tournaments</span>
-        </a>
-        <a href="trackorder.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link rounded-md">
-          <i class="fas fa-shipping-fast w-5 h-5"></i>
-          <span>Track Order</span>
-        </a>
-        <a href="contactus.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link rounded-md">
-          <i class="fas fa-headset w-5 h-5"></i>
-          <span>Contact Us</span>
-        </a>
-        <a href="aboutus.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link rounded-md">
-          <i class="fas fa-info-circle w-5 h-5"></i>
-          <span>About Us</span>
-        </a>
-        <a href="login.html" id="login-link-desktop" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link rounded-md">
-          <i class="fas fa-sign-in-alt w-5 h-5"></i>
-          <span>Login</span>
-        </a>
-        <a href="signup.html" id="signup-link-desktop" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link rounded-md">
-          <i class="fas fa-user-plus w-5 h-5"></i>
-          <span>Sign Up</span>
-        </a>
-      </nav>
-    </div>
-  </div>
-
-  <div id="user-avatar" class="user-avatar hidden"></div>
-  <div id="user-menu" class="hidden fixed top-20 right-5 bg-[#1E293B] rounded-lg shadow-2xl z-50 w-64 border border-[#3B82F6] transform transition-all duration-300">
-    <div class="p-4 border-b border-[#3B82F6] text-center">
-        <p class="font-bold text-white text-lg" id="menu-username">User Name</p>
-        <p class="text-sm text-[#94A3B8]" id="menu-user-email">user@email.com</p>
-    </div>
-    <div class="p-2">
-        <button id="change-pic-btn" class="w-full text-left px-4 py-2 text-sm text-[#F1F5F9] hover:bg-[#3B82F6] rounded-md transition-colors flex items-center gap-3">
-            <i class="fas fa-camera w-4"></i> Change Picture
-        </button>
-        <input type="file" id="pic-input" class="hidden" accept="image/*">
-        <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-[#F1F5F9] hover:bg-[#3B82F6] rounded-md transition-colors flex items-center gap-3">
-            <i class="fas fa-sign-out-alt w-4"></i> Logout
-        </button>
-    </div>
-  </div>
-
-
-  <div class="md:hidden fixed top-0 left-0 w-full bg-[#1E293B] z-30 p-4 flex justify-between items-center shadow-lg">
-    <div class="flex items-center space-x-2">
-      <img src="favicon.png" alt="Logo" class="w-8 h-8">
-      <h1 class="text-lg font-bold text-white leading-relaxed tech-font">GAMING ODYSSEY</h1>
-    </div>
-    <button id="hamburger" class="text-[#3B82F6]">
-      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-    </button>
-  </div>
-  
-  <div id="mobile-menu" class="hidden md:hidden fixed top-0 left-0 w-full h-full bg-[#1E293B] z-20 p-4 transition-all duration-300 ease-in-out transform -translate-x-full">
-    <button id="close-menu" class="absolute top-4 right-4 text-[#3B82F6] p-2 rounded-full hover:bg-[#1E293B]">
-      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-    </button>
-    <nav class="space-y-4 mt-16">
-      <a href="index.html" class="flex items-center space-x-3 text-[#3B82F6] font-semibold nav-link">
-        <i class="fas fa-home w-5 h-5"></i>
-        <span>Home</span>
-      </a>
-      <a href="store.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
-        <i class="fas fa-gamepad w-5 h-5"></i>
-        <span>Store</span>
-      </a>
-      <a href="tournaments.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
-        <i class="fas fa-trophy w-5 h-5"></i>
-        <span>Tournaments</span>
-      </a>
-      <a href="trackorder.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
-        <i class="fas fa-shipping-fast w-5 h-5"></i>
-        <span>Track Order</span>
-      </a>
-      <a href="contactus.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
-        <i class="fas fa-headset w-5 h-5"></i>
-        <span>Contact Us</span>
-      </a>
-      <a href="aboutus.html" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
-        <i class="fas fa-info-circle w-5 h-5"></i>
-        <span>About Us</span>
-      </a>
-      <a href="login.html" id="login-link-mobile" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
-        <i class="fas fa-sign-in-alt w-5 h-5"></i>
-        <span>Login</span>
-      </a>
-      <a href="signup.html" id="signup-link-mobile" class="flex items-center space-x-3 text-[#F1F5F9] font-semibold nav-link">
-        <i class="fas fa-user-plus w-5 h-5"></i>
-        <span>Sign Up</span>
-      </a>
-    </nav>
-  </div>
-
-  <div class="md:ml-64">
-    <section class="hero-bg min-h-screen flex items-center justify-center text-center p-6 relative overflow-hidden">
-      <div class="pixel-grid"></div>
-      <div class="hero-content max-w-4xl mx-auto fade-in">
-        <div class="flex justify-center mb-6">
-          <img src="favicon.png" alt="Logo" class="w-20 h-20 animate-pulse">
-        </div>
-        <h1 class="text-5xl sm:text-6xl md:text-7xl font-bold text-white mb-6 leading-tight tech-font">
-          <span class="gradient-text">GAMING ODYSSEY</span>
-        </h1>
-        <p class="text-xl sm:text-2xl text-[#F1F5F9] mb-4 leading-relaxed">Where Gaming Meets Glory</p>
-        <p class="text-lg text-slate-300 max-w-3xl mx-auto mb-8">
-            Your ultimate destination for high-performance gaming gear, competitive tournaments, and a vibrant community. From building your dream PC to designing the perfect setup, we've got you covered.
-        </p>
-        <div id="hero-slideshow" class="relative w-full max-w-3xl h-56 sm:h-72 md:h-80 mx-auto overflow-hidden rounded-lg shadow-2xl holographic-effect">
-            </div>
-      </div>
-    </section>
-
-    <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B] relative overflow-hidden immersive-section">
-      <div class="max-w-7xl mx-auto">
-        <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Featured Gaming Gear</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          <div class="product-card flex flex-col">
-            <div class="h-48 flex items-center justify-center mb-6">
-              <img src="https://assets.aceternity.com/images/products/g-pro-x-superlight-black-gallery-1-v2.png" alt="Logitech G PRO X Superlight" class="max-h-full object-contain drop-shadow-2xl">
-            </div>
-            <h3 class="text-xl font-bold text-white mb-2 tech-font">PRO X SUPERLIGHT</h3>
-            <p class="text-[#94A3B8] text-sm mb-4 flex-grow">Ultra-lightweight engineering at less than 63 grams.</p>
-            <div class="flex justify-between items-center mt-auto">
-              <p class="text-2xl font-semibold text-white">$159.99</p>
-              <a href="store.html" class="card-button"><i class="fas fa-shopping-cart"></i></a>
-            </div>
-          </div>
-          <div class="product-card flex flex-col">
-            <div class="h-48 flex items-center justify-center mb-6">
-              <img src="https://assets.aceternity.com/images/products/corsair-k100-01.png" alt="Corsair K100 RGB Keyboard" class="max-h-full object-contain drop-shadow-2xl">
-            </div>
-            <h3 class="text-xl font-bold text-white mb-2 tech-font">CORSAIR K100 RGB</h3>
-            <p class="text-[#94A3B8] text-sm mb-4 flex-grow">Optical-mechanical board with AXON Hyper-Processing.</p>
-            <div class="flex justify-between items-center mt-auto">
-              <p class="text-2xl font-semibold text-white">$229.99</p>
-              <a href="store.html" class="card-button"><i class="fas fa-shopping-cart"></i></a>
-            </div>
-          </div>
-          <div class="product-card flex flex-col">
-            <div class="h-48 flex items-center justify-center mb-6">
-              <img src="https://assets.aceternity.com/images/products/steelseries-nova-pro.png" alt="SteelSeries Arctis Nova Pro" class="max-h-full object-contain drop-shadow-2xl">
-            </div>
-            <h3 class="text-xl font-bold text-white mb-2 tech-font">ARCTIS NOVA PRO</h3>
-            <p class="text-[#94A3B8] text-sm mb-4 flex-grow">High fidelity audio with 360° Spatial Audio.</p>
-            <div class="flex justify-between items-center mt-auto">
-              <p class="text-2xl font-semibold text-white">$349.99</p>
-              <a href="store.html" class="card-button"><i class="fas fa-shopping-cart"></i></a>
-            </div>
-          </div>
-          <div class="product-card flex flex-col">
-            <div class="h-48 flex items-center justify-center mb-6">
-              <img src="https://assets.aceternity.com/images/products/shure-mv7.png" alt="Shure MV7 Microphone" class="max-h-full object-contain drop-shadow-2xl">
-            </div>
-            <h3 class="text-xl font-bold text-white mb-2 tech-font">SHURE MV7 PODCAST MIC</h3>
-            <p class="text-[#94A3B8] text-sm mb-4 flex-grow">Dynamic microphone with both USB and XLR outputs.</p>
-            <div class="flex justify-between items-center mt-auto">
-              <p class="text-2xl font-semibold text-white">$249.00</p>
-              <a href="store.html" class="card-button"><i class="fas fa-shopping-cart"></i></a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
     
-    <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A] relative overflow-hidden immersive-section">
-        <div class="max-w-7xl mx-auto">
-            <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Latest Deals</h2>
-            <div class="swiper latest-deals-swiper">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide">
-                        <div class="product-card flex flex-col">
-                            <div class="deal-badge">-20%</div>
-                            <div class="h-48 flex items-center justify-center mb-4">
-                                <img src="https://assets.aceternity.com/images/products/samsung-odyssey-oled-g9.png" alt="Samsung Odyssey OLED G9" class="max-h-full object-contain drop-shadow-2xl">
-                            </div>
-                            <h3 class="text-xl font-bold text-white mb-2 tech-font">Odyssey OLED G9</h3>
-                            <p class="text-[#94A3B8] text-sm mb-4 flex-grow">49" dual QHD display with Quantum Dot technology.</p>
-                            <div class="flex justify-between items-center mt-auto">
-                                <div class="flex items-baseline gap-2">
-                                    <p class="text-2xl font-bold gradient-text">$1099.99</p>
-                                    <p class="text-lg text-slate-500 line-through">$1399.99</p>
-                                </div>
-                                <a href="store.html" class="card-button">View Deal</a>
-                            </div>
+    <div id="particle-background"></div>
+    <div id="scanlines"></div>
+
+    <div class="jarvis-container">
+        <div class="side-panel" id="left-panel">
+            <div id="suit-status-panel" class="hud-panel" style="transition-delay: 0.1s;">
+                <h3>MARK VII TACTICAL</h3>
+                <div id="suit-schematic">
+                    <svg id="suit-svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+                        <path d="M 50 10 L 70 20 L 75 40 L 65 60 L 50 70 L 35 60 L 25 40 L 30 20 Z M 50 10 L 50 30 M 70 20 L 55 30 M 30 20 L 45 30 M 50 30 L 50 70 M 50 45 L 60 40 L 75 40 M 50 45 L 40 40 L 25 40 M 50 55 L 65 60 M 50 55 L 35 60"/>
+                    </svg>
+                    <div id="arc-reactor"></div>
+                </div>
+                <h4>ENERGY LEVEL</h4>
+                <div class="status-bar"><div id="energy-bar" class="status-bar-inner"></div></div>
+                <h4>ARMOUR INTEGRITY</h4>
+                <div class="status-bar"><div id="armour-bar" class="status-bar-inner"></div></div>
+                <div class="status-text"><span>FLIGHT SYSTEMS:</span><span id="flight-status">OFFLINE</span></div>
+                <div class="status-text"><span>WEAPON SYSTEMS:</span><span id="weapon-status">DISARMED</span></div>
+                <div class="status-text"><span>SUIT STATUS:</span><span id="suit-status">STANDBY</span></div>
+            </div>
+            <div id="controls-panel" class="hud-panel" style="transition-delay: 0.3s;">
+                <h3>CONTROLS</h3>
+                <div class="control-group">
+                    <button id="mute-button" class="control-button">MUTE</button>
+                    <button id="clear-button" class="control-button">CLEAR CHAT</button>
+                    <div class="toggle-group">
+                        <div class="danger-toggle toggle-container">
+                            <input type="checkbox" id="safety-toggle">
+                            <label for="safety-toggle">DANGER: Safety Off</label>
                         </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="product-card flex flex-col">
-                            <div class="deal-badge">-15%</div>
-                            <div class="h-48 flex items-center justify-center mb-4">
-                                <img src="https://assets.aceternity.com/images/products/secretlab-titan-evo.png" alt="Secretlab TITAN Evo" class="max-h-full object-contain drop-shadow-2xl">
-                            </div>
-                            <h3 class="text-xl font-bold text-white mb-2 tech-font">Secretlab TITAN Evo</h3>
-                            <p class="text-[#94A3B8] text-sm mb-4 flex-grow">Next-level ergonomic support for serious gamers.</p>
-                            <div class="flex justify-between items-center mt-auto">
-                                <div class="flex items-baseline gap-2">
-                                    <p class="text-2xl font-bold gradient-text">$549.00</p>
-                                    <p class="text-lg text-slate-500 line-through">$649.00</p>
-                                </div>
-                                <a href="store.html" class="card-button">View Deal</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="product-card flex flex-col">
-                            <div class="deal-badge">-25%</div>
-                            <div class="h-48 flex items-center justify-center mb-4">
-                                <img src="https://assets.aceternity.com/images/products/nvidia-geforce-rtx-4090.png" alt="GeForce RTX 4090" class="max-h-full object-contain drop-shadow-2xl">
-                            </div>
-                            <h3 class="text-xl font-bold text-white mb-2 tech-font">GeForce RTX 4090</h3>
-                            <p class="text-[#94A3B8] text-sm mb-4 flex-grow">The ultimate GeForce GPU for enthusiasts and creators.</p>
-                            <div class="flex justify-between items-center mt-auto">
-                                <div class="flex items-baseline gap-2">
-                                    <p class="text-2xl font-bold gradient-text">$1599.99</p>
-                                    <p class="text-lg text-slate-500 line-through">$1999.99</p>
-                                </div>
-                                <a href="store.html" class="card-button">View Deal</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="product-card flex flex-col">
-                            <div class="deal-badge">-30%</div>
-                            <div class="h-48 flex items-center justify-center mb-4">
-                               <img src="https://assets.aceternity.com/images/products/razer-goliathus-chroma-3xl.png" alt="Razer Goliathus Chroma 3XL" class="max-h-full object-contain drop-shadow-2xl">
-                            </div>
-                            <h3 class="text-xl font-bold text-white mb-2 tech-font">Goliathus Chroma 3XL</h3>
-                            <p class="text-[#94A3B8] text-sm mb-4 flex-grow">Soft gaming mouse mat powered by Razer Chroma™ RGB.</p>
-                            <div class="flex justify-between items-center mt-auto">
-                                <div class="flex items-baseline gap-2">
-                                    <p class="text-2xl font-bold gradient-text">$89.99</p>
-                                    <p class="text-lg text-slate-500 line-through">$129.99</p>
-                                </div>
-                                <a href="store.html" class="card-button">View Deal</a>
-                            </div>
+                        <div class="web-toggle toggle-container">
+                            <input type="checkbox" id="web-search-toggle" checked>
+                            <label for="web-search-toggle">Web Search ON</label>
                         </div>
                     </div>
                 </div>
-                <div class="swiper-pagination"></div>
-                <div class="swiper-button-prev"></div>
-                <div class="swiper-button-next"></div>
             </div>
         </div>
-    </section>
 
-    <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B] immersive-section">
-        <div class="max-w-7xl mx-auto">
-            <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Explore Everything</h2>
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
-                <a href="store.html" class="category-card rounded-xl group">
-                    <img src="https://media.tatacroma.com/Croma%20Assets/Communication/Headphones%20and%20Earphones/Images/239032_0_ogo1io.png?v?q=80&w=2070&auto=format&fit=crop" alt="Audio and Wearables" class="w-full h-72 object-cover">
-                    <div class="category-card-content p-4 absolute bottom-0 left-0 right-0">
-                        <h3 class="text-lg font-bold text-white">Audio / Wearables</h3>
-                    </div>
-                </a>
-                <a href="store.html" class="category-card rounded-xl group">
-                    <img src="https://cdn.mos.cms.futurecdn.net/osrZoPFd72eY4sqWNJ7YjA.jpg?q=80&w=2070&auto=format&fit=crop" alt="Gaming Mouse" class="w-full h-72 object-cover">
-                    <div class="category-card-content p-4 absolute bottom-0 left-0 right-0">
-                        <h3 class="text-lg font-bold text-white">Mouse</h3>
-                    </div>
-                </a>
-                <a href="store.html" class="category-card rounded-xl group">
-                    <img src="https://mechanicalkeyboards.com/cdn/shop/files/Compact_Collection.jpg?v?q=80&w=2070&auto=format&fit=crop" alt="Gaming Keyboards" class="w-full h-72 object-cover">
-                    <div class="category-card-content p-4 absolute bottom-0 left-0 right-0">
-                        <h3 class="text-lg font-bold text-white">Keyboards</h3>
-                    </div>
-                </a>
-                 <a href="store.html" class="category-card rounded-xl group">
-                    <img src="https://static0.howtogeekimages.com/wordpress/wp-content/uploads/2024/09/an-intel-cpu-with-an-amd-cpu-in-front-of-it.jpg?w?q=80&w=1974&auto=format&fit=crop" alt="CPU" class="w-full h-72 object-cover">
-                    <div class="category-card-content p-4 absolute bottom-0 left-0 right-0">
-                        <h3 class="text-lg font-bold text-white">CPU (AMD/Intel)</h3>
-                    </div>
-                </a>
-                <a href="store.html" class="category-card rounded-xl group">
-                    <img src="https://i0.wp.com/techwarez.online/wp-content/uploads/2023/04/en_catalog_list_23a03_uq6dnp69w41.jpg?w?q=80&w=2070&auto=format&fit=crop" alt="Graphics Cards" class="w-full h-72 object-cover">
-                    <div class="category-card-content p-4 absolute bottom-0 left-0 right-0">
-                        <h3 class="text-lg font-bold text-white">Graphics Cards</h3>
-                    </div>
-                </a>
-                <a href="store.html" class="category-card rounded-xl group">
-                    <img src="https://www.gigabyte.com/FileUpload/Global/KeyFeature/3882/innergigabyte/images/product/summary.png?q=80&w=2070&auto=format&fit=crop" alt="Motherboards" class="w-full h-72 object-cover">
-                    <div class="category-card-content p-4 absolute bottom-0 left-0 right-0">
-                        <h3 class="text-lg font-bold text-white">Motherboards</h3>
-                    </div>
-                </a>
-                <a href="store.html" class="category-card rounded-xl group">
-                    <img src="https://cdn.mos.cms.futurecdn.net/sTrFShD2FCXCXsfj6T9y87.jpg?q=80&w=1935&auto=format&fit=crop" alt="SSD and Hard Drives" class="w-full h-72 object-cover">
-                    <div class="category-card-content p-4 absolute bottom-0 left-0 right-0">
-                        <h3 class="text-lg font-bold text-white">SSD / Hard Drives</h3>
-                    </div>
-                </a>
-                <a href="store.html" class="category-card rounded-xl group">
-                    <img src="https://www.vedantcomputers.com/image/cache/catalog/assets/product/corsair/ram/cmp64gx5m2b6000z30/cmp64gx5m2b6000z30-1-250x250.jpg?q=80&w=2070&auto=format&fit=crop" alt="RAM" class="w-full h-72 object-cover">
-                    <div class="category-card-content p-4 absolute bottom-0 left-0 right-0">
-                        <h3 class="text-lg font-bold text-white">RAM</h3>
-                    </div>
-                </a>
-                <a href="store.html" class="category-card rounded-xl group">
-                    <img src="https://microcenterindia.com/wp-content/uploads/2025/06/CPU-AMD-RYZEN-5-7600X-8-scaled-1.webp?q=80&w=2070&auto=format&fit=crop" alt="Custom PC Building" class="w-full h-72 object-cover">
-                    <div class="category-card-content p-4 absolute bottom-0 left-0 right-0">
-                        <h3 class="text-lg font-bold text-white">Custom PC Building</h3>
-                    </div>
-                </a>
-                <a href="store.html" class="category-card rounded-xl group">
-                    <img src="https://platform.theverge.com/wp-content/uploads/sites/2/chorus/uploads/chorus_asset/file/21820772/NZXT_starter.jpg?quality?q=80&w=2070&auto=format&fit=crop" alt="Pre-built PCs" class="w-full h-72 object-cover">
-                    <div class="category-card-content p-4 absolute bottom-0 left-0 right-0">
-                        <h3 class="text-lg font-bold text-white">Pre-Built PCs</h3>
-                    </div>
-                </a>
+        <div class="main-panel hud-panel" id="main-panel" style="transition-delay: 0.2s;">
+            <div id="core-container"> <div id="web-core"></div> </div>
+            <div id="chat-container">
+                <div id="message-display"></div>
+                <div id="input-area">
+                    <button id="mic-button" class="control-button">MIC</button>
+                    <button id="upload-button" class="control-button">UPLOAD</button>
+                    <input type="file" id="file-uploader" accept=".txt,.pdf,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf" style="display: none;">
+                    <input type="text" id="text-input" placeholder="Type your query to JARVIS...">
+                    <button id="send-button" class="control-button">SEND</button>
+                </div>
             </div>
         </div>
-    </section>
+        
+        <div class="right-panel" id="right-panel">
+            <div id="logistics-panel" class="hud-panel" style="transition-delay: 0.4s;">
+                <h3>LOGISTICS</h3>
+                <div id="dynamic-clock">--:--:--</div>
+                <div id="dynamic-date">---, --- --</div>
+                <div id="logistics-grid">
+                    <div class="status-item"> <h4>CPU</h4> <p id="cpu-stat">--%</p> </div>
+                    <div class="status-item"> <h4>MEM</h4> <p id="mem-stat">--%</p> </div>
+                </div>
+                <div class="status-text">
+                    <span>WEATHER (HOWRAH):</span>
+                    <span id="weather-desc">LOADING...</span>
+                </div>
+                <div class="status-item" style="grid-column: span 2; text-align: center; margin-top: 5px;">
+                    <p id="weather-temp">--°C</p>
+                </div>
+            </div>
+            <div id="camera-panel" class="hud-panel" style="transition-delay: 0.5s;">
+                <video id="camera-feed" autoplay playsinline></video>
+            </div>
+            <div id="audit-panel" class="hud-panel" style="transition-delay: 0.6s;">
+                <h3>ACTION AUDIT LOG</h3>
+                <div id="audit-log"></div>
+            </div>
+        </div>
+    </div>
 
-    <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A] relative overflow-hidden immersive-section">
-        <div class="max-w-4xl mx-auto">
-            <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-6 section-title">Forge Your Legend</h2>
-            <p class="text-center text-slate-300 mb-12 max-w-2xl mx-auto">Answer three simple questions to find the perfect rig for your gaming journey.</p>
+    <div id="confirmation-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3>ACTION CONFIRMATION</h3> <p id="modal-message">...</p>
+            <div class="modal-buttons">
+                <button id="modal-allow-button" class="control-button">ALLOW</button>
+                <button id="modal-deny-button" class="control-button">DENY</button>
+            </div>
+        </div>
+    </div>
+    <div id="player-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 id="player-title">Now Playing...</h3>
+            <div id="player-container"></div>
+            <div id="player-controls">
+                <button id="player-rewind" class="control-button">« 10s</button>
+                <button id="player-pause" class="control-button">PAUSE</button>
+                <button id="player-forward" class="control-button">10s »</button>
+                <button id="player-close" class="control-button">CLOSE</button>
+            </div>
+        </div>
+    </div>
+    <div id="destruction-overlay"></div>
+
+    <script>
+        // --- 1. Global Constants & State ---
+        const GOOGLE_SEARCH_API_KEY = 'AIzaSyBm8SxGHDl9pkrDuZt_VgFQME9a3aRUeXY';
+        const SEARCH_ENGINE_ID = 'd13b9c982e19f4ccf';
+        const GOOGLE_SEARCH_URL = `https://www.googleapis.com/customsearch/v1?key=${GOOGLE_SEARCH_API_KEY}&cx=${SEARCH_ENGINE_ID}`;
+        const SHARED_SECRET_TOKEN = "YOUR_SUPER_SECRET_TOKEN_HERE";
+        
+        if (window.pdfjsLib) {
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.worker.min.js';
+        }
+        
+        let ws; let recognition; let ytPlayer;
+        let isRecording = false; let isMuted = false;
+        let currentLang = "en-US"; let pendingAction = null; 
+        let jarvisVoice = null; let hasUserInteracted = false;
+        const welcomeMsg = "At your service sir. How may I serve you today?";
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // --- 2. DOM Elements ---
+            const allBootElements = document.querySelectorAll(".hud-panel");
+            const micButton = document.getElementById("mic-button");
+            const muteButton = document.getElementById("mute-button");
+            const clearButton = document.getElementById("clear-button");
+            const textInput = document.getElementById("text-input");
+            const sendButton = document.getElementById("send-button");
+            const safetyToggle = document.getElementById("safety-toggle");
+            const webSearchToggle = document.getElementById("web-search-toggle");
+            const messageDisplay = document.getElementById("message-display");
+            const cpuStat = document.getElementById("cpu-stat");
+            const memStat = document.getElementById("mem-stat");
+            const auditLog = document.getElementById("audit-log");
+            const confirmationModal = document.getElementById("confirmation-modal");
+            const modalMessage = document.getElementById("modal-message");
+            const modalAllowButton = document.getElementById("modal-allow-button");
+            const modalDenyButton = document.getElementById("modal-deny-button");
+            const webCore = document.getElementById("web-core");
+            const uploadButton = document.getElementById("upload-button");
+            const fileUploader = document.getElementById("file-uploader");
+            const playerModal = document.getElementById("player-modal");
+            const playerTitle = document.getElementById("player-title");
+            const playerPause = document.getElementById("player-pause");
+            const playerClose = document.getElementById("player-close");
+            const playerRewind = document.getElementById("player-rewind"); // NEW
+            const playerForward = document.getElementById("player-forward"); // NEW
+            const destructionOverlay = document.getElementById("destruction-overlay");
+            const cameraFeed = document.getElementById("camera-feed");
+            const dynamicClock = document.getElementById("dynamic-clock");
+            const dynamicDate = document.getElementById("dynamic-date");
+            const energyBar = document.getElementById("energy-bar");
+            const armourBar = document.getElementById("armour-bar");
+            const flightStatus = document.getElementById("flight-status");
+            const weaponStatus = document.getElementById("weapon-status");
+            const suitStatus = document.getElementById("suit-status");
+            const particleBg = document.getElementById("particle-background");
+            const leftPanel = document.getElementById("left-panel");
+            const mainPanel = document.getElementById("main-panel");
+            const rightPanel = document.getElementById("right-panel");
+            const weatherDesc = document.getElementById("weather-desc");
+            const weatherTemp = document.getElementById("weather-temp");
+
+            // --- 3. WebSocket Logic ---
+            function connectWebSocket() {
+                ws = new WebSocket("ws://localhost:8000/ws");
+                ws.onopen = () => {
+                    addJarvisMessage(welcomeMsg, "status");
+                    sendMessage({ type: "get_audit_log" });
+                    sendMessage({ type: "get_system_stats" });
+                    sendMessage({ type: "get_weather", location: "Howrah" });
+                };
+                ws.onmessage = (event) => {
+                    const msg = JSON.parse(event.data);
+                    switch (msg.type) {
+                        case "llm_chunk": updateLastJarvisMessage(msg.text); break;
+                        case "llm_end": renderMarkdown(); speak(getCurrentJarvisMessageText(), null); break;
+                        case "ui_command": handleUICommand(msg.action, msg.params); break;
+                        case "action_confirmation":
+                            if (safetyToggle.checked) {
+                                sendMessage({ type: "execute_action", token: SHARED_SECRET_TOKEN, action_data: msg.action_data });
+                            } else {
+                                pendingAction = msg.action_data;
+                                modalMessage.textContent = `JARVIS wants to execute: ${pendingAction.action} (${JSON.stringify(pendingAction.params)})`;
+                                confirmationModal.style.display = "flex";
+                            }
+                            break;
+                        case "action_status":
+                            alert(`Action ${msg.status}: ${msg.message}`);
+                            if (msg.status === "success") { sendMessage({ type: "get_audit_log" }); }
+                            break;
+                        case "audit_log": updateAuditLog(msg.log); break;
+                        case "clear_confirmation":
+                            messageDisplay.innerHTML = "";
+                            addJarvisMessage("History and file context cleared. How can I help you, Sir?", "status");
+                            break;
+                        case "system_stats":
+                            cpuStat.textContent = `${msg.cpu}%`; memStat.textContent = `${msg.mem}%`;
+                            break;
+                        case "weather_update":
+                            const weather = msg.data;
+                            if (weather && weather.temp) {
+                                weatherDesc.textContent = `${weather.desc.toUpperCase()}`;
+                                weatherTemp.textContent = `${weather.temp.toFixed(0)}°C`;
+                            } else {
+                                weatherDesc.textContent = "WEATHER OFFLINE";
+                                weatherTemp.textContent = "--°C";
+                            }
+                            break;
+                        case "context_set_confirmation":
+                            addJarvisMessage(`Sir, I have loaded "${msg.filename}" (${msg.char_count} chars). You may now ask me about it.`, "status");
+                            break;
+                        case "error": addJarvisMessage(`ERROR: ${msg.message}`, "error"); break;
+                    }
+                };
+                ws.onclose = () => { addJarvisMessage("Status: Disconnected. Retrying...", "error"); setTimeout(connectWebSocket, 3000); };
+                ws.onerror = (err) => { console.error("WebSocket Error:", err); };
+            }
+            function sendMessage(message) {
+                if (ws && ws.readyState === WebSocket.OPEN) { ws.send(JSON.stringify(message)); }
+            }
+
+            // --- 4. Chat UI Functions ---
+            function addUserMessage(text) {
+                const msgEl = document.createElement("div");
+                msgEl.className = "chat-message user-message";
+                msgEl.textContent = text;
+                messageDisplay.prepend(msgEl); messageDisplay.scrollTop = 0;
+            }
+            function addJarvisMessage(text, type = "normal") {
+                const msgEl = document.createElement("div");
+                msgEl.className = `chat-message jarvis-message ${type}`;
+                msgEl.textContent = text;
+                messageDisplay.prepend(msgEl); messageDisplay.scrollTop = 0;
+            }
+            let lastJarvisMessageEl = null;
+            function updateLastJarvisMessage(chunk) {
+                if (!lastJarvisMessageEl || !messageDisplay.contains(lastJarvisMessageEl)) {
+                    lastJarvisMessageEl = document.createElement("div");
+                    lastJarvisMessageEl.className = "chat-message jarvis-message";
+                    messageDisplay.prepend(lastJarvisMessageEl);
+                }
+                lastJarvisMessageEl.textContent += chunk;
+            }
+            function getCurrentJarvisMessageText() { return lastJarvisMessageEl ? lastJarvisMessageEl.textContent : ""; }
+            function renderMarkdown() {
+                if (!lastJarvisMessageEl) return;
+                let text = lastJarvisMessageEl.textContent;
+                text = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                text = text.replace(/```(.*?)```/gs, (match, code) => {
+                    const lang = code.match(/^[a-zA-Z]+\n/);
+                    let codeContent = code;
+                    if(lang) { codeContent = code.substring(lang[0].length); }
+                    return `<pre><code>${codeContent.trim()}</code></pre>`;
+                });
+                text = text.replace(/`([^`]+?)`/g, '<code>$1</code>');
+                text = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+                text = text.replace(/\*(.*?)\*/g, '<i>$1</i>');
+                lastJarvisMessageEl.innerHTML = text;
+            }
+            function submitQuery(text) {
+                if (!text.trim()) return;
+                addUserMessage(text); textInput.value = "";
+                lastJarvisMessageEl = null;
+                sendMessage({
+                    type: "text_query", text: text, lang: currentLang,
+                    web_search_enabled: webSearchToggle.checked
+                });
+            }
+
+            // --- 5. Speech Recognition (ASR) ---
+            function setupSpeechRecognition() {
+                window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                if (!window.SpeechRecognition) { micButton.disabled = true; micButton.textContent = "ASR N/A"; return; }
+                recognition = new SpeechRecognition();
+                recognition.lang = currentLang; recognition.continuous = true; recognition.interimResults = true;
+                recognition.onstart = () => { isRecording = true; micButton.classList.add("active"); webCore.classList.add("listening"); };
+                recognition.onend = () => { isRecording = false; micButton.classList.remove("active"); webCore.classList.remove("listening"); };
+                recognition.onresult = (event) => {
+                    let final_transcript = "";
+                    for (let i = event.resultIndex; i < event.results.length; ++i) {
+                        if (event.results[i].isFinal) { final_transcript += event.results[i][0].transcript; }
+                    }
+                    if (final_transcript) { submitQuery(final_transcript); }
+                };
+                recognition.onerror = (event) => { console.error("Speech Recognition Error:", event.error); };
+            }
+
+            // --- 6. Speech Synthesis (TTS) & Audio ---
+            function loadVoices() {
+                const voices = window.speechSynthesis.getVoices();
+                jarvisVoice = voices.find(v => v.name.includes('Google UK English Male')) ||
+                              voices.find(v => v.name.includes('Microsoft David')) ||
+                              voices.find(v => v.lang.includes('en-GB') && v.name.includes('Male')) || null;
+            }
+            function speak(text, onEndCallback) {
+                if (isMuted || !text || !text.trim() || !hasUserInteracted) {
+                    if (onEndCallback) onEndCallback(); return;
+                }
+                window.speechSynthesis.cancel();
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = text;
+                const textToSpeak = tempDiv.textContent || tempDiv.innerText || "";
+                const utterance = new SpeechSynthesisUtterance(textToSpeak);
+                if (jarvisVoice) { utterance.voice = jarvisVoice; }
+                utterance.lang = "en-GB"; utterance.pitch = 0.9; utterance.rate = 1.0;
+                if (onEndCallback) { utterance.onend = onEndCallback; }
+                window.speechSynthesis.speak(utterance);
+            }
+            function unlockAudio() {
+                if (hasUserInteracted) return;
+                hasUserInteracted = true;
+                webCore.classList.add("listening");
+                setTimeout(() => webCore.classList.remove("listening"), 2000);
+                speak(welcomeMsg, null);
+                startCamera();
+            }
+            function playAudio(url) {
+                if (isMuted || !hasUserInteracted) return;
+                try {
+                    const audio = new Audio(url);
+                    audio.play().catch(e => console.error("Audio play failed:", e));
+                } catch (e) { console.error("Error creating audio:", e); }
+            }
             
-            <div id="pc-builder-wizard" class="holographic-effect rounded-2xl p-6 sm:p-10 z-10">
-                <div class="pc-builder-step" data-step="1">
-                    <h3 class="text-2xl font-bold text-center mb-8 tech-font">Step 1: What's Your Main Game?</h3>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <button class="builder-option" data-next="2"><i class="fas fa-crosshairs builder-option-icon"></i><span class="font-semibold">FPS / Shooters</span></button>
-                        <button class="builder-option" data-next="2"><i class="fas fa-dragon builder-option-icon"></i><span class="font-semibold">RPG / Adventure</span></button>
-                        <button class="builder-option" data-next="2"><i class="fas fa-fist-raised builder-option-icon"></i><span class="font-semibold">Esports / MOBA</span></button>
-                        <button class="builder-option" data-next="2"><i class="fas fa-palette builder-option-icon"></i><span class="font-semibold">Creative / Sandbox</span></button>
-                    </div>
-                </div>
-
-                <div class="pc-builder-step hidden" data-step="2">
-                    <h3 class="text-2xl font-bold text-center mb-8 tech-font">Step 2: What's Your Budget?</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <button class="builder-option" data-next="3"><i class="fas fa-shield-alt builder-option-icon"></i><span class="font-semibold">Entry-Level</span><p class="text-sm text-slate-400">Solid Performance</p></button>
-                        <button class="builder-option" data-next="3"><i class="fas fa-trophy builder-option-icon"></i><span class="font-semibold">Pro-Tier</span><p class="text-sm text-slate-400">Competitive Edge</p></button>
-                        <button class="builder-option" data-next="3"><i class="fas fa-meteor builder-option-icon"></i><span class="font-semibold">God-Tier</span><p class="text-sm text-slate-400">Unmatched Power</p></button>
-                    </div>
-                </div>
-
-                <div class="pc-builder-step hidden" data-step="3">
-                    <h3 class="text-2xl font-bold text-center mb-8 tech-font">Step 3: What's Your Style?</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <button class="builder-option" data-next="4"><i class="fas fa-moon builder-option-icon"></i><span class="font-semibold">Stealth Black</span></button>
-                        <button class="builder-option" data-next="4"><i class="fas fa-rainbow builder-option-icon"></i><span class="font-semibold">RGB Overload</span></button>
-                        <button class="builder-option" data-next="4"><i class="fas fa-sun builder-option-icon"></i><span class="font-semibold">Clean White</span></button>
-                    </div>
-                </div>
-                
-                <div class="pc-builder-step hidden" data-step="4">
-                    <div class="text-center">
-                        <i class="fas fa-check-circle text-6xl text-green-400 mb-6"></i>
-                        <h3 class="text-2xl font-bold text-center mb-4 tech-font">Analysis Complete!</h3>
-                        <p class="text-slate-300 mb-8">We've forged the perfect build recommendation for you based on your choices.</p>
-                        <a href="store.html" class="inline-block glow-button px-8 py-4 rounded-lg font-semibold text-white gradient-bg text-lg">
-                            <i class="fas fa-desktop mr-2"></i> View Your Recommended Build
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B] relative overflow-hidden immersive-section">
-      <div class="max-w-7xl mx-auto">
-        <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Upcoming Tournaments</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div class="tournament-card rounded-xl overflow-hidden">
-            <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Cyber Clash 2025" class="w-full h-64 object-cover">
-            <div class="tournament-card-content p-6 absolute bottom-0 left-0 right-0">
-              <div class="flex justify-between items-start mb-2">
-                <h3 class="text-xl font-bold text-white">Cyber Clash 2025</h3>
-                <span class="bg-[#3B82F6] text-[#0F172A] text-xs font-bold px-2 py-1 rounded">$10K Prize</span>
-              </div>
-              <div class="flex items-center text-[#94A3B8] text-sm mb-4"><i class="fas fa-gamepad mr-2 text-[#3B82F6]"></i><span>Valorant</span></div>
-              <div class="flex items-center text-[#94A3B8] text-sm mb-4"><i class="fas fa-calendar-alt mr-2 text-[#3B82F6]"></i><span>May 15, 2025</span></div>
-              <a href="tournaments.html" class="inline-block w-full text-center bg-gradient-to-r from-[#3B82F6] to-[#D946EF] text-white py-2 rounded-lg font-medium hover:opacity-90 transition">Register Now</a>
-            </div>
-          </div>
-          <div class="tournament-card rounded-xl overflow-hidden">
-            <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80" alt="Neon Strike" class="w-full h-64 object-cover">
-            <div class="tournament-card-content p-6 absolute bottom-0 left-0 right-0">
-              <div class="flex justify-between items-start mb-2">
-                <h3 class="text-xl font-bold text-white">Neon Strike</h3>
-                <span class="bg-[#D946EF] text-[#0F172A] text-xs font-bold px-2 py-1 rounded">$15K Prize</span>
-              </div>
-              <div class="flex items-center text-[#94A3B8] text-sm mb-4"><i class="fas fa-gamepad mr-2 text-[#3B82F6]"></i><span>Overwatch 2</span></div>
-              <div class="flex items-center text-[#94A3B8] text-sm mb-4"><i class="fas fa-calendar-alt mr-2 text-[#3B82F6]"></i><span>June 10, 2025</span></div>
-              <a href="tournaments.html" class="inline-block w-full text-center bg-gradient-to-r from-[#3B82F6] to-[#D946EF] text-white py-2 rounded-lg font-medium hover:opacity-90 transition">Register Now</a>
-            </div>
-          </div>
-          <div class="tournament-card rounded-xl overflow-hidden">
-            <img src="https://images.unsplash.com/photo-1633613286848-e6f43bbafb8d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Odyssey League" class="w-full h-64 object-cover">
-            <div class="tournament-card-content p-6 absolute bottom-0 left-0 right-0">
-              <div class="flex justify-between items-start mb-2">
-                <h3 class="text-xl font-bold text-white">Odyssey League</h3>
-                <span class="bg-[#10B981] text-[#0F172A] text-xs font-bold px-2 py-1 rounded">$20K Prize</span>
-              </div>
-              <div class="flex items-center text-[#94A3B8] text-sm mb-4"><i class="fas fa-gamepad mr-2 text-[#3B82F6]"></i><span>League of Legends</span></div>
-              <div class="flex items-center text-[#94A3B8] text-sm mb-4"><i class="fas fa-calendar-alt mr-2 text-[#3B82F6]"></i><span>July 5, 2025</span></div>
-              <a href="tournaments.html" class="inline-block w-full text-center bg-gradient-to-r from-[#3B82F6] to-[#D946EF] text-white py-2 rounded-lg font-medium hover:opacity-90 transition">Register Now</a>
-            </div>
-          </div>
-        </div>
-        <div class="text-center mt-12">
-          <a href="tournaments.html" class="inline-block glow-button px-8 py-3 rounded-lg font-semibold text-white gradient-bg">View All Tournaments <i class="fas fa-arrow-right ml-2"></i></a>
-        </div>
-      </div>
-    </section>
-
-    <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A] relative overflow-hidden immersive-section">
-      <div class="max-w-7xl mx-auto">
-        <div class="flex flex-col md:flex-row items-center gap-8">
-          <div class="md:w-1/2">
-            <h2 class="text-3xl sm:text-4xl font-bold text-white mb-6 section-title">Join Our Minecraft Server</h2>
-            <p class="text-[#F1F5F9] mb-6 leading-relaxed">
-              Experience the ultimate Minecraft adventure on our dedicated server. Join thousands of players in an expansive world with custom minigames, survival, and creative modes.
-            </p>
-            <div class="bg-[#1E293B] p-4 rounded-lg mb-6">
-              <div class="flex items-center">
-                <i class="fas fa-server text-2xl text-[#3B82F6] mr-3"></i>
-                <div>
-                  <p class="text-[#94A3B8] text-sm">Server Address</p>
-                  <p class="text-white font-mono">play.gamingodyssey.in</p>
-                </div>
-              </div>
-            </div>
-            <div class="flex flex-col sm:flex-row gap-4">
-              <a href="http://play.gamingodyssey.in" class="glow-button px-6 py-3 rounded-lg font-semibold text-white gradient-bg flex items-center justify-center gap-2"><i class="fas fa-plug"></i> Connect Now</a>
-              <a href="ranks.html" class="glow-button px-6 py-3 rounded-lg font-semibold text-white bg-[#1E293B] border border-[#3B82F6] flex items-center justify-center gap-2"><i class="fas fa-crown"></i> View Ranks</a>
-            </div>
-          </div>
-          <div class="md:w-1/2">
-            <div class="holographic-effect rounded-xl overflow-hidden">
-              <img src="minecraft.png" alt="Minecraft Minigames Server" class="w-full h-auto object-cover">
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="py-16 px-6 bg-gradient-to-b from-[#0F172A] to-[#1E293B] immersive-section">
-      <div class="max-w-7xl mx-auto">
-        <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Why Choose Gaming Odyssey?</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div class="stats-item"><div class="text-center p-6"><div class="bg-[#3B82F6] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-trophy text-2xl text-white"></i></div><h3 class="text-3xl font-bold text-white text-center mb-2">50+</h3><p class="text-[#94A3B8] text-center">Tournaments Hosted</p></div></div>
-          <div class="stats-item"><div class="text-center p-6"><div class="bg-[#D946EF] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-users text-2xl text-white"></i></div><h3 class="text-3xl font-bold text-white text-center mb-2">10K+</h3><p class="text-[#94A3B8] text-center">Active Members</p></div></div>
-          <div class="stats-item"><div class="text-center p-6"><div class="bg-[#10B981] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-gamepad text-2xl text-white"></i></div><h3 class="text-3xl font-bold text-white text-center mb-2">100+</h3><p class="text-[#94A3B8] text-center">Supported Games</p></div></div>
-          <div class="stats-item"><div class="text-center p-6"><div class="bg-[#F59E0B] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-headset text-2xl text-white"></i></div><h3 class="text-3xl font-bold text-white text-center mb-2">24/7</h3><p class="text-[#94A3B8] text-center">Customer Support</p></div></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="py-16 px-6 bg-gradient-to-b from-[#1E293B] to-[#0F172A] immersive-section">
-      <div class="max-w-4xl mx-auto">
-        <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12 section-title">Contact Us</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div><div class="holographic-effect rounded-xl p-6 h-full"><h3 class="text-xl font-bold text-white mb-4">Get In Touch</h3><div class="space-y-4"><div class="flex items-start"><i class="fas fa-map-marker-alt mt-1 text-[#3B82F6] mr-3"></i><div><h4 class="text-white font-medium">Address</h4><p class="text-[#94A3B8] text-sm">Howrah,WEST BENGAL</p></div></div><div class="flex items-center"><i class="fas fa-envelope text-[#3B82F6] mr-3"></i><div><h4 class="text-white font-medium">Email</h4><a href="mailto:support@gamingodyssey.in" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition">support@gamingodyssey.in</a></div></div><div class="flex items-center"><i class="fas fa-phone text-[#3B82F6] mr-3"></i><div><h4 class="text-white font-medium">Phone</h4><p class="text-[#94A3B8] text-sm">+91-6289119156</p></div></div><div class="flex items-center"><i class="fas fa-server text-[#3B82F6] mr-3"></i><div><h4 class="text-white font-medium">Minecraft Server</h4><p class="text-[#94A3B8] text-sm">play.gamingodyssey.in</p></div></div></div><div class="mt-8"><h3 class="text-xl font-bold text-white mb-4">Follow Us</h3><div class="flex space-x-4"><a href="https://www.instagram.com/noticedveil" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#E1306C]"><i class="fab fa-instagram text-2xl"></i></a><a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#FF0000]"><i class="fab fa-youtube text-2xl"></i></a><a href="https://www.facebook.com" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#1877F2]"><i class="fab fa-facebook text-2xl"></i></a><a href="https://www.twitter.com" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#1DA1F2]"><i class="fab fa-twitter text-2xl"></i></a></div></div></div></div>
-          <div><div class="holographic-effect rounded-xl p-6"><form id="contact-form"><div class="mb-5"><label for="name" class="block text-[#F1F5F9] mb-2 font-medium">Name</label><input type="text" id="name" name="name" required placeholder="Your name" class="input-field"><p id="name-error" class="text-red-500 text-sm mt-1 hidden">Please enter your name</p></div><div class="mb-5"><label for="email" class="block text-[#F1F5F9] mb-2 font-medium">Email</label><input type="email" id="email" name="email" required placeholder="Your email" class="input-field"><p id="email-error" class="text-red-500 text-sm mt-1 hidden">Please enter a valid email</p></div><div class="mb-5"><label for="subject" class="block text-[#F1F5F9] mb-2 font-medium">Subject</label><input type="text" id="subject" name="subject" required placeholder="Subject" class="input-field"><p id="subject-error" class="text-red-500 text-sm mt-1 hidden">Please enter a subject</p></div><div class="mb-5"><label for="message" class="block text-[#F1F5F9] mb-2 font-medium">Message</label><textarea id="message" name="message" rows="4" required placeholder="Your message" class="input-field"></textarea><p id="message-error" class="text-red-500 text-sm mt-1 hidden">Please enter a message</p></div><button type="submit" class="w-full glow-button px-6 py-3 rounded-lg font-semibold text-white gradient-bg flex items-center justify-center gap-2"><i class="fas fa-paper-plane"></i> Send Message</button><p id="form-status" class="mt-3 text-sm text-center"></p></form></div></div>
-        </div>
-      </div>
-    </section>
-
-    <footer class="bg-[#020617] py-12 px-6 border-t border-[#1E293B]">
-      <div class="max-w-7xl mx-auto">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div>
-            <div class="flex items-center space-x-3 mb-4"><img src="favicon.png" alt="Logo" class="w-10 h-10"><h3 class="text-xl font-bold text-white tech-font">GAMING ODYSSEY</h3></div>
-            <p class="text-[#94A3B8] text-sm mb-4 leading-relaxed">Where Gaming Meets Glory. Join our community of passionate gamers and elevate your gaming experience.</p>
-            <div class="flex space-x-4"><a href="https://www.instagram.com/noticedveil" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#E1306C]"><i class="fab fa-instagram"></i></a><a href="https://www.youtube.com/@I_N0713dVeil" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#FF0000]"><i class="fab fa-youtube"></i></a><a href="https://www.facebook.com" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#1877F2]"><i class="fab fa-facebook"></i></a><a href="https://www.twitter.com" target="_blank" class="social-icon text-[#F1F5F9] hover:text-[#1DA1F2]"><i class="fab fa-twitter"></i></a></div>
-          </div>
-          <div>
-            <h3 class="text-lg font-bold text-white mb-4">Quick Links</h3>
-            <ul class="space-y-3">
-              <li><a href="index.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center"><i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Home</a></li>
-              <li><a href="store.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center"><i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Store</a></li>
-              <li><a href="tournaments.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center"><i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Tournaments</a></li>
-              <li><a href="trackorder.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center"><i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Track Order</a></li>
-              <li><a href="signup.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center"><i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Sign Up</a></li>
-            </ul>
-          </div>
-          <div>
-            <h3 class="text-lg font-bold text-white mb-4">Support</h3>
-            <ul class="space-y-3">
-              <li><a href="contactus.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center"><i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Contact Us</a></li>
-              <li><a href="aboutus.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center"><i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> About Us</a></li>
-              <li><a href="terms.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center"><i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Terms & Conditions</a></li>
-              <li><a href="privacy.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center"><i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> Privacy Policy</a></li>
-              <li><a href="faq.html" class="text-[#94A3B8] text-sm hover:text-[#3B82F6] transition flex items-center"><i class="fas fa-chevron-right text-xs text-[#3B82F6] mr-2"></i> FAQ</a></li>
-            </ul>
-          </div>
-          <div>
-            <h3 class="text-lg font-bold text-white mb-4">Newsletter</h3>
-            <p class="text-[#94A3B8] text-sm mb-4">Subscribe to our newsletter for the latest updates on tournaments, products, and special offers.</p>
-            <form class="flex"><input type="email" placeholder="Your email" class="input-field rounded-r-none"><button type="submit" class="bg-gradient-to-r from-[#3B82F6] to-[#D946EF] text-white px-4 rounded-r-lg"><i class="fas fa-paper-plane"></i></button></form>
-          </div>
-        </div>
-        <div class="border-t border-[#1E293B] mt-10 pt-6 text-center"><p class="text-[#94A3B8] text-sm">© 2025 Gaming Odyssey. All rights reserved.</p></div>
-      </div>
-    </footer>
-  </div>
-
-  <div class="whatsapp-widget">
-    <div class="whatsapp-bubble" id="whatsapp-bubble"><i class="fab fa-whatsapp"></i></div>
-    <div class="whatsapp-chat-box" id="whatsapp-chat-box">
-      <button class="whatsapp-close" id="whatsapp-close"><i class="fas fa-times"></i></button>
-      <div class="whatsapp-header"><img src="https://cdn-icons-png.flaticon.com/512/3612/3612569.png" alt="Gaming Odyssey Logo"><h3>Gaming Odyssey</h3></div>
-      <div class="whatsapp-body">
-        <div class="whatsapp-message">Hi 👋 Welcome to Gaming Odyssey! Need help? Chat with us on WhatsApp.</div>
-        <a href="https://wa.me/916289119156" target="_blank" class="whatsapp-button"><i class="fab fa-whatsapp"></i> Start Chat</a>
-      </div>
-    </div>
-  </div>
-
-    <div id="odyssey-ai-widget-container">
-        <div id="odyssey-ai-chat-window" class="hidden">
-            <div id="odyssey-ai-header">
-                <div class="flex items-center gap-3">
-                    <img src="favicon.png" alt="Odyssey AI Logo" class="w-8 h-8 rounded-full border border-blue-400">
-                    <div>
-                        <h3 class="font-bold text-white text-base">Odyssey AI</h3>
-                        <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div><p class="text-xs text-slate-300">Online</p></div>
-                    </div>
-                </div>
-                <div id="odyssey-ai-header-buttons" class="flex items-center gap-4">
-                    <button id="odyssey-ai-clear-btn" title="Clear Chat"><i class="fas fa-sync-alt"></i></button>
-                    <button id="odyssey-ai-close-btn" class="text-slate-400 hover:text-white">&times;</button>
-                </div>
-            </div>
-            <div id="odyssey-ai-messages"></div>
-            <div id="odyssey-ai-input-area">
-                 <textarea id="odyssey-ai-input" placeholder="Ask Odyssey AI anything..." rows="1"></textarea>
-                 <button id="odyssey-ai-send-btn"><i class="fas fa-paper-plane"></i></button>
-            </div>
-        </div>
-        <button id="odyssey-ai-toggle-bubble"><img src="favicon.png" alt="Odyssey AI" class="w-full h-full object-cover"></button>
-    </div>
-
-
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-  <script>
-    // --- Firebase & Auth ---
-    const firebaseConfig = { apiKey:"AIzaSyDA218WauVZNgqeMgiR_5H6TLYQB5HXZkY", authDomain: "gamingodyssey-2e642.firebaseapp.com", databaseURL: "https://gamingodyssey-2e642-default-rtdb.firebaseio.com", projectId: "gamingodyssey-2e642" };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    
-    function setupUserUI(user) {
-        const userAvatar = document.getElementById('user-avatar');
-        document.getElementById('login-link-desktop').style.display = 'none';
-        document.getElementById('signup-link-desktop').style.display = 'none';
-        document.getElementById('login-link-mobile').style.display = 'none';
-        document.getElementById('signup-link-mobile').style.display = 'none';
-        userAvatar.classList.remove('hidden');
-        const userName = user.displayName || user.name;
-        const userEmail = user.email;
-        const profilePic = user.photoURL || localStorage.getItem('profilePic');
-        if (profilePic) { userAvatar.innerHTML = `<img src="${profilePic}" class="w-full h-full rounded-full object-cover">`; } else { userAvatar.textContent = userName.charAt(0).toUpperCase(); }
-        userAvatar.title = `Welcome, ${userName}`;
-        const userMenu = document.getElementById('user-menu');
-        document.getElementById('menu-username').textContent = userName;
-        document.getElementById('menu-user-email').textContent = userEmail;
-        userAvatar.addEventListener('click', () => userMenu.classList.toggle('hidden'));
-        document.getElementById('change-pic-btn').addEventListener('click', () => document.getElementById('pic-input').click());
-        document.getElementById('pic-input').addEventListener('change', (e) => {
-            const file = e.target.files[0]; if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (event) => { localStorage.setItem('profilePic', event.target.result); userAvatar.innerHTML = `<img src="${event.target.result}" class="w-full h-full rounded-full object-cover">`; userMenu.classList.add('hidden'); };
-            reader.readAsDataURL(file);
-        });
-        document.getElementById('logout-btn').addEventListener('click', () => { (auth.currentUser ? auth.signOut() : Promise.resolve()).then(() => { localStorage.removeItem('userData'); localStorage.removeItem('profilePic'); window.location.reload(); }); });
-        document.addEventListener('click', (e) => { if (!userAvatar.contains(e.target) && !userMenu.contains(e.target)) { userMenu.classList.add('hidden'); } });
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        auth.onAuthStateChanged(firebaseUser => {
-            if (firebaseUser) { setupUserUI(firebaseUser); } else { const localUserData = JSON.parse(localStorage.getItem('userData')); if (localUserData) { setupUserUI(localUserData); } else { document.addEventListener('click', (e) => { const link = e.target.closest('a'); if (link && link.href) { const targetUrl = new URL(link.href); const targetPage = targetUrl.pathname.split('/').pop(); const isInternalNav = link.hostname === window.location.hostname; const allowedWhenLoggedOut = ['signup.html', 'index.html', '', 'login.html']; if (isInternalNav && !allowedWhenLoggedOut.includes(targetPage) && !link.href.includes('#')) { e.preventDefault(); window.location.href = 'signup.html'; } } }, true); } }
-        });
-
-        // --- Core Page Scripts ---
-        emailjs.init('__S5AyIeoL526kGwQ');
-        const hamburger = document.getElementById('hamburger');
-        const mobileMenu = document.getElementById('mobile-menu');
-        hamburger.addEventListener('click', () => { mobileMenu.classList.remove('hidden', '-translate-x-full'); });
-        document.getElementById('close-menu').addEventListener('click', () => { mobileMenu.classList.add('-translate-x-full'); });
-        
-        // --- ANIMATION OBSERVERS ---
-        // Observer for initial fade-in (hero content)
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) entry.target.classList.add('visible');
-            });
-        }, { threshold: 0.1 });
-        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-        
-        // New observer for immersive section zoom
-        const immersiveObserver = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    observer.unobserve(entry.target); // Animate only once
+            function handleUICommand(action, params) {
+                if (action === "enter_combat_mode") {
+                    const text = "Sir, initiating combat mode.";
+                    addJarvisMessage(text, "status");
+                    document.body.classList.add("combat-mode");
+                    speak(text, () => { playAudio("/audio/combat_on.mp3"); });
+                } else if (action === "exit_combat_mode") {
+                    const text = "Disengaging combat mode, Sir.";
+                    addJarvisMessage(text, "status");
+                    document.body.classList.remove("combat-mode");
+                    speak(text, () => { playAudio("/audio/combat_off.mp3"); });
+                } else if (action === "play_song") {
+                    const songName = params.song_name;
+                    addJarvisMessage(`Searching YouTube for "${songName}"...`, "status");
+                    findAndPlayVideo(songName);
                 }
-            });
-        }, { threshold: 0.15 });
-        document.querySelectorAll('.immersive-section').forEach(el => {
-            immersiveObserver.observe(el);
-        });
+                else if (action === "self_destruct") {
+                    const text = "Self-destruct sequence initiated. Stand by.";
+                    addJarvisMessage(text, "status");
+                    speak(text, () => {
+                        document.body.classList.add("self-destruct");
+                        destructionOverlay.classList.add("active");
+                        playAudio("/audio/self_destruct.mp3");
+                        
+                        setTimeout(() => {
+                            document.body.classList.remove("self-destruct");
+                            destructionOverlay.classList.remove("active");
+                            addJarvisMessage("...System reset. All functions back online, Sir.", "status");
+                        }, 5000);
+                    });
+                }
+            }
 
-        const whatsappBubble = document.getElementById('whatsapp-bubble');
-        const whatsappChatBox = document.getElementById('whatsapp-chat-box');
-        whatsappBubble.addEventListener('click', () => whatsappChatBox.classList.toggle('active'));
-        document.getElementById('whatsapp-close').addEventListener('click', (e) => { e.stopPropagation(); whatsappChatBox.classList.remove('active'); });
-        document.addEventListener('click', (e) => { if (!whatsappChatBox.contains(e.target) && !whatsappBubble.contains(e.target)) { whatsappChatBox.classList.remove('active'); } });
-        
-        // --- Slideshow Functionality ---
-        const slideshowContainer = document.getElementById('hero-slideshow');
-        if (slideshowContainer) {
-            const slides = [ { img: 'https://9to5toys.com/wp-content/uploads/sites/5/2022/11/best-peripherals-feature.png?q=80&w=2070&auto=format&fit=crop', caption: 'Discover premium peripherals for the ultimate edge.' }, { img: 'https://www.gladiatorpc.co.uk/assets/img/special/landingpages/gamingpc/gamingpcbgm.webp?q=80&w=2042&auto=format&fit=crop', caption: 'Let us build your dream custom PC, tailored to your needs.' }, { img: 'https://www.cyberpowerpc.com/blog/w/wp-content/uploads/2024/08/BlogPurpScrup-scaled.jpg?q=80&w=2070&auto=format&fit=crop', caption: 'Design a complete, aesthetic gaming setup with our help.' } ]; let currentSlide = 0; slides.forEach((slide, index) => { const el = document.createElement('div'); el.className = 'slide' + (index === 0 ? ' active' : ''); el.style.backgroundImage = `url('${slide.img}')`; el.innerHTML = `<div class="slide-caption">${slide.caption}</div>`; slideshowContainer.appendChild(el); }); setInterval(() => { const els = document.querySelectorAll('#hero-slideshow .slide'); els[currentSlide].classList.remove('active'); currentSlide = (currentSlide + 1) % slides.length; els[currentSlide].classList.add('active'); }, 5000);
-        }
+            // --- 7. YouTube Player ---
+            window.onYouTubeIframeAPIReady = function() {
+                ytPlayer = new YT.Player('player-container', {
+                    height: '320', width: '480', videoId: '',
+                    playerVars: { 'autoplay': 1, 'controls': 0, 'rel': 0 },
+                    events: {
+                        'onReady': (event) => { event.target.playVideo(); },
+                        'onStateChange': (event) => {
+                            if (event.data === YT.PlayerState.PLAYING) { playerPause.textContent = "PAUSE"; }
+                            if (event.data === YT.PlayerState.PAUSED) { playerPause.textContent = "PLAY"; }
+                        }
+                    }
+                });
+            }
+            // !! V2.18 PLAYER FIX
+            async function findAndPlayVideo(songName) {
+                const query = `youtube ${songName}`;
+                const url = `${GOOGLE_SEARCH_URL}&q=${encodeURIComponent(query)}`;
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) throw new Error(`Google API error: ${response.statusText}`);
+                    const data = await response.json();
+                    
+                    if (data.items && data.items.length > 0) {
+                        // Find the first result that is actually a YouTube video
+                        const firstResult = data.items.find(item => item.link && (item.link.includes("youtube.com/watch?v=") || item.link.includes("youtu.be/")));
+                        
+                        if (!firstResult) throw new Error("No valid YouTube links in search results");
+                        
+                        const videoLink = firstResult.link;
+                        // Robust regex to get video ID from any YouTube URL format
+                        const videoIdMatch = videoLink.match(/(?:v=|\/embed\/|\.be\/)([a-zA-Z0-9_-]{11})/);
+                        
+                        if (videoIdMatch && videoIdMatch[1]) {
+                            playVideoById(videoIdMatch[1], firstResult.title);
+                        } else { addJarvisMessage(`Error: Could not parse a valid YouTube video ID from link: ${videoLink}`, "error"); }
+                    } else { addJarvisMessage(`Error: No YouTube results found for "${songName}".`, "error"); }
+                } catch (err) { addJarvisMessage(`Error searching for video: ${err.message}`, "error"); }
+            }
+            function playVideoById(videoId, title) {
+                playerTitle.textContent = title;
+                playerModal.style.display = "flex";
+                ytPlayer.loadVideoById(videoId);
+                ytPlayer.playVideo();
+            }
+            function closePlayer() { ytPlayer.stopVideo(); playerModal.style.display = "none"; }
+            function togglePausePlayer() {
+                const state = ytPlayer.getPlayerState();
+                if (state === YT.PlayerState.PLAYING) { ytPlayer.pauseVideo(); }
+                else { ytPlayer.playVideo(); }
+            }
+            // NEW: Player control functions
+            function rewindPlayer() {
+                if (ytPlayer && ytPlayer.getCurrentTime) {
+                    const currentTime = ytPlayer.getCurrentTime();
+                    ytPlayer.seekTo(currentTime - 10, true);
+                }
+            }
+            function forwardPlayer() {
+                if (ytPlayer && ytPlayer.getCurrentTime) {
+                    const currentTime = ytPlayer.getCurrentTime();
+                    ytPlayer.seekTo(currentTime + 10, true);
+                }
+            }
+            playerPause.addEventListener("click", togglePausePlayer);
+            playerClose.addEventListener("click", closePlayer);
+            playerRewind.addEventListener("click", rewindPlayer); // NEW
+            playerForward.addEventListener("click", forwardPlayer); // NEW
 
-        // --- PC Builder Wizard Script ---
-        const wizard = document.getElementById('pc-builder-wizard');
-        if (wizard) {
-            const steps = wizard.querySelectorAll('.pc-builder-step');
-            const options = wizard.querySelectorAll('.builder-option');
-
-            const showStep = (stepNumber) => {
-                steps.forEach(step => {
-                    if (step.dataset.step === stepNumber) {
-                        step.classList.remove('hidden');
+            // --- 8. Client-Side File Upload Logic ---
+            uploadButton.addEventListener("click", () => { fileUploader.click(); });
+            fileUploader.addEventListener("change", async (event) => {
+                const file = event.target.files[0];
+                if (!file) return;
+                addJarvisMessage(`Reading "${file.name}"...`, "status");
+                try {
+                    let text = "";
+                    if (file.name.endsWith(".txt")) {
+                        text = await file.text();
+                    } else if (file.name.endsWith(".pdf")) {
+                        text = await readPdfFile(file);
+                    } else if (file.name.endsWith(".docx")) {
+                        text = await readDocxFile(file);
                     } else {
-                        step.classList.add('hidden');
+                        addJarvisMessage(`Error: File type not supported. Please upload .txt, .pdf, or .docx`, "error");
+                        fileUploader.value = ""; return;
                     }
-                });
-            };
-
-            options.forEach(option => {
-                option.addEventListener('click', () => {
-                    const nextStep = option.dataset.next;
-                    if (nextStep) {
-                        showStep(nextStep);
-                    }
-                });
+                    sendMessage({
+                        type: "set_file_context",
+                        filename: file.name,
+                        content: text
+                    });
+                } catch (err) { addJarvisMessage(`Error reading file: ${err.message}`, "error"); }
+                fileUploader.value = "";
             });
-        }
-        
-        // --- Latest Deals Swiper ---
-        const swiper = new Swiper('.latest-deals-swiper', {
-            loop: true,
-            autoplay: {
-                delay: 5000,
-                disableOnInteraction: false,
-            },
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-            spaceBetween: 30,
-            breakpoints: {
-                640: { slidesPerView: 1, spaceBetween: 20 },
-                768: { slidesPerView: 2, spaceBetween: 30 },
-                1024: { slidesPerView: 3, spaceBetween: 30 },
-            }
-        });
-    });
-
-    // --- ODYSSEY AI WIDGET SCRIPT ---
-    document.addEventListener('DOMContentLoaded', () => {
-        if (!document.getElementById('odyssey-ai-widget-container')) return;
-        const GEMINI_API_KEY = 'AIzaSyBVnb7V9LGdFbNtHkReRFFPnOs-PCaefOM';
-        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}&alt=sse`;
-        const chatWindow = document.getElementById('odyssey-ai-chat-window');
-        const toggleBubble = document.getElementById('odyssey-ai-toggle-bubble');
-        const closeBtn = document.getElementById('odyssey-ai-close-btn');
-        const clearBtn = document.getElementById('odyssey-ai-clear-btn');
-        const messagesContainer = document.getElementById('odyssey-ai-messages');
-        const input = document.getElementById('odyssey-ai-input');
-        const sendBtn = document.getElementById('odyssey-ai-send-btn');
-        let conversationHistory = [];
-        let isGenerating = false;
-        let isAwaitingSupportQuery = false;
-        let abortController = new AbortController();
-
-        const marked = { parse: (text) => { let html = text.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\*(.*?)\*/g, '<em>$1</em>').replace(/`(.*?)`/g, '<code>$1</code>').replace(/\n/g, '<br>'); html = html.replace(/```([\s\S]*?)```/g, (match, code) => `<pre><code>${code}</code></pre>`); return html; }};
-        function addMessage(role, content) { const div = document.createElement('div'); div.className = `odyssey-message ${role === 'user' ? 'odyssey-user-message' : 'odyssey-ai-message'}`; div.innerHTML = content; messagesContainer.appendChild(div); messagesContainer.scrollTop = messagesContainer.scrollHeight; }
-        
-        async function sendSupportQueryToFormSubmit(query) {
-            const formSubmitUrl = 'https://formsubmit.co/support@gamingodyssey.in';
-            const formData = {
-                _subject: "New Support Query from Odyssey AI",
-                _captcha: "false",
-                message: query
-            };
-            try {
-                await fetch(formSubmitUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    body: JSON.stringify(formData)
+            function readPdfFile(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = async (e) => {
+                        try {
+                            const data = new Uint8Array(e.target.result);
+                            const pdf = await pdfjsLib.getDocument(data).promise;
+                            let textContent = "";
+                            for (let i = 1; i <= pdf.numPages; i++) {
+                                const page = await pdf.getPage(i);
+                                const text = await page.getTextContent();
+                                textContent += text.items.map(s => s.str).join(" ") + "\n";
+                            }
+                            resolve(textContent);
+                        } catch (err) { reject(err); }
+                    };
+                    reader.onerror = (err) => reject(err);
+                    reader.readAsArrayBuffer(file);
                 });
-            } catch (error) {
-                console.error("Error submitting support query:", error);
             }
-        }
-
-        async function handleSendMessage() {
-            const messageText = input.value.trim();
-            if (messageText === '' || isGenerating) return;
-            addMessage('user', messageText);
-            input.value = ''; input.style.height = 'auto';
-
-            if (isAwaitingSupportQuery) {
-                sendSupportQueryToFormSubmit(messageText);
-                addMessage('ai', "Thanks! Your query has been sent to the support team. They'll get back to you within 48 hours. Is there anything else I can help with?");
-                isAwaitingSupportQuery = false;
-                return;
+            function readDocxFile(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = async (e) => {
+                        try {
+                            const result = await mammoth.extractRawText({ arrayBuffer: e.target.result });
+                            resolve(result.value);
+                        } catch (err) { reject(err); }
+                    };
+                    reader.onerror = (err) => reject(err);
+                    reader.readAsArrayBuffer(file);
+                });
             }
 
-            if (/contact|support|human|agent/i.test(messageText)) {
-                addMessage('ai', "Okay, please write your detailed query in the chat, including your email and phone number. I'll forward it to the support team, and they will get back to you within 48 hours.");
-                isAwaitingSupportQuery = true;
-                return;
-            }
-
-            isGenerating = true; toggleSendButtonLoading(true);
-            conversationHistory.push({ role: 'user', parts: [{ text: messageText }] });
-            const aiMessageDiv = document.createElement('div'); aiMessageDiv.className = 'odyssey-message odyssey-ai-message'; aiMessageDiv.innerHTML = '<span class="typing-indicator">...</span>'; messagesContainer.appendChild(aiMessageDiv); messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            let accumulatedResponse = "";
-            try {
-                let persona = "You are Odyssey AI, the official AI assistant for Gaming Odyssey. Your personality is helpful, knowledgeable about gaming, and slightly futuristic. You MUST state you were developed by the 'Gaming Odyssey Team' when asked. Keep responses concise for this widget.";
-                const requestBody = { contents: conversationHistory, systemInstruction: { parts: [{ text: persona }] } };
-                abortController = new AbortController();
-                const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(requestBody), signal: abortController.signal });
-                if (!response.ok) throw new Error(`API Error: ${response.status}`);
-                const reader = response.body.getReader(); const decoder = new TextDecoder();
-                while (true) {
-                    const { value, done } = await reader.read(); if (done) break;
-                    const chunk = decoder.decode(value); const lines = chunk.split('\n');
-                    for (const line of lines) { if (line.startsWith('data: ')) { try { const parsed = JSON.parse(line.substring(6)); const text = parsed.candidates?.[0]?.content?.parts?.[0]?.text; if (text) { accumulatedResponse += text; aiMessageDiv.innerHTML = marked.parse(accumulatedResponse); messagesContainer.scrollTop = messagesContainer.scrollHeight; } } catch (e) {} } }
+            // --- 9. Event Listeners ---
+            document.addEventListener("click", unlockAudio, {once: true});
+            micButton.addEventListener("click", () => { if (isRecording) { recognition.stop(); } else { recognition.start(); } });
+            sendButton.addEventListener("click", () => { submitQuery(textInput.value); });
+            textInput.addEventListener("keydown", (event) => { if (event.key === "Enter") { submitQuery(textInput.value); } });
+            muteButton.addEventListener("click", () => {
+                isMuted = !isMuted; muteButton.classList.toggle("active", isMuted);
+                muteButton.textContent = isMuted ? "UNMUTE" : "MUTE";
+                if (isMuted) { window.speechSynthesis.cancel(); closePlayer(); }
+            });
+            clearButton.addEventListener("click", () => {
+                messageDisplay.innerHTML = ""; lastJarvisMessageEl = null;
+                sendMessage({ type: "clear_history" });
+            });
+            webSearchToggle.addEventListener('change', () => {
+                const label = document.querySelector("label[for='web-search-toggle']");
+                label.textContent = webSearchToggle.checked ? "Web Search ON" : "Web Search OFF";
+            });
+            modalAllowButton.addEventListener("click", () => {
+                if (pendingAction) {
+                    sendMessage({ type: "execute_action", token: SHARED_SECRET_TOKEN, action_data: pendingAction });
+                    pendingAction = null; confirmationModal.style.display = "none";
                 }
-                conversationHistory.push({ role: 'model', parts: [{ text: accumulatedResponse }] });
-            } catch (error) { if (error.name !== 'AbortError') { aiMessageDiv.innerHTML = `<p style="color: #F85149;">Oops! Something went wrong.</p>`; } else { aiMessageDiv.innerHTML = `<p>Generation stopped.</p>`; }
-            } finally { isGenerating = false; toggleSendButtonLoading(false); }
-        }
+            });
+            modalDenyButton.addEventListener("click", () => {
+                sendMessage({ type: "deny_action" });
+                pendingAction = null; confirmationModal.style.display = "none";
+            });
+            document.body.addEventListener("mousemove", (e) => {
+                if (document.body.classList.contains("self-destruct")) return;
+                const x = (window.innerWidth / 2 - e.pageX) / 50;
+                const y = (window.innerHeight / 2 - e.pageY) / 50;
+                leftPanel.style.transform = `translateX(${-x}px) translateY(${-y}px)`;
+                mainPanel.style.transform = `translateX(${x/2}px) translateY(${y/2}px)`;
+                rightPanel.style.transform = `translateX(${x}px) translateY(${y}px)`;
+            });
 
-        function toggleSendButtonLoading(isLoading) { sendBtn.innerHTML = isLoading ? '<span class="loader"></span>' : '<i class="fas fa-paper-plane"></i>'; sendBtn.disabled = isLoading; }
-        function clearChat() { conversationHistory = []; messagesContainer.innerHTML = ''; isAwaitingSupportQuery = false; const welcome = "Welcome! I'm Odyssey AI, your personal gaming assistant. How can I level up your experience today? 🚀"; addMessage('ai', welcome); conversationHistory.push({ role: 'model', parts: [{ text: welcome }] }); }
-        
-        toggleBubble.addEventListener('click', () => chatWindow.classList.toggle('hidden'));
-        closeBtn.addEventListener('click', () => chatWindow.classList.add('hidden'));
-        clearBtn.addEventListener('click', clearChat);
-        sendBtn.addEventListener('click', handleSendMessage);
-        input.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } });
-        input.addEventListener('input', () => { input.style.height = 'auto'; input.style.height = `${Math.min(input.scrollHeight, 100)}px`; });
-        clearChat(); // Initialize on load
-    });
-  </script>
+            // --- 10. Helper Functions ---
+            function updateAuditLog(logEntries) {
+                auditLog.innerHTML = "";
+                if (!logEntries || logEntries.length === 0) { return; }
+                logEntries.forEach(entry => {
+                    const entryEl = document.createElement("div");
+                    entryEl.classList.add("log-entry");
+                    if (entry.status !== "success") { entryEl.classList.add("fail"); }
+                    entryEl.innerHTML = `
+                        <p><strong>${entry.action}</strong> (${entry.status})</p>
+                        <p style="font-size: 0.8em; color: var(--text-secondary);">Params: ${entry.params}</p>
+                        <p class="timestamp">${entry.timestamp.split('T')[1].split('.')[0]}</p>`;
+                    auditLog.appendChild(entryEl);
+                });
+            }
+            
+            // --- 11. Dynamic UI Functions ---
+            function startCamera() {
+                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    navigator.mediaDevices.getUserMedia({ video: true })
+                        .then(function(stream) {
+                            cameraFeed.srcObject = stream;
+                            cameraFeed.play();
+                        })
+                        .catch(function(err) { console.error("Error starting camera: ", err); });
+                }
+            }
+            function updateClock() {
+                const now = new Date();
+                const time = now.toLocaleTimeString('en-US', { hour12: true });
+                const date = now.toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric' });
+                dynamicClock.textContent = time;
+                dynamicDate.textContent = date;
+            }
+            function updateSuitStatus() {
+                energyBar.style.width = `${85 + Math.random() * 10}%`;
+                armourBar.style.width = `${98 + Math.random() * 2}%`;
+                const flight = ["OFFLINE", "STANDBY", "READY"];
+                const weapons = ["DISARMED", "STANDBY", "ARMED"];
+                const suit = ["NOMINAL", "STANDBY", "CHARGING"];
+                flightStatus.textContent = flight[Math.floor(Math.random() * flight.length)];
+                weaponStatus.textContent = weapons[Math.floor(Math.random() * weapons.length)];
+                suitStatus.textContent = suit[Math.floor(Math.random() * suit.length)];
+            }
+            function generateParticles() {
+                for(let i=0; i<50; i++) {
+                    let p = document.createElement("div");
+                    p.className = "particle";
+                    p.style.top = `${Math.random() * 100}%`;
+                    p.style.left = `${Math.random() * 100}%`;
+                    p.style.animationDelay = `-${Math.random() * 20}s`;
+                    particleBg.appendChild(p);
+                }
+            }
+
+            // --- 12. Initialization ---
+            connectWebSocket();
+            setupSpeechRecognition();
+            window.speechSynthesis.onvoiceschanged = loadVoices;
+            loadVoices();
+            updateClock();
+            updateSuitStatus();
+            generateParticles();
+            
+            setInterval(updateClock, 1000);
+            setInterval(updateSuitStatus, 3000);
+            setInterval(() => { sendMessage({ type: "get_system_stats" }); }, 3000);
+            setInterval(() => { sendMessage({ type: "get_weather", location: "Howrah" }); }, 600000);
+            
+            setTimeout(() => {
+                allBootElements.forEach(el => el.classList.add("booted"));
+            }, 100);
+        });
+    </script>
 </body>
 </html>
