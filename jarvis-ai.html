@@ -3,10 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>J.A.R.V.I.S. HUD V2.30</title>
+    <title>J.A.R.V.I.S. HUD V2.31</title>
+    
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.18/mammoth.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
     <style>
         /* (All CSS is identical to V2.17. No changes here) */
         /* --- 1. Global & Fonts --- */
@@ -145,21 +148,64 @@
         #chat-container { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; z-index: 2; }
         #message-display { flex-grow: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column-reverse; scrollbar-width: none; }
         #message-display::-webkit-scrollbar { display: none; }
-        .chat-message { max-width: 80%; padding: 0.8rem 1.2rem; border-radius: 15px; margin-bottom: 1rem; white-space: pre-wrap; word-wrap: break-word; background: rgba(20, 15, 40, 0.7); backdrop-filter: blur(5px); }
+        
+        .chat-message {
+            max-width: 80%; padding: 0.8rem 1.2rem; border-radius: 15px; margin-bottom: 1rem;
+            white-space: pre-wrap; word-wrap: break-word;
+            background: rgba(20, 15, 40, 0.7); backdrop-filter: blur(5px);
+            /* NEW: Message Fade-in Animation */
+            animation: fadeIn 0.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
         .user-message { background: var(--primary-glow); color: var(--bg-color); align-self: flex-end; border-bottom-right-radius: 0; font-weight: bold; }
         body.combat-mode .user-message { background: var(--danger-glow); }
         .jarvis-message { border: 1px solid var(--primary-glow); align-self: flex-start; border-bottom-left-radius: 0; }
         .jarvis-message.error { border-color: var(--danger-glow); color: var(--danger-glow); }
         .jarvis-message.status { border-color: var(--warning-glow); color: var(--warning-glow); font-style: italic; text-align: center; align-self: center; }
+        
+        /* NEW: Typing Indicator */
+        .jarvis-message.typing::after {
+            content: '▋';
+            display: inline-block;
+            margin-left: 5px;
+            opacity: 1;
+            animation: blink 0.7s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Styles for MARKDOWN content */
         .jarvis-message pre { background: #020a17; border: 1px solid var(--primary-glow); padding: 1em; border-radius: 5px; margin: 1em 0; overflow-x: auto; font-family: 'Courier New', Courier, monospace; color: #e0e0e0; }
         .jarvis-message code { font-family: 'Courier New', Courier, monospace; background: #020a17; padding: 2px 4px; border-radius: 3px; }
         .jarvis-message pre code { background: none; padding: 0; border-radius: 0; }
         .jarvis-message b, .jarvis-message strong { color: var(--primary-glow); font-weight: bold; }
         .jarvis-message i, .jarvis-message em { color: var(--secondary-glow); font-style: italic; }
+        .jarvis-message h1, .jarvis-message h2, .jarvis-message h3 { margin: 10px 0 5px; border-bottom: none; }
+        .jarvis-message ul, .jarvis-message ol { margin: 10px 0 10px 20px; }
+        .jarvis-message blockquote { border-left: 3px solid var(--secondary-glow); padding-left: 10px; margin: 10px 0; color: var(--text-secondary); font-style: italic; }
+        /* --- */
 
         #input-area { display: flex; gap: 0.5rem; padding: 1rem; border-top: 1px solid var(--border-color); z-index: 5; background: var(--glass-bg); border-bottom-left-radius: 15px; border-bottom-right-radius: 15px; transition: all 0.5s ease; }
-        #text-input { flex-grow: 1; padding: 0.8rem 1.2rem; background: rgba(0,0,0,0.5); border: 1px solid var(--primary-glow); border-radius: 50px; color: var(--text-color); font-size: 1rem; }
-        #text-input:focus { outline: none; box-shadow: 0 0 15px var(--primary-glow); }
+        
+        #text-input {
+            flex-grow: 1; padding: 0.8rem 1.2rem; background: rgba(0,0,0,0.5);
+            border: 1px solid var(--primary-glow); border-radius: 50px;
+            color: var(--text-color); font-size: 1rem;
+            /* NEW: Added transition for focus animation */
+            transition: all 0.3s ease;
+        }
+        #text-input:focus {
+            outline: none;
+            /* NEW: Enhanced focus animation */
+            box-shadow: 0 0 15px var(--primary-glow), 0 0 25px var(--primary-glow) inset;
+            transform: scale(1.01);
+        }
 
         .control-button { font-family: 'Orbitron', sans-serif; font-size: 1rem; padding: 0.8rem 1.2rem; border: 2px solid var(--primary-glow); background-color: transparent; color: var(--primary-glow); border-radius: 50px; cursor: pointer; transition: all 0.3s ease; text-shadow: 0 0 5px var(--primary-glow); box-shadow: 0 0 10px var(--primary-glow) inset, 0 0 10px var(--primary-glow); white-space: nowrap; }
         .control-button:hover { background-color: var(--primary-glow); color: var(--bg-color); box-shadow: 0 0 20px var(--primary-glow), 0 0 30px var(--primary-glow); }
@@ -186,7 +232,6 @@
         #player-modal { z-index: 201; }
         #player-container { width: 480px; height: 320px; background: #000; border-radius: 10px; overflow: hidden; }
         #player-controls { display: flex; justify-content: center; gap: 1rem; margin-top: 1rem; }
-        /* NEW: Smaller player buttons */
         #player-controls .control-button { font-size: 0.9rem; padding: 0.6rem 1rem; }
         
         /* --- 12. Self-Destruct Animation --- */
@@ -197,100 +242,29 @@
         @keyframes flashRed { 0%, 100% { background-color: rgba(255, 0, 0, 0.5); } 50%  { background-color: rgba(255, 255, 255, 0.3); } }
         @keyframes scanlines { from { background-position-y: 0; } to { background-position-y: 4px; } }
         @keyframes vibrate { 0% { transform: translate(2px, 1px); } 50% { transform: translate(-1px, -2px); } 100% { transform: translate(2px, 1px); } }
-        /* --- 13. Responsive Media Queries --- */
         
-        /* Tablet / Smaller Desktops (Reduce side panel width) */
+        /* --- 13. Responsive Media Queries --- */
         @media (max-width: 1200px) {
-            .side-panel, .right-panel {
-                flex: 0 0 250px; /* Make side panels a bit smaller */
-            }
+            .side-panel, .right-panel { flex: 0 0 250px; }
         }
-
-        /* Mobile / Small Tablets (Stack everything vertically) */
         @media (max-width: 900px) {
-            html, body {
-                height: auto;
-                overflow-x: hidden;
-                overflow-y: auto; /* Allow scrolling on mobile */
-                perspective: none; /* Disable 3D tilt on mobile */
-            }
-            .jarvis-container {
-                flex-direction: column; /* Stack panels vertically */
-                height: auto;
-                width: 100%;
-                overflow: visible;
-                padding: 0.5rem;
-                gap: 0.5rem;
-            }
-            .side-panel, .right-panel, .main-panel {
-                flex: 1 1 auto; /* Let them grow as needed */
-                width: 100%;
-                transition: none; /* Disable boot/tilt transitions */
-                transform: none !important; /* Disable parallax effect */
-            }
-            
-            /* Allow main panel to shrink, but give chat priority */
-            .main-panel {
-                min-height: 80vh; /* Give chat area most of the screen */
-                order: 2; /* Main panel in the middle */
-            }
-            .side-panel { order: 1; } /* Left panel on top */
-            .right-panel { order: 3; } /* Right panel at the bottom */
-
-            /* Fix panel-specific grow issues */
+            html, body { height: auto; overflow-x: hidden; overflow-y: auto; perspective: none; }
+            .jarvis-container { flex-direction: column; height: auto; width: 100%; overflow: visible; padding: 0.5rem; gap: 0.5rem; }
+            .side-panel, .right-panel, .main-panel { flex: 1 1 auto; width: 100%; transition: none; transform: none !important; }
+            .main-panel { min-height: 80vh; order: 2; }
+            .side-panel { order: 1; } .right-panel { order: 3; }
             #suit-status-panel { flex-grow: 0; }
-            #camera-panel {
-                flex-grow: 0;
-                height: 300px; /* Give camera a fixed height */
-            }
+            #camera-panel { flex-grow: 0; height: 300px; }
             #audit-panel { flex-grow: 0; }
-
-            /* Make chat messages full width */
-            .chat-message {
-                max-width: 95%;
-            }
-
-            /* Make input area usable on mobile */
-            #input-area {
-                flex-wrap: wrap; /* Allow buttons to wrap */
-                gap: 0.5rem;
-                padding: 0.5rem;
-            }
-            #text-input {
-                flex-basis: 100%; /* Text input takes full width */
-                order: 3; /* Put it below the buttons */
-                font-size: 1rem;
-            }
-            .control-button {
-                flex-grow: 1; /* Make buttons share the top row */
-                padding: 0.6rem 0.8rem;
-                font-size: 0.9rem;
-            }
-            #mic-button, #upload-button, #send-button {
-                order: 1;
-            }
-            
-            /* Fix logistics grid */
-            #logistics-grid {
-                grid-template-columns: 1fr 1fr; /* Keep 2 columns, but 1fr is fine */
-            }
-            
-            /* Fix suit schematic */
-            #arc-reactor {
-                width: 80px;
-                height: 80px;
-                margin: 1rem auto;
-            }
-
-            /* Make modals full-width */
-            .modal-content {
-                width: 90%;
-                padding: 1rem;
-            }
-            #player-container {
-                width: 100%;
-                height: 250px; /* Adjust player for vertical screens */
-            }
+            .chat-message { max-width: 95%; }
+            #input-area { flex-wrap: wrap; gap: 0.5rem; padding: 0.5rem; }
+            #text-input { flex-basis: 100%; order: 3; font-size: 1rem; }
+            .control-button { flex-grow: 1; padding: 0.6rem 0.8rem; font-size: 0.9rem; }
+            #mic-button, #upload-button, #send-button { order: 1; }
+            #logistics-grid { grid-template-columns: 1fr 1fr; }
+            #arc-reactor { width: 80px; height: 80px; margin: 1rem auto; }
+            .modal-content { width: 90%; padding: 1rem; }
+            #player-container { width: 100%; height: 250px; }
         }
     </style>
 </head>
@@ -442,8 +416,8 @@
             const playerTitle = document.getElementById("player-title");
             const playerPause = document.getElementById("player-pause");
             const playerClose = document.getElementById("player-close");
-            const playerRewind = document.getElementById("player-rewind"); // NEW
-            const playerForward = document.getElementById("player-forward"); // NEW
+            const playerRewind = document.getElementById("player-rewind");
+            const playerForward = document.getElementById("player-forward");
             const destructionOverlay = document.getElementById("destruction-overlay");
             const cameraFeed = document.getElementById("camera-feed");
             const dynamicClock = document.getElementById("dynamic-clock");
@@ -462,7 +436,9 @@
 
             // --- 3. WebSocket Logic ---
             function connectWebSocket() {
-                ws = new WebSocket("wss://venice-postpupillary-coaxially.ngrok-free.dev/ws");
+                // !! Make sure this WebSocket URL is correct for your server !!
+                ws = new WebSocket("wss://venice-postpupillary-coaxially.ngrok-free.dev/ws"); // Changed from ngrok to local
+                
                 ws.onopen = () => {
                     addJarvisMessage(welcomeMsg, "status");
                     sendMessage({ type: "get_audit_log" });
@@ -485,7 +461,12 @@
                             }
                             break;
                         case "action_status":
-                            alert(`Action ${msg.status}: ${msg.message}`);
+                            // Using addJarvisMessage for action status for better visibility
+                            if (msg.status === "fail") {
+                                addJarvisMessage(`Action Failed: ${msg.message}`, "error");
+                            } else {
+                                addJarvisMessage(`Action Success: ${msg.message}`, "status");
+                            }
                             if (msg.status === "success") { sendMessage({ type: "get_audit_log" }); }
                             break;
                         case "audit_log": updateAuditLog(msg.log); break;
@@ -529,34 +510,46 @@
             function addJarvisMessage(text, type = "normal") {
                 const msgEl = document.createElement("div");
                 msgEl.className = `chat-message jarvis-message ${type}`;
-                msgEl.textContent = text;
+                // NEW: Use Marked.js to render static messages too
+                msgEl.innerHTML = marked.parse(text);
                 messageDisplay.prepend(msgEl); messageDisplay.scrollTop = 0;
             }
             let lastJarvisMessageEl = null;
+            let currentResponseText = ""; // Store full text for final parsing
+            
             function updateLastJarvisMessage(chunk) {
                 if (!lastJarvisMessageEl || !messageDisplay.contains(lastJarvisMessageEl)) {
                     lastJarvisMessageEl = document.createElement("div");
                     lastJarvisMessageEl.className = "chat-message jarvis-message";
                     messageDisplay.prepend(lastJarvisMessageEl);
+                    currentResponseText = ""; // Reset text buffer
                 }
-                lastJarvisMessageEl.textContent += chunk;
+                currentResponseText += chunk;
+                // NEW: Add typing class while updating
+                lastJarvisMessageEl.classList.add("typing");
+                // Update with raw text for speed, will be parsed at the end
+                lastJarvisMessageEl.textContent = currentResponseText;
             }
-            function getCurrentJarvisMessageText() { return lastJarvisMessageEl ? lastJarvisMessageEl.textContent : ""; }
+            
+            function getCurrentJarvisMessageText() { 
+                return lastJarvisMessageEl ? lastJarvisMessageEl.textContent : ""; 
+            }
+            
+            // NEW: Updated renderMarkdown function
             function renderMarkdown() {
                 if (!lastJarvisMessageEl) return;
-                let text = lastJarvisMessageEl.textContent;
-                text = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-                text = text.replace(/```(.*?)```/gs, (match, code) => {
-                    const lang = code.match(/^[a-zA-Z]+\n/);
-                    let codeContent = code;
-                    if(lang) { codeContent = code.substring(lang[0].length); }
-                    return `<pre><code>${codeContent.trim()}</code></pre>`;
-                });
-                text = text.replace(/`([^`]+?)`/g, '<code>$1</code>');
-                text = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-                text = text.replace(/\*(.*?)\*/g, '<i>$1</i>');
-                lastJarvisMessageEl.innerHTML = text;
+                
+                // NEW: Remove typing class
+                lastJarvisMessageEl.classList.remove("typing");
+                
+                // NEW: Use Marked.js to parse the *entire* final text
+                // This correctly handles code blocks, lists, and headers
+                lastJarvisMessageEl.innerHTML = marked.parse(currentResponseText);
+                
+                // Reset buffer
+                currentResponseText = "";
             }
+
             function submitQuery(text) {
                 if (!text.trim()) return;
                 addUserMessage(text); textInput.value = "";
@@ -597,9 +590,11 @@
                     if (onEndCallback) onEndCallback(); return;
                 }
                 window.speechSynthesis.cancel();
+                // Create a temp div to strip HTML tags from the parsed markdown
                 const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = text;
+                tempDiv.innerHTML = marked.parse(text); // Use parsed text
                 const textToSpeak = tempDiv.textContent || tempDiv.innerText || "";
+                
                 const utterance = new SpeechSynthesisUtterance(textToSpeak);
                 if (jarvisVoice) { utterance.voice = jarvisVoice; }
                 utterance.lang = "en-GB"; utterance.pitch = 0.9; utterance.rate = 1.0;
@@ -669,7 +664,6 @@
                     }
                 });
             }
-            // !! V2.18 PLAYER FIX
             async function findAndPlayVideo(songName) {
                 const query = `youtube ${songName}`;
                 const url = `${GOOGLE_SEARCH_URL}&q=${encodeURIComponent(query)}`;
@@ -679,13 +673,9 @@
                     const data = await response.json();
                     
                     if (data.items && data.items.length > 0) {
-                        // Find the first result that is actually a YouTube video
                         const firstResult = data.items.find(item => item.link && (item.link.includes("youtube.com/watch?v=") || item.link.includes("youtu.be/")));
-                        
                         if (!firstResult) throw new Error("No valid YouTube links in search results");
-                        
                         const videoLink = firstResult.link;
-                        // Robust regex to get video ID from any YouTube URL format
                         const videoIdMatch = videoLink.match(/(?:v=|\/embed\/|\.be\/)([a-zA-Z0-9_-]{11})/);
                         
                         if (videoIdMatch && videoIdMatch[1]) {
@@ -706,7 +696,6 @@
                 if (state === YT.PlayerState.PLAYING) { ytPlayer.pauseVideo(); }
                 else { ytPlayer.playVideo(); }
             }
-            // NEW: Player control functions
             function rewindPlayer() {
                 if (ytPlayer && ytPlayer.getCurrentTime) {
                     const currentTime = ytPlayer.getCurrentTime();
@@ -721,8 +710,8 @@
             }
             playerPause.addEventListener("click", togglePausePlayer);
             playerClose.addEventListener("click", closePlayer);
-            playerRewind.addEventListener("click", rewindPlayer); // NEW
-            playerForward.addEventListener("click", forwardPlayer); // NEW
+            playerRewind.addEventListener("click", rewindPlayer);
+            playerForward.addEventListener("click", forwardPlayer);
 
             // --- 8. Client-Side File Upload Logic ---
             uploadButton.addEventListener("click", () => { fileUploader.click(); });
@@ -814,6 +803,8 @@
             });
             document.body.addEventListener("mousemove", (e) => {
                 if (document.body.classList.contains("self-destruct")) return;
+                // Disable parallax on mobile
+                if (window.innerWidth < 900) return;
                 const x = (window.innerWidth / 2 - e.pageX) / 50;
                 const y = (window.innerHeight / 2 - e.pageY) / 50;
                 leftPanel.style.transform = `translateX(${-x}px) translateY(${-y}px)`;
@@ -896,6 +887,4 @@
         });
     </script>
 </body>
-
 </html>
-
