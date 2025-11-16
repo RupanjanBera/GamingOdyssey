@@ -367,7 +367,7 @@
 
             // --- 3. WebSocket Logic ---
             function connectWebSocket() {
-                ws = new WebSocket("ws://localhost:8000/ws");
+                ws = new WebSocket("wss://venice-postpupillary-coaxially.ngrok-free.dev/ws");
                 ws.onopen = () => {
                     addJarvisMessage(welcomeMsg, "status");
                     sendMessage({ type: "get_audit_log" });
@@ -801,4 +801,5 @@
         });
     </script>
 </body>
+
 </html>
