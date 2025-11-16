@@ -197,6 +197,101 @@
         @keyframes flashRed { 0%, 100% { background-color: rgba(255, 0, 0, 0.5); } 50%  { background-color: rgba(255, 255, 255, 0.3); } }
         @keyframes scanlines { from { background-position-y: 0; } to { background-position-y: 4px; } }
         @keyframes vibrate { 0% { transform: translate(2px, 1px); } 50% { transform: translate(-1px, -2px); } 100% { transform: translate(2px, 1px); } }
+        /* --- 13. Responsive Media Queries --- */
+        
+        /* Tablet / Smaller Desktops (Reduce side panel width) */
+        @media (max-width: 1200px) {
+            .side-panel, .right-panel {
+                flex: 0 0 250px; /* Make side panels a bit smaller */
+            }
+        }
+
+        /* Mobile / Small Tablets (Stack everything vertically) */
+        @media (max-width: 900px) {
+            html, body {
+                height: auto;
+                overflow-x: hidden;
+                overflow-y: auto; /* Allow scrolling on mobile */
+                perspective: none; /* Disable 3D tilt on mobile */
+            }
+            .jarvis-container {
+                flex-direction: column; /* Stack panels vertically */
+                height: auto;
+                width: 100%;
+                overflow: visible;
+                padding: 0.5rem;
+                gap: 0.5rem;
+            }
+            .side-panel, .right-panel, .main-panel {
+                flex: 1 1 auto; /* Let them grow as needed */
+                width: 100%;
+                transition: none; /* Disable boot/tilt transitions */
+                transform: none !important; /* Disable parallax effect */
+            }
+            
+            /* Allow main panel to shrink, but give chat priority */
+            .main-panel {
+                min-height: 80vh; /* Give chat area most of the screen */
+                order: 2; /* Main panel in the middle */
+            }
+            .side-panel { order: 1; } /* Left panel on top */
+            .right-panel { order: 3; } /* Right panel at the bottom */
+
+            /* Fix panel-specific grow issues */
+            #suit-status-panel { flex-grow: 0; }
+            #camera-panel {
+                flex-grow: 0;
+                height: 300px; /* Give camera a fixed height */
+            }
+            #audit-panel { flex-grow: 0; }
+
+            /* Make chat messages full width */
+            .chat-message {
+                max-width: 95%;
+            }
+
+            /* Make input area usable on mobile */
+            #input-area {
+                flex-wrap: wrap; /* Allow buttons to wrap */
+                gap: 0.5rem;
+                padding: 0.5rem;
+            }
+            #text-input {
+                flex-basis: 100%; /* Text input takes full width */
+                order: 3; /* Put it below the buttons */
+                font-size: 1rem;
+            }
+            .control-button {
+                flex-grow: 1; /* Make buttons share the top row */
+                padding: 0.6rem 0.8rem;
+                font-size: 0.9rem;
+            }
+            #mic-button, #upload-button, #send-button {
+                order: 1;
+            }
+            
+            /* Fix logistics grid */
+            #logistics-grid {
+                grid-template-columns: 1fr 1fr; /* Keep 2 columns, but 1fr is fine */
+            }
+            
+            /* Fix suit schematic */
+            #arc-reactor {
+                width: 80px;
+                height: 80px;
+                margin: 1rem auto;
+            }
+
+            /* Make modals full-width */
+            .modal-content {
+                width: 90%;
+                padding: 1rem;
+            }
+            #player-container {
+                width: 100%;
+                height: 250px; /* Adjust player for vertical screens */
+            }
+        }
     </style>
 </head>
 <body>
@@ -803,3 +898,4 @@
 </body>
 
 </html>
+
