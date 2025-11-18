@@ -268,6 +268,24 @@
             }
         }
 
+        /* Audio notification style */
+        .audio-notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ff9eb1;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            z-index: 10000;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            display: none;
+        }
+
         @media (max-width: 768px) {
             h1 {
                 font-size: 2.5rem;
@@ -297,6 +315,11 @@
     <div class="hearts" id="hearts-container"></div>
     <div id="sparkles-container"></div>
 
+    <!-- Audio notification -->
+    <div class="audio-notification" id="audio-notification">
+        Click anywhere to enable background music ❤️
+    </div>
+
     <div class="container">
         <!-- Opening Title -->
         <section id="title-section">
@@ -322,7 +345,7 @@
             <h2>With All My Heart</h2>
             <p>I know I don't always get things right, and sometimes my actions don't show how much I truly value you.</p>
             <div class="highlight">
-                <p>"Although I know that I mess up a lot of times… you know na that I'm not perfect… but I’ll always try and improve myself for you. I’ll never disappoint you ever again, I promise. Will you forgive me please? 🥺🫂"</p>
+                <p>"Although I know that I mess up a lot of times… you know na that I'm not perfect… but I'll always try and improve myself for you. I'll never disappoint you ever again, I promise. Will you forgive me please? 🥺🫂"</p>
             </div>
             <p>Your happiness means everything to me, and I will always strive to be better for you.</p>
         </section>
@@ -390,10 +413,11 @@
     </div>
 
     <!-- Background Music -->
-   <audio id="bg-music" loop>
-    <source src="https://gamingodyssey.in/thousandyears.mp3" type="audio/mpeg">
-</audio>
-   <script>
+    <audio id="bg-music" loop>
+        <source src="https://gamingodyssey.in/thousandyears.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
         // Create floating hearts
         function createHearts() {
             const heartsContainer = document.getElementById('hearts-container');
@@ -433,17 +457,37 @@
             }
         }
         
-        // Start background music (soft volume)
+        // Start background music (with autoplay handling)
         function startBackgroundMusic() {
             const audio = document.getElementById('bg-music');
             audio.volume = 0.2; // Set volume to 20%
+            const notification = document.getElementById('audio-notification');
             
-            // Autoplay with user interaction
-            document.addEventListener('click', function() {
-                audio.play().catch(error => {
+            // Try to play the audio immediately
+            const playPromise = audio.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    // Audio started playing successfully
+                    console.log('Audio is playing');
+                }).catch(error => {
+                    // Autoplay was prevented, show notification
                     console.log('Autoplay prevented:', error);
+                    notification.style.display = 'block';
+                    
+                    // Try to play when user interacts with the page
+                    const playOnInteraction = () => {
+                        audio.play().then(() => {
+                            notification.style.display = 'none';
+                            document.removeEventListener('click', playOnInteraction);
+                        }).catch(e => {
+                            console.log('Still waiting for user interaction');
+                        });
+                    };
+                    
+                    document.addEventListener('click', playOnInteraction);
                 });
-            }, {once: true});
+            }
         }
         
         // Animate sections to appear one by one
@@ -538,6 +582,3 @@
     </script>
 </body>
 </html>
-
-
-
