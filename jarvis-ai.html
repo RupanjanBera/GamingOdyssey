@@ -650,20 +650,14 @@
                 }
             }
 
-            // --- 7. YouTube Player ---
+// --- 7. YouTube Player (FIXED) ---
+            // We define the variable but DO NOT initialize it immediately while hidden
+            let apiReady = false;
+            
             window.onYouTubeIframeAPIReady = function() {
-                ytPlayer = new YT.Player('player-container', {
-                    height: '320', width: '480', videoId: '',
-                    playerVars: { 'autoplay': 1, 'controls': 0, 'rel': 0 },
-                    events: {
-                        'onReady': (event) => { event.target.playVideo(); },
-                        'onStateChange': (event) => {
-                            if (event.data === YT.PlayerState.PLAYING) { playerPause.textContent = "PAUSE"; }
-                            if (event.data === YT.PlayerState.PAUSED) { playerPause.textContent = "PLAY"; }
-                        }
-                    }
-                });
+                apiReady = true;
             }
+
             async function findAndPlayVideo(songName) {
                 const query = `youtube ${songName}`;
                 const url = `${GOOGLE_SEARCH_URL}&q=${encodeURIComponent(query)}`;
@@ -684,30 +678,68 @@
                     } else { addJarvisMessage(`Error: No YouTube results found for "${songName}".`, "error"); }
                 } catch (err) { addJarvisMessage(`Error searching for video: ${err.message}`, "error"); }
             }
+
             function playVideoById(videoId, title) {
                 playerTitle.textContent = title;
+                // 1. SHOW the modal FIRST so the element is visible to the DOM
                 playerModal.style.display = "flex";
-                ytPlayer.loadVideoById(videoId);
-                ytPlayer.playVideo();
+
+                // 2. Initialize or Load the player only after the element is visible
+                if (!ytPlayer) {
+                    ytPlayer = new YT.Player('player-container', {
+                        height: '320',
+                        width: '480',
+                        videoId: videoId,
+                        playerVars: { 
+                            'autoplay': 1, 
+                            'controls': 1, // Changed to 1 so you can manually scrub if needed
+                            'rel': 0,
+                            'origin': window.location.origin // Important for API security
+                        },
+                        events: {
+                            'onReady': (event) => { event.target.playVideo(); },
+                            'onStateChange': (event) => {
+                                if (event.data === YT.PlayerState.PLAYING) { playerPause.textContent = "PAUSE"; }
+                                if (event.data === YT.PlayerState.PAUSED) { playerPause.textContent = "PLAY"; }
+                            }
+                        }
+                    });
+                } else {
+                    // If player already exists, just load the new video
+                    ytPlayer.loadVideoById(videoId);
+                    // Ensure it plays
+                    ytPlayer.playVideo();
+                }
             }
-            function closePlayer() { ytPlayer.stopVideo(); playerModal.style.display = "none"; }
+
+            function closePlayer() { 
+                if (ytPlayer && typeof ytPlayer.stopVideo === 'function') {
+                    ytPlayer.stopVideo(); 
+                }
+                playerModal.style.display = "none"; 
+            }
+
             function togglePausePlayer() {
+                if (!ytPlayer) return;
                 const state = ytPlayer.getPlayerState();
                 if (state === YT.PlayerState.PLAYING) { ytPlayer.pauseVideo(); }
                 else { ytPlayer.playVideo(); }
             }
+            
             function rewindPlayer() {
                 if (ytPlayer && ytPlayer.getCurrentTime) {
                     const currentTime = ytPlayer.getCurrentTime();
                     ytPlayer.seekTo(currentTime - 10, true);
                 }
             }
+            
             function forwardPlayer() {
                 if (ytPlayer && ytPlayer.getCurrentTime) {
                     const currentTime = ytPlayer.getCurrentTime();
                     ytPlayer.seekTo(currentTime + 10, true);
                 }
             }
+
             playerPause.addEventListener("click", togglePausePlayer);
             playerClose.addEventListener("click", closePlayer);
             playerRewind.addEventListener("click", rewindPlayer);
@@ -888,3 +920,4 @@
     </script>
 </body>
 </html>
+
