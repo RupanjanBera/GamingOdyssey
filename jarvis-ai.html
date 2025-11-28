@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>J.A.R.V.I.S. HUD V2.33 [RESPONSIVE]</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>J.A.R.V.I.S. HUD V2.31</title>
     
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
@@ -11,6 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
     <style>
+        /* (All CSS is identical to V2.17. No changes here) */
         /* --- 1. Global & Fonts --- */
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400&display=swap');
         :root {
@@ -19,639 +20,903 @@
             --bg-color: #0d0a1f; --glass-bg: rgba(20, 15, 40, 0.7);
             --text-color: #e0e0e0; --text-secondary: #a0a0c0;
             --border-color: rgba(0, 255, 255, 0.3);
-            --header-height: 0px; /* 0 on desktop, 60 on mobile */
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; }
-        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         html, body {
             height: 100%; width: 100%; font-family: 'Roboto', sans-serif;
             background-color: var(--bg-color); color: var(--text-color);
-            overflow: hidden; 
+            overflow: hidden;
             background-image: linear-gradient(45deg, #1a0b2a, #0d0a1f);
+            perspective: 1000px;
         }
         
-        /* --- 2. Backgrounds --- */
-        #particle-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none;}
+        /* --- 2. Backgrounds & Overlays --- */
+        #particle-background {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; overflow: hidden;
+        }
         .particle {
             position: absolute; background: var(--primary-glow);
             border-radius: 50%; opacity: 0.5; width: 2px; height: 2px;
             box-shadow: 0 0 5px var(--primary-glow);
             animation: move 20s linear infinite;
         }
-        @keyframes move { 0% { transform: translateY(0) translateX(0); opacity: 0.5; } 100% { transform: translateY(-100vh) translateX(10vw); opacity: 0; } }
+        @keyframes move {
+            0% { transform: translateY(0) translateX(0); opacity: 0.5; }
+            100% { transform: translateY(-100vh) translateX(10vw); opacity: 0; }
+        }
         #scanlines {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1; pointer-events: none;
             background: linear-gradient(0deg, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0.03) 50%, rgba(255, 255, 255, 0) 50%);
             background-size: 100% 3px;
+            animation: scanlines 5s linear infinite;
         }
 
-        /* --- 3. Mobile Header (Hidden on Desktop) --- */
-        #mobile-header {
-            display: none; justify-content: space-between; align-items: center;
-            padding: 0 15px; height: 60px; width: 100%;
-            background: rgba(13, 10, 31, 0.95); border-bottom: 1px solid var(--primary-glow);
-            position: fixed; top: 0; left: 0; z-index: 100; backdrop-filter: blur(10px);
-        }
-        .header-btn {
-            background: transparent; border: 1px solid var(--primary-glow); color: var(--primary-glow);
-            padding: 8px 12px; border-radius: 5px; font-family: 'Orbitron'; font-size: 0.8rem;
-        }
-        #mobile-title { font-family: 'Orbitron'; font-weight: bold; color: var(--primary-glow); letter-spacing: 2px; }
-
-        /* --- 4. Main Layout --- */
-        .jarvis-container {
-            display: flex; height: 100vh; width: 100vw;
-            padding: 1rem; gap: 1rem; position: relative;
-            transition: all 0.3s ease;
-        }
-
-        /* Side Panels (Left & Right) */
-        .side-panel, .right-panel {
-            flex: 0 0 300px; display: flex; flex-direction: column; gap: 1rem; z-index: 10;
-            transition: transform 0.3s ease;
-        }
-
-        /* Main Center Panel */
-        .main-panel {
-            flex-grow: 1; display: flex; flex-direction: column;
-            overflow: hidden; position: relative; z-index: 5;
-        }
-
-        /* HUD Panels (The glass boxes) */
+        /* --- 3. HUD Panels & Boot Sequence --- */
         .hud-panel {
             background: var(--glass-bg); border: 1px solid var(--border-color);
-            border-radius: 15px; backdrop-filter: blur(10px); padding: 1rem;
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.1) inset;
-            display: flex; flex-direction: column;
+            border-radius: 15px; backdrop-filter: blur(10px);
+            padding: 1rem; box-shadow: 0 0 20px rgba(0, 255, 255, 0.2) inset;
+            transition: all 0.5s ease; position: relative; overflow: hidden;
+            opacity: 0; transform: translateY(20px) scale(0.98);
+            animation: flicker 10s linear infinite;
         }
+        .hud-panel::before, .hud-panel::after {
+            content: ''; position: absolute; width: 2px; height: 0;
+            background: var(--primary-glow); box-shadow: 0 0 10px var(--primary-glow);
+            animation: scan-border 4s linear infinite;
+        }
+        .hud-panel::before { top: 0; left: 0; }
+        .hud-panel::after { bottom: 0; right: 0; animation-delay: 2s; }
+        @keyframes scan-border { 0% { height: 0; } 50% { height: 100%; } 100% { height: 0; opacity: 0; } }
+        @keyframes flicker {
+            0%, 100% { opacity: 1; } 50.0% { opacity: 1; } 50.1% { opacity: 0.9; }
+            50.2% { opacity: 1; } 50.3% { opacity: 0.95; } 50.4% { opacity: 1; }
+        }
+        .booted { opacity: 1; transform: translateY(0) scale(1); }
+
+        h1, h2, h3, h4 { font-family: 'Orbitron', sans-serif; color: var(--primary-glow); transition: all 0.5s ease; }
+        h3 { border-bottom: 1px solid var(--border-color); padding-bottom: 5px; margin-bottom: 10px; }
+        h4 { color: var(--text-secondary); margin-top: 10px; font-size: 0.9rem; }
         
-        /* Headers & Typography */
-        h3 { font-family: 'Orbitron'; color: var(--primary-glow); border-bottom: 1px solid var(--border-color); padding-bottom: 5px; margin-bottom: 10px; font-size: 1.1rem; }
-        h4 { color: var(--text-secondary); margin-top: 10px; font-size: 0.8rem; font-family: 'Orbitron'; }
+        #main-title {
+            font-size: 2.5rem; text-align: center;
+            animation: glitch 5s linear infinite;
+        }
+        @keyframes glitch {
+            0%, 100% { text-shadow: 0 0 10px var(--primary-glow); }
+            49% { text-shadow: 0 0 10px var(--primary-glow); }
+            50% { text-shadow: 2px 2px 10px var(--danger-glow), -2px -2px 10px var(--secondary-glow); }
+            51% { text-shadow: 0 0 10px var(--primary-glow); }
+        }
 
-        /* --- 5. Suit & Status Graphics --- */
-        #suit-schematic { position: relative; display: flex; flex-direction: column; align-items: center; margin-bottom: 1rem; height: 160px; justify-content: center; }
-        #suit-svg { width: 120px; opacity: 0.4; position: absolute; z-index: 1; }
-        #suit-svg path { stroke: var(--primary-glow); stroke-width: 1; fill: none; filter: drop-shadow(0 0 5px var(--primary-glow)); }
-        #arc-reactor {
-            width: 70px; height: 70px; border-radius: 50%; border: 2px solid var(--primary-glow);
-            background: radial-gradient(circle, var(--primary-glow) 0%, rgba(0,0,0,0) 60%);
-            box-shadow: 0 0 15px var(--primary-glow); z-index: 2; margin-top: 30px;
-            animation: pulse 2s infinite ease-in-out;
+        /* --- 4. Combat Mode Theme --- */
+        body.combat-mode {
+            --primary-glow: #ff2200; --border-color: rgba(255, 34, 0, 0.3);
+            --glass-bg: rgba(40, 15, 20, 0.7);
         }
-        .status-bar { width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin-top: 5px; overflow: hidden; }
-        .status-bar-inner { height: 100%; background: var(--primary-glow); width: 0%; transition: width 0.5s ease; box-shadow: 0 0 5px var(--primary-glow); }
-        .status-text { display: flex; justify-content: space-between; font-size: 0.8rem; margin-top: 5px; }
+        body.combat-mode .hud-panel { box-shadow: 0 0 20px rgba(255, 34, 0, 0.2) inset; }
+        body.combat-mode .status-item, body.combat-mode .jarvis-message, body.combat-mode #text-input { border-color: var(--danger-glow); }
+        body.combat-mode .control-button { border-color: var(--danger-glow); color: var(--danger-glow); text-shadow: 0 0 5px var(--danger-glow); box-shadow: 0 0 10px var(--danger-glow) inset, 0 0 10px var(--danger-glow); }
+        body.combat-mode .control-button:hover { background-color: var(--danger-glow); color: var(--bg-color); }
+        body.combat-mode .web-toggle { border-color: var(--danger-glow); background: rgba(255, 34, 0, 0.1); }
+        body.combat-mode .web-toggle label { color: var(--danger-glow); }
+        body.combat-mode .status-bar-inner { background: var(--danger-glow); box-shadow: 0 0 10px var(--danger-glow); }
+        body.combat-mode #arc-reactor, body.combat-mode #suit-svg path { --primary-glow: var(--danger-glow); }
 
-        /* --- 6. Chat Area & Animations --- */
-        #core-container {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            display: flex; justify-content: center; align-items: center; pointer-events: none; z-index: 0;
-        }
-        #web-core {
-            width: 300px; height: 300px; border-radius: 50%;
-            background: radial-gradient(circle, rgba(0, 255, 255, 0.1) 0%, rgba(0,0,0,0) 70%);
-            box-shadow: 0 0 60px rgba(0, 255, 255, 0.1); opacity: 0.3; transition: all 0.5s ease;
-        }
-        #web-core.listening { opacity: 0.8; box-shadow: 0 0 90px var(--primary-glow); transform: scale(1.1); border: 1px solid var(--primary-glow); }
+        /* --- 5. Main Layout --- */
+        .jarvis-container { display: flex; height: 100vh; width: 100vw; padding: 1rem; gap: 1rem; }
+        .side-panel { flex: 0 0 300px; display: flex; flex-direction: column; gap: 1rem; z-index: 10; transition: transform 0.1s ease-out; }
+        .main-panel { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; transition: transform 0.1s ease-out; }
+        .right-panel { flex: 0 0 300px; display: flex; flex-direction: column; gap: 1rem; z-index: 10; transition: transform 0.1s ease-out; }
 
-        #chat-container { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; z-index: 2; height: 100%; }
-        #message-display {
-            flex-grow: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column-reverse;
-            scrollbar-width: thin; scrollbar-color: var(--primary-glow) transparent;
-        }
+        /* --- 6. Left Panel (Suit Status) --- */
+        #suit-status-panel { flex-grow: 1; display: flex; flex-direction: column; }
+        #suit-schematic { position: relative; display: flex; flex-direction: column; align-items: center; margin-bottom: 1rem; }
+        #suit-svg { width: 100%; opacity: 0.3; position: absolute; top: 50px; z-index: 1; }
+        #suit-svg path { stroke: var(--primary-glow); stroke-width: 0.5; fill: none; filter: drop-shadow(0 0 5px var(--primary-glow)); transition: all 0.5s ease; }
+        #arc-reactor { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--primary-glow); background: radial-gradient(circle, var(--primary-glow) 0%, rgba(0,0,0,0) 60%); box-shadow: 0 0 20px var(--primary-glow), 0 0 40px var(--primary-glow), 0 0 60px var(--primary-glow) inset; margin: 1.5rem auto; animation: pulse 2s infinite ease-in-out; transition: all 0.5s ease; z-index: 2; }
+        .status-bar { width: 100%; height: 20px; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); border-radius: 5px; padding: 2px; z-index: 2; }
+        .status-bar-inner { height: 100%; width: 90%; background: var(--primary-glow); border-radius: 3px; box-shadow: 0 0 10px var(--primary-glow); transition: all 0.5s ease; }
+        .status-text { display: flex; justify-content: space-between; font-size: 0.9rem; margin-top: 5px; z-index: 2; }
+        .status-text span:first-child { color: var(--text-secondary); }
+        .status-text span:last-child { font-weight: bold; }
+
+        /* --- 7. Right Panel (System & Logistics) --- */
+        #logistics-panel { flex-shrink: 0; }
+        #dynamic-clock { font-size: 1.5rem; text-align: center; font-family: 'Orbitron'; }
+        #dynamic-date { font-size: 0.9rem; text-align: center; color: var(--text-secondary); }
+        #logistics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        #weather-temp { font-size: 1.5rem; font-family: 'Orbitron'; }
+        #weather-desc { font-weight: bold; }
+        #camera-panel { flex-grow: 1; display: flex; flex-direction: column; padding: 0; }
+        #camera-feed { width: 100%; height: 100%; object-fit: cover; border-radius: 15px; transform: scaleX(-1); background: #000; }
+
+        /* --- 8. Main Panel (Chat) --- */
+        #core-container { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; justify-content: center; align-items: center; overflow: hidden; z-index: 1; border-radius: 15px; }
+        #web-core { width: 300px; height: 300px; border-radius: 50%; background: radial-gradient(circle, var(--primary-glow) 0%, var(--bg-color) 70%); box-shadow: 0 0 30px var(--primary-glow), 0 0 60px var(--primary-glow), 0 0 90px var(--secondary-glow); animation: pulse 3s infinite ease-in-out; position: relative; opacity: 0.2; animation-play-state: paused; transition: all 0.5s ease; }
+        body.combat-mode #web-core { background: radial-gradient(circle, var(--danger-glow) 0%, var(--bg-color) 70%); box-shadow: 0 0 30px var(--danger-glow), 0 0 60px var(--danger-glow), 0 0 90px var(--danger-glow); }
+        #web-core.listening { animation-play-state: running; opacity: 0.4; }
+        #web-core::before, #web-core::after { content: ''; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); border-radius: 50%; border: 2px solid var(--primary-glow); transition: all 0.5s ease; }
+        body.combat-mode #web-core::before, body.combat-mode #web-core::after { border-color: var(--danger-glow); }
+        #web-core::before { width: 400px; height: 400px; animation: spin 8s linear infinite; }
+        #web-core::after { width: 500px; height: 500px; animation: spin 12s linear infinite reverse; }
+        @keyframes pulse { 0% { transform: scale(0.9); } 50% { transform: scale(1); } 100% { transform: scale(0.9); } }
+        @keyframes spin { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
+
+        #chat-container { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; z-index: 2; }
+        #message-display { flex-grow: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column-reverse; scrollbar-width: none; }
+        #message-display::-webkit-scrollbar { display: none; }
         
         .chat-message {
-            max-width: 85%; padding: 0.8rem 1rem; border-radius: 12px; margin-bottom: 0.8rem;
-            font-size: 0.95rem; line-height: 1.4; word-wrap: break-word; animation: fadeIn 0.3s ease;
+            max-width: 80%; padding: 0.8rem 1.2rem; border-radius: 15px; margin-bottom: 1rem;
+            white-space: pre-wrap; word-wrap: break-word;
+            background: rgba(20, 15, 40, 0.7); backdrop-filter: blur(5px);
+            /* NEW: Message Fade-in Animation */
+            animation: fadeIn 0.5s ease-out;
         }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
 
-        .user-message { background: var(--primary-glow); color: #000; align-self: flex-end; border-bottom-right-radius: 2px; font-weight: bold; }
-        .jarvis-message { background: rgba(0, 0, 0, 0.6); border: 1px solid var(--primary-glow); align-self: flex-start; border-bottom-left-radius: 2px; }
+        .user-message { background: var(--primary-glow); color: var(--bg-color); align-self: flex-end; border-bottom-right-radius: 0; font-weight: bold; }
+        body.combat-mode .user-message { background: var(--danger-glow); }
+        .jarvis-message { border: 1px solid var(--primary-glow); align-self: flex-start; border-bottom-left-radius: 0; }
         .jarvis-message.error { border-color: var(--danger-glow); color: var(--danger-glow); }
-        .jarvis-message.typing::after { content: '▋'; animation: blink 0.7s infinite; margin-left: 5px; }
+        .jarvis-message.status { border-color: var(--warning-glow); color: var(--warning-glow); font-style: italic; text-align: center; align-self: center; }
         
-        /* Markdown Styling inside Chat */
-        .jarvis-message code { background: #111; padding: 2px 4px; border-radius: 3px; font-family: monospace; color: var(--secondary-glow); }
-        .jarvis-message pre { background: #0a0a15; padding: 10px; border-radius: 5px; overflow-x: auto; margin: 5px 0; border: 1px solid rgba(255,255,255,0.1); }
-        .jarvis-message strong { color: var(--primary-glow); }
-
-        /* --- 7. Input Area --- */
-        #input-area {
-            display: flex; gap: 8px; padding: 10px; background: var(--glass-bg);
-            border-top: 1px solid var(--border-color); align-items: center; border-radius: 0 0 15px 15px;
+        /* NEW: Typing Indicator */
+        .jarvis-message.typing::after {
+            content: '▋';
+            display: inline-block;
+            margin-left: 5px;
+            opacity: 1;
+            animation: blink 0.7s infinite;
         }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Styles for MARKDOWN content */
+        .jarvis-message pre { background: #020a17; border: 1px solid var(--primary-glow); padding: 1em; border-radius: 5px; margin: 1em 0; overflow-x: auto; font-family: 'Courier New', Courier, monospace; color: #e0e0e0; }
+        .jarvis-message code { font-family: 'Courier New', Courier, monospace; background: #020a17; padding: 2px 4px; border-radius: 3px; }
+        .jarvis-message pre code { background: none; padding: 0; border-radius: 0; }
+        .jarvis-message b, .jarvis-message strong { color: var(--primary-glow); font-weight: bold; }
+        .jarvis-message i, .jarvis-message em { color: var(--secondary-glow); font-style: italic; }
+        .jarvis-message h1, .jarvis-message h2, .jarvis-message h3 { margin: 10px 0 5px; border-bottom: none; }
+        .jarvis-message ul, .jarvis-message ol { margin: 10px 0 10px 20px; }
+        .jarvis-message blockquote { border-left: 3px solid var(--secondary-glow); padding-left: 10px; margin: 10px 0; color: var(--text-secondary); font-style: italic; }
+        /* --- */
+
+        #input-area { display: flex; gap: 0.5rem; padding: 1rem; border-top: 1px solid var(--border-color); z-index: 5; background: var(--glass-bg); border-bottom-left-radius: 15px; border-bottom-right-radius: 15px; transition: all 0.5s ease; }
+        
         #text-input {
-            flex-grow: 1; background: rgba(0,0,0,0.5); border: 1px solid var(--border-color);
-            color: #fff; padding: 10px 15px; border-radius: 20px; font-size: 1rem; transition: border 0.3s;
+            flex-grow: 1; padding: 0.8rem 1.2rem; background: rgba(0,0,0,0.5);
+            border: 1px solid var(--primary-glow); border-radius: 50px;
+            color: var(--text-color); font-size: 1rem;
+            /* NEW: Added transition for focus animation */
+            transition: all 0.3s ease;
         }
-        #text-input:focus { border-color: var(--primary-glow); box-shadow: 0 0 10px rgba(0, 255, 255, 0.2); }
-        
-        .control-button {
-            background: transparent; border: 1px solid var(--primary-glow); color: var(--primary-glow);
-            border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center;
-            cursor: pointer; transition: all 0.2s; flex-shrink: 0;
+        #text-input:focus {
+            outline: none;
+            /* NEW: Enhanced focus animation */
+            box-shadow: 0 0 15px var(--primary-glow), 0 0 25px var(--primary-glow) inset;
+            transform: scale(1.01);
         }
-        .control-button:hover { background: var(--primary-glow); color: #000; }
-        .control-button.active { background: var(--danger-glow); border-color: var(--danger-glow); color: #fff; box-shadow: 0 0 15px var(--danger-glow); }
-        
-        /* Toggles */
-        .toggle-group { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
-        .toggle-container { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; }
-        
-        /* --- 8. Modals & Video --- */
-        .modal-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); z-index: 200; backdrop-filter: blur(5px);
-            justify-content: center; align-items: center;
-        }
-        .modal-content {
-            background: var(--bg-color); border: 1px solid var(--primary-glow);
-            padding: 20px; border-radius: 15px; width: 95%; max-width: 500px; text-align: center;
-            box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
-        }
-        #player-container { width: 100%; height: 250px; background: #000; border-radius: 10px; margin: 10px 0; }
-        #camera-feed { width: 100%; height: 150px; object-fit: cover; border-radius: 10px; background: #000; transform: scaleX(-1); }
 
-        /* --- 9. RESPONSIVE MEDIA QUERIES --- */
+        .control-button { font-family: 'Orbitron', sans-serif; font-size: 1rem; padding: 0.8rem 1.2rem; border: 2px solid var(--primary-glow); background-color: transparent; color: var(--primary-glow); border-radius: 50px; cursor: pointer; transition: all 0.3s ease; text-shadow: 0 0 5px var(--primary-glow); box-shadow: 0 0 10px var(--primary-glow) inset, 0 0 10px var(--primary-glow); white-space: nowrap; }
+        .control-button:hover { background-color: var(--primary-glow); color: var(--bg-color); box-shadow: 0 0 20px var(--primary-glow), 0 0 30px var(--primary-glow); }
+        .control-button.active { background-color: #ff0000; border-color: #ff0000; box-shadow: 0 0 15px #ff0000; text-shadow: none; }
+        #mute-button.active { background-color: var(--secondary-glow); border-color: var(--secondary-glow); }
+        #clear-button, #upload-button { border-color: var(--warning-glow); color: var(--warning-glow); box-shadow: 0 0 10px var(--warning-glow) inset, 0 0 10px var(--warning-glow); }
+        #clear-button:hover, #upload-button:hover { background-color: var(--warning-glow); }
+
+        /* --- 9. Toggles --- */
+        .toggle-group { display: flex; flex-direction: column; gap: 10px; }
+        .toggle-container { display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 5px; border: 1px solid; cursor: pointer; }
+        .toggle-container label { font-family: 'Orbitron'; font-weight: bold; cursor: pointer; }
+        .danger-toggle { border-color: var(--danger-glow); background: rgba(255, 34, 0, 0.1); }
+        .danger-toggle label { color: var(--danger-glow); }
+        .web-toggle { border-color: var(--primary-glow); background: rgba(0, 255, 255, 0.1); }
+        .web-toggle label { color: var(--primary-glow); }
+        
+        /* --- 10. Modals --- */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); justify-content: center; align-items: center; z-index: 200; }
+        .modal-content { background: var(--glass-bg); padding: 2rem; border-radius: 15px; border: 1px solid var(--primary-glow); box-shadow: 0 0 30px var(--primary-glow); text-align: center; }
+        body.combat-mode .modal-content { border-color: var(--danger-glow); box-shadow: 0 0 30px var(--danger-glow); }
+
+        /* --- 11. Mini Player --- */
+        #player-modal { z-index: 201; }
+        #player-container { width: 480px; height: 320px; background: #000; border-radius: 10px; overflow: hidden; }
+        #player-controls { display: flex; justify-content: center; gap: 1rem; margin-top: 1rem; }
+        #player-controls .control-button { font-size: 0.9rem; padding: 0.6rem 1rem; }
+        
+        /* --- 12. Self-Destruct Animation --- */
+        #destruction-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9998; background: rgba(255, 0, 0, 0.3); animation: flashRed 0.2s linear infinite; }
+        #destruction-overlay::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(0deg, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0) 50%); background-size: 100% 4px; animation: scanlines 0.2s linear infinite; }
+        #destruction-overlay.active { display: block; }
+        body.self-destruct .jarvis-container { animation: vibrate 0.1s linear infinite; }
+        @keyframes flashRed { 0%, 100% { background-color: rgba(255, 0, 0, 0.5); } 50%  { background-color: rgba(255, 255, 255, 0.3); } }
+        @keyframes scanlines { from { background-position-y: 0; } to { background-position-y: 4px; } }
+        @keyframes vibrate { 0% { transform: translate(2px, 1px); } 50% { transform: translate(-1px, -2px); } 100% { transform: translate(2px, 1px); } }
+        
+        /* --- 13. Responsive Media Queries --- */
+        @media (max-width: 1200px) {
+            .side-panel, .right-panel { flex: 0 0 250px; }
+        }
         @media (max-width: 900px) {
-            :root { --header-height: 60px; }
-            
-            /* Enable Mobile Header */
-            #mobile-header { display: flex; }
-
-            /* Layout Shift */
-            .jarvis-container { flex-direction: column; padding: 0; height: 100vh; padding-top: var(--header-height); gap: 0; }
-
-            /* Panels convert to Drawers */
-            .side-panel, .right-panel {
-                position: fixed; top: var(--header-height); bottom: 0; width: 85%; max-width: 320px;
-                background: #0d0a1f; border-right: 1px solid var(--primary-glow);
-                padding: 15px; box-shadow: 10px 0 30px rgba(0,0,0,0.8);
-                transform: translateX(-110%); /* Hide Left */
-                transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
-                overflow-y: auto;
-                border-radius: 0;
-            }
-
-            /* Right Panel comes from Right */
-            .right-panel {
-                right: 0; left: auto; border-left: 1px solid var(--primary-glow); border-right: none;
-                transform: translateX(110%); /* Hide Right */
-            }
-
-            /* Active Classes for JS */
-            .side-panel.open { transform: translateX(0); }
-            .right-panel.open { transform: translateX(0); }
-
-            /* Main Chat Adjustments */
-            .main-panel {
-                width: 100%; height: 100%; border-radius: 0; border: none; background: transparent;
-                box-shadow: none; padding: 0;
-            }
-            .hud-panel { box-shadow: none; border: none; background: transparent; } /* Remove panel borders inside drawers for cleaner look */
-            #chat-container { border-radius: 0; }
-            #input-area { border-radius: 0; padding-bottom: max(10px, env(safe-area-inset-bottom)); }
-            
-            /* Visual tweaks for mobile */
-            #core-container { top: 10%; transform: scale(0.6); opacity: 0.4; }
-            .chat-message { max-width: 90%; font-size: 0.9rem; }
+            html, body { height: auto; overflow-x: hidden; overflow-y: auto; perspective: none; }
+            .jarvis-container { flex-direction: column; height: auto; width: 100%; overflow: visible; padding: 0.5rem; gap: 0.5rem; }
+            .side-panel, .right-panel, .main-panel { flex: 1 1 auto; width: 100%; transition: none; transform: none !important; }
+            .main-panel { min-height: 80vh; order: 2; }
+            .side-panel { order: 1; } .right-panel { order: 3; }
+            #suit-status-panel { flex-grow: 0; }
+            #camera-panel { flex-grow: 0; height: 300px; }
+            #audit-panel { flex-grow: 0; }
+            .chat-message { max-width: 95%; }
+            #input-area { flex-wrap: wrap; gap: 0.5rem; padding: 0.5rem; }
+            #text-input { flex-basis: 100%; order: 3; font-size: 1rem; }
+            .control-button { flex-grow: 1; padding: 0.6rem 0.8rem; font-size: 0.9rem; }
+            #mic-button, #upload-button, #send-button { order: 1; }
+            #logistics-grid { grid-template-columns: 1fr 1fr; }
+            #arc-reactor { width: 80px; height: 80px; margin: 1rem auto; }
+            .modal-content { width: 90%; padding: 1rem; }
+            #player-container { width: 100%; height: 250px; }
         }
-
-        /* --- 10. Combat Mode Overrides --- */
-        body.combat-mode {
-            --primary-glow: #ff2200; --border-color: rgba(255, 34, 0, 0.5);
-            background-image: linear-gradient(45deg, #2a0b0b, #1f0a0a);
-        }
-        body.combat-mode #mobile-header { border-bottom-color: var(--danger-glow); }
-        body.combat-mode .control-button { border-color: var(--danger-glow); color: var(--danger-glow); }
-        
-        /* Self Destruct */
-        #destruction-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; background: rgba(255,0,0,0.4); animation: flash 0.2s infinite; }
-        @keyframes flash { 0%,100% { opacity: 0; } 50% { opacity: 1; } }
-        body.self-destruct #destruction-overlay { display: block; }
     </style>
 </head>
 <body>
-
+    
     <div id="particle-background"></div>
     <div id="scanlines"></div>
-    <div id="destruction-overlay"></div>
-
-    <div id="mobile-header">
-        <button id="mobile-menu-btn" class="header-btn">☰ SYSTEM</button>
-        <div id="mobile-title">J.A.R.V.I.S.</div>
-        <button id="mobile-info-btn" class="header-btn">LOGS ⓘ</button>
-    </div>
 
     <div class="jarvis-container">
         <div class="side-panel" id="left-panel">
-            <div id="suit-status-panel" class="hud-panel">
+            <div id="suit-status-panel" class="hud-panel" style="transition-delay: 0.1s;">
                 <h3>MARK VII TACTICAL</h3>
                 <div id="suit-schematic">
-                    <svg id="suit-svg" viewBox="0 0 100 100">
-                        <path d="M 50 10 L 70 20 L 75 40 L 65 60 L 50 70 L 35 60 L 25 40 L 30 20 Z M 50 10 L 50 30 M 70 20 L 55 30 M 30 20 L 45 30"/>
+                    <svg id="suit-svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+                        <path d="M 50 10 L 70 20 L 75 40 L 65 60 L 50 70 L 35 60 L 25 40 L 30 20 Z M 50 10 L 50 30 M 70 20 L 55 30 M 30 20 L 45 30 M 50 30 L 50 70 M 50 45 L 60 40 L 75 40 M 50 45 L 40 40 L 25 40 M 50 55 L 65 60 M 50 55 L 35 60"/>
                     </svg>
                     <div id="arc-reactor"></div>
                 </div>
-                <h4>ENERGY LEVEL</h4> <div class="status-bar"><div id="energy-bar" class="status-bar-inner"></div></div>
-                <h4>ARMOUR INTEGRITY</h4> <div class="status-bar"><div id="armour-bar" class="status-bar-inner"></div></div>
-                <div class="status-text"><span>FLIGHT:</span><span id="flight-status">OFFLINE</span></div>
-                <div class="status-text"><span>WEAPONS:</span><span id="weapon-status">DISARMED</span></div>
+                <h4>ENERGY LEVEL</h4>
+                <div class="status-bar"><div id="energy-bar" class="status-bar-inner"></div></div>
+                <h4>ARMOUR INTEGRITY</h4>
+                <div class="status-bar"><div id="armour-bar" class="status-bar-inner"></div></div>
+                <div class="status-text"><span>FLIGHT SYSTEMS:</span><span id="flight-status">OFFLINE</span></div>
+                <div class="status-text"><span>WEAPON SYSTEMS:</span><span id="weapon-status">DISARMED</span></div>
+                <div class="status-text"><span>SUIT STATUS:</span><span id="suit-status">STANDBY</span></div>
             </div>
-            
-            <div id="controls-panel" class="hud-panel">
+            <div id="controls-panel" class="hud-panel" style="transition-delay: 0.3s;">
                 <h3>CONTROLS</h3>
-                <div style="display:flex; gap:10px; margin-bottom:10px;">
-                    <button id="mute-button" class="control-button" style="width:100%; border-radius:10px;">MUTE</button>
-                    <button id="clear-button" class="control-button" style="width:100%; border-radius:10px;">CLEAR</button>
-                </div>
-                <div class="toggle-group">
-                    <div class="toggle-container">
-                        <input type="checkbox" id="safety-toggle"> <label for="safety-toggle" style="color:var(--danger-glow)">DANGER: Safety Off</label>
-                    </div>
-                    <div class="toggle-container">
-                        <input type="checkbox" id="web-search-toggle" checked> <label for="web-search-toggle">Web Search ON</label>
+                <div class="control-group">
+                    <button id="mute-button" class="control-button">MUTE</button>
+                    <button id="clear-button" class="control-button">CLEAR CHAT</button>
+                    <div class="toggle-group">
+                        <div class="danger-toggle toggle-container">
+                            <input type="checkbox" id="safety-toggle">
+                            <label for="safety-toggle">DANGER: Safety Off</label>
+                        </div>
+                        <div class="web-toggle toggle-container">
+                            <input type="checkbox" id="web-search-toggle" checked>
+                            <label for="web-search-toggle">Web Search ON</label>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="main-panel" id="main-panel">
+        <div class="main-panel hud-panel" id="main-panel" style="transition-delay: 0.2s;">
             <div id="core-container"> <div id="web-core"></div> </div>
             <div id="chat-container">
                 <div id="message-display"></div>
                 <div id="input-area">
-                    <button id="upload-button" class="control-button">📎</button>
-                    <input type="file" id="file-uploader" accept=".txt,.pdf,.doc,.docx" style="display: none;">
-                    
-                    <input type="text" id="text-input" placeholder="Type command...">
-                    
-                    <button id="mic-button" class="control-button">🎤</button>
-                    <button id="send-button" class="control-button">➤</button>
+                    <button id="mic-button" class="control-button">MIC</button>
+                    <button id="upload-button" class="control-button">UPLOAD</button>
+                    <input type="file" id="file-uploader" accept=".txt,.pdf,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf" style="display: none;">
+                    <input type="text" id="text-input" placeholder="Type your query to JARVIS...">
+                    <button id="send-button" class="control-button">SEND</button>
                 </div>
             </div>
         </div>
         
         <div class="right-panel" id="right-panel">
-            <div id="logistics-panel" class="hud-panel">
+            <div id="logistics-panel" class="hud-panel" style="transition-delay: 0.4s;">
                 <h3>LOGISTICS</h3>
-                <div id="dynamic-clock" style="font-size:1.5rem; text-align:center;">--:--</div>
-                <div id="dynamic-date" style="text-align:center; color:var(--text-secondary); margin-bottom:10px;">---</div>
-                
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; text-align:center;">
-                    <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:5px;">
-                        <h4>CPU</h4> <span id="cpu-stat">--%</span>
-                    </div>
-                    <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:5px;">
-                        <h4>MEM</h4> <span id="mem-stat">--%</span>
-                    </div>
+                <div id="dynamic-clock">--:--:--</div>
+                <div id="dynamic-date">---, --- --</div>
+                <div id="logistics-grid">
+                    <div class="status-item"> <h4>CPU</h4> <p id="cpu-stat">--%</p> </div>
+                    <div class="status-item"> <h4>MEM</h4> <p id="mem-stat">--%</p> </div>
                 </div>
-                
-                <h4 style="margin-top:20px;">VISUAL SENSOR</h4>
-                <video id="camera-feed" autoplay playsinline muted></video>
-                
-                <div style="margin-top:10px; display:flex; justify-content:space-between; font-size:0.8rem;">
-                    <span>TEMP: <b id="weather-temp">--°C</b></span>
-                    <span id="weather-desc">SCANNING...</span>
+                <div class="status-text">
+                    <span>WEATHER (HOWRAH):</span>
+                    <span id="weather-desc">LOADING...</span>
+                </div>
+                <div class="status-item" style="grid-column: span 2; text-align: center; margin-top: 5px;">
+                    <p id="weather-temp">--°C</p>
                 </div>
             </div>
-            
-            <div id="audit-panel" class="hud-panel">
-                <h3>AUDIT LOG</h3>
-                <div id="audit-log" style="font-size:0.7rem; color:var(--text-secondary); max-height:150px; overflow-y:auto;"></div>
+            <div id="camera-panel" class="hud-panel" style="transition-delay: 0.5s;">
+                <video id="camera-feed" autoplay playsinline></video>
+            </div>
+            <div id="audit-panel" class="hud-panel" style="transition-delay: 0.6s;">
+                <h3>ACTION AUDIT LOG</h3>
+                <div id="audit-log"></div>
             </div>
         </div>
     </div>
 
     <div id="confirmation-modal" class="modal-overlay">
         <div class="modal-content">
-            <h3>ACTION REQUIRED</h3> <p id="modal-message">...</p>
-            <div style="margin-top:15px;">
-                <button id="modal-allow-button" class="control-button" style="width:100px; border-radius:20px; display:inline-block;">ALLOW</button>
-                <button id="modal-deny-button" class="control-button" style="width:100px; border-radius:20px; display:inline-block; border-color:var(--danger-glow); color:var(--danger-glow);">DENY</button>
+            <h3>ACTION CONFIRMATION</h3> <p id="modal-message">...</p>
+            <div class="modal-buttons">
+                <button id="modal-allow-button" class="control-button">ALLOW</button>
+                <button id="modal-deny-button" class="control-button">DENY</button>
             </div>
         </div>
     </div>
-    
     <div id="player-modal" class="modal-overlay">
         <div class="modal-content">
-            <h3 id="player-title">YouTube Player</h3>
+            <h3 id="player-title">Now Playing...</h3>
             <div id="player-container"></div>
-            <div style="display:flex; justify-content:center; gap:10px;">
-                <button id="player-rewind" class="control-button">«</button>
-                <button id="player-pause" class="control-button" style="width:80px; border-radius:10px;">PAUSE</button>
-                <button id="player-forward" class="control-button">»</button>
-                <button id="player-close" class="control-button" style="border-color:var(--danger-glow); color:var(--danger-glow);">X</button>
+            <div id="player-controls">
+                <button id="player-rewind" class="control-button">« 10s</button>
+                <button id="player-pause" class="control-button">PAUSE</button>
+                <button id="player-forward" class="control-button">10s »</button>
+                <button id="player-close" class="control-button">CLOSE</button>
             </div>
         </div>
     </div>
+    <div id="destruction-overlay"></div>
 
     <script>
-        // --- 1. Global Config ---
-        // REPLACE WITH YOUR KEYS IF NEEDED
-        const GOOGLE_SEARCH_API_KEY = 'AIzaSyBm8SxGHDl9pkrDuZt_VgFQME9a3aRUeXY'; 
+        // --- 1. Global Constants & State ---
+        const GOOGLE_SEARCH_API_KEY = 'AIzaSyBm8SxGHDl9pkrDuZt_VgFQME9a3aRUeXY';
         const SEARCH_ENGINE_ID = 'd13b9c982e19f4ccf';
         const GOOGLE_SEARCH_URL = `https://www.googleapis.com/customsearch/v1?key=${GOOGLE_SEARCH_API_KEY}&cx=${SEARCH_ENGINE_ID}`;
         const SHARED_SECRET_TOKEN = "YOUR_SUPER_SECRET_TOKEN_HERE";
         
-        // YOUR WEBSOCKET URL (Hardcoded as requested)
-        const WS_URL = "wss://venice-postpupillary-coaxially.ngrok-free.dev/ws";
-
-        // State Variables
+        if (window.pdfjsLib) {
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.worker.min.js';
+        }
+        
         let ws; let recognition; let ytPlayer;
         let isRecording = false; let isMuted = false;
         let currentLang = "en-US"; let pendingAction = null; 
         let jarvisVoice = null; let hasUserInteracted = false;
-        const welcomeMsg = "At your service sir. Systems online.";
+        const welcomeMsg = "At your service sir. How may I serve you today?";
 
-        // --- 2. Mobile Responsive Logic (New) ---
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        const mobileInfoBtn = document.getElementById('mobile-info-btn');
-        const leftPanel = document.getElementById('left-panel');
-        const rightPanel = document.getElementById('right-panel');
-        const mainPanel = document.getElementById('main-panel');
-
-        function toggleDrawer(panel) {
-            const isOpen = panel.classList.contains('open');
-            // Close both first
-            leftPanel.classList.remove('open');
-            rightPanel.classList.remove('open');
-            // If it wasn't open before, open it now
-            if (!isOpen) panel.classList.add('open');
-        }
-
-        mobileMenuBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleDrawer(leftPanel); });
-        mobileInfoBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleDrawer(rightPanel); });
-        mainPanel.addEventListener('click', () => { 
-            // Close drawers if clicking main area on mobile
-            if(window.innerWidth <= 900) {
-                leftPanel.classList.remove('open');
-                rightPanel.classList.remove('open');
-            }
-        });
-
-        // --- 3. Initialization ---
         document.addEventListener("DOMContentLoaded", () => {
-            // Setup Elements
+            // --- 2. DOM Elements ---
+            const allBootElements = document.querySelectorAll(".hud-panel");
             const micButton = document.getElementById("mic-button");
+            const muteButton = document.getElementById("mute-button");
+            const clearButton = document.getElementById("clear-button");
             const textInput = document.getElementById("text-input");
             const sendButton = document.getElementById("send-button");
+            const safetyToggle = document.getElementById("safety-toggle");
+            const webSearchToggle = document.getElementById("web-search-toggle");
             const messageDisplay = document.getElementById("message-display");
-            
-            // Connect WebSocket
-            connectWebSocket();
-            
-            // Setup Features
-            setupSpeechRecognition();
-            startCamera();
-            
-            // Event Listeners
-            sendButton.addEventListener("click", () => submitQuery(textInput.value));
-            textInput.addEventListener("keydown", (e) => { if(e.key==="Enter") submitQuery(textInput.value); });
-            
-            document.getElementById("mute-button").addEventListener("click", function() {
-                isMuted = !isMuted; 
-                this.classList.toggle("active", isMuted);
-                this.textContent = isMuted ? "UNMUTED" : "MUTE"; // Simple toggle text
-                if(isMuted) window.speechSynthesis.cancel();
-            });
+            const cpuStat = document.getElementById("cpu-stat");
+            const memStat = document.getElementById("mem-stat");
+            const auditLog = document.getElementById("audit-log");
+            const confirmationModal = document.getElementById("confirmation-modal");
+            const modalMessage = document.getElementById("modal-message");
+            const modalAllowButton = document.getElementById("modal-allow-button");
+            const modalDenyButton = document.getElementById("modal-deny-button");
+            const webCore = document.getElementById("web-core");
+            const uploadButton = document.getElementById("upload-button");
+            const fileUploader = document.getElementById("file-uploader");
+            const playerModal = document.getElementById("player-modal");
+            const playerTitle = document.getElementById("player-title");
+            const playerPause = document.getElementById("player-pause");
+            const playerClose = document.getElementById("player-close");
+            const playerRewind = document.getElementById("player-rewind");
+            const playerForward = document.getElementById("player-forward");
+            const destructionOverlay = document.getElementById("destruction-overlay");
+            const cameraFeed = document.getElementById("camera-feed");
+            const dynamicClock = document.getElementById("dynamic-clock");
+            const dynamicDate = document.getElementById("dynamic-date");
+            const energyBar = document.getElementById("energy-bar");
+            const armourBar = document.getElementById("armour-bar");
+            const flightStatus = document.getElementById("flight-status");
+            const weaponStatus = document.getElementById("weapon-status");
+            const suitStatus = document.getElementById("suit-status");
+            const particleBg = document.getElementById("particle-background");
+            const leftPanel = document.getElementById("left-panel");
+            const mainPanel = document.getElementById("main-panel");
+            const rightPanel = document.getElementById("right-panel");
+            const weatherDesc = document.getElementById("weather-desc");
+            const weatherTemp = document.getElementById("weather-temp");
 
-            document.getElementById("clear-button").addEventListener("click", () => {
-                messageDisplay.innerHTML = "";
+            // --- 3. WebSocket Logic ---
+            function connectWebSocket() {
+                // !! Make sure this WebSocket URL is correct for your server !!
+                ws = new WebSocket("wss://venice-postpupillary-coaxially.ngrok-free.dev/ws"); // Changed from ngrok to local
+                
+                ws.onopen = () => {
+                    addJarvisMessage(welcomeMsg, "status");
+                    sendMessage({ type: "get_audit_log" });
+                    sendMessage({ type: "get_system_stats" });
+                    sendMessage({ type: "get_weather", location: "Howrah" });
+                };
+                ws.onmessage = (event) => {
+                    const msg = JSON.parse(event.data);
+                    switch (msg.type) {
+                        case "llm_chunk": updateLastJarvisMessage(msg.text); break;
+                        case "llm_end": renderMarkdown(); speak(getCurrentJarvisMessageText(), null); break;
+                        case "ui_command": handleUICommand(msg.action, msg.params); break;
+                        case "action_confirmation":
+                            if (safetyToggle.checked) {
+                                sendMessage({ type: "execute_action", token: SHARED_SECRET_TOKEN, action_data: msg.action_data });
+                            } else {
+                                pendingAction = msg.action_data;
+                                modalMessage.textContent = `JARVIS wants to execute: ${pendingAction.action} (${JSON.stringify(pendingAction.params)})`;
+                                confirmationModal.style.display = "flex";
+                            }
+                            break;
+                        case "action_status":
+                            // Using addJarvisMessage for action status for better visibility
+                            if (msg.status === "fail") {
+                                addJarvisMessage(`Action Failed: ${msg.message}`, "error");
+                            } else {
+                                addJarvisMessage(`Action Success: ${msg.message}`, "status");
+                            }
+                            if (msg.status === "success") { sendMessage({ type: "get_audit_log" }); }
+                            break;
+                        case "audit_log": updateAuditLog(msg.log); break;
+                        case "clear_confirmation":
+                            messageDisplay.innerHTML = "";
+                            addJarvisMessage("History and file context cleared. How can I help you, Sir?", "status");
+                            break;
+                        case "system_stats":
+                            cpuStat.textContent = `${msg.cpu}%`; memStat.textContent = `${msg.mem}%`;
+                            break;
+                        case "weather_update":
+                            const weather = msg.data;
+                            if (weather && weather.temp) {
+                                weatherDesc.textContent = `${weather.desc.toUpperCase()}`;
+                                weatherTemp.textContent = `${weather.temp.toFixed(0)}°C`;
+                            } else {
+                                weatherDesc.textContent = "WEATHER OFFLINE";
+                                weatherTemp.textContent = "--°C";
+                            }
+                            break;
+                        case "context_set_confirmation":
+                            addJarvisMessage(`Sir, I have loaded "${msg.filename}" (${msg.char_count} chars). You may now ask me about it.`, "status");
+                            break;
+                        case "error": addJarvisMessage(`ERROR: ${msg.message}`, "error"); break;
+                    }
+                };
+                ws.onclose = () => { addJarvisMessage("Status: Disconnected. Retrying...", "error"); setTimeout(connectWebSocket, 3000); };
+                ws.onerror = (err) => { console.error("WebSocket Error:", err); };
+            }
+            function sendMessage(message) {
+                if (ws && ws.readyState === WebSocket.OPEN) { ws.send(JSON.stringify(message)); }
+            }
+
+            // --- 4. Chat UI Functions ---
+            function addUserMessage(text) {
+                const msgEl = document.createElement("div");
+                msgEl.className = "chat-message user-message";
+                msgEl.textContent = text;
+                messageDisplay.prepend(msgEl); messageDisplay.scrollTop = 0;
+            }
+            function addJarvisMessage(text, type = "normal") {
+                const msgEl = document.createElement("div");
+                msgEl.className = `chat-message jarvis-message ${type}`;
+                // NEW: Use Marked.js to render static messages too
+                msgEl.innerHTML = marked.parse(text);
+                messageDisplay.prepend(msgEl); messageDisplay.scrollTop = 0;
+            }
+            let lastJarvisMessageEl = null;
+            let currentResponseText = ""; // Store full text for final parsing
+            
+            function updateLastJarvisMessage(chunk) {
+                if (!lastJarvisMessageEl || !messageDisplay.contains(lastJarvisMessageEl)) {
+                    lastJarvisMessageEl = document.createElement("div");
+                    lastJarvisMessageEl.className = "chat-message jarvis-message";
+                    messageDisplay.prepend(lastJarvisMessageEl);
+                    currentResponseText = ""; // Reset text buffer
+                }
+                currentResponseText += chunk;
+                // NEW: Add typing class while updating
+                lastJarvisMessageEl.classList.add("typing");
+                // Update with raw text for speed, will be parsed at the end
+                lastJarvisMessageEl.textContent = currentResponseText;
+            }
+            
+            function getCurrentJarvisMessageText() { 
+                return lastJarvisMessageEl ? lastJarvisMessageEl.textContent : ""; 
+            }
+            
+            // NEW: Updated renderMarkdown function
+            function renderMarkdown() {
+                if (!lastJarvisMessageEl) return;
+                
+                // NEW: Remove typing class
+                lastJarvisMessageEl.classList.remove("typing");
+                
+                // NEW: Use Marked.js to parse the *entire* final text
+                // This correctly handles code blocks, lists, and headers
+                lastJarvisMessageEl.innerHTML = marked.parse(currentResponseText);
+                
+                // Reset buffer
+                currentResponseText = "";
+            }
+
+            function submitQuery(text) {
+                if (!text.trim()) return;
+                addUserMessage(text); textInput.value = "";
+                lastJarvisMessageEl = null;
+                sendMessage({
+                    type: "text_query", text: text, lang: currentLang,
+                    web_search_enabled: webSearchToggle.checked
+                });
+            }
+
+            // --- 5. Speech Recognition (ASR) ---
+            function setupSpeechRecognition() {
+                window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                if (!window.SpeechRecognition) { micButton.disabled = true; micButton.textContent = "ASR N/A"; return; }
+                recognition = new SpeechRecognition();
+                recognition.lang = currentLang; recognition.continuous = true; recognition.interimResults = true;
+                recognition.onstart = () => { isRecording = true; micButton.classList.add("active"); webCore.classList.add("listening"); };
+                recognition.onend = () => { isRecording = false; micButton.classList.remove("active"); webCore.classList.remove("listening"); };
+                recognition.onresult = (event) => {
+                    let final_transcript = "";
+                    for (let i = event.resultIndex; i < event.results.length; ++i) {
+                        if (event.results[i].isFinal) { final_transcript += event.results[i][0].transcript; }
+                    }
+                    if (final_transcript) { submitQuery(final_transcript); }
+                };
+                recognition.onerror = (event) => { console.error("Speech Recognition Error:", event.error); };
+            }
+
+            // --- 6. Speech Synthesis (TTS) & Audio ---
+            function loadVoices() {
+                const voices = window.speechSynthesis.getVoices();
+                jarvisVoice = voices.find(v => v.name.includes('Google UK English Male')) ||
+                              voices.find(v => v.name.includes('Microsoft David')) ||
+                              voices.find(v => v.lang.includes('en-GB') && v.name.includes('Male')) || null;
+            }
+            function speak(text, onEndCallback) {
+                if (isMuted || !text || !text.trim() || !hasUserInteracted) {
+                    if (onEndCallback) onEndCallback(); return;
+                }
+                window.speechSynthesis.cancel();
+                // Create a temp div to strip HTML tags from the parsed markdown
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = marked.parse(text); // Use parsed text
+                const textToSpeak = tempDiv.textContent || tempDiv.innerText || "";
+                
+                const utterance = new SpeechSynthesisUtterance(textToSpeak);
+                if (jarvisVoice) { utterance.voice = jarvisVoice; }
+                utterance.lang = "en-GB"; utterance.pitch = 0.9; utterance.rate = 1.0;
+                if (onEndCallback) { utterance.onend = onEndCallback; }
+                window.speechSynthesis.speak(utterance);
+            }
+            function unlockAudio() {
+                if (hasUserInteracted) return;
+                hasUserInteracted = true;
+                webCore.classList.add("listening");
+                setTimeout(() => webCore.classList.remove("listening"), 2000);
+                speak(welcomeMsg, null);
+                startCamera();
+            }
+            function playAudio(url) {
+                if (isMuted || !hasUserInteracted) return;
+                try {
+                    const audio = new Audio(url);
+                    audio.play().catch(e => console.error("Audio play failed:", e));
+                } catch (e) { console.error("Error creating audio:", e); }
+            }
+            
+            function handleUICommand(action, params) {
+                if (action === "enter_combat_mode") {
+                    const text = "Sir, initiating combat mode.";
+                    addJarvisMessage(text, "status");
+                    document.body.classList.add("combat-mode");
+                    speak(text, () => { playAudio("/audio/combat_on.mp3"); });
+                } else if (action === "exit_combat_mode") {
+                    const text = "Disengaging combat mode, Sir.";
+                    addJarvisMessage(text, "status");
+                    document.body.classList.remove("combat-mode");
+                    speak(text, () => { playAudio("/audio/combat_off.mp3"); });
+                } else if (action === "play_song") {
+                    const songName = params.song_name;
+                    addJarvisMessage(`Searching YouTube for "${songName}"...`, "status");
+                    findAndPlayVideo(songName);
+                }
+                else if (action === "self_destruct") {
+                    const text = "Self-destruct sequence initiated. Stand by.";
+                    addJarvisMessage(text, "status");
+                    speak(text, () => {
+                        document.body.classList.add("self-destruct");
+                        destructionOverlay.classList.add("active");
+                        playAudio("/audio/self_destruct.mp3");
+                        
+                        setTimeout(() => {
+                            document.body.classList.remove("self-destruct");
+                            destructionOverlay.classList.remove("active");
+                            addJarvisMessage("...System reset. All functions back online, Sir.", "status");
+                        }, 5000);
+                    });
+                }
+            }
+
+// --- 7. YouTube Player (FIXED) ---
+            // We define the variable but DO NOT initialize it immediately while hidden
+            let apiReady = false;
+            
+            window.onYouTubeIframeAPIReady = function() {
+                apiReady = true;
+            }
+
+            async function findAndPlayVideo(songName) {
+                const query = `youtube ${songName}`;
+                const url = `${GOOGLE_SEARCH_URL}&q=${encodeURIComponent(query)}`;
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) throw new Error(`Google API error: ${response.statusText}`);
+                    const data = await response.json();
+                    
+                    if (data.items && data.items.length > 0) {
+                        const firstResult = data.items.find(item => item.link && (item.link.includes("youtube.com/watch?v=") || item.link.includes("youtu.be/")));
+                        if (!firstResult) throw new Error("No valid YouTube links in search results");
+                        const videoLink = firstResult.link;
+                        const videoIdMatch = videoLink.match(/(?:v=|\/embed\/|\.be\/)([a-zA-Z0-9_-]{11})/);
+                        
+                        if (videoIdMatch && videoIdMatch[1]) {
+                            playVideoById(videoIdMatch[1], firstResult.title);
+                        } else { addJarvisMessage(`Error: Could not parse a valid YouTube video ID from link: ${videoLink}`, "error"); }
+                    } else { addJarvisMessage(`Error: No YouTube results found for "${songName}".`, "error"); }
+                } catch (err) { addJarvisMessage(`Error searching for video: ${err.message}`, "error"); }
+            }
+
+            function playVideoById(videoId, title) {
+                playerTitle.textContent = title;
+                // 1. SHOW the modal FIRST so the element is visible to the DOM
+                playerModal.style.display = "flex";
+
+                // 2. Initialize or Load the player only after the element is visible
+                if (!ytPlayer) {
+                    ytPlayer = new YT.Player('player-container', {
+                        height: '320',
+                        width: '480',
+                        videoId: videoId,
+                        playerVars: { 
+                            'autoplay': 1, 
+                            'controls': 1, // Changed to 1 so you can manually scrub if needed
+                            'rel': 0,
+                            'origin': window.location.origin // Important for API security
+                        },
+                        events: {
+                            'onReady': (event) => { event.target.playVideo(); },
+                            'onStateChange': (event) => {
+                                if (event.data === YT.PlayerState.PLAYING) { playerPause.textContent = "PAUSE"; }
+                                if (event.data === YT.PlayerState.PAUSED) { playerPause.textContent = "PLAY"; }
+                            }
+                        }
+                    });
+                } else {
+                    // If player already exists, just load the new video
+                    ytPlayer.loadVideoById(videoId);
+                    // Ensure it plays
+                    ytPlayer.playVideo();
+                }
+            }
+
+            function closePlayer() { 
+                if (ytPlayer && typeof ytPlayer.stopVideo === 'function') {
+                    ytPlayer.stopVideo(); 
+                }
+                playerModal.style.display = "none"; 
+            }
+
+            function togglePausePlayer() {
+                if (!ytPlayer) return;
+                const state = ytPlayer.getPlayerState();
+                if (state === YT.PlayerState.PLAYING) { ytPlayer.pauseVideo(); }
+                else { ytPlayer.playVideo(); }
+            }
+            
+            function rewindPlayer() {
+                if (ytPlayer && ytPlayer.getCurrentTime) {
+                    const currentTime = ytPlayer.getCurrentTime();
+                    ytPlayer.seekTo(currentTime - 10, true);
+                }
+            }
+            
+            function forwardPlayer() {
+                if (ytPlayer && ytPlayer.getCurrentTime) {
+                    const currentTime = ytPlayer.getCurrentTime();
+                    ytPlayer.seekTo(currentTime + 10, true);
+                }
+            }
+
+            playerPause.addEventListener("click", togglePausePlayer);
+            playerClose.addEventListener("click", closePlayer);
+            playerRewind.addEventListener("click", rewindPlayer);
+            playerForward.addEventListener("click", forwardPlayer);
+
+            // --- 8. Client-Side File Upload Logic ---
+            uploadButton.addEventListener("click", () => { fileUploader.click(); });
+            fileUploader.addEventListener("change", async (event) => {
+                const file = event.target.files[0];
+                if (!file) return;
+                addJarvisMessage(`Reading "${file.name}"...`, "status");
+                try {
+                    let text = "";
+                    if (file.name.endsWith(".txt")) {
+                        text = await file.text();
+                    } else if (file.name.endsWith(".pdf")) {
+                        text = await readPdfFile(file);
+                    } else if (file.name.endsWith(".docx")) {
+                        text = await readDocxFile(file);
+                    } else {
+                        addJarvisMessage(`Error: File type not supported. Please upload .txt, .pdf, or .docx`, "error");
+                        fileUploader.value = ""; return;
+                    }
+                    sendMessage({
+                        type: "set_file_context",
+                        filename: file.name,
+                        content: text
+                    });
+                } catch (err) { addJarvisMessage(`Error reading file: ${err.message}`, "error"); }
+                fileUploader.value = "";
+            });
+            function readPdfFile(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = async (e) => {
+                        try {
+                            const data = new Uint8Array(e.target.result);
+                            const pdf = await pdfjsLib.getDocument(data).promise;
+                            let textContent = "";
+                            for (let i = 1; i <= pdf.numPages; i++) {
+                                const page = await pdf.getPage(i);
+                                const text = await page.getTextContent();
+                                textContent += text.items.map(s => s.str).join(" ") + "\n";
+                            }
+                            resolve(textContent);
+                        } catch (err) { reject(err); }
+                    };
+                    reader.onerror = (err) => reject(err);
+                    reader.readAsArrayBuffer(file);
+                });
+            }
+            function readDocxFile(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = async (e) => {
+                        try {
+                            const result = await mammoth.extractRawText({ arrayBuffer: e.target.result });
+                            resolve(result.value);
+                        } catch (err) { reject(err); }
+                    };
+                    reader.onerror = (err) => reject(err);
+                    reader.readAsArrayBuffer(file);
+                });
+            }
+
+            // --- 9. Event Listeners ---
+            document.addEventListener("click", unlockAudio, {once: true});
+            micButton.addEventListener("click", () => { if (isRecording) { recognition.stop(); } else { recognition.start(); } });
+            sendButton.addEventListener("click", () => { submitQuery(textInput.value); });
+            textInput.addEventListener("keydown", (event) => { if (event.key === "Enter") { submitQuery(textInput.value); } });
+            muteButton.addEventListener("click", () => {
+                isMuted = !isMuted; muteButton.classList.toggle("active", isMuted);
+                muteButton.textContent = isMuted ? "UNMUTE" : "MUTE";
+                if (isMuted) { window.speechSynthesis.cancel(); closePlayer(); }
+            });
+            clearButton.addEventListener("click", () => {
+                messageDisplay.innerHTML = ""; lastJarvisMessageEl = null;
                 sendMessage({ type: "clear_history" });
             });
-
-            document.getElementById("upload-button").addEventListener("click", () => document.getElementById("file-uploader").click());
-            document.getElementById("file-uploader").addEventListener("change", handleFileUpload);
-
-            // Modals
-            document.getElementById("modal-allow-button").addEventListener("click", () => {
-                if(pendingAction) {
+            webSearchToggle.addEventListener('change', () => {
+                const label = document.querySelector("label[for='web-search-toggle']");
+                label.textContent = webSearchToggle.checked ? "Web Search ON" : "Web Search OFF";
+            });
+            modalAllowButton.addEventListener("click", () => {
+                if (pendingAction) {
                     sendMessage({ type: "execute_action", token: SHARED_SECRET_TOKEN, action_data: pendingAction });
-                    pendingAction = null; document.getElementById("confirmation-modal").style.display = "none";
+                    pendingAction = null; confirmationModal.style.display = "none";
                 }
             });
-            document.getElementById("modal-deny-button").addEventListener("click", () => {
-                document.getElementById("confirmation-modal").style.display = "none"; pendingAction = null;
+            modalDenyButton.addEventListener("click", () => {
+                sendMessage({ type: "deny_action" });
+                pendingAction = null; confirmationModal.style.display = "none";
+            });
+            document.body.addEventListener("mousemove", (e) => {
+                if (document.body.classList.contains("self-destruct")) return;
+                // Disable parallax on mobile
+                if (window.innerWidth < 900) return;
+                const x = (window.innerWidth / 2 - e.pageX) / 50;
+                const y = (window.innerHeight / 2 - e.pageY) / 50;
+                leftPanel.style.transform = `translateX(${-x}px) translateY(${-y}px)`;
+                mainPanel.style.transform = `translateX(${x/2}px) translateY(${y/2}px)`;
+                rightPanel.style.transform = `translateX(${x}px) translateY(${y}px)`;
             });
 
-            // Player Controls
-            document.getElementById("player-close").addEventListener("click", closePlayer);
-            document.getElementById("player-pause").addEventListener("click", () => {
-                if(!ytPlayer) return;
-                ytPlayer.getPlayerState() === 1 ? ytPlayer.pauseVideo() : ytPlayer.playVideo();
-            });
-
-            // Start Clock & Stats
-            setInterval(updateClock, 1000);
-            setInterval(updateSuitStatus, 2000);
-            updateClock();
+            // --- 10. Helper Functions ---
+            function updateAuditLog(logEntries) {
+                auditLog.innerHTML = "";
+                if (!logEntries || logEntries.length === 0) { return; }
+                logEntries.forEach(entry => {
+                    const entryEl = document.createElement("div");
+                    entryEl.classList.add("log-entry");
+                    if (entry.status !== "success") { entryEl.classList.add("fail"); }
+                    entryEl.innerHTML = `
+                        <p><strong>${entry.action}</strong> (${entry.status})</p>
+                        <p style="font-size: 0.8em; color: var(--text-secondary);">Params: ${entry.params}</p>
+                        <p class="timestamp">${entry.timestamp.split('T')[1].split('.')[0]}</p>`;
+                    auditLog.appendChild(entryEl);
+                });
+            }
             
-            // Voice Load
+            // --- 11. Dynamic UI Functions ---
+            function startCamera() {
+                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    navigator.mediaDevices.getUserMedia({ video: true })
+                        .then(function(stream) {
+                            cameraFeed.srcObject = stream;
+                            cameraFeed.play();
+                        })
+                        .catch(function(err) { console.error("Error starting camera: ", err); });
+                }
+            }
+            function updateClock() {
+                const now = new Date();
+                const time = now.toLocaleTimeString('en-US', { hour12: true });
+                const date = now.toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric' });
+                dynamicClock.textContent = time;
+                dynamicDate.textContent = date;
+            }
+            function updateSuitStatus() {
+                energyBar.style.width = `${85 + Math.random() * 10}%`;
+                armourBar.style.width = `${98 + Math.random() * 2}%`;
+                const flight = ["OFFLINE", "STANDBY", "READY"];
+                const weapons = ["DISARMED", "STANDBY", "ARMED"];
+                const suit = ["NOMINAL", "STANDBY", "CHARGING"];
+                flightStatus.textContent = flight[Math.floor(Math.random() * flight.length)];
+                weaponStatus.textContent = weapons[Math.floor(Math.random() * weapons.length)];
+                suitStatus.textContent = suit[Math.floor(Math.random() * suit.length)];
+            }
+            function generateParticles() {
+                for(let i=0; i<50; i++) {
+                    let p = document.createElement("div");
+                    p.className = "particle";
+                    p.style.top = `${Math.random() * 100}%`;
+                    p.style.left = `${Math.random() * 100}%`;
+                    p.style.animationDelay = `-${Math.random() * 20}s`;
+                    particleBg.appendChild(p);
+                }
+            }
+
+            // --- 12. Initialization ---
+            connectWebSocket();
+            setupSpeechRecognition();
             window.speechSynthesis.onvoiceschanged = loadVoices;
             loadVoices();
+            updateClock();
+            updateSuitStatus();
+            generateParticles();
             
-            // One-time interaction unlock
-            document.addEventListener("click", () => {
-                if(!hasUserInteracted) {
-                    hasUserInteracted = true;
-                    speak(welcomeMsg);
-                }
-            }, {once:true});
+            setInterval(updateClock, 1000);
+            setInterval(updateSuitStatus, 3000);
+            setInterval(() => { sendMessage({ type: "get_system_stats" }); }, 3000);
+            setInterval(() => { sendMessage({ type: "get_weather", location: "Howrah" }); }, 600000);
+            
+            setTimeout(() => {
+                allBootElements.forEach(el => el.classList.add("booted"));
+            }, 100);
         });
-
-        // --- 4. WebSocket Logic ---
-        function connectWebSocket() {
-            ws = new WebSocket(WS_URL);
-            
-            ws.onopen = () => {
-                addJarvisMessage("Connected to Server.", "status");
-                sendMessage({ type: "get_audit_log" });
-                sendMessage({ type: "get_weather", location: "Howrah" });
-            };
-            
-            ws.onmessage = (event) => {
-                const msg = JSON.parse(event.data);
-                if(msg.type === "llm_chunk") updateLastJarvisMessage(msg.text);
-                else if(msg.type === "llm_end") { renderMarkdown(); speak(getCurrentJarvisMessageText()); }
-                else if(msg.type === "ui_command") handleUICommand(msg.action, msg.params);
-                else if(msg.type === "weather_update") {
-                    if(msg.data && msg.data.temp) {
-                        document.getElementById("weather-temp").textContent = msg.data.temp.toFixed(0) + "°C";
-                        document.getElementById("weather-desc").textContent = msg.data.desc.toUpperCase();
-                    }
-                }
-                // Handle other message types (audit, error, etc) as needed
-                else if(msg.type === "error") addJarvisMessage("Error: " + msg.message, "error");
-            };
-            
-            ws.onclose = () => setTimeout(connectWebSocket, 3000);
-        }
-
-        function sendMessage(data) {
-            if(ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify(data));
-        }
-
-        // --- 5. UI Functions ---
-        let lastMsgEl = null;
-        let msgBuffer = "";
-
-        function addUserMessage(text) {
-            const el = document.createElement("div");
-            el.className = "chat-message user-message";
-            el.textContent = text;
-            document.getElementById("message-display").prepend(el);
-        }
-
-        function addJarvisMessage(text, type="") {
-            const el = document.createElement("div");
-            el.className = `chat-message jarvis-message ${type}`;
-            el.innerHTML = marked.parse(text);
-            document.getElementById("message-display").prepend(el);
-            return el;
-        }
-
-        function updateLastJarvisMessage(text) {
-            const display = document.getElementById("message-display");
-            if(!lastMsgEl || !display.contains(lastMsgEl)) {
-                lastMsgEl = document.createElement("div");
-                lastMsgEl.className = "chat-message jarvis-message typing";
-                display.prepend(lastMsgEl);
-                msgBuffer = "";
-            }
-            msgBuffer += text;
-            lastMsgEl.textContent = msgBuffer; // Raw text while typing
-        }
-
-        function renderMarkdown() {
-            if(lastMsgEl) {
-                lastMsgEl.classList.remove("typing");
-                lastMsgEl.innerHTML = marked.parse(msgBuffer);
-            }
-        }
-        function getCurrentJarvisMessageText() { return msgBuffer; }
-
-        function submitQuery(text) {
-            if(!text.trim()) return;
-            addUserMessage(text);
-            document.getElementById("text-input").value = "";
-            lastMsgEl = null;
-            sendMessage({ type: "text_query", text: text, web_search_enabled: document.getElementById("web-search-toggle").checked });
-        }
-
-        // --- 6. Speech & Audio ---
-        function setupSpeechRecognition() {
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if(!SpeechRecognition) return;
-            recognition = new SpeechRecognition();
-            recognition.continuous = false; 
-            recognition.interimResults = false;
-            
-            recognition.onstart = () => { isRecording=true; document.getElementById("mic-button").classList.add("active"); document.getElementById("web-core").classList.add("listening"); };
-            recognition.onend = () => { isRecording=false; document.getElementById("mic-button").classList.remove("active"); document.getElementById("web-core").classList.remove("listening"); };
-            recognition.onresult = (e) => {
-                const transcript = e.results[0][0].transcript;
-                if(transcript) submitQuery(transcript);
-            };
-            
-            document.getElementById("mic-button").addEventListener("click", () => {
-                isRecording ? recognition.stop() : recognition.start();
-            });
-        }
-
-        function loadVoices() {
-            const voices = window.speechSynthesis.getVoices();
-            jarvisVoice = voices.find(v => v.name.includes("Google UK English Male")) || voices[0];
-        }
-
-        function speak(text) {
-            if(isMuted || !text) return;
-            window.speechSynthesis.cancel();
-            const temp = document.createElement("div"); temp.innerHTML = marked.parse(text);
-            const utt = new SpeechSynthesisUtterance(temp.textContent);
-            if(jarvisVoice) utt.voice = jarvisVoice;
-            utt.pitch = 0.9;
-            window.speechSynthesis.speak(utt);
-        }
-
-        // --- 7. YouTube Logic ---
-        window.onYouTubeIframeAPIReady = function() { console.log("YT Ready"); };
-        
-        async function playVideoById(videoId, title) {
-            document.getElementById("player-modal").style.display = "flex";
-            document.getElementById("player-title").textContent = title;
-            if(!ytPlayer) {
-                ytPlayer = new YT.Player('player-container', {
-                    height: '100%', width: '100%', videoId: videoId,
-                    playerVars: { 'autoplay': 1 },
-                    events: { 'onReady': (e) => e.target.playVideo() }
-                });
-            } else {
-                ytPlayer.loadVideoById(videoId);
-            }
-        }
-        function closePlayer() { 
-            if(ytPlayer && ytPlayer.stopVideo) ytPlayer.stopVideo(); 
-            document.getElementById("player-modal").style.display = "none"; 
-        }
-
-        function handleUICommand(action, params) {
-            if(action === "enter_combat_mode") {
-                document.body.classList.add("combat-mode");
-                addJarvisMessage("Combat Mode Engaged.", "status");
-            } else if (action === "play_song") {
-                // Simplified search logic
-                fetch(`${GOOGLE_SEARCH_URL}&q=youtube+${encodeURIComponent(params.song_name)}`)
-                    .then(r=>r.json())
-                    .then(data => {
-                        const item = data.items.find(i => i.link.includes("watch?v="));
-                        if(item) {
-                            const vid = item.link.split("v=")[1].split("&")[0];
-                            playVideoById(vid, item.title);
-                        } else addJarvisMessage("Video not found.", "error");
-                    });
-            }
-        }
-
-        // --- 8. File Uploads ---
-        async function handleFileUpload(e) {
-            const file = e.target.files[0];
-            if(!file) return;
-            addJarvisMessage(`Processing ${file.name}...`, "status");
-            
-            let text = "";
-            if(file.name.endsWith(".txt")) text = await file.text();
-            else if(file.name.endsWith(".docx")) {
-                const res = await mammoth.extractRawText({arrayBuffer: await file.arrayBuffer()});
-                text = res.value;
-            }
-            // PDF logic is complex, skipping for brevity but libraries are included
-            
-            sendMessage({ type: "set_file_context", filename: file.name, content: text });
-            e.target.value = "";
-        }
-
-        // --- 9. Stats & Camera ---
-        function startCamera() {
-            navigator.mediaDevices.getUserMedia({video:true})
-                .then(s => document.getElementById("camera-feed").srcObject = s)
-                .catch(e => console.log("Cam error", e));
-        }
-        
-        function updateClock() {
-            const now = new Date();
-            document.getElementById("dynamic-clock").textContent = now.toLocaleTimeString();
-            document.getElementById("dynamic-date").textContent = now.toLocaleDateString();
-        }
-        
-        function updateSuitStatus() {
-            document.getElementById("energy-bar").style.width = (80 + Math.random()*20) + "%";
-            document.getElementById("armour-bar").style.width = (90 + Math.random()*10) + "%";
-            document.getElementById("cpu-stat").textContent = Math.floor(Math.random()*30+10) + "%";
-            document.getElementById("mem-stat").textContent = Math.floor(Math.random()*40+20) + "%";
-        }
     </script>
 </body>
 </html>
