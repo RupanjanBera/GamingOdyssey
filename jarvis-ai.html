@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>J.A.R.V.I.S. HUD V2.7 - Mobile Optimized</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
+    <title>J.A.R.V.I.S. HUD V2.9 - Compact UI</title>
     
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
@@ -24,7 +24,7 @@
         html, body {
             height: 100%; width: 100%; font-family: 'Roboto', sans-serif;
             background-color: var(--bg-color); color: var(--text-color);
-            overflow: hidden; /* Prevent body scroll, handle in panels */
+            overflow: hidden; 
             background-image: linear-gradient(45deg, #1a0b2a, #0d0a1f);
             perspective: 1000px;
         }
@@ -88,10 +88,9 @@
         body.combat-mode .status-item, body.combat-mode .jarvis-message, body.combat-mode #text-input { border-color: var(--danger-glow); }
         body.combat-mode .control-button { border-color: var(--danger-glow); color: var(--danger-glow); text-shadow: 0 0 5px var(--danger-glow); box-shadow: 0 0 10px var(--danger-glow) inset, 0 0 10px var(--danger-glow); }
         body.combat-mode .control-button:hover { background-color: var(--danger-glow); color: var(--bg-color); }
-        body.combat-mode .web-toggle { border-color: var(--danger-glow); background: rgba(255, 34, 0, 0.1); }
-        body.combat-mode .web-toggle label { color: var(--danger-glow); }
         body.combat-mode .status-bar-inner { background: var(--danger-glow); box-shadow: 0 0 10px var(--danger-glow); }
         body.combat-mode #arc-reactor, body.combat-mode #suit-svg path { --primary-glow: var(--danger-glow); }
+        body.combat-mode #web-search-btn.active { color: var(--danger-glow); box-shadow: 0 0 10px var(--danger-glow); }
 
         /* --- 5. Main Layout (Desktop Default) --- */
         .jarvis-container { display: flex; height: 100vh; width: 100vw; padding: 1rem; gap: 1rem; }
@@ -180,29 +179,73 @@
         #mute-button.active { background-color: var(--secondary-glow); border-color: var(--secondary-glow); }
         #clear-button, #upload-button { border-color: var(--warning-glow); color: var(--warning-glow); }
 
-        .toggle-group { display: flex; flex-direction: column; gap: 10px; }
-        .toggle-container { display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 5px; border: 1px solid; cursor: pointer; }
-        .toggle-container label { font-family: 'Orbitron'; font-weight: bold; cursor: pointer; }
-        
+        /* Web Search Button Styling */
+        #web-search-btn {
+            display: flex; align-items: center; justify-content: center;
+            width: 45px; height: 45px;
+            border-radius: 50%;
+            border: 1px solid var(--text-secondary);
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer; transition: all 0.3s ease;
+        }
+        #web-search-btn svg { width: 20px; height: 20px; fill: currentColor; }
+        #web-search-btn.active {
+            border-color: var(--primary-glow);
+            color: var(--primary-glow);
+            box-shadow: 0 0 10px var(--primary-glow) inset, 0 0 10px var(--primary-glow);
+        }
+
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); justify-content: center; align-items: center; z-index: 200; }
         .modal-content { background: var(--glass-bg); padding: 2rem; border-radius: 15px; border: 1px solid var(--primary-glow); box-shadow: 0 0 30px var(--primary-glow); text-align: center; }
 
-        /* Auth UI Styling (Retained High Tech Look) */
+        /* COMPACT AUTH UI */
         #login-modal .modal-content {
-            background: rgba(10, 10, 25, 0.95); border: 2px solid var(--primary-glow); width: 400px; max-width: 90%;
+            background: rgba(10, 10, 25, 0.98); 
+            border: 1px solid var(--primary-glow); 
+            width: 320px; /* Reduced width */
+            max-width: 85%;
+            padding: 1.5rem; /* Reduced padding */
             position: relative;
-            clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
-            box-shadow: 0 0 50px rgba(0, 255, 255, 0.15), inset 0 0 30px rgba(0, 255, 255, 0.1);
+            /* Simplified clip-path for cleaner look */
+            clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.1);
+            display: flex; flex-direction: column; align-items: center; gap: 10px;
         }
-        .login-bracket { position: absolute; width: 20px; height: 20px; border: 2px solid var(--primary-glow); }
-        .lb-tl { top: 10px; left: 10px; border-right: none; border-bottom: none; }
-        .lb-tr { top: 10px; right: 10px; border-left: none; border-bottom: none; }
-        .lb-bl { bottom: 10px; left: 10px; border-right: none; border-top: none; }
-        .lb-br { bottom: 10px; right: 10px; border-left: none; border-top: none; }
         
-        #google-login-btn { background: linear-gradient(90deg, rgba(0,255,255,0.1), rgba(0,255,255,0.2)); color: var(--primary-glow); display: flex; align-items: center; justify-content: center; gap: 15px; font-family: 'Orbitron'; font-size: 1rem; border: 1px solid var(--primary-glow); padding: 12px 25px; cursor: pointer; width: 100%; margin: 0 auto 15px; transition: all 0.3s; }
-        #google-login-btn:hover { box-shadow: 0 0 20px var(--primary-glow); background: rgba(0,255,255,0.15); }
-        .guest-btn { color: var(--text-secondary); font-family: 'Roboto'; font-size: 0.9rem; background: transparent; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
+        .auth-icon-container {
+            width: 50px; height: 50px; margin-bottom: 0.5rem; /* Reduced size */
+            position: relative; display: flex; align-items: center; justify-content: center;
+        }
+        .auth-ring {
+            position: absolute; width: 100%; height: 100%;
+            border: 1px dashed var(--primary-glow); border-radius: 50%;
+            animation: spin 8s linear infinite;
+        }
+        .auth-icon { width: 24px; height: 24px; fill: var(--primary-glow); z-index: 2; }
+
+        .login-title { font-family: 'Orbitron'; font-size: 1.1rem; color: var(--primary-glow); letter-spacing: 1px; margin: 0; }
+        .login-subtitle { font-size: 0.75rem; color: var(--text-secondary); margin: 0; margin-bottom: 1rem; }
+        
+        #google-login-btn { 
+            background: rgba(0, 255, 255, 0.05); 
+            color: var(--primary-glow); 
+            display: flex; align-items: center; justify-content: center; gap: 10px; 
+            font-family: 'Orbitron'; font-size: 0.8rem; 
+            border: 1px solid var(--primary-glow); 
+            padding: 10px 15px; cursor: pointer; width: 100%; 
+            transition: all 0.3s; 
+            margin: 0; /* Remove margin */
+        }
+        #google-login-btn:hover { background: rgba(0, 255, 255, 0.15); box-shadow: 0 0 15px var(--primary-glow); }
+        
+        .guest-btn { 
+            color: var(--text-secondary); font-family: 'Roboto'; font-size: 0.75rem; 
+            background: transparent; border: none; cursor: pointer; 
+            text-transform: uppercase; letter-spacing: 1px; 
+            margin-top: 5px; opacity: 0.6; 
+        }
+        .guest-btn:hover { opacity: 1; color: #fff; }
 
         .auth-profile { position: fixed; top: 20px; right: 20px; z-index: 1000; display: flex; align-items: center; gap: 15px; background: rgba(10, 10, 20, 0.85); border: 1px solid var(--primary-glow); border-left: 5px solid var(--primary-glow); padding: 8px 20px 8px 10px; clip-path: polygon(0 0, 100% 0, 100% 70%, 90% 100%, 0 100%); transition: all 0.3s ease; backdrop-filter: blur(5px); }
         .user-avatar { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 1px solid #fff; }
@@ -211,101 +254,28 @@
         /* Mobile Navigation (Hidden on Desktop) */
         #mobile-nav { display: none; }
 
-        /* --- 9. Responsive / Mobile Optimization --- */
+        /* --- 9. Responsive / Mobile Optimization (FIXED) --- */
         @media (max-width: 900px) {
-            /* Fix Body for Mobile */
-            html, body { 
-                height: 100dvh; /* Use dynamic viewport height */
-                width: 100vw; 
-                overflow: hidden; 
-                position: fixed; /* Lock scroll to prevent bounce */
-            }
-
-            /* Main Container Layout */
-            .jarvis-container { 
-                flex-direction: column; 
-                height: calc(100dvh - 60px); /* Leave room for bottom nav */
-                width: 100%; 
-                padding: 0; 
-                gap: 0; 
-                position: relative;
-            }
-
-            /* Panel Logic - Tabs */
-            .side-panel, .right-panel, .main-panel { 
-                width: 100%; 
-                height: 100%; 
-                border: none;
-                border-radius: 0;
-                background: var(--bg-color); /* Opaque bg */
-                padding: 10px;
-                overflow-y: auto;
-                transition: none; transform: none !important;
-                display: none; /* Hidden by default */
-            }
-
-            /* Default Active Tab */
-            .main-panel.active-tab { display: flex; }
-            .side-panel.active-tab { display: flex; }
-            .right-panel.active-tab { display: flex; }
-
-            /* Chat Panel Mobile Fixes */
-            .main-panel { padding: 0; }
-            #chat-container { height: 100%; padding-bottom: 0; }
-            #message-display { padding: 10px; padding-bottom: 70px; /* Space for input */ }
-            
-            #input-area { 
-                position: absolute; bottom: 0; left: 0; width: 100%; 
-                background: rgba(13, 10, 31, 0.95); padding: 10px; z-index: 50;
-                border-radius: 0; border-top: 1px solid var(--primary-glow);
-                flex-wrap: nowrap;
-            }
-            #text-input { font-size: 16px; /* Fix iOS Zoom */ flex-grow: 1; }
+            html, body { height: 100dvh; width: 100vw; overflow: hidden; position: fixed; }
+            .jarvis-container { display: flex; flex-direction: column; height: 100dvh; width: 100%; padding: 0; gap: 0; padding-bottom: 60px; }
+            .side-panel, .right-panel, .main-panel { width: 100%; height: 100%; border: none; border-radius: 0; background: var(--bg-color); padding: 10px; overflow-y: auto; transition: none !important; transform: none !important; display: none; flex-direction: column; }
+            .side-panel.active-tab, .right-panel.active-tab, .main-panel.active-tab { display: flex; }
+            .hud-panel { opacity: 1 !important; transform: none !important; animation: none !important; box-shadow: none; border: 1px solid var(--primary-glow); margin-bottom: 1rem; flex-shrink: 0; width: 100%; }
+            .main-panel { padding: 0; overflow: hidden; } 
+            #chat-container { flex-grow: 1; display: flex; flex-direction: column; height: 100%; overflow: hidden; }
+            #message-display { flex-grow: 1; overflow-y: auto; padding: 10px; padding-bottom: 20px; }
+            #input-area { position: relative; flex-shrink: 0; width: 100%; background: rgba(13, 10, 31, 0.95); padding: 10px; z-index: 50; border-radius: 0; border-top: 1px solid var(--primary-glow); flex-wrap: nowrap; bottom: auto; left: auto; }
+            #text-input { font-size: 16px; flex-grow: 1; }
             .control-button { padding: 0.6rem; font-size: 0.9rem; }
-            
-            /* Suit/Logistics Panels Mobile Fixes */
-            #suit-status-panel, #logistics-panel, #camera-panel, #audit-panel {
-                flex-grow: 0; margin-bottom: 10px; opacity: 1 !important; transform: none !important;
-            }
-            #camera-panel { height: 250px; }
-            
-            /* Auth Profile Mobile */
+            #camera-panel { height: 250px; min-height: 250px; }
             .auth-profile { top: 10px; right: 10px; padding: 5px 10px; clip-path: none; border-radius: 5px; border-left: 2px solid var(--primary-glow); }
             .pilot-label, .status-dot, .avatar-ring { display: none; }
             .user-name { font-size: 0.8rem; max-width: 80px; }
             #logout-btn { padding: 2px 5px; font-size: 0.6rem; margin-left: 5px; }
-
-            /* Mobile Navigation Bar */
-            #mobile-nav {
-                display: flex; height: 60px; width: 100%;
-                position: fixed; bottom: 0; left: 0;
-                background: rgba(10, 10, 20, 0.95);
-                border-top: 2px solid var(--primary-glow);
-                z-index: 1000;
-                justify-content: space-around;
-                align-items: center;
-                backdrop-filter: blur(10px);
-            }
-            .nav-item {
-                color: var(--text-secondary);
-                font-family: 'Orbitron';
-                font-size: 0.8rem;
-                text-align: center;
-                padding: 10px;
-                flex-grow: 1;
-                cursor: pointer;
-                border-top: 2px solid transparent;
-                transition: all 0.3s;
-            }
-            .nav-item.active {
-                color: var(--primary-glow);
-                text-shadow: 0 0 10px var(--primary-glow);
-                background: linear-gradient(0deg, rgba(0,255,255,0.1), transparent);
-                border-top: 2px solid var(--primary-glow);
-            }
-            
-            /* Modals Mobile */
-            #login-modal .modal-content { width: 95%; max-height: 90dvh; overflow-y: auto; }
+            #mobile-nav { display: flex; height: 60px; width: 100%; position: absolute; bottom: 0; left: 0; background: rgba(10, 10, 20, 0.95); border-top: 2px solid var(--primary-glow); z-index: 2000; justify-content: space-around; align-items: center; backdrop-filter: blur(10px); }
+            .nav-item { color: var(--text-secondary); font-family: 'Orbitron'; font-size: 0.8rem; text-align: center; padding: 10px; flex-grow: 1; cursor: pointer; border-top: 2px solid transparent; transition: all 0.3s; }
+            .nav-item.active { color: var(--primary-glow); text-shadow: 0 0 10px var(--primary-glow); background: linear-gradient(0deg, rgba(0,255,255,0.1), transparent); border-top: 2px solid var(--primary-glow); }
+            #login-modal .modal-content { width: 95%; max-height: 90dvh; overflow-y: auto; margin-top: 20px; padding: 1.5rem; }
             #player-container { width: 100%; height: 200px; }
         }
     </style>
@@ -353,16 +323,7 @@
                 <div class="control-group">
                     <button id="mute-button" class="control-button">MUTE</button>
                     <button id="clear-button" class="control-button">CLEAR CHAT</button>
-                    <div class="toggle-group">
-                        <div class="danger-toggle toggle-container">
-                            <input type="checkbox" id="safety-toggle">
-                            <label for="safety-toggle">DANGER: Safety Off</label>
-                        </div>
-                        <div class="web-toggle toggle-container">
-                            <input type="checkbox" id="web-search-toggle" checked>
-                            <label for="web-search-toggle">Web Search ON</label>
-                        </div>
-                    </div>
+                    <!-- Removed Danger & Web Toggle (Web moved to chat input) -->
                 </div>
             </div>
         </div>
@@ -373,10 +334,16 @@
             <div id="chat-container">
                 <div id="message-display"></div>
                 <div id="input-area">
+                    <!-- WEB SEARCH TOGGLE ICON -->
+                    <button id="web-search-btn" class="active" title="Toggle Web Search">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                        </svg>
+                    </button>
+                    <input type="text" id="text-input" placeholder="CMD...">
                     <button id="mic-button" class="control-button">MIC</button>
                     <button id="upload-button" class="control-button">UP</button>
                     <input type="file" id="file-uploader" accept=".txt,.pdf,.doc,.docx" style="display: none;">
-                    <input type="text" id="text-input" placeholder="CMD...">
                     <button id="send-button" class="control-button">SEND</button>
                 </div>
             </div>
@@ -419,22 +386,20 @@
     <!-- Modals -->
     <div id="login-modal" class="modal-overlay">
         <div class="modal-content">
-            <div class="login-bracket lb-tl"></div><div class="login-bracket lb-tr"></div>
-            <div class="login-bracket lb-bl"></div><div class="login-bracket lb-br"></div>
             <div class="auth-icon-container">
                 <div class="auth-ring"></div>
                 <svg class="auth-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><path d="M12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/><path d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
             </div>
             <h2 class="login-title">IDENTITY VERIFICATION</h2>
             <p id="login-msg" class="login-subtitle">SECURE ACCESS REQUIRED</p>
-            <div id="limit-warning" class="login-warning" style="display:none; color: var(--danger-glow); font-weight: bold; margin-bottom: 1rem;">
-                TRIAL PROTOCOLS EXPIRED (100/100)<br><span id="reset-timer">RESETS IN: --:--:--</span>
+            <div id="limit-warning" class="login-warning" style="display:none; color: var(--danger-glow); font-weight: bold; margin-bottom: 0.5rem; font-size: 0.8rem;">
+                TRIAL EXPIRED<br><span id="reset-timer">RESETS IN: --:--:--</span>
             </div>
             <button id="google-login-btn">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20" alt="G">
-                AUTHENTICATE VIA GOOGLE
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18" alt="G">
+                LOGIN WITH GOOGLE
             </button>
-            <button id="guest-btn" class="guest-btn">INITIATE GUEST PROTOCOL</button>
+            <button id="guest-btn" class="guest-btn">GUEST ACCESS</button>
         </div>
     </div>
 
@@ -530,6 +495,7 @@
         let isRecording = false; let isMuted = false;
         let currentLang = "en-US"; let pendingAction = null; 
         let jarvisVoice = null; let hasUserInteracted = false;
+        let webSearchEnabled = true; // Default ON
         const welcomeMsg = "At your service sir. How may I serve you today?";
         
         window.currentUser = null;
@@ -545,21 +511,14 @@
 
         // --- Mobile Tab Logic ---
         window.switchTab = function(tabName) {
-            // Only works if mobile nav is visible
             if(window.innerWidth > 900) return;
-
-            // Update Nav visual
             const navItems = document.querySelectorAll('.nav-item');
             navItems.forEach(item => item.classList.remove('active'));
             const activeIndex = tabName === 'sys' ? 0 : tabName === 'comm' ? 1 : 2;
             navItems[activeIndex].classList.add('active');
-
-            // Hide all panels
             document.getElementById('left-panel').classList.remove('active-tab');
             document.getElementById('main-panel').classList.remove('active-tab');
             document.getElementById('right-panel').classList.remove('active-tab');
-
-            // Show selected
             if(tabName === 'sys') document.getElementById('left-panel').classList.add('active-tab');
             if(tabName === 'comm') document.getElementById('main-panel').classList.add('active-tab');
             if(tabName === 'data') document.getElementById('right-panel').classList.add('active-tab');
@@ -572,8 +531,7 @@
             const clearButton = document.getElementById("clear-button");
             const textInput = document.getElementById("text-input");
             const sendButton = document.getElementById("send-button");
-            const safetyToggle = document.getElementById("safety-toggle");
-            const webSearchToggle = document.getElementById("web-search-toggle");
+            const webSearchBtn = document.getElementById("web-search-btn");
             const messageDisplay = document.getElementById("message-display");
             const cpuStat = document.getElementById("cpu-stat");
             const memStat = document.getElementById("mem-stat");
@@ -622,13 +580,10 @@
                         case "llm_end": renderMarkdown(); speak(getCurrentJarvisMessageText(), null); break;
                         case "ui_command": handleUICommand(msg.action, msg.params); break;
                         case "action_confirmation":
-                            if (safetyToggle.checked) {
-                                sendMessage({ type: "execute_action", token: SHARED_SECRET_TOKEN, action_data: msg.action_data });
-                            } else {
-                                pendingAction = msg.action_data;
-                                modalMessage.textContent = `JARVIS wants to execute: ${pendingAction.action} (${JSON.stringify(pendingAction.params)})`;
-                                confirmationModal.style.display = "flex";
-                            }
+                            // SAFETY ALWAYS ON: Always ask for confirmation
+                            pendingAction = msg.action_data;
+                            modalMessage.textContent = `JARVIS wants to execute: ${pendingAction.action} (${JSON.stringify(pendingAction.params)})`;
+                            confirmationModal.style.display = "flex";
                             break;
                         case "action_status":
                             if (window.currentUser && window.firebaseDb) {
@@ -738,7 +693,7 @@
                 addUserMessage(text); textInput.value = ""; lastJarvisMessageEl = null;
                 sendMessage({
                     type: "text_query", text: text, lang: currentLang,
-                    web_search_enabled: webSearchToggle.checked,
+                    web_search_enabled: webSearchEnabled,
                     userId: window.currentUser ? window.currentUser.uid : "guest" 
                 });
             }
@@ -862,10 +817,28 @@
             document.addEventListener("click", unlockAudio, {once: true});
             micButton.addEventListener("click", () => { if (isRecording) { recognition.stop(); } else { recognition.start(); } });
             sendButton.addEventListener("click", () => { submitQuery(textInput.value); });
+            
+            // New Web Search Toggle Logic
+            webSearchBtn.addEventListener("click", () => {
+                webSearchEnabled = !webSearchEnabled;
+                webSearchBtn.classList.toggle("active", webSearchEnabled);
+            });
+
             textInput.addEventListener("keydown", (event) => { if (event.key === "Enter") { submitQuery(textInput.value); } });
             muteButton.addEventListener("click", () => { isMuted = !isMuted; muteButton.classList.toggle("active", isMuted); if (isMuted) { window.speechSynthesis.cancel(); } });
             clearButton.addEventListener("click", () => { messageDisplay.innerHTML = ""; sendMessage({ type: "clear_history" }); });
             
+            modalAllowButton.addEventListener("click", () => {
+                if (pendingAction) {
+                    sendMessage({ type: "execute_action", token: SHARED_SECRET_TOKEN, action_data: pendingAction });
+                    pendingAction = null; confirmationModal.style.display = "none";
+                }
+            });
+            modalDenyButton.addEventListener("click", () => {
+                sendMessage({ type: "deny_action" });
+                pendingAction = null; confirmationModal.style.display = "none";
+            });
+
             googleLoginBtn.addEventListener('click', async () => { try { await window.firebaseAuth.signInWithPopup(window.firebaseAuth.auth, window.firebaseAuth.provider); } catch (e) { alert("Login failed: " + e.message); } });
             guestBtn.addEventListener('click', () => { document.getElementById('login-modal').style.display = 'none'; });
             logoutBtn.addEventListener('click', () => { window.firebaseAuth.signOut(window.firebaseAuth.auth); window.location.reload(); });
