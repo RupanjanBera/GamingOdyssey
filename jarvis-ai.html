@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>J.A.R.V.I.S. HUD V2.31</title>
+    <title>J.A.R.V.I.S. HUD V2.4 - Secure Auth</title>
     
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
@@ -243,7 +243,29 @@
         @keyframes scanlines { from { background-position-y: 0; } to { background-position-y: 4px; } }
         @keyframes vibrate { 0% { transform: translate(2px, 1px); } 50% { transform: translate(-1px, -2px); } 100% { transform: translate(2px, 1px); } }
         
-        /* --- 13. Responsive Media Queries --- */
+        /* --- 13. Login / Auth Styles (NEW) --- */
+        #login-modal { z-index: 300; display: flex; } /* Initial display flex for immediate prompt */
+        .auth-profile {
+            position: fixed; top: 10px; right: 20px; z-index: 100;
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(0,0,0,0.6); padding: 5px 15px; border-radius: 30px;
+            border: 1px solid var(--primary-glow);
+            transition: all 0.3s ease;
+        }
+        .auth-profile:hover { box-shadow: 0 0 15px var(--primary-glow); }
+        .user-avatar { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-glow); }
+        .user-name { font-size: 0.8rem; color: var(--primary-glow); max-width: 100px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        #google-login-btn {
+            background: #fff; color: #333; display: flex; align-items: center; gap: 10px;
+            font-family: 'Roboto'; font-weight: bold; border: none; padding: 10px 20px;
+            cursor: pointer; border-radius: 5px; margin: 10px auto;
+            transition: transform 0.2s;
+        }
+        #google-login-btn:hover { transform: scale(1.05); }
+        .guest-btn { margin-top: 10px; font-size: 0.8rem; color: var(--text-secondary); text-decoration: underline; background: none; border: none; cursor: pointer; }
+        .login-warning { color: var(--danger-glow); font-size: 0.9rem; margin-bottom: 1rem; font-weight: bold; }
+
+        /* --- 14. Responsive Media Queries --- */
         @media (max-width: 1200px) {
             .side-panel, .right-panel { flex: 0 0 250px; }
         }
@@ -265,6 +287,8 @@
             #arc-reactor { width: 80px; height: 80px; margin: 1rem auto; }
             .modal-content { width: 90%; padding: 1rem; }
             #player-container { width: 100%; height: 250px; }
+            .auth-profile { top: 5px; right: 5px; padding: 5px; }
+            .user-name { display: none; }
         }
     </style>
 </head>
@@ -272,6 +296,13 @@
     
     <div id="particle-background"></div>
     <div id="scanlines"></div>
+
+    <!-- Auth UI -->
+    <div id="auth-display" class="auth-profile" style="display: none;">
+        <img id="user-avatar" src="" class="user-avatar" alt="User">
+        <span id="user-name" class="user-name">Guest</span>
+        <button id="logout-btn" class="control-button" style="padding: 0.3rem 0.8rem; font-size: 0.7rem; border-width: 1px;">LOGOUT</button>
+    </div>
 
     <div class="jarvis-container">
         <div class="side-panel" id="left-panel">
@@ -351,6 +382,21 @@
         </div>
     </div>
 
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3>IDENTITY VERIFICATION REQUIRED</h3>
+            <p id="login-msg">Access restricted. Please authenticate.</p>
+            <p id="limit-warning" class="login-warning" style="display:none;">TRIAL PERIOD EXPIRED (10/10)</p>
+            
+            <button id="google-login-btn">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20" alt="G">
+                Sign in with Google
+            </button>
+            <button id="guest-btn" class="guest-btn">Skip for now (Guest Mode)</button>
+        </div>
+    </div>
+
     <div id="confirmation-modal" class="modal-overlay">
         <div class="modal-content">
             <h3>ACTION CONFIRMATION</h3> <p id="modal-message">...</p>
@@ -374,6 +420,70 @@
     </div>
     <div id="destruction-overlay"></div>
 
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyDA218WauVZNgqeMgiR_5H6TLYQB5HXZkY",
+          authDomain: "gamingodyssey-2e642.firebaseapp.com",
+          databaseURL: "https://gamingodyssey-2e642-default-rtdb.firebaseio.com",
+          projectId: "gamingodyssey-2e642",
+          storageBucket: "gamingodyssey-2e642.firebasestorage.app",
+          messagingSenderId: "964191300629",
+          appId: "1:964191300629:web:4be869d43fd0afeb00321c",
+          measurementId: "G-VS888VHFJJ"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
+
+        // Expose auth functions to global scope
+        window.firebaseAuth = { auth, provider, signInWithPopup, signOut };
+        window.firebaseDb = { db, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, limit };
+        
+        // Auth State Logic
+        onAuthStateChanged(auth, (user) => {
+            const loginModal = document.getElementById('login-modal');
+            const authDisplay = document.getElementById('auth-display');
+            const guestBtn = document.getElementById('guest-btn');
+            
+            if (user) {
+                // Logged In
+                window.currentUser = user;
+                loginModal.style.display = 'none';
+                authDisplay.style.display = 'flex';
+                document.getElementById('user-name').textContent = user.displayName;
+                document.getElementById('user-avatar').src = user.photoURL;
+                
+                // Initialize User's Private Audit Log
+                window.initPrivateAuditLog(user.uid);
+            } else {
+                // Logged Out
+                window.currentUser = null;
+                authDisplay.style.display = 'none';
+                
+                // If limit reached, force modal and hide skip button
+                if (window.guestInteractions >= 10) {
+                    loginModal.style.display = 'flex';
+                    guestBtn.style.display = 'none';
+                    document.getElementById('limit-warning').style.display = 'block';
+                } else {
+                    // Start screen logic
+                    loginModal.style.display = 'flex';
+                    guestBtn.style.display = 'inline-block';
+                    document.getElementById('limit-warning').style.display = 'none';
+                }
+            }
+        });
+    </script>
+
     <script>
         // --- 1. Global Constants & State ---
         const GOOGLE_SEARCH_API_KEY = 'AIzaSyBm8SxGHDl9pkrDuZt_VgFQME9a3aRUeXY';
@@ -390,6 +500,10 @@
         let currentLang = "en-US"; let pendingAction = null; 
         let jarvisVoice = null; let hasUserInteracted = false;
         const welcomeMsg = "At your service sir. How may I serve you today?";
+        
+        // Auth State Globals
+        window.currentUser = null;
+        window.guestInteractions = parseInt(localStorage.getItem('jarvis_guest_count') || '0');
 
         document.addEventListener("DOMContentLoaded", () => {
             // --- 2. DOM Elements ---
@@ -433,17 +547,24 @@
             const rightPanel = document.getElementById("right-panel");
             const weatherDesc = document.getElementById("weather-desc");
             const weatherTemp = document.getElementById("weather-temp");
+            
+            // Auth Elements
+            const googleLoginBtn = document.getElementById('google-login-btn');
+            const guestBtn = document.getElementById('guest-btn');
+            const logoutBtn = document.getElementById('logout-btn');
 
             // --- 3. WebSocket Logic ---
             function connectWebSocket() {
                 // !! Make sure this WebSocket URL is correct for your server !!
-                ws = new WebSocket("wss://venice-postpupillary-coaxially.ngrok-free.dev/ws"); // Changed from ngrok to local
+                ws = new WebSocket("wss://venice-postpupillary-coaxially.ngrok-free.dev/ws"); 
                 
                 ws.onopen = () => {
                     addJarvisMessage(welcomeMsg, "status");
-                    sendMessage({ type: "get_audit_log" });
                     sendMessage({ type: "get_system_stats" });
                     sendMessage({ type: "get_weather", location: "Howrah" });
+                    
+                    // We DO NOT fetch audit log from WS anymore to prevent sharing.
+                    // Instead we use Firestore (see below).
                 };
                 ws.onmessage = (event) => {
                     const msg = JSON.parse(event.data);
@@ -461,15 +582,23 @@
                             }
                             break;
                         case "action_status":
-                            // Using addJarvisMessage for action status for better visibility
+                            // Logic: Save to Firestore Private Log ONLY
+                            if (window.currentUser && window.firebaseDb) {
+                                savePrivateLog(msg.action || "Unknown Action", msg.status, JSON.stringify(msg.message));
+                            }
+                            
                             if (msg.status === "fail") {
                                 addJarvisMessage(`Action Failed: ${msg.message}`, "error");
                             } else {
                                 addJarvisMessage(`Action Success: ${msg.message}`, "status");
                             }
-                            if (msg.status === "success") { sendMessage({ type: "get_audit_log" }); }
+                            // Removed: sendMessage({ type: "get_audit_log" }); 
+                            // Why? Because we now listen to Firestore directly.
                             break;
-                        case "audit_log": updateAuditLog(msg.log); break;
+                        case "audit_log": 
+                            // IGNORE WS AUDIT LOGS. We use private Firestore now.
+                            // updateAuditLog(msg.log); 
+                            break;
                         case "clear_confirmation":
                             messageDisplay.innerHTML = "";
                             addJarvisMessage("History and file context cleared. How can I help you, Sir?", "status");
@@ -552,11 +681,26 @@
 
             function submitQuery(text) {
                 if (!text.trim()) return;
+                
+                // --- AUTH CHECK ---
+                if (!window.currentUser) {
+                    if (window.guestInteractions >= 10) {
+                        document.getElementById('login-modal').style.display = 'flex';
+                        document.getElementById('limit-warning').style.display = 'block';
+                        document.getElementById('guest-btn').style.display = 'none';
+                        return;
+                    }
+                    window.guestInteractions++;
+                    localStorage.setItem('jarvis_guest_count', window.guestInteractions);
+                }
+                // ------------------
+
                 addUserMessage(text); textInput.value = "";
                 lastJarvisMessageEl = null;
                 sendMessage({
                     type: "text_query", text: text, lang: currentLang,
-                    web_search_enabled: webSearchToggle.checked
+                    web_search_enabled: webSearchToggle.checked,
+                    userId: window.currentUser ? window.currentUser.uid : "guest" // Send UID to backend
                 });
             }
 
@@ -618,6 +762,11 @@
             }
             
             function handleUICommand(action, params) {
+                // Save log to Firestore first
+                if (window.currentUser && window.firebaseDb) {
+                     savePrivateLog(action, "UI Command", JSON.stringify(params));
+                }
+
                 if (action === "enter_combat_mode") {
                     const text = "Sir, initiating combat mode.";
                     addJarvisMessage(text, "status");
@@ -650,13 +799,9 @@
                 }
             }
 
-// --- 7. YouTube Player (FIXED) ---
-            // We define the variable but DO NOT initialize it immediately while hidden
+            // --- 7. YouTube Player (FIXED) ---
             let apiReady = false;
-            
-            window.onYouTubeIframeAPIReady = function() {
-                apiReady = true;
-            }
+            window.onYouTubeIframeAPIReady = function() { apiReady = true; }
 
             async function findAndPlayVideo(songName) {
                 const query = `youtube ${songName}`;
@@ -681,21 +826,12 @@
 
             function playVideoById(videoId, title) {
                 playerTitle.textContent = title;
-                // 1. SHOW the modal FIRST so the element is visible to the DOM
                 playerModal.style.display = "flex";
 
-                // 2. Initialize or Load the player only after the element is visible
                 if (!ytPlayer) {
                     ytPlayer = new YT.Player('player-container', {
-                        height: '320',
-                        width: '480',
-                        videoId: videoId,
-                        playerVars: { 
-                            'autoplay': 1, 
-                            'controls': 1, // Changed to 1 so you can manually scrub if needed
-                            'rel': 0,
-                            'origin': window.location.origin // Important for API security
-                        },
+                        height: '320', width: '480', videoId: videoId,
+                        playerVars: { 'autoplay': 1, 'controls': 1, 'rel': 0, 'origin': window.location.origin },
                         events: {
                             'onReady': (event) => { event.target.playVideo(); },
                             'onStateChange': (event) => {
@@ -704,18 +840,11 @@
                             }
                         }
                     });
-                } else {
-                    // If player already exists, just load the new video
-                    ytPlayer.loadVideoById(videoId);
-                    // Ensure it plays
-                    ytPlayer.playVideo();
-                }
+                } else { ytPlayer.loadVideoById(videoId); ytPlayer.playVideo(); }
             }
 
             function closePlayer() { 
-                if (ytPlayer && typeof ytPlayer.stopVideo === 'function') {
-                    ytPlayer.stopVideo(); 
-                }
+                if (ytPlayer && typeof ytPlayer.stopVideo === 'function') { ytPlayer.stopVideo(); }
                 playerModal.style.display = "none"; 
             }
 
@@ -726,19 +855,8 @@
                 else { ytPlayer.playVideo(); }
             }
             
-            function rewindPlayer() {
-                if (ytPlayer && ytPlayer.getCurrentTime) {
-                    const currentTime = ytPlayer.getCurrentTime();
-                    ytPlayer.seekTo(currentTime - 10, true);
-                }
-            }
-            
-            function forwardPlayer() {
-                if (ytPlayer && ytPlayer.getCurrentTime) {
-                    const currentTime = ytPlayer.getCurrentTime();
-                    ytPlayer.seekTo(currentTime + 10, true);
-                }
-            }
+            function rewindPlayer() { if (ytPlayer) ytPlayer.seekTo(ytPlayer.getCurrentTime() - 10, true); }
+            function forwardPlayer() { if (ytPlayer) ytPlayer.seekTo(ytPlayer.getCurrentTime() + 10, true); }
 
             playerPause.addEventListener("click", togglePausePlayer);
             playerClose.addEventListener("click", closePlayer);
@@ -844,8 +962,29 @@
                 rightPanel.style.transform = `translateX(${x}px) translateY(${y}px)`;
             });
 
-            // --- 10. Helper Functions ---
+            // --- 10. Auth Event Listeners (NEW) ---
+            googleLoginBtn.addEventListener('click', async () => {
+                try {
+                    await window.firebaseAuth.signInWithPopup(window.firebaseAuth.auth, window.firebaseAuth.provider);
+                } catch (error) {
+                    console.error("Login Failed", error);
+                    alert("Login failed: " + error.message);
+                }
+            });
+
+            guestBtn.addEventListener('click', () => {
+                document.getElementById('login-modal').style.display = 'none';
+            });
+
+            logoutBtn.addEventListener('click', () => {
+                window.firebaseAuth.signOut(window.firebaseAuth.auth);
+                // Force reload to clear state cleanly
+                window.location.reload();
+            });
+
+            // --- 11. Helper Functions ---
             function updateAuditLog(logEntries) {
+                // Legacy function - kept for compatibility but overridden by private log logic
                 auditLog.innerHTML = "";
                 if (!logEntries || logEntries.length === 0) { return; }
                 logEntries.forEach(entry => {
@@ -855,12 +994,12 @@
                     entryEl.innerHTML = `
                         <p><strong>${entry.action}</strong> (${entry.status})</p>
                         <p style="font-size: 0.8em; color: var(--text-secondary);">Params: ${entry.params}</p>
-                        <p class="timestamp">${entry.timestamp.split('T')[1].split('.')[0]}</p>`;
+                        <p class="timestamp">${entry.timestamp || "Just now"}</p>`;
                     auditLog.appendChild(entryEl);
                 });
             }
             
-            // --- 11. Dynamic UI Functions ---
+            // --- 12. Dynamic UI Functions ---
             function startCamera() {
                 if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                     navigator.mediaDevices.getUserMedia({ video: true })
@@ -899,7 +1038,36 @@
                 }
             }
 
-            // --- 12. Initialization ---
+            // --- 13. Private Log Logic (FIRESTORE) ---
+            window.initPrivateAuditLog = function(userId) {
+                const { db, collection, query, orderBy, onSnapshot, limit } = window.firebaseDb;
+                // Listen to THIS user's logs only
+                const logsRef = collection(db, "users", userId, "audit_log");
+                const q = query(logsRef, orderBy("timestamp", "desc"), limit(20));
+
+                onSnapshot(q, (snapshot) => {
+                    const logs = [];
+                    snapshot.forEach((doc) => logs.push(doc.data()));
+                    updateAuditLog(logs); // Reuse UI function
+                });
+            };
+
+            window.savePrivateLog = async function(action, status, params) {
+                if (!window.currentUser) return; // Don't save guest logs to DB
+                const { db, collection, addDoc, serverTimestamp } = window.firebaseDb;
+                try {
+                    await addDoc(collection(db, "users", window.currentUser.uid, "audit_log"), {
+                        action: action,
+                        status: status,
+                        params: params,
+                        timestamp: serverTimestamp() // Use server time
+                    });
+                } catch (e) {
+                    console.error("Error saving private log:", e);
+                }
+            };
+
+            // --- 14. Initialization ---
             connectWebSocket();
             setupSpeechRecognition();
             window.speechSynthesis.onvoiceschanged = loadVoices;
