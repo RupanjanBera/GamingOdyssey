@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>J.A.R.V.I.S. HUD V2.4 - Secure Auth</title>
+    <title>J.A.R.V.I.S. HUD V2.6 - Timed Access</title>
     
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
@@ -153,7 +153,6 @@
             max-width: 80%; padding: 0.8rem 1.2rem; border-radius: 15px; margin-bottom: 1rem;
             white-space: pre-wrap; word-wrap: break-word;
             background: rgba(20, 15, 40, 0.7); backdrop-filter: blur(5px);
-            /* NEW: Message Fade-in Animation */
             animation: fadeIn 0.5s ease-out;
         }
         @keyframes fadeIn {
@@ -197,12 +196,10 @@
             flex-grow: 1; padding: 0.8rem 1.2rem; background: rgba(0,0,0,0.5);
             border: 1px solid var(--primary-glow); border-radius: 50px;
             color: var(--text-color); font-size: 1rem;
-            /* NEW: Added transition for focus animation */
             transition: all 0.3s ease;
         }
         #text-input:focus {
             outline: none;
-            /* NEW: Enhanced focus animation */
             box-shadow: 0 0 15px var(--primary-glow), 0 0 25px var(--primary-glow) inset;
             transform: scale(1.01);
         }
@@ -214,7 +211,6 @@
         #clear-button, #upload-button { border-color: var(--warning-glow); color: var(--warning-glow); box-shadow: 0 0 10px var(--warning-glow) inset, 0 0 10px var(--warning-glow); }
         #clear-button:hover, #upload-button:hover { background-color: var(--warning-glow); }
 
-        /* --- 9. Toggles --- */
         .toggle-group { display: flex; flex-direction: column; gap: 10px; }
         .toggle-container { display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 5px; border: 1px solid; cursor: pointer; }
         .toggle-container label { font-family: 'Orbitron'; font-weight: bold; cursor: pointer; }
@@ -223,18 +219,15 @@
         .web-toggle { border-color: var(--primary-glow); background: rgba(0, 255, 255, 0.1); }
         .web-toggle label { color: var(--primary-glow); }
         
-        /* --- 10. Modals --- */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); justify-content: center; align-items: center; z-index: 200; }
         .modal-content { background: var(--glass-bg); padding: 2rem; border-radius: 15px; border: 1px solid var(--primary-glow); box-shadow: 0 0 30px var(--primary-glow); text-align: center; }
         body.combat-mode .modal-content { border-color: var(--danger-glow); box-shadow: 0 0 30px var(--danger-glow); }
 
-        /* --- 11. Mini Player --- */
         #player-modal { z-index: 201; }
         #player-container { width: 480px; height: 320px; background: #000; border-radius: 10px; overflow: hidden; }
         #player-controls { display: flex; justify-content: center; gap: 1rem; margin-top: 1rem; }
         #player-controls .control-button { font-size: 0.9rem; padding: 0.6rem 1rem; }
         
-        /* --- 12. Self-Destruct Animation --- */
         #destruction-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9998; background: rgba(255, 0, 0, 0.3); animation: flashRed 0.2s linear infinite; }
         #destruction-overlay::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(0deg, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0) 50%); background-size: 100% 4px; animation: scanlines 0.2s linear infinite; }
         #destruction-overlay.active { display: block; }
@@ -243,29 +236,118 @@
         @keyframes scanlines { from { background-position-y: 0; } to { background-position-y: 4px; } }
         @keyframes vibrate { 0% { transform: translate(2px, 1px); } 50% { transform: translate(-1px, -2px); } 100% { transform: translate(2px, 1px); } }
         
-        /* --- 13. Login / Auth Styles (NEW) --- */
-        #login-modal { z-index: 300; display: flex; } /* Initial display flex for immediate prompt */
-        .auth-profile {
-            position: fixed; top: 10px; right: 20px; z-index: 100;
-            display: flex; align-items: center; gap: 10px;
-            background: rgba(0,0,0,0.6); padding: 5px 15px; border-radius: 30px;
-            border: 1px solid var(--primary-glow);
-            transition: all 0.3s ease;
+        /* --- REDESIGNED AUTH UI --- */
+        
+        /* 1. Login Modal Styling */
+        #login-modal .modal-content {
+            background: rgba(10, 10, 25, 0.95);
+            border: 2px solid var(--primary-glow);
+            width: 400px; max-width: 90%;
+            position: relative;
+            clip-path: polygon(
+                20px 0, 100% 0, 100% calc(100% - 20px), 
+                calc(100% - 20px) 100%, 0 100%, 0 20px
+            );
+            box-shadow: 0 0 50px rgba(0, 255, 255, 0.15), inset 0 0 30px rgba(0, 255, 255, 0.1);
         }
-        .auth-profile:hover { box-shadow: 0 0 15px var(--primary-glow); }
-        .user-avatar { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-glow); }
-        .user-name { font-size: 0.8rem; color: var(--primary-glow); max-width: 100px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        #google-login-btn {
-            background: #fff; color: #333; display: flex; align-items: center; gap: 10px;
-            font-family: 'Roboto'; font-weight: bold; border: none; padding: 10px 20px;
-            cursor: pointer; border-radius: 5px; margin: 10px auto;
-            transition: transform 0.2s;
+        
+        /* Decorative HUD Brackets for Login */
+        .login-bracket {
+            position: absolute; width: 20px; height: 20px;
+            border: 2px solid var(--primary-glow);
+            transition: all 0.5s ease;
         }
-        #google-login-btn:hover { transform: scale(1.05); }
-        .guest-btn { margin-top: 10px; font-size: 0.8rem; color: var(--text-secondary); text-decoration: underline; background: none; border: none; cursor: pointer; }
-        .login-warning { color: var(--danger-glow); font-size: 0.9rem; margin-bottom: 1rem; font-weight: bold; }
+        .lb-tl { top: 10px; left: 10px; border-right: none; border-bottom: none; }
+        .lb-tr { top: 10px; right: 10px; border-left: none; border-bottom: none; }
+        .lb-bl { bottom: 10px; left: 10px; border-right: none; border-top: none; }
+        .lb-br { bottom: 10px; right: 10px; border-left: none; border-top: none; }
 
-        /* --- 14. Responsive Media Queries --- */
+        .auth-icon-container {
+            width: 80px; height: 80px; margin: 0 auto 1.5rem;
+            position: relative; display: flex; align-items: center; justify-content: center;
+        }
+        .auth-ring {
+            position: absolute; width: 100%; height: 100%;
+            border: 2px dashed var(--primary-glow); border-radius: 50%;
+            animation: spin 10s linear infinite;
+        }
+        .auth-icon { width: 40px; height: 40px; fill: var(--primary-glow); z-index: 2; }
+
+        .login-title { font-family: 'Orbitron'; color: var(--primary-glow); letter-spacing: 2px; margin-bottom: 5px; text-shadow: 0 0 10px var(--primary-glow); }
+        .login-subtitle { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 2rem; letter-spacing: 1px; }
+
+        #google-login-btn {
+            background: linear-gradient(90deg, rgba(0,255,255,0.1), rgba(0,255,255,0.2));
+            color: var(--primary-glow);
+            display: flex; align-items: center; justify-content: center; gap: 15px;
+            font-family: 'Orbitron'; font-size: 1rem; border: 1px solid var(--primary-glow);
+            padding: 12px 25px; cursor: pointer; width: 100%; margin: 0 auto 15px;
+            transition: all 0.3s; position: relative; overflow: hidden;
+        }
+        #google-login-btn::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0,255,255,0.4), transparent);
+            transition: 0.5s;
+        }
+        #google-login-btn:hover::before { left: 100%; }
+        #google-login-btn:hover { box-shadow: 0 0 20px var(--primary-glow); background: rgba(0,255,255,0.15); }
+
+        .guest-btn { 
+            color: var(--text-secondary); font-family: 'Roboto'; font-size: 0.9rem; 
+            background: transparent; border: none; cursor: pointer; 
+            text-transform: uppercase; letter-spacing: 1px; opacity: 0.7; transition: 0.3s; 
+        }
+        .guest-btn:hover { opacity: 1; color: #fff; text-shadow: 0 0 5px #fff; }
+
+        /* Timer Styles */
+        #reset-timer {
+            font-family: 'Orbitron';
+            color: var(--warning-glow);
+            font-size: 1.2rem;
+            margin-top: 5px;
+            display: block;
+        }
+
+        /* 2. User Profile (Top Right) Styling */
+        .auth-profile {
+            position: fixed; top: 20px; right: 20px; z-index: 1000;
+            display: flex; align-items: center; gap: 15px;
+            background: rgba(10, 10, 20, 0.85);
+            border: 1px solid var(--primary-glow);
+            border-left: 5px solid var(--primary-glow);
+            padding: 8px 20px 8px 10px;
+            clip-path: polygon(0 0, 100% 0, 100% 70%, 90% 100%, 0 100%);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+        .auth-profile:hover { box-shadow: 0 0 25px var(--primary-glow); transform: translateX(-5px); }
+
+        .avatar-container { position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
+        .user-avatar { 
+            width: 34px; height: 34px; border-radius: 50%; object-fit: cover; 
+            border: 1px solid #fff; z-index: 2; 
+        }
+        .avatar-ring {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            border: 1px dashed var(--primary-glow); border-radius: 50%;
+            animation: spin 8s linear infinite reverse;
+        }
+
+        .user-info { display: flex; flex-direction: column; align-items: flex-start; }
+        .pilot-label { font-size: 0.6rem; color: var(--text-secondary); letter-spacing: 1px; margin-bottom: 2px; }
+        .user-name { font-family: 'Orbitron'; font-size: 0.9rem; color: var(--primary-glow); max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 0 0 5px var(--primary-glow); }
+        
+        #logout-btn {
+            background: transparent; border: 1px solid var(--danger-glow); color: var(--danger-glow);
+            font-family: 'Orbitron'; font-size: 0.7rem; padding: 4px 8px; margin-left: 10px;
+            cursor: pointer; transition: 0.3s; border-radius: 2px;
+        }
+        #logout-btn:hover { background: var(--danger-glow); color: #000; box-shadow: 0 0 10px var(--danger-glow); }
+
+        .status-dot { width: 6px; height: 6px; background: #00ff00; border-radius: 50%; box-shadow: 0 0 5px #00ff00; margin-left: auto; }
+
+        /* --- Responsive --- */
         @media (max-width: 1200px) {
             .side-panel, .right-panel { flex: 0 0 250px; }
         }
@@ -287,8 +369,12 @@
             #arc-reactor { width: 80px; height: 80px; margin: 1rem auto; }
             .modal-content { width: 90%; padding: 1rem; }
             #player-container { width: 100%; height: 250px; }
-            .auth-profile { top: 5px; right: 5px; padding: 5px; }
-            .user-name { display: none; }
+            
+            /* Responsive Auth */
+            .auth-profile { top: 10px; right: 10px; padding: 5px 10px; clip-path: none; border-left: 1px solid var(--primary-glow); border-radius: 5px; }
+            .pilot-label, .status-dot, .avatar-ring { display: none; }
+            .user-name { font-size: 0.8rem; max-width: 80px; }
+            #logout-btn { padding: 2px 5px; font-size: 0.6rem; }
         }
     </style>
 </head>
@@ -297,11 +383,18 @@
     <div id="particle-background"></div>
     <div id="scanlines"></div>
 
-    <!-- Auth UI -->
+    <!-- HIGH-TECH AUTH PROFILE -->
     <div id="auth-display" class="auth-profile" style="display: none;">
-        <img id="user-avatar" src="" class="user-avatar" alt="User">
-        <span id="user-name" class="user-name">Guest</span>
-        <button id="logout-btn" class="control-button" style="padding: 0.3rem 0.8rem; font-size: 0.7rem; border-width: 1px;">LOGOUT</button>
+        <div class="avatar-container">
+            <div class="avatar-ring"></div>
+            <img id="user-avatar" src="" class="user-avatar" alt="User">
+        </div>
+        <div class="user-info">
+            <span class="pilot-label">PILOT IDENTITY</span>
+            <span id="user-name" class="user-name">Guest</span>
+        </div>
+        <div class="status-dot"></div>
+        <button id="logout-btn">DISENGAGE</button>
     </div>
 
     <div class="jarvis-container">
@@ -382,18 +475,37 @@
         </div>
     </div>
 
-    <!-- Login Modal -->
+    <!-- HIGH-TECH LOGIN MODAL -->
     <div id="login-modal" class="modal-overlay">
         <div class="modal-content">
-            <h3>IDENTITY VERIFICATION REQUIRED</h3>
-            <p id="login-msg">Access restricted. Please authenticate.</p>
-            <p id="limit-warning" class="login-warning" style="display:none;">TRIAL PERIOD EXPIRED (10/10)</p>
+            <!-- Decorative Brackets -->
+            <div class="login-bracket lb-tl"></div>
+            <div class="login-bracket lb-tr"></div>
+            <div class="login-bracket lb-bl"></div>
+            <div class="login-bracket lb-br"></div>
+
+            <div class="auth-icon-container">
+                <div class="auth-ring"></div>
+                <!-- Fingerprint SVG Icon -->
+                <svg class="auth-icon" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                    <path d="M12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/>
+                    <path d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+                </svg>
+            </div>
+
+            <h2 class="login-title">IDENTITY VERIFICATION</h2>
+            <p id="login-msg" class="login-subtitle">SECURE ACCESS REQUIRED</p>
+            <div id="limit-warning" class="login-warning" style="display:none; color: var(--danger-glow); font-weight: bold; margin-bottom: 1rem;">
+                TRIAL PROTOCOLS EXPIRED (100/100)<br>
+                <span id="reset-timer">RESETS IN: --:--:--</span>
+            </div>
             
             <button id="google-login-btn">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20" alt="G">
-                Sign in with Google
+                AUTHENTICATE VIA GOOGLE
             </button>
-            <button id="guest-btn" class="guest-btn">Skip for now (Guest Mode)</button>
+            <button id="guest-btn" class="guest-btn">INITIATE GUEST PROTOCOL</button>
         </div>
     </div>
 
@@ -470,10 +582,11 @@
                 authDisplay.style.display = 'none';
                 
                 // If limit reached, force modal and hide skip button
-                if (window.guestInteractions >= 10) {
+                if (window.checkGuestLimit()) {
                     loginModal.style.display = 'flex';
                     guestBtn.style.display = 'none';
                     document.getElementById('limit-warning').style.display = 'block';
+                    window.startResetTimer();
                 } else {
                     // Start screen logic
                     loginModal.style.display = 'flex';
@@ -490,6 +603,8 @@
         const SEARCH_ENGINE_ID = 'd13b9c982e19f4ccf';
         const GOOGLE_SEARCH_URL = `https://www.googleapis.com/customsearch/v1?key=${GOOGLE_SEARCH_API_KEY}&cx=${SEARCH_ENGINE_ID}`;
         const SHARED_SECRET_TOKEN = "YOUR_SUPER_SECRET_TOKEN_HERE";
+        const GUEST_LIMIT = 100;
+        const RESET_PERIOD_MS = 6 * 60 * 60 * 1000; // 6 Hours
         
         if (window.pdfjsLib) {
             pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.worker.min.js';
@@ -504,6 +619,15 @@
         // Auth State Globals
         window.currentUser = null;
         window.guestInteractions = parseInt(localStorage.getItem('jarvis_guest_count') || '0');
+        window.resetTime = parseInt(localStorage.getItem('jarvis_reset_time') || '0');
+
+        // Reset Logic Check on Load
+        if (Date.now() - window.resetTime > RESET_PERIOD_MS) {
+            window.guestInteractions = 0;
+            window.resetTime = Date.now();
+            localStorage.setItem('jarvis_guest_count', '0');
+            localStorage.setItem('jarvis_reset_time', window.resetTime.toString());
+        }
 
         document.addEventListener("DOMContentLoaded", () => {
             // --- 2. DOM Elements ---
@@ -562,9 +686,6 @@
                     addJarvisMessage(welcomeMsg, "status");
                     sendMessage({ type: "get_system_stats" });
                     sendMessage({ type: "get_weather", location: "Howrah" });
-                    
-                    // We DO NOT fetch audit log from WS anymore to prevent sharing.
-                    // Instead we use Firestore (see below).
                 };
                 ws.onmessage = (event) => {
                     const msg = JSON.parse(event.data);
@@ -592,12 +713,6 @@
                             } else {
                                 addJarvisMessage(`Action Success: ${msg.message}`, "status");
                             }
-                            // Removed: sendMessage({ type: "get_audit_log" }); 
-                            // Why? Because we now listen to Firestore directly.
-                            break;
-                        case "audit_log": 
-                            // IGNORE WS AUDIT LOGS. We use private Firestore now.
-                            // updateAuditLog(msg.log); 
                             break;
                         case "clear_confirmation":
                             messageDisplay.innerHTML = "";
@@ -639,24 +754,21 @@
             function addJarvisMessage(text, type = "normal") {
                 const msgEl = document.createElement("div");
                 msgEl.className = `chat-message jarvis-message ${type}`;
-                // NEW: Use Marked.js to render static messages too
                 msgEl.innerHTML = marked.parse(text);
                 messageDisplay.prepend(msgEl); messageDisplay.scrollTop = 0;
             }
             let lastJarvisMessageEl = null;
-            let currentResponseText = ""; // Store full text for final parsing
+            let currentResponseText = "";
             
             function updateLastJarvisMessage(chunk) {
                 if (!lastJarvisMessageEl || !messageDisplay.contains(lastJarvisMessageEl)) {
                     lastJarvisMessageEl = document.createElement("div");
                     lastJarvisMessageEl.className = "chat-message jarvis-message";
                     messageDisplay.prepend(lastJarvisMessageEl);
-                    currentResponseText = ""; // Reset text buffer
+                    currentResponseText = "";
                 }
                 currentResponseText += chunk;
-                // NEW: Add typing class while updating
                 lastJarvisMessageEl.classList.add("typing");
-                // Update with raw text for speed, will be parsed at the end
                 lastJarvisMessageEl.textContent = currentResponseText;
             }
             
@@ -664,30 +776,63 @@
                 return lastJarvisMessageEl ? lastJarvisMessageEl.textContent : ""; 
             }
             
-            // NEW: Updated renderMarkdown function
             function renderMarkdown() {
                 if (!lastJarvisMessageEl) return;
-                
-                // NEW: Remove typing class
                 lastJarvisMessageEl.classList.remove("typing");
-                
-                // NEW: Use Marked.js to parse the *entire* final text
-                // This correctly handles code blocks, lists, and headers
                 lastJarvisMessageEl.innerHTML = marked.parse(currentResponseText);
-                
-                // Reset buffer
                 currentResponseText = "";
             }
+
+            // --- GUEST LIMIT & TIMER LOGIC ---
+            window.checkGuestLimit = function() {
+                // If limit reached, verify if time has passed
+                if (window.guestInteractions >= GUEST_LIMIT) {
+                    if (Date.now() - window.resetTime > RESET_PERIOD_MS) {
+                        // Reset!
+                        window.guestInteractions = 0;
+                        window.resetTime = Date.now();
+                        localStorage.setItem('jarvis_guest_count', '0');
+                        localStorage.setItem('jarvis_reset_time', window.resetTime.toString());
+                        return false; // Not blocked
+                    }
+                    return true; // Blocked
+                }
+                return false; // Not blocked
+            };
+
+            window.startResetTimer = function() {
+                const timerEl = document.getElementById('reset-timer');
+                if (!timerEl) return;
+                
+                const update = () => {
+                    const elapsed = Date.now() - window.resetTime;
+                    const remaining = RESET_PERIOD_MS - elapsed;
+                    
+                    if (remaining <= 0) {
+                        timerEl.textContent = "RESET COMPLETE. REFRESH PAGE.";
+                        return;
+                    }
+                    
+                    const hours = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+                    
+                    timerEl.textContent = `RESETS IN: ${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+                    requestAnimationFrame(update);
+                };
+                update();
+            };
 
             function submitQuery(text) {
                 if (!text.trim()) return;
                 
-                // --- AUTH CHECK ---
+                // --- AUTH & LIMIT CHECK ---
                 if (!window.currentUser) {
-                    if (window.guestInteractions >= 10) {
+                    if (window.checkGuestLimit()) {
                         document.getElementById('login-modal').style.display = 'flex';
                         document.getElementById('limit-warning').style.display = 'block';
                         document.getElementById('guest-btn').style.display = 'none';
+                        window.startResetTimer();
                         return;
                     }
                     window.guestInteractions++;
@@ -700,7 +845,7 @@
                 sendMessage({
                     type: "text_query", text: text, lang: currentLang,
                     web_search_enabled: webSearchToggle.checked,
-                    userId: window.currentUser ? window.currentUser.uid : "guest" // Send UID to backend
+                    userId: window.currentUser ? window.currentUser.uid : "guest" 
                 });
             }
 
@@ -734,9 +879,8 @@
                     if (onEndCallback) onEndCallback(); return;
                 }
                 window.speechSynthesis.cancel();
-                // Create a temp div to strip HTML tags from the parsed markdown
                 const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = marked.parse(text); // Use parsed text
+                tempDiv.innerHTML = marked.parse(text); 
                 const textToSpeak = tempDiv.textContent || tempDiv.innerText || "";
                 
                 const utterance = new SpeechSynthesisUtterance(textToSpeak);
@@ -953,7 +1097,6 @@
             });
             document.body.addEventListener("mousemove", (e) => {
                 if (document.body.classList.contains("self-destruct")) return;
-                // Disable parallax on mobile
                 if (window.innerWidth < 900) return;
                 const x = (window.innerWidth / 2 - e.pageX) / 50;
                 const y = (window.innerHeight / 2 - e.pageY) / 50;
@@ -962,7 +1105,7 @@
                 rightPanel.style.transform = `translateX(${x}px) translateY(${y}px)`;
             });
 
-            // --- 10. Auth Event Listeners (NEW) ---
+            // --- 10. Auth Event Listeners ---
             googleLoginBtn.addEventListener('click', async () => {
                 try {
                     await window.firebaseAuth.signInWithPopup(window.firebaseAuth.auth, window.firebaseAuth.provider);
@@ -978,13 +1121,12 @@
 
             logoutBtn.addEventListener('click', () => {
                 window.firebaseAuth.signOut(window.firebaseAuth.auth);
-                // Force reload to clear state cleanly
                 window.location.reload();
             });
 
             // --- 11. Helper Functions ---
             function updateAuditLog(logEntries) {
-                // Legacy function - kept for compatibility but overridden by private log logic
+                // Legacy function
                 auditLog.innerHTML = "";
                 if (!logEntries || logEntries.length === 0) { return; }
                 logEntries.forEach(entry => {
@@ -1041,26 +1183,25 @@
             // --- 13. Private Log Logic (FIRESTORE) ---
             window.initPrivateAuditLog = function(userId) {
                 const { db, collection, query, orderBy, onSnapshot, limit } = window.firebaseDb;
-                // Listen to THIS user's logs only
                 const logsRef = collection(db, "users", userId, "audit_log");
                 const q = query(logsRef, orderBy("timestamp", "desc"), limit(20));
 
                 onSnapshot(q, (snapshot) => {
                     const logs = [];
                     snapshot.forEach((doc) => logs.push(doc.data()));
-                    updateAuditLog(logs); // Reuse UI function
+                    updateAuditLog(logs); 
                 });
             };
 
             window.savePrivateLog = async function(action, status, params) {
-                if (!window.currentUser) return; // Don't save guest logs to DB
+                if (!window.currentUser) return; 
                 const { db, collection, addDoc, serverTimestamp } = window.firebaseDb;
                 try {
                     await addDoc(collection(db, "users", window.currentUser.uid, "audit_log"), {
                         action: action,
                         status: status,
                         params: params,
-                        timestamp: serverTimestamp() // Use server time
+                        timestamp: serverTimestamp() 
                     });
                 } catch (e) {
                     console.error("Error saving private log:", e);
