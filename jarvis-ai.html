@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
-    <title>J.A.R.V.I.S. HUD V2.9 - Compact UI</title>
+    <title>J.A.R.V.I.S. HUD V3.1 - Unlocked</title>
     
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
@@ -199,58 +199,6 @@
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); justify-content: center; align-items: center; z-index: 200; }
         .modal-content { background: var(--glass-bg); padding: 2rem; border-radius: 15px; border: 1px solid var(--primary-glow); box-shadow: 0 0 30px var(--primary-glow); text-align: center; }
 
-        /* COMPACT AUTH UI */
-        #login-modal .modal-content {
-            background: rgba(10, 10, 25, 0.98); 
-            border: 1px solid var(--primary-glow); 
-            width: 320px; /* Reduced width */
-            max-width: 85%;
-            padding: 1.5rem; /* Reduced padding */
-            position: relative;
-            /* Simplified clip-path for cleaner look */
-            clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
-            box-shadow: 0 0 30px rgba(0, 255, 255, 0.1);
-            display: flex; flex-direction: column; align-items: center; gap: 10px;
-        }
-        
-        .auth-icon-container {
-            width: 50px; height: 50px; margin-bottom: 0.5rem; /* Reduced size */
-            position: relative; display: flex; align-items: center; justify-content: center;
-        }
-        .auth-ring {
-            position: absolute; width: 100%; height: 100%;
-            border: 1px dashed var(--primary-glow); border-radius: 50%;
-            animation: spin 8s linear infinite;
-        }
-        .auth-icon { width: 24px; height: 24px; fill: var(--primary-glow); z-index: 2; }
-
-        .login-title { font-family: 'Orbitron'; font-size: 1.1rem; color: var(--primary-glow); letter-spacing: 1px; margin: 0; }
-        .login-subtitle { font-size: 0.75rem; color: var(--text-secondary); margin: 0; margin-bottom: 1rem; }
-        
-        #google-login-btn { 
-            background: rgba(0, 255, 255, 0.05); 
-            color: var(--primary-glow); 
-            display: flex; align-items: center; justify-content: center; gap: 10px; 
-            font-family: 'Orbitron'; font-size: 0.8rem; 
-            border: 1px solid var(--primary-glow); 
-            padding: 10px 15px; cursor: pointer; width: 100%; 
-            transition: all 0.3s; 
-            margin: 0; /* Remove margin */
-        }
-        #google-login-btn:hover { background: rgba(0, 255, 255, 0.15); box-shadow: 0 0 15px var(--primary-glow); }
-        
-        .guest-btn { 
-            color: var(--text-secondary); font-family: 'Roboto'; font-size: 0.75rem; 
-            background: transparent; border: none; cursor: pointer; 
-            text-transform: uppercase; letter-spacing: 1px; 
-            margin-top: 5px; opacity: 0.6; 
-        }
-        .guest-btn:hover { opacity: 1; color: #fff; }
-
-        .auth-profile { position: fixed; top: 20px; right: 20px; z-index: 1000; display: flex; align-items: center; gap: 15px; background: rgba(10, 10, 20, 0.85); border: 1px solid var(--primary-glow); border-left: 5px solid var(--primary-glow); padding: 8px 20px 8px 10px; clip-path: polygon(0 0, 100% 0, 100% 70%, 90% 100%, 0 100%); transition: all 0.3s ease; backdrop-filter: blur(5px); }
-        .user-avatar { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 1px solid #fff; }
-        .user-name { font-family: 'Orbitron'; font-size: 0.9rem; color: var(--primary-glow); max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
         /* Mobile Navigation (Hidden on Desktop) */
         #mobile-nav { display: none; }
 
@@ -268,14 +216,10 @@
             #text-input { font-size: 16px; flex-grow: 1; }
             .control-button { padding: 0.6rem; font-size: 0.9rem; }
             #camera-panel { height: 250px; min-height: 250px; }
-            .auth-profile { top: 10px; right: 10px; padding: 5px 10px; clip-path: none; border-radius: 5px; border-left: 2px solid var(--primary-glow); }
-            .pilot-label, .status-dot, .avatar-ring { display: none; }
-            .user-name { font-size: 0.8rem; max-width: 80px; }
-            #logout-btn { padding: 2px 5px; font-size: 0.6rem; margin-left: 5px; }
+            
             #mobile-nav { display: flex; height: 60px; width: 100%; position: absolute; bottom: 0; left: 0; background: rgba(10, 10, 20, 0.95); border-top: 2px solid var(--primary-glow); z-index: 2000; justify-content: space-around; align-items: center; backdrop-filter: blur(10px); }
             .nav-item { color: var(--text-secondary); font-family: 'Orbitron'; font-size: 0.8rem; text-align: center; padding: 10px; flex-grow: 1; cursor: pointer; border-top: 2px solid transparent; transition: all 0.3s; }
             .nav-item.active { color: var(--primary-glow); text-shadow: 0 0 10px var(--primary-glow); background: linear-gradient(0deg, rgba(0,255,255,0.1), transparent); border-top: 2px solid var(--primary-glow); }
-            #login-modal .modal-content { width: 95%; max-height: 90dvh; overflow-y: auto; margin-top: 20px; padding: 1.5rem; }
             #player-container { width: 100%; height: 200px; }
         }
     </style>
@@ -284,20 +228,6 @@
     
     <div id="particle-background"></div>
     <div id="scanlines"></div>
-
-    <!-- Auth Profile -->
-    <div id="auth-display" class="auth-profile" style="display: none;">
-        <div class="avatar-container">
-            <div class="avatar-ring"></div>
-            <img id="user-avatar" src="" class="user-avatar" alt="User">
-        </div>
-        <div class="user-info">
-            <span class="pilot-label">PILOT IDENTITY</span>
-            <span id="user-name" class="user-name">Guest</span>
-        </div>
-        <div class="status-dot"></div>
-        <button id="logout-btn">DISENGAGE</button>
-    </div>
 
     <div class="jarvis-container">
         <!-- LEFT PANEL (SYS TAB) -->
@@ -323,7 +253,6 @@
                 <div class="control-group">
                     <button id="mute-button" class="control-button">MUTE</button>
                     <button id="clear-button" class="control-button">CLEAR CHAT</button>
-                    <!-- Removed Danger & Web Toggle (Web moved to chat input) -->
                 </div>
             </div>
         </div>
@@ -384,25 +313,6 @@
     </nav>
 
     <!-- Modals -->
-    <div id="login-modal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="auth-icon-container">
-                <div class="auth-ring"></div>
-                <svg class="auth-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><path d="M12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/><path d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
-            </div>
-            <h2 class="login-title">IDENTITY VERIFICATION</h2>
-            <p id="login-msg" class="login-subtitle">SECURE ACCESS REQUIRED</p>
-            <div id="limit-warning" class="login-warning" style="display:none; color: var(--danger-glow); font-weight: bold; margin-bottom: 0.5rem; font-size: 0.8rem;">
-                TRIAL EXPIRED<br><span id="reset-timer">RESETS IN: --:--:--</span>
-            </div>
-            <button id="google-login-btn">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18" alt="G">
-                LOGIN WITH GOOGLE
-            </button>
-            <button id="guest-btn" class="guest-btn">GUEST ACCESS</button>
-        </div>
-    </div>
-
     <div id="confirmation-modal" class="modal-overlay">
         <div class="modal-content">
             <h3>ACTION CONFIRMATION</h3> <p id="modal-message">...</p>
@@ -426,10 +336,9 @@
     </div>
     <div id="destruction-overlay"></div>
 
-    <!-- Firebase SDKs -->
+    <!-- Firebase SDKs (Only Firestore Needed for Logs) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -444,40 +353,20 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
         const db = getFirestore(app);
-        const provider = new GoogleAuthProvider();
 
-        window.firebaseAuth = { auth, provider, signInWithPopup, signOut };
+        // Generate or retrieve a persistent device ID for private memory
+        let deviceId = localStorage.getItem('jarvis_device_id');
+        if (!deviceId) {
+            deviceId = 'device_' + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('jarvis_device_id', deviceId);
+        }
+        
+        window.currentUserId = deviceId;
         window.firebaseDb = { db, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, limit };
         
-        onAuthStateChanged(auth, (user) => {
-            const loginModal = document.getElementById('login-modal');
-            const authDisplay = document.getElementById('auth-display');
-            const guestBtn = document.getElementById('guest-btn');
-            
-            if (user) {
-                window.currentUser = user;
-                loginModal.style.display = 'none';
-                authDisplay.style.display = 'flex';
-                document.getElementById('user-name').textContent = user.displayName;
-                document.getElementById('user-avatar').src = user.photoURL;
-                window.initPrivateAuditLog(user.uid);
-            } else {
-                window.currentUser = null;
-                authDisplay.style.display = 'none';
-                if (window.checkGuestLimit()) {
-                    loginModal.style.display = 'flex';
-                    guestBtn.style.display = 'none';
-                    document.getElementById('limit-warning').style.display = 'block';
-                    window.startResetTimer();
-                } else {
-                    loginModal.style.display = 'flex';
-                    guestBtn.style.display = 'inline-block';
-                    document.getElementById('limit-warning').style.display = 'none';
-                }
-            }
-        });
+        // Start logs immediately
+        window.initPrivateAuditLog(deviceId);
     </script>
 
     <script>
@@ -486,8 +375,6 @@
         const SEARCH_ENGINE_ID = 'd13b9c982e19f4ccf';
         const GOOGLE_SEARCH_URL = `https://www.googleapis.com/customsearch/v1?key=${GOOGLE_SEARCH_API_KEY}&cx=${SEARCH_ENGINE_ID}`;
         const SHARED_SECRET_TOKEN = "YOUR_SUPER_SECRET_TOKEN_HERE";
-        const GUEST_LIMIT = 100;
-        const RESET_PERIOD_MS = 6 * 60 * 60 * 1000;
         
         if (window.pdfjsLib) { pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.worker.min.js'; }
         
@@ -498,17 +385,6 @@
         let webSearchEnabled = true; // Default ON
         const welcomeMsg = "At your service sir. How may I serve you today?";
         
-        window.currentUser = null;
-        window.guestInteractions = parseInt(localStorage.getItem('jarvis_guest_count') || '0');
-        window.resetTime = parseInt(localStorage.getItem('jarvis_reset_time') || '0');
-
-        if (Date.now() - window.resetTime > RESET_PERIOD_MS) {
-            window.guestInteractions = 0;
-            window.resetTime = Date.now();
-            localStorage.setItem('jarvis_guest_count', '0');
-            localStorage.setItem('jarvis_reset_time', window.resetTime.toString());
-        }
-
         // --- Mobile Tab Logic ---
         window.switchTab = function(tabName) {
             if(window.innerWidth > 900) return;
@@ -561,10 +437,6 @@
             const particleBg = document.getElementById("particle-background");
             const weatherDesc = document.getElementById("weather-desc");
             const weatherTemp = document.getElementById("weather-temp");
-            
-            const googleLoginBtn = document.getElementById('google-login-btn');
-            const guestBtn = document.getElementById('guest-btn');
-            const logoutBtn = document.getElementById('logout-btn');
 
             function connectWebSocket() {
                 ws = new WebSocket("wss://venice-postpupillary-coaxially.ngrok-free.dev/ws"); 
@@ -586,7 +458,7 @@
                             confirmationModal.style.display = "flex";
                             break;
                         case "action_status":
-                            if (window.currentUser && window.firebaseDb) {
+                            if (window.firebaseDb) {
                                 savePrivateLog(msg.action || "Unknown Action", msg.status, JSON.stringify(msg.message));
                             }
                             if (msg.status === "fail") { addJarvisMessage(`Action Failed: ${msg.message}`, "error"); } 
@@ -648,53 +520,13 @@
                 currentResponseText = "";
             }
 
-            window.checkGuestLimit = function() {
-                if (window.guestInteractions >= GUEST_LIMIT) {
-                    if (Date.now() - window.resetTime > RESET_PERIOD_MS) {
-                        window.guestInteractions = 0; window.resetTime = Date.now();
-                        localStorage.setItem('jarvis_guest_count', '0');
-                        localStorage.setItem('jarvis_reset_time', window.resetTime.toString());
-                        return false; 
-                    }
-                    return true;
-                }
-                return false;
-            };
-
-            window.startResetTimer = function() {
-                const timerEl = document.getElementById('reset-timer');
-                if (!timerEl) return;
-                const update = () => {
-                    const elapsed = Date.now() - window.resetTime;
-                    const remaining = RESET_PERIOD_MS - elapsed;
-                    if (remaining <= 0) { timerEl.textContent = "RESET COMPLETE. REFRESH PAGE."; return; }
-                    const hours = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-                    const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
-                    timerEl.textContent = `RESETS IN: ${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
-                    requestAnimationFrame(update);
-                };
-                update();
-            };
-
             function submitQuery(text) {
                 if (!text.trim()) return;
-                if (!window.currentUser) {
-                    if (window.checkGuestLimit()) {
-                        document.getElementById('login-modal').style.display = 'flex';
-                        document.getElementById('limit-warning').style.display = 'block';
-                        document.getElementById('guest-btn').style.display = 'none';
-                        window.startResetTimer();
-                        return;
-                    }
-                    window.guestInteractions++;
-                    localStorage.setItem('jarvis_guest_count', window.guestInteractions);
-                }
                 addUserMessage(text); textInput.value = ""; lastJarvisMessageEl = null;
                 sendMessage({
                     type: "text_query", text: text, lang: currentLang,
                     web_search_enabled: webSearchEnabled,
-                    userId: window.currentUser ? window.currentUser.uid : "guest" 
+                    userId: window.currentUserId 
                 });
             }
 
@@ -742,7 +574,7 @@
             }
             
             function handleUICommand(action, params) {
-                if (window.currentUser && window.firebaseDb) { savePrivateLog(action, "UI Command", JSON.stringify(params)); }
+                if (window.firebaseDb) { savePrivateLog(action, "UI Command", JSON.stringify(params)); }
                 if (action === "enter_combat_mode") {
                     addJarvisMessage("Combate Mode Initiated.", "status"); document.body.classList.add("combat-mode"); speak("Combat mode initiated.", () => { playAudio("/audio/combat_on.mp3"); });
                 } else if (action === "exit_combat_mode") {
@@ -839,10 +671,6 @@
                 pendingAction = null; confirmationModal.style.display = "none";
             });
 
-            googleLoginBtn.addEventListener('click', async () => { try { await window.firebaseAuth.signInWithPopup(window.firebaseAuth.auth, window.firebaseAuth.provider); } catch (e) { alert("Login failed: " + e.message); } });
-            guestBtn.addEventListener('click', () => { document.getElementById('login-modal').style.display = 'none'; });
-            logoutBtn.addEventListener('click', () => { window.firebaseAuth.signOut(window.firebaseAuth.auth); window.location.reload(); });
-
             function updateAuditLog(logEntries) {
                 auditLog.innerHTML = "";
                 if (!logEntries) return;
@@ -867,9 +695,8 @@
                 });
             };
             window.savePrivateLog = async function(action, status, params) {
-                if (!window.currentUser) return;
                 const { db, collection, addDoc, serverTimestamp } = window.firebaseDb;
-                await addDoc(collection(db, "users", window.currentUser.uid, "audit_log"), { action, status, params, timestamp: serverTimestamp() });
+                await addDoc(collection(db, "users", window.currentUserId, "audit_log"), { action, status, params, timestamp: serverTimestamp() });
             };
 
             connectWebSocket(); setupSpeechRecognition(); window.speechSynthesis.onvoiceschanged = loadVoices; loadVoices();
