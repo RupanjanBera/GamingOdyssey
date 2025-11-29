@@ -3,12 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
-    <title>J.A.R.V.I.S. HUD V3.1 - Unlocked</title>
+    <title>J.A.R.V.I.S. HUD V3.1 - Unlocked (Vision AI)</title>
     
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.18/mammoth.browser.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
 
     <style>
         /* --- 1. Global & Fonts --- */
@@ -201,6 +207,11 @@
 
         /* Mobile Navigation (Hidden on Desktop) */
         #mobile-nav { display: none; }
+        
+        /* New Overlays */
+        #destruction-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9998; background: rgba(255, 0, 0, 0.3); animation: flashRed 0.2s linear infinite; pointer-events: none; }
+        #destruction-overlay.active { display: block; }
+        @keyframes flashRed { 0%, 100% { background-color: rgba(255, 0, 0, 0.5); } 50% { background-color: rgba(255, 255, 255, 0.3); } }
 
         /* --- 9. Responsive / Mobile Optimization (FIXED) --- */
         @media (max-width: 900px) {
@@ -230,7 +241,6 @@
     <div id="scanlines"></div>
 
     <div class="jarvis-container">
-        <!-- LEFT PANEL (SYS TAB) -->
         <div class="side-panel" id="left-panel">
             <div id="suit-status-panel" class="hud-panel" style="transition-delay: 0.1s;">
                 <h3>MARK VII TACTICAL</h3>
@@ -257,13 +267,11 @@
             </div>
         </div>
 
-        <!-- MAIN PANEL (COMM TAB - DEFAULT) -->
         <div class="main-panel hud-panel active-tab" id="main-panel" style="transition-delay: 0.2s;">
             <div id="core-container"> <div id="web-core"></div> </div>
             <div id="chat-container">
                 <div id="message-display"></div>
                 <div id="input-area">
-                    <!-- WEB SEARCH TOGGLE ICON -->
                     <button id="web-search-btn" class="active" title="Toggle Web Search">
                         <svg viewBox="0 0 24 24">
                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
@@ -278,7 +286,6 @@
             </div>
         </div>
         
-        <!-- RIGHT PANEL (DATA TAB) -->
         <div class="right-panel" id="right-panel">
             <div id="logistics-panel" class="hud-panel" style="transition-delay: 0.4s;">
                 <h3>LOGISTICS</h3>
@@ -297,6 +304,7 @@
             </div>
             <div id="camera-panel" class="hud-panel" style="transition-delay: 0.5s;">
                 <video id="camera-feed" autoplay playsinline></video>
+                <div style="position: absolute; bottom: 10px; left: 10px; font-size: 0.8rem; background: rgba(0,0,0,0.5); padding: 5px;">VISION: ACTIVE</div>
             </div>
             <div id="audit-panel" class="hud-panel" style="transition-delay: 0.6s;">
                 <h3>ACTION AUDIT LOG</h3>
@@ -305,14 +313,12 @@
         </div>
     </div>
 
-    <!-- MOBILE NAVIGATION (Visible only on <900px) -->
     <nav id="mobile-nav">
         <div class="nav-item" onclick="switchTab('sys')">SYS</div>
         <div class="nav-item active" onclick="switchTab('comm')">COMM</div>
         <div class="nav-item" onclick="switchTab('data')">DATA</div>
     </nav>
 
-    <!-- Modals -->
     <div id="confirmation-modal" class="modal-overlay">
         <div class="modal-content">
             <h3>ACTION CONFIRMATION</h3> <p id="modal-message">...</p>
@@ -336,7 +342,6 @@
     </div>
     <div id="destruction-overlay"></div>
 
-    <!-- Firebase SDKs (Only Firestore Needed for Logs) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -385,6 +390,11 @@
         let webSearchEnabled = true; // Default ON
         const welcomeMsg = "At your service sir. How may I serve you today?";
         
+        // --- VISION STATE ---
+        let lastBlinkTime = 0;
+        let lastGestureTime = 0;
+        let emergencyTriggered = false;
+
         // --- Mobile Tab Logic ---
         window.switchTab = function(tabName) {
             if(window.innerWidth > 900) return;
@@ -439,7 +449,8 @@
             const weatherTemp = document.getElementById("weather-temp");
 
             function connectWebSocket() {
-                ws = new WebSocket("wss://venice-postpupillary-coaxially.ngrok-free.dev/ws"); 
+                // Changed to localhost to match the provided main.py
+                ws = new WebSocket("ws://localhost:8000/ws"); 
                 ws.onopen = () => {
                     addJarvisMessage(welcomeMsg, "status");
                     sendMessage({ type: "get_system_stats" });
@@ -566,25 +577,35 @@
                 webCore.classList.add("listening");
                 setTimeout(() => webCore.classList.remove("listening"), 2000);
                 speak(welcomeMsg, null);
-                startCamera();
+                startCamera(); // Starts Vision AI
             }
-            function playAudio(url) {
+            
+            // --- UPDATED PLAY SOUND FUNCTION ---
+            function playAudio(typeOrUrl) {
                 if (isMuted || !hasUserInteracted) return;
-                try { new Audio(url).play().catch(e => console.error(e)); } catch (e) { console.error(e); }
+                let finalUrl = typeOrUrl;
+                
+                // Audio Mapping
+                if (typeOrUrl === "repulsor") finalUrl = "https://gamingodyssey.in/repulsor.mp3";
+                else if (typeOrUrl === "power_down") finalUrl = "https://gamingodyssey.in/power_down.mp3";
+                else if (typeOrUrl === "combat_on") finalUrl = "https://gamingodyssey.in/combat_on.mp3";
+                else if (typeOrUrl === "alarm") finalUrl = "https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg";
+
+                try { new Audio(finalUrl).play().catch(e => console.error(e)); } catch (e) { console.error(e); }
             }
             
             function handleUICommand(action, params) {
                 if (window.firebaseDb) { savePrivateLog(action, "UI Command", JSON.stringify(params)); }
                 if (action === "enter_combat_mode") {
-                    addJarvisMessage("Combate Mode Initiated.", "status"); document.body.classList.add("combat-mode"); speak("Combat mode initiated.", () => { playAudio("/audio/combat_on.mp3"); });
+                    addJarvisMessage("Combate Mode Initiated.", "status"); document.body.classList.add("combat-mode"); speak("Combat mode initiated.", () => { playAudio("combat_on"); });
                 } else if (action === "exit_combat_mode") {
-                    addJarvisMessage("Combat Mode Disengaged.", "status"); document.body.classList.remove("combat-mode"); speak("Combat mode disengaged.", () => { playAudio("/audio/combat_off.mp3"); });
+                    addJarvisMessage("Combat Mode Disengaged.", "status"); document.body.classList.remove("combat-mode"); speak("Combat mode disengaged.", () => { playAudio("power_down"); });
                 } else if (action === "play_song") {
                     addJarvisMessage(`Searching YouTube for "${params.song_name}"...`, "status"); findAndPlayVideo(params.song_name);
                 } else if (action === "self_destruct") {
                     addJarvisMessage("Self-destruct sequence initiated.", "status");
                     speak("Self-destruct sequence initiated.", () => {
-                        document.body.classList.add("self-destruct"); destructionOverlay.classList.add("active"); playAudio("/audio/self_destruct.mp3");
+                        document.body.classList.add("self-destruct"); destructionOverlay.classList.add("active"); playAudio("alarm");
                         setTimeout(() => { document.body.classList.remove("self-destruct"); destructionOverlay.classList.remove("active"); addJarvisMessage("System reset.", "status"); }, 5000);
                     });
                 }
@@ -681,7 +702,100 @@
                 });
             }
             
-            function startCamera() { if (navigator.mediaDevices) navigator.mediaDevices.getUserMedia({ video: true }).then(s => { cameraFeed.srcObject = s; cameraFeed.play(); }).catch(e => console.log(e)); }
+            // --- VISION & CAMERA LOGIC ---
+            function getEAR(landmarks, indices) {
+                const dist = (p1, p2) => Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
+                return (dist(landmarks[indices[1]], landmarks[indices[5]]) + dist(landmarks[indices[2]], landmarks[indices[4]])) / (2.0 * dist(landmarks[indices[0]], landmarks[indices[3]]));
+            }
+
+            function onResultsFace(results) {
+                if (emergencyTriggered || !results.multiFaceLandmarks || results.multiFaceLandmarks.length === 0) return;
+                const landmarks = results.multiFaceLandmarks[0];
+                const leftEAR = getEAR(landmarks, [33, 160, 158, 133, 153, 144]);
+                const rightEAR = getEAR(landmarks, [362, 385, 387, 263, 373, 380]);
+                
+                if ((leftEAR + rightEAR) / 2 < 0.25) { // Eyes closed
+                    const now = Date.now();
+                    if (now - lastBlinkTime > 200) { 
+                        if (now - lastBlinkTime < 500) triggerEmergencyProtocol();
+                        lastBlinkTime = now;
+                    }
+                }
+            }
+
+            function onResultsHands(results) {
+                if (!results.multiHandLandmarks || results.multiHandLandmarks.length === 0) return;
+                const now = Date.now();
+                if (now - lastGestureTime < 1500) return; // Debounce 1.5s
+
+                const landmarks = results.multiHandLandmarks[0];
+                // Simple Gesture Logic: Check if finger tips are above mid-finger joints (Open Palm)
+                const isFingerExtended = (tip, pip) => landmarks[tip].y < landmarks[pip].y;
+                const fingersOpen = [8, 12, 16, 20].filter(i => isFingerExtended(i, i-2)).length;
+
+                // Gesture: OPEN PALM (4+ fingers open) -> Play/Pause
+                if (fingersOpen >= 4) {
+                    if (ytPlayer && ytPlayer.getPlayerState) {
+                        ytPlayer.getPlayerState() === 1 ? ytPlayer.pauseVideo() : ytPlayer.playVideo();
+                    }
+                    playAudio("repulsor");
+                    addJarvisMessage("Gesture Detected: Play/Pause", "status");
+                    lastGestureTime = now;
+                } 
+                // Gesture: FIST (0-1 fingers open) -> Mute/Unmute
+                else if (fingersOpen <= 1) {
+                    document.getElementById("mute-button").click();
+                    playAudio("power_down");
+                    addJarvisMessage("Gesture Detected: Mute Toggle", "status");
+                    lastGestureTime = now;
+                }
+            }
+
+            function triggerEmergencyProtocol() {
+                emergencyTriggered = true;
+                document.body.classList.add("combat-mode");
+                document.getElementById("destruction-overlay").classList.add("active");
+                playAudio("combat_on");
+                
+                addJarvisMessage("⚠️ DURESS SIGNAL DETECTED. CONTACTING SUPPORT.", "error");
+                
+                // Send Email via FormSubmit
+                fetch("https://formsubmit.co/ajax/support@gamingodyssey.in", {
+                    method: "POST", headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ _subject: "JARVIS EMERGENCY", message: "Double-Blink Duress Signal Detected at " + new Date().toLocaleString() })
+                });
+
+                // Notify Backend
+                if (ws) ws.send(JSON.stringify({ type: "danger_trigger" }));
+                
+                setTimeout(() => { 
+                    emergencyTriggered = false; 
+                    document.getElementById("destruction-overlay").classList.remove("active");
+                }, 10000);
+            }
+
+            async function startCamera() {
+                const videoElement = document.getElementById('camera-feed');
+                
+                // Face Mesh (Blink)
+                const faceMesh = new FaceMesh({locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`});
+                faceMesh.setOptions({maxNumFaces: 1, refineLandmarks: true, minDetectionConfidence: 0.5});
+                faceMesh.onResults(onResultsFace);
+
+                // Hands (Gestures)
+                const hands = new Hands({locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`});
+                hands.setOptions({maxNumHands: 1, minDetectionConfidence: 0.7});
+                hands.onResults(onResultsHands);
+
+                const camera = new Camera(videoElement, {
+                    onFrame: async () => {
+                        await faceMesh.send({image: videoElement});
+                        await hands.send({image: videoElement});
+                    }, width: 1280, height: 720
+                });
+                camera.start();
+            }
+
             function updateClock() { const now = new Date(); dynamicClock.textContent = now.toLocaleTimeString(); dynamicDate.textContent = now.toLocaleDateString(); }
             function updateSuitStatus() {
                 energyBar.style.width = `${85 + Math.random() * 10}%`; armourBar.style.width = `${98 + Math.random() * 2}%`;
