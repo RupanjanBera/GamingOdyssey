@@ -845,6 +845,7 @@
                 const welcomeMsg = `At your service ${userName}. How may I serve you today?`;
 
                 function connectWebSocket() {
+                    // [FIXED] Restored the ngrok WebSocket URL
                     ws = new WebSocket("wss://venice-postpupillary-coaxially.ngrok-free.dev/ws"); 
                     ws.onopen = () => {
                         addJarvisMessage(welcomeMsg, "status");
