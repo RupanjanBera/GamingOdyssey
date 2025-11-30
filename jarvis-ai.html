@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
-    <title>J.A.R.V.I.S. HUD V3.1 - Access Control</title>
+    <title>J.A.R.V.I.S. HUD V3.2 - Guest Control</title>
     
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
@@ -59,7 +59,6 @@
             padding: 1rem; box-shadow: 0 0 20px rgba(0, 255, 255, 0.2) inset;
             transition: all 0.5s ease; position: relative; overflow: hidden;
             opacity: 0; transform: translateY(20px) scale(0.98);
-            /* animation: flicker 10s linear infinite; Removed to stop flicker before auth */
         }
         .hud-panel.active-animation {
              animation: flicker 10s linear infinite;
@@ -124,6 +123,17 @@
         #weather-desc { font-weight: bold; }
         #camera-panel { flex-grow: 1; display: flex; flex-direction: column; padding: 0; }
         #camera-feed { width: 100%; height: 100%; object-fit: cover; border-radius: 15px; transform: scaleX(-1); background: #000; }
+        
+        /* New Styles for Guest Limitation */
+        #guest-counter-display {
+            border: 1px solid var(--warning-glow);
+            border-radius: 10px; padding: 10px; text-align: center;
+            margin-top: 10px; background: rgba(255, 170, 0, 0.1);
+        }
+        #response-count {
+            font-size: 2rem; color: var(--warning-glow); font-family: 'Orbitron';
+            text-shadow: 0 0 10px var(--warning-glow);
+        }
 
         /* --- 8. Main Panel (Chat) --- */
         #core-container { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; justify-content: center; align-items: center; overflow: hidden; z-index: 1; border-radius: 15px; }
@@ -183,6 +193,17 @@
         .control-button.active { background-color: #ff0000; border-color: #ff0000; box-shadow: 0 0 15px #ff0000; text-shadow: none; }
         #mute-button.active { background-color: var(--secondary-glow); border-color: var(--secondary-glow); }
         #clear-button, #upload-button { border-color: var(--warning-glow); color: var(--warning-glow); }
+        
+        /* Logout Button Specifics */
+        #logout-btn {
+            position: fixed; top: 15px; right: 15px; z-index: 1100;
+            padding: 0.5rem 1rem; font-size: 0.8rem;
+            border-color: var(--danger-glow); color: var(--danger-glow);
+            box-shadow: 0 0 5px var(--danger-glow) inset, 0 0 5px var(--danger-glow);
+            text-shadow: 0 0 3px var(--danger-glow);
+            display: none; /* Hidden until logged in */
+        }
+        #logout-btn:hover { background: var(--danger-glow); color: var(--bg-color); }
 
         /* Web Search Button Styling */
         #web-search-btn {
@@ -224,6 +245,17 @@
             text-align: center; border-radius: 10px; outline: none;
         }
         .access-input:focus { box-shadow: 0 0 20px var(--primary-glow); }
+        
+        /* Cooldown Overlay */
+        #cooldown-overlay .modal-content {
+            border-color: var(--danger-glow);
+            box-shadow: 0 0 30px var(--danger-glow);
+        }
+        #cooldown-timer {
+            font-size: 3rem; font-family: 'Orbitron';
+            color: var(--danger-glow); margin: 20px 0;
+            text-shadow: 0 0 15px var(--danger-glow);
+        }
 
         /* Mobile Navigation (Hidden on Desktop) */
         #mobile-nav { display: none; }
@@ -247,6 +279,7 @@
             .nav-item { color: var(--text-secondary); font-family: 'Orbitron'; font-size: 0.8rem; text-align: center; padding: 10px; flex-grow: 1; cursor: pointer; border-top: 2px solid transparent; transition: all 0.3s; }
             .nav-item.active { color: var(--primary-glow); text-shadow: 0 0 10px var(--primary-glow); background: linear-gradient(0deg, rgba(0,255,255,0.1), transparent); border-top: 2px solid var(--primary-glow); }
             #player-container { width: 100%; height: 200px; }
+            #logout-btn { top: 10px; right: 10px; padding: 5px 10px; font-size: 0.7rem; }
         }
     </style>
 </head>
@@ -255,7 +288,8 @@
     <div id="particle-background"></div>
     <div id="scanlines"></div>
 
-    <!-- ACCESS CONTROL OVERLAY -->
+    <button id="logout-btn" class="control-button">LOGOUT</button>
+
     <div id="access-overlay" class="modal-overlay">
         <div class="modal-content access-box">
             <h1 class="access-title">SYSTEM ACCESS</h1>
@@ -291,8 +325,17 @@
         </div>
     </div>
 
+    <div id="cooldown-overlay" class="modal-overlay">
+        <div class="modal-content">
+            <h3 style="color: var(--danger-glow);">LIMIT REACHED</h3>
+            <p style="margin-bottom: 1rem;">Guest Token Expired. System cooling down.</p>
+            <div id="cooldown-timer">00:00:00</div>
+            <p style="font-size: 0.8rem; color: var(--text-secondary);">Access will restore automatically.</p>
+            <button id="cooldown-logout" class="control-button" style="margin-top: 20px;">LOGOUT</button>
+        </div>
+    </div>
+
     <div class="jarvis-container">
-        <!-- LEFT PANEL (SYS TAB) -->
         <div class="side-panel" id="left-panel">
             <div id="suit-status-panel" class="hud-panel" style="transition-delay: 0.1s;">
                 <h3>MARK VII TACTICAL</h3>
@@ -319,13 +362,11 @@
             </div>
         </div>
 
-        <!-- MAIN PANEL (COMM TAB - DEFAULT) -->
         <div class="main-panel hud-panel active-tab" id="main-panel" style="transition-delay: 0.2s;">
             <div id="core-container"> <div id="web-core"></div> </div>
             <div id="chat-container">
                 <div id="message-display"></div>
                 <div id="input-area">
-                    <!-- WEB SEARCH TOGGLE ICON -->
                     <button id="web-search-btn" class="active" title="Toggle Web Search">
                         <svg viewBox="0 0 24 24">
                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
@@ -340,7 +381,6 @@
             </div>
         </div>
         
-        <!-- RIGHT PANEL (DATA TAB) -->
         <div class="right-panel" id="right-panel">
             <div id="logistics-panel" class="hud-panel" style="transition-delay: 0.4s;">
                 <h3>LOGISTICS</h3>
@@ -350,7 +390,13 @@
                     <div class="status-item"> <h4>CPU</h4> <p id="cpu-stat">--%</p> </div>
                     <div class="status-item"> <h4>MEM</h4> <p id="mem-stat">--%</p> </div>
                 </div>
-                <div class="status-text">
+                
+                <div id="guest-counter-display" style="display: none;">
+                     <h4 style="margin-top:0; color:var(--warning-glow);">RESPONSES LEFT</h4>
+                     <p id="response-count">100</p>
+                </div>
+
+                <div class="status-text" style="margin-top: 15px;">
                     <span>WEATHER:</span> <span id="weather-desc">LOADING...</span>
                 </div>
                 <div class="status-item" style="grid-column: span 2; text-align: center; margin-top: 5px;">
@@ -367,14 +413,12 @@
         </div>
     </div>
 
-    <!-- MOBILE NAVIGATION (Visible only on <900px) -->
     <nav id="mobile-nav">
         <div class="nav-item" onclick="switchTab('sys')">SYS</div>
         <div class="nav-item active" onclick="switchTab('comm')">COMM</div>
         <div class="nav-item" onclick="switchTab('data')">DATA</div>
     </nav>
 
-    <!-- Modals -->
     <div id="confirmation-modal" class="modal-overlay">
         <div class="modal-content">
             <h3>ACTION CONFIRMATION</h3> <p id="modal-message">...</p>
@@ -398,7 +442,6 @@
     </div>
     <div id="destruction-overlay"></div>
 
-    <!-- Firebase SDKs (Only Firestore Needed for Logs) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -438,6 +481,10 @@
         const GOOGLE_SEARCH_URL = `https://www.googleapis.com/customsearch/v1?key=${GOOGLE_SEARCH_API_KEY}&cx=${SEARCH_ENGINE_ID}`;
         const SHARED_SECRET_TOKEN = "YOUR_SUPER_SECRET_TOKEN_HERE";
         
+        // --- Guest Limitation Constants ---
+        const GUEST_MAX_RESPONSES = 100;
+        const GUEST_COOLDOWN_MS = 6 * 60 * 60 * 1000; // 6 Hours in Milliseconds
+
         if (window.pdfjsLib) { pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.worker.min.js'; }
         
         let ws; let recognition; let ytPlayer;
@@ -446,6 +493,7 @@
         let jarvisVoice = null; let hasUserInteracted = false;
         let webSearchEnabled = true; // Default ON
         let userName = "Sir"; // Default if something goes wrong
+        let userRole = "admin"; // 'admin' or 'guest'
         
         // --- Mobile Tab Logic ---
         window.switchTab = function(tabName) {
@@ -478,6 +526,29 @@
             const btnAdminCancel = document.getElementById("btn-admin-cancel");
             const btnGuestCancel = document.getElementById("btn-guest-cancel");
             const jarvisContainer = document.querySelector(".jarvis-container");
+            const logoutBtn = document.getElementById("logout-btn");
+            const guestCounterDisplay = document.getElementById("guest-counter-display");
+            const responseCountEl = document.getElementById("response-count");
+            const cooldownOverlay = document.getElementById("cooldown-overlay");
+            const cooldownTimerEl = document.getElementById("cooldown-timer");
+            const cooldownLogoutBtn = document.getElementById("cooldown-logout");
+
+            // --- Session Check on Load ---
+            checkSession();
+
+            function checkSession() {
+                const storedSession = localStorage.getItem('jarvis_auth_session');
+                if (storedSession) {
+                    const sessionData = JSON.parse(storedSession);
+                    userName = sessionData.name;
+                    userRole = sessionData.role;
+                    grantAccess(false); // Skip animation if reloading
+                }
+            }
+
+            function setSession(name, role) {
+                localStorage.setItem('jarvis_auth_session', JSON.stringify({ name: name, role: role }));
+            }
 
             // --- Access Control Logic ---
             btnAdmin.addEventListener("click", () => {
@@ -508,17 +579,27 @@
                 guestNameInput.value = "";
             });
 
+            // Logout Logic
+            logoutBtn.addEventListener("click", performLogout);
+            cooldownLogoutBtn.addEventListener("click", performLogout);
+
+            function performLogout() {
+                localStorage.removeItem('jarvis_auth_session');
+                location.reload();
+            }
+
             btnAdminSubmit.addEventListener("click", verifyAdmin);
             adminPassInput.addEventListener("keydown", (e) => { if (e.key === "Enter") verifyAdmin(); });
 
             function verifyAdmin() {
                 if (adminPassInput.value === "jarvis2025") {
                     userName = "Sir";
-                    grantAccess();
+                    userRole = "admin";
+                    setSession(userName, userRole);
+                    grantAccess(true);
                 } else {
                     accessError.textContent = "INVALID PASSPHRASE";
                     accessError.style.display = "block";
-                    // Shake effect
                     adminPassInput.animate([ { transform: 'translateX(0)' }, { transform: 'translateX(-10px)' }, { transform: 'translateX(10px)' }, { transform: 'translateX(0)' } ], { duration: 300 });
                 }
             }
@@ -530,28 +611,139 @@
                 const name = guestNameInput.value.trim();
                 if (name.length > 0) {
                     userName = name;
-                    grantAccess();
+                    userRole = "guest";
+                    
+                    // Check if this specific guest is currently in cooldown
+                    if(checkGuestCooldown(userName)) {
+                        return; // UI is handled inside the function
+                    }
+
+                    setSession(userName, userRole);
+                    grantAccess(true);
                 } else {
                     accessError.textContent = "NAME REQUIRED";
                     accessError.style.display = "block";
                 }
             }
 
-            function grantAccess() {
+            function grantAccess(animate = true) {
                 accessOverlay.style.opacity = "0";
                 setTimeout(() => { accessOverlay.style.display = "none"; }, 500);
                 jarvisContainer.classList.add("access-granted");
+                logoutBtn.style.display = "block";
+
+                // Setup Guest UI if applicable
+                if (userRole === "guest") {
+                    guestCounterDisplay.style.display = "block";
+                    updateGuestUI();
+                } else {
+                    guestCounterDisplay.style.display = "none";
+                }
                 
-                // Add animations to panels
-                allBootElements.forEach(el => el.classList.add("active-animation"));
-                setTimeout(() => { allBootElements.forEach(el => el.classList.add("booted")); }, 100);
+                if (animate) {
+                    allBootElements.forEach(el => el.classList.add("active-animation"));
+                    setTimeout(() => { allBootElements.forEach(el => el.classList.add("booted")); }, 100);
+                } else {
+                    allBootElements.forEach(el => { el.classList.add("booted"); el.style.opacity=1; el.style.transform='none'; });
+                }
 
                 // Start System
                 initializeJarvisSystem();
             }
 
+            // --- Guest Limitation Logic ---
+            function getGuestData(name) {
+                const key = `jarvis_guest_data_${name.toLowerCase()}`;
+                const raw = localStorage.getItem(key);
+                if (raw) return JSON.parse(raw);
+                return { count: GUEST_MAX_RESPONSES, cooldownUntil: 0 };
+            }
 
-            // --- Core System Initialization (Moved inside function) ---
+            function saveGuestData(name, data) {
+                const key = `jarvis_guest_data_${name.toLowerCase()}`;
+                localStorage.setItem(key, JSON.stringify(data));
+            }
+
+            function updateGuestUI() {
+                if(userRole !== 'guest') return;
+                const data = getGuestData(userName);
+                responseCountEl.textContent = data.count;
+            }
+
+            function checkGuestCooldown(name) {
+                const data = getGuestData(name);
+                const now = Date.now();
+
+                // Check if cooldown has expired
+                if (data.cooldownUntil > 0 && now > data.cooldownUntil) {
+                    data.count = GUEST_MAX_RESPONSES;
+                    data.cooldownUntil = 0;
+                    saveGuestData(name, data);
+                    return false; // Access Granted
+                }
+
+                // Check if active cooldown
+                if (data.cooldownUntil > 0 && now < data.cooldownUntil) {
+                    startCooldownTimer(data.cooldownUntil);
+                    return true; // Access Denied
+                }
+
+                return false;
+            }
+
+            function decrementGuestLimit() {
+                if (userRole !== 'guest') return;
+                
+                const data = getGuestData(userName);
+                if (data.count > 0) {
+                    data.count--;
+                    saveGuestData(userName, data);
+                    updateGuestUI();
+                }
+
+                if (data.count <= 0) {
+                    // Activate Cooldown
+                    data.cooldownUntil = Date.now() + GUEST_COOLDOWN_MS;
+                    saveGuestData(userName, data);
+                    startCooldownTimer(data.cooldownUntil);
+                }
+            }
+
+            let cooldownInterval;
+            function startCooldownTimer(targetTime) {
+                accessOverlay.style.display = 'none'; // Hide login if open
+                cooldownOverlay.style.display = 'flex';
+                
+                // Clear any existing interval
+                if (cooldownInterval) clearInterval(cooldownInterval);
+
+                const updateTimer = () => {
+                    const now = Date.now();
+                    const diff = targetTime - now;
+
+                    if (diff <= 0) {
+                        clearInterval(cooldownInterval);
+                        cooldownOverlay.style.display = 'none';
+                        // Reset logic happens on next interaction or reload
+                        // Force reload to reset state
+                        location.reload();
+                        return;
+                    }
+
+                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                    cooldownTimerEl.textContent = 
+                        `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                };
+
+                updateTimer();
+                cooldownInterval = setInterval(updateTimer, 1000);
+            }
+
+
+            // --- Core System Initialization ---
             const micButton = document.getElementById("mic-button");
             const muteButton = document.getElementById("mute-button");
             const clearButton = document.getElementById("clear-button");
@@ -589,6 +781,9 @@
             const weatherTemp = document.getElementById("weather-temp");
 
             function initializeJarvisSystem() {
+                // If in cooldown, stop everything
+                if(userRole === 'guest' && checkGuestCooldown(userName)) return;
+
                 const welcomeMsg = `At your service ${userName}. How may I serve you today?`;
 
                 function connectWebSocket() {
@@ -596,20 +791,22 @@
                     ws.onopen = () => {
                         addJarvisMessage(welcomeMsg, "status");
                         
-                        // FIX: Explicitly send user configuration to backend
                         sendMessage({ type: "system_config", user_name: userName }); 
-                        
                         sendMessage({ type: "get_system_stats" });
                         sendMessage({ type: "get_weather", location: "Howrah" });
                         
-                        // Speak welcome message
                         unlockAudio();
                     };
                     ws.onmessage = (event) => {
                         const msg = JSON.parse(event.data);
                         switch (msg.type) {
                             case "llm_chunk": updateLastJarvisMessage(msg.text); break;
-                            case "llm_end": renderMarkdown(); speak(getCurrentJarvisMessageText(), null); break;
+                            case "llm_end": 
+                                renderMarkdown(); 
+                                speak(getCurrentJarvisMessageText(), null); 
+                                // Decrement Guest Limit Here
+                                if(userRole === 'guest') decrementGuestLimit();
+                                break;
                             case "ui_command": handleUICommand(msg.action, msg.params); break;
                             case "action_confirmation":
                                 pendingAction = msg.action_data;
@@ -681,16 +878,19 @@
 
                 function submitQuery(text) {
                     if (!text.trim()) return;
+                    
+                    // Pre-check for guest limit before sending
+                    if (userRole === 'guest' && checkGuestCooldown(userName)) return;
+
                     addUserMessage(text); textInput.value = ""; lastJarvisMessageEl = null;
                     
-                    // Modify query to enforce naming convention if needed, though mostly handled by initial context
                     sendMessage({
                         type: "text_query", 
                         text: text, 
                         lang: currentLang,
                         web_search_enabled: webSearchEnabled,
                         userId: window.currentUserId,
-                        user_name: userName // Added persistent context
+                        user_name: userName
                     });
                 }
 
@@ -868,3 +1068,4 @@
         });
     </script>
 </body>
+</html>
