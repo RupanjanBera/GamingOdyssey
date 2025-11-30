@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
-    <title>J.A.R.V.I.S. HUD V3.1 - Access Control</title>
+    <title>J.A.R.V.I.S. HUD V3.1 - Vision Enabled</title>
     
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
@@ -11,7 +11,6 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
     <style>
-        /* --- 1. Global & Fonts --- */
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400&display=swap');
         :root {
             --primary-glow: #00ffff; --secondary-glow: #ff00ff;
@@ -26,845 +25,295 @@
             background-color: var(--bg-color); color: var(--text-color);
             overflow: hidden; 
             background-image: linear-gradient(45deg, #1a0b2a, #0d0a1f);
-            perspective: 1000px;
         }
         
-        /* --- 2. Backgrounds & Overlays --- */
-        #particle-background {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; overflow: hidden;
-        }
+        #particle-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
         .particle {
-            position: absolute; background: var(--primary-glow);
-            border-radius: 50%; opacity: 0.5; width: 2px; height: 2px;
-            box-shadow: 0 0 5px var(--primary-glow);
+            position: absolute; background: var(--primary-glow); border-radius: 50%; opacity: 0.5; width: 2px; height: 2px;
             animation: move 20s linear infinite;
         }
-        @keyframes move {
-            0% { transform: translateY(0) translateX(0); opacity: 0.5; }
-            100% { transform: translateY(-100vh) translateX(10vw); opacity: 0; }
-        }
-        #scanlines {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 1; pointer-events: none;
-            background: linear-gradient(0deg, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0.03) 50%, rgba(255, 255, 255, 0) 50%);
-            background-size: 100% 3px;
-            animation: scanlines 5s linear infinite;
-        }
-
-        /* --- 3. HUD Panels & Boot Sequence --- */
+        @keyframes move { 100% { transform: translateY(-100vh) translateX(10vw); opacity: 0; } }
+        
         .hud-panel {
-            background: var(--glass-bg); border: 1px solid var(--border-color);
-            border-radius: 15px; backdrop-filter: blur(10px);
+            background: var(--glass-bg); border: 1px solid var(--border-color); border-radius: 15px; backdrop-filter: blur(10px);
             padding: 1rem; box-shadow: 0 0 20px rgba(0, 255, 255, 0.2) inset;
-            transition: all 0.5s ease; position: relative; overflow: hidden;
-            opacity: 0; transform: translateY(20px) scale(0.98);
-            /* animation: flicker 10s linear infinite; Removed to stop flicker before auth */
+            animation: flicker 10s linear infinite;
         }
-        .hud-panel.active-animation {
-             animation: flicker 10s linear infinite;
-        }
-        .hud-panel::before, .hud-panel::after {
-            content: ''; position: absolute; width: 2px; height: 0;
-            background: var(--primary-glow); box-shadow: 0 0 10px var(--primary-glow);
-            animation: scan-border 4s linear infinite;
-        }
-        .hud-panel::before { top: 0; left: 0; }
-        .hud-panel::after { bottom: 0; right: 0; animation-delay: 2s; }
-        @keyframes scan-border { 0% { height: 0; } 50% { height: 100%; } 100% { height: 0; opacity: 0; } }
-        @keyframes flicker {
-            0%, 100% { opacity: 1; } 50.0% { opacity: 1; } 50.1% { opacity: 0.9; }
-            50.2% { opacity: 1; } 50.3% { opacity: 0.95; } 50.4% { opacity: 1; }
-        }
-        .booted { opacity: 1; transform: translateY(0) scale(1); }
+        @keyframes flicker { 50% { opacity: 1; } 50.1% { opacity: 0.9; } 50.2% { opacity: 1; } }
 
-        h1, h2, h3, h4 { font-family: 'Orbitron', sans-serif; color: var(--primary-glow); transition: all 0.5s ease; }
+        h1, h2, h3 { font-family: 'Orbitron', sans-serif; color: var(--primary-glow); }
         h3 { border-bottom: 1px solid var(--border-color); padding-bottom: 5px; margin-bottom: 10px; }
-        h4 { color: var(--text-secondary); margin-top: 10px; font-size: 0.9rem; }
 
-        /* --- 4. Combat Mode Theme --- */
-        body.combat-mode {
-            --primary-glow: #ff2200; --border-color: rgba(255, 34, 0, 0.3);
-            --glass-bg: rgba(40, 15, 20, 0.7);
-        }
-        body.combat-mode .hud-panel { box-shadow: 0 0 20px rgba(255, 34, 0, 0.2) inset; }
-        body.combat-mode .status-item, body.combat-mode .jarvis-message, body.combat-mode #text-input { border-color: var(--danger-glow); }
-        body.combat-mode .control-button { border-color: var(--danger-glow); color: var(--danger-glow); text-shadow: 0 0 5px var(--danger-glow); box-shadow: 0 0 10px var(--danger-glow) inset, 0 0 10px var(--danger-glow); }
-        body.combat-mode .control-button:hover { background-color: var(--danger-glow); color: var(--bg-color); }
-        body.combat-mode .status-bar-inner { background: var(--danger-glow); box-shadow: 0 0 10px var(--danger-glow); }
-        body.combat-mode #arc-reactor, body.combat-mode #suit-svg path { --primary-glow: var(--danger-glow); }
-        body.combat-mode #web-search-btn.active { color: var(--danger-glow); box-shadow: 0 0 10px var(--danger-glow); }
-
-        /* --- 5. Main Layout (Desktop Default) --- */
-        .jarvis-container { display: flex; height: 100vh; width: 100vw; padding: 1rem; gap: 1rem; opacity: 0; transition: opacity 1s ease; pointer-events: none; }
-        .jarvis-container.access-granted { opacity: 1; pointer-events: all; }
-
-        .side-panel { flex: 0 0 300px; display: flex; flex-direction: column; gap: 1rem; z-index: 10; transition: transform 0.1s ease-out; }
-        .main-panel { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; transition: transform 0.1s ease-out; }
-        .right-panel { flex: 0 0 300px; display: flex; flex-direction: column; gap: 1rem; z-index: 10; transition: transform 0.1s ease-out; }
-
-        /* --- 6. Left Panel (Suit Status) --- */
-        #suit-status-panel { flex-grow: 1; display: flex; flex-direction: column; }
-        #suit-schematic { position: relative; display: flex; flex-direction: column; align-items: center; margin-bottom: 1rem; }
-        #suit-svg { width: 100%; opacity: 0.3; position: absolute; top: 50px; z-index: 1; }
-        #suit-svg path { stroke: var(--primary-glow); stroke-width: 0.5; fill: none; filter: drop-shadow(0 0 5px var(--primary-glow)); transition: all 0.5s ease; }
-        #arc-reactor { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--primary-glow); background: radial-gradient(circle, var(--primary-glow) 0%, rgba(0,0,0,0) 60%); box-shadow: 0 0 20px var(--primary-glow), 0 0 40px var(--primary-glow), 0 0 60px var(--primary-glow) inset; margin: 1.5rem auto; animation: pulse 2s infinite ease-in-out; transition: all 0.5s ease; z-index: 2; }
-        .status-bar { width: 100%; height: 20px; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); border-radius: 5px; padding: 2px; z-index: 2; }
-        .status-bar-inner { height: 100%; width: 90%; background: var(--primary-glow); border-radius: 3px; box-shadow: 0 0 10px var(--primary-glow); transition: all 0.5s ease; }
-        .status-text { display: flex; justify-content: space-between; font-size: 0.9rem; margin-top: 5px; z-index: 2; }
-        .status-text span:first-child { color: var(--text-secondary); }
-        .status-text span:last-child { font-weight: bold; }
-
-        /* --- 7. Right Panel (System & Logistics) --- */
-        #logistics-panel { flex-shrink: 0; }
-        #dynamic-clock { font-size: 1.5rem; text-align: center; font-family: 'Orbitron'; }
-        #dynamic-date { font-size: 0.9rem; text-align: center; color: var(--text-secondary); }
-        #logistics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-        #weather-temp { font-size: 1.5rem; font-family: 'Orbitron'; }
-        #weather-desc { font-weight: bold; }
-        #camera-panel { flex-grow: 1; display: flex; flex-direction: column; padding: 0; }
-        #camera-feed { width: 100%; height: 100%; object-fit: cover; border-radius: 15px; transform: scaleX(-1); background: #000; }
-
-        /* --- 8. Main Panel (Chat) --- */
-        #core-container { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; justify-content: center; align-items: center; overflow: hidden; z-index: 1; border-radius: 15px; }
-        #web-core { width: 300px; height: 300px; border-radius: 50%; background: radial-gradient(circle, var(--primary-glow) 0%, var(--bg-color) 70%); box-shadow: 0 0 30px var(--primary-glow), 0 0 60px var(--primary-glow), 0 0 90px var(--secondary-glow); animation: pulse 3s infinite ease-in-out; position: relative; opacity: 0.2; animation-play-state: paused; transition: all 0.5s ease; }
-        body.combat-mode #web-core { background: radial-gradient(circle, var(--danger-glow) 0%, var(--bg-color) 70%); box-shadow: 0 0 30px var(--danger-glow), 0 0 60px var(--danger-glow), 0 0 90px var(--danger-glow); }
-        #web-core.listening { animation-play-state: running; opacity: 0.4; }
-        #web-core::before, #web-core::after { content: ''; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); border-radius: 50%; border: 2px solid var(--primary-glow); transition: all 0.5s ease; }
-        body.combat-mode #web-core::before, body.combat-mode #web-core::after { border-color: var(--danger-glow); }
-        #web-core::before { width: 400px; height: 400px; animation: spin 8s linear infinite; }
-        #web-core::after { width: 500px; height: 500px; animation: spin 12s linear infinite reverse; }
-        @keyframes pulse { 0% { transform: scale(0.9); } 50% { transform: scale(1); } 100% { transform: scale(0.9); } }
-        @keyframes spin { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
-
-        #chat-container { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; z-index: 2; }
-        #message-display { flex-grow: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column-reverse; scrollbar-width: none; }
-        #message-display::-webkit-scrollbar { display: none; }
+        body.combat-mode { --primary-glow: #ff2200; --border-color: rgba(255, 34, 0, 0.3); }
         
-        .chat-message {
-            max-width: 80%; padding: 0.8rem 1.2rem; border-radius: 15px; margin-bottom: 1rem;
-            white-space: pre-wrap; word-wrap: break-word;
-            background: rgba(20, 15, 40, 0.7); backdrop-filter: blur(5px);
-            animation: fadeIn 0.5s ease-out;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
+        .jarvis-container { display: flex; height: 100vh; width: 100vw; padding: 1rem; gap: 1rem; }
+        .side-panel, .right-panel { flex: 0 0 300px; display: flex; flex-direction: column; gap: 1rem; z-index: 10; }
+        .main-panel { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
 
-        .user-message { background: var(--primary-glow); color: var(--bg-color); align-self: flex-end; border-bottom-right-radius: 0; font-weight: bold; }
-        body.combat-mode .user-message { background: var(--danger-glow); }
-        .jarvis-message { border: 1px solid var(--primary-glow); align-self: flex-start; border-bottom-left-radius: 0; }
-        .jarvis-message.error { border-color: var(--danger-glow); color: var(--danger-glow); }
-        .jarvis-message.status { border-color: var(--warning-glow); color: var(--warning-glow); font-style: italic; text-align: center; align-self: center; }
+        #suit-schematic svg path { stroke: var(--primary-glow); fill: none; }
+        #arc-reactor { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--primary-glow); box-shadow: 0 0 20px var(--primary-glow); margin: 1.5rem auto; animation: pulse 2s infinite; }
+        @keyframes pulse { 50% { transform: scale(1.05); } }
         
-        /* Typing Indicator */
-        .jarvis-message.typing::after { content: '▋'; display: inline-block; margin-left: 5px; opacity: 1; animation: blink 0.7s infinite; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-
-        /* Styles for MARKDOWN content */
-        .jarvis-message pre { background: #020a17; border: 1px solid var(--primary-glow); padding: 1em; border-radius: 5px; margin: 1em 0; overflow-x: auto; font-family: 'Courier New', Courier, monospace; color: #e0e0e0; }
-        .jarvis-message code { font-family: 'Courier New', Courier, monospace; background: #020a17; padding: 2px 4px; border-radius: 3px; }
-        .jarvis-message b, .jarvis-message strong { color: var(--primary-glow); font-weight: bold; }
-        .jarvis-message h1, .jarvis-message h2 { margin: 10px 0 5px; border-bottom: none; }
-
-        #input-area { display: flex; gap: 0.5rem; padding: 1rem; border-top: 1px solid var(--border-color); z-index: 5; background: var(--glass-bg); border-bottom-left-radius: 15px; border-bottom-right-radius: 15px; transition: all 0.5s ease; }
+        #chat-container { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; z-index: 2; }
+        #message-display { flex-grow: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column-reverse; }
+        .chat-message { max-width: 80%; padding: 0.8rem; border-radius: 15px; margin-bottom: 1rem; background: rgba(0,0,0,0.5); }
+        .user-message { background: var(--primary-glow); color: #000; align-self: flex-end; }
+        .jarvis-message { border: 1px solid var(--primary-glow); align-self: flex-start; }
+        .jarvis-message.typing::after { content: '▋'; animation: blink 0.7s infinite; }
         
-        #text-input {
-            flex-grow: 1; padding: 0.8rem 1.2rem; background: rgba(0,0,0,0.5);
-            border: 1px solid var(--primary-glow); border-radius: 50px;
-            color: var(--text-color); font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-        #text-input:focus { outline: none; box-shadow: 0 0 15px var(--primary-glow), 0 0 25px var(--primary-glow) inset; transform: scale(1.01); }
+        #input-area { display: flex; gap: 0.5rem; padding: 1rem; background: var(--glass-bg); border-radius: 15px; }
+        #text-input { flex-grow: 1; padding: 0.8rem; background: rgba(0,0,0,0.5); border: 1px solid var(--primary-glow); color: white; border-radius: 50px; }
+        .control-button { padding: 0.8rem; border: 2px solid var(--primary-glow); background: transparent; color: var(--primary-glow); border-radius: 50px; cursor: pointer; font-family: 'Orbitron'; }
+        .control-button:hover { background: var(--primary-glow); color: black; }
+        
+        #camera-feed { width: 100%; border-radius: 15px; transform: scaleX(-1); background: #000; }
+        
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 200; justify-content: center; align-items: center; }
+        .modal-content { background: var(--glass-bg); padding: 2rem; border-radius: 15px; border: 1px solid var(--primary-glow); text-align: center; }
 
-        .control-button { font-family: 'Orbitron', sans-serif; font-size: 1rem; padding: 0.8rem 1.2rem; border: 2px solid var(--primary-glow); background-color: transparent; color: var(--primary-glow); border-radius: 50px; cursor: pointer; transition: all 0.3s ease; text-shadow: 0 0 5px var(--primary-glow); box-shadow: 0 0 10px var(--primary-glow) inset, 0 0 10px var(--primary-glow); white-space: nowrap; }
-        .control-button:hover { background-color: var(--primary-glow); color: var(--bg-color); box-shadow: 0 0 20px var(--primary-glow), 0 0 30px var(--primary-glow); }
-        .control-button.active { background-color: #ff0000; border-color: #ff0000; box-shadow: 0 0 15px #ff0000; text-shadow: none; }
-        #mute-button.active { background-color: var(--secondary-glow); border-color: var(--secondary-glow); }
-        #clear-button, #upload-button { border-color: var(--warning-glow); color: var(--warning-glow); }
-
-        /* Web Search Button Styling */
-        #web-search-btn {
-            display: flex; align-items: center; justify-content: center;
-            width: 45px; height: 45px;
-            border-radius: 50%;
-            border: 1px solid var(--text-secondary);
-            background: transparent;
-            color: var(--text-secondary);
-            cursor: pointer; transition: all 0.3s ease;
-        }
-        #web-search-btn svg { width: 20px; height: 20px; fill: currentColor; }
-        #web-search-btn.active {
-            border-color: var(--primary-glow);
-            color: var(--primary-glow);
-            box-shadow: 0 0 10px var(--primary-glow) inset, 0 0 10px var(--primary-glow);
-        }
-
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); justify-content: center; align-items: center; z-index: 200; }
-        .modal-content { background: var(--glass-bg); padding: 2rem; border-radius: 15px; border: 1px solid var(--primary-glow); box-shadow: 0 0 30px var(--primary-glow); text-align: center; }
-
-        /* ACCESS OVERLAY STYLES */
-        #access-overlay {
-            display: flex; flex-direction: column; z-index: 9999;
-            background: rgba(13, 10, 31, 0.98);
-        }
-        .access-box {
-            min-width: 300px; max-width: 500px; width: 90%;
-            border: 2px solid var(--primary-glow);
-            box-shadow: 0 0 50px var(--primary-glow) inset, 0 0 50px var(--primary-glow);
-        }
-        .access-title { margin-bottom: 2rem; font-family: 'Orbitron'; text-shadow: 0 0 10px var(--primary-glow); }
-        #access-options { display: flex; flex-direction: column; gap: 1rem; width: 100%; }
-        .large-btn { width: 100%; padding: 1.5rem; font-size: 1.2rem; letter-spacing: 2px; }
-        .access-input {
-            width: 100%; padding: 1rem; margin-bottom: 1rem;
-            background: rgba(0,0,0,0.5); border: 1px solid var(--primary-glow);
-            color: var(--primary-glow); font-family: 'Orbitron'; font-size: 1.2rem;
-            text-align: center; border-radius: 10px; outline: none;
-        }
-        .access-input:focus { box-shadow: 0 0 20px var(--primary-glow); }
-
-        /* Mobile Navigation (Hidden on Desktop) */
-        #mobile-nav { display: none; }
-
-        /* --- 9. Responsive / Mobile Optimization (FIXED) --- */
         @media (max-width: 900px) {
-            html, body { height: 100dvh; width: 100vw; overflow: hidden; position: fixed; }
-            .jarvis-container { display: flex; flex-direction: column; height: 100dvh; width: 100%; padding: 0; gap: 0; padding-bottom: 60px; }
-            .side-panel, .right-panel, .main-panel { width: 100%; height: 100%; border: none; border-radius: 0; background: var(--bg-color); padding: 10px; overflow-y: auto; transition: none !important; transform: none !important; display: none; flex-direction: column; }
-            .side-panel.active-tab, .right-panel.active-tab, .main-panel.active-tab { display: flex; }
-            .hud-panel { opacity: 1 !important; transform: none !important; animation: none !important; box-shadow: none; border: 1px solid var(--primary-glow); margin-bottom: 1rem; flex-shrink: 0; width: 100%; }
-            .main-panel { padding: 0; overflow: hidden; } 
-            #chat-container { flex-grow: 1; display: flex; flex-direction: column; height: 100%; overflow: hidden; }
-            #message-display { flex-grow: 1; overflow-y: auto; padding: 10px; padding-bottom: 20px; }
-            #input-area { position: relative; flex-shrink: 0; width: 100%; background: rgba(13, 10, 31, 0.95); padding: 10px; z-index: 50; border-radius: 0; border-top: 1px solid var(--primary-glow); flex-wrap: nowrap; bottom: auto; left: auto; }
-            #text-input { font-size: 16px; flex-grow: 1; }
-            .control-button { padding: 0.6rem; font-size: 0.9rem; }
-            #camera-panel { height: 250px; min-height: 250px; }
-            
-            #mobile-nav { display: flex; height: 60px; width: 100%; position: absolute; bottom: 0; left: 0; background: rgba(10, 10, 20, 0.95); border-top: 2px solid var(--primary-glow); z-index: 2000; justify-content: space-around; align-items: center; backdrop-filter: blur(10px); }
-            .nav-item { color: var(--text-secondary); font-family: 'Orbitron'; font-size: 0.8rem; text-align: center; padding: 10px; flex-grow: 1; cursor: pointer; border-top: 2px solid transparent; transition: all 0.3s; }
-            .nav-item.active { color: var(--primary-glow); text-shadow: 0 0 10px var(--primary-glow); background: linear-gradient(0deg, rgba(0,255,255,0.1), transparent); border-top: 2px solid var(--primary-glow); }
-            #player-container { width: 100%; height: 200px; }
+            .jarvis-container { flex-direction: column; padding: 0; }
+            .side-panel, .right-panel { display: none; }
+            #mobile-nav { display: flex; }
         }
+        #mobile-nav { display: none; position: fixed; bottom: 0; width: 100%; background: #000; justify-content: space-around; padding: 10px; z-index: 100; border-top: 1px solid var(--primary-glow); }
+        .nav-item { color: var(--text-secondary); font-family: 'Orbitron'; }
     </style>
 </head>
 <body>
-    
     <div id="particle-background"></div>
-    <div id="scanlines"></div>
-
-    <!-- ACCESS CONTROL OVERLAY -->
-    <div id="access-overlay" class="modal-overlay">
-        <div class="modal-content access-box">
-            <h1 class="access-title">SYSTEM ACCESS</h1>
-            
-            <div id="access-main-menu">
-                <div id="access-options">
-                    <button id="btn-admin" class="control-button large-btn">ADMIN ACCESS</button>
-                    <button id="btn-guest" class="control-button large-btn">GUEST ACCESS</button>
-                </div>
-            </div>
-
-            <div id="admin-auth" style="display: none;">
-                <h3 style="margin-bottom: 1rem; border:none;">SECURITY CLEARANCE</h3>
-                <p style="margin-bottom: 0.5rem; color: var(--text-secondary);">ENTER PASSPHRASE</p>
-                <input type="password" id="admin-pass" class="access-input" placeholder="********">
-                <div style="display: flex; gap: 1rem; justify-content: center;">
-                    <button id="btn-admin-submit" class="control-button">VERIFY</button>
-                    <button id="btn-admin-cancel" class="control-button" style="border-color: var(--danger-glow); color: var(--danger-glow);">BACK</button>
-                </div>
-            </div>
-
-            <div id="guest-auth" style="display: none;">
-                <h3 style="margin-bottom: 1rem; border:none;">VISITOR IDENTIFICATION</h3>
-                <p style="margin-bottom: 0.5rem; color: var(--text-secondary);">STATE YOUR NAME</p>
-                <input type="text" id="guest-name" class="access-input" placeholder="Name">
-                <div style="display: flex; gap: 1rem; justify-content: center;">
-                    <button id="btn-guest-submit" class="control-button">PROCEED</button>
-                    <button id="btn-guest-cancel" class="control-button" style="border-color: var(--danger-glow); color: var(--danger-glow);">BACK</button>
-                </div>
-            </div>
-
-            <p id="access-error" style="color: var(--danger-glow); margin-top: 1rem; display: none; font-weight: bold; text-shadow: 0 0 5px var(--danger-glow);">ACCESS DENIED</p>
-        </div>
-    </div>
-
     <div class="jarvis-container">
-        <!-- LEFT PANEL (SYS TAB) -->
         <div class="side-panel" id="left-panel">
-            <div id="suit-status-panel" class="hud-panel" style="transition-delay: 0.1s;">
-                <h3>MARK VII TACTICAL</h3>
-                <div id="suit-schematic">
-                    <svg id="suit-svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
-                        <path d="M 50 10 L 70 20 L 75 40 L 65 60 L 50 70 L 35 60 L 25 40 L 30 20 Z M 50 10 L 50 30 M 70 20 L 55 30 M 30 20 L 45 30 M 50 30 L 50 70 M 50 45 L 60 40 L 75 40 M 50 45 L 40 40 L 25 40 M 50 55 L 65 60 M 50 55 L 35 60"/>
-                    </svg>
-                    <div id="arc-reactor"></div>
-                </div>
-                <h4>ENERGY LEVEL</h4>
-                <div class="status-bar"><div id="energy-bar" class="status-bar-inner"></div></div>
-                <h4>ARMOUR INTEGRITY</h4>
-                <div class="status-bar"><div id="armour-bar" class="status-bar-inner"></div></div>
-                <div class="status-text"><span>FLIGHT SYSTEMS:</span><span id="flight-status">OFFLINE</span></div>
-                <div class="status-text"><span>WEAPON SYSTEMS:</span><span id="weapon-status">DISARMED</span></div>
-                <div class="status-text"><span>SUIT STATUS:</span><span id="suit-status">STANDBY</span></div>
+            <div class="hud-panel">
+                <h3>STATUS</h3>
+                <div id="suit-schematic"><div id="arc-reactor"></div></div>
+                <div>ENERGY: <span id="energy-bar">98%</span></div>
             </div>
-            <div id="controls-panel" class="hud-panel" style="transition-delay: 0.3s;">
+            <div class="hud-panel">
                 <h3>CONTROLS</h3>
-                <div class="control-group">
-                    <button id="mute-button" class="control-button">MUTE</button>
-                    <button id="clear-button" class="control-button">CLEAR CHAT</button>
-                </div>
+                <button id="mute-button" class="control-button">MUTE</button>
+                <button id="clear-button" class="control-button">CLEAR</button>
             </div>
         </div>
 
-        <!-- MAIN PANEL (COMM TAB - DEFAULT) -->
-        <div class="main-panel hud-panel active-tab" id="main-panel" style="transition-delay: 0.2s;">
-            <div id="core-container"> <div id="web-core"></div> </div>
+        <div class="main-panel hud-panel" id="main-panel">
             <div id="chat-container">
                 <div id="message-display"></div>
                 <div id="input-area">
-                    <!-- WEB SEARCH TOGGLE ICON -->
-                    <button id="web-search-btn" class="active" title="Toggle Web Search">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
-                        </svg>
-                    </button>
+                    <button id="web-search-btn" class="control-button" title="Web Search">🌐</button>
                     <input type="text" id="text-input" placeholder="CMD...">
                     <button id="mic-button" class="control-button">MIC</button>
                     <button id="upload-button" class="control-button">UP</button>
-                    <input type="file" id="file-uploader" accept=".txt,.pdf,.doc,.docx" style="display: none;">
+                    <input type="file" id="file-uploader" accept=".txt,.pdf,.doc,.docx,.jpg,.jpeg,.png" style="display: none;">
                     <button id="send-button" class="control-button">SEND</button>
                 </div>
             </div>
         </div>
         
-        <!-- RIGHT PANEL (DATA TAB) -->
         <div class="right-panel" id="right-panel">
-            <div id="logistics-panel" class="hud-panel" style="transition-delay: 0.4s;">
-                <h3>LOGISTICS</h3>
-                <div id="dynamic-clock">--:--:--</div>
-                <div id="dynamic-date">---, --- --</div>
-                <div id="logistics-grid">
-                    <div class="status-item"> <h4>CPU</h4> <p id="cpu-stat">--%</p> </div>
-                    <div class="status-item"> <h4>MEM</h4> <p id="mem-stat">--%</p> </div>
-                </div>
-                <div class="status-text">
-                    <span>WEATHER:</span> <span id="weather-desc">LOADING...</span>
-                </div>
-                <div class="status-item" style="grid-column: span 2; text-align: center; margin-top: 5px;">
-                    <p id="weather-temp">--°C</p>
-                </div>
+            <div class="hud-panel">
+                <h3>DATA</h3>
+                <div id="dynamic-clock">--:--</div>
+                <div id="weather-desc">LOADING...</div>
+                <div id="cpu-stat">CPU: --%</div>
             </div>
-            <div id="camera-panel" class="hud-panel" style="transition-delay: 0.5s;">
-                <video id="camera-feed" autoplay playsinline></video>
-            </div>
-            <div id="audit-panel" class="hud-panel" style="transition-delay: 0.6s;">
-                <h3>ACTION AUDIT LOG</h3>
-                <div id="audit-log"></div>
-            </div>
+            <div class="hud-panel"><video id="camera-feed" autoplay playsinline></video></div>
+            <div class="hud-panel" id="audit-log" style="font-size: 0.8em; overflow-y: auto; height: 150px;"></div>
         </div>
     </div>
 
-    <!-- MOBILE NAVIGATION (Visible only on <900px) -->
     <nav id="mobile-nav">
-        <div class="nav-item" onclick="switchTab('sys')">SYS</div>
-        <div class="nav-item active" onclick="switchTab('comm')">COMM</div>
-        <div class="nav-item" onclick="switchTab('data')">DATA</div>
+        <div class="nav-item" onclick="location.reload()">RELOAD</div>
     </nav>
 
-    <!-- Modals -->
     <div id="confirmation-modal" class="modal-overlay">
         <div class="modal-content">
-            <h3>ACTION CONFIRMATION</h3> <p id="modal-message">...</p>
-            <div class="modal-buttons">
-                <button id="modal-allow-button" class="control-button">ALLOW</button>
-                <button id="modal-deny-button" class="control-button">DENY</button>
-            </div>
+            <h3>CONFIRM ACTION</h3> <p id="modal-message">...</p>
+            <button id="modal-allow-button" class="control-button">ALLOW</button>
+            <button id="modal-deny-button" class="control-button">DENY</button>
         </div>
     </div>
+    
     <div id="player-modal" class="modal-overlay">
         <div class="modal-content">
-            <h3 id="player-title">Now Playing...</h3>
             <div id="player-container"></div>
-            <div id="player-controls">
-                <button id="player-rewind" class="control-button">« 10s</button>
-                <button id="player-pause" class="control-button">PAUSE</button>
-                <button id="player-forward" class="control-button">10s »</button>
-                <button id="player-close" class="control-button">CLOSE</button>
-            </div>
+            <button id="player-close" class="control-button">CLOSE</button>
         </div>
     </div>
-    <div id="destruction-overlay"></div>
 
-    <!-- Firebase SDKs (Only Firestore Needed for Logs) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
         const firebaseConfig = {
           apiKey: "AIzaSyDA218WauVZNgqeMgiR_5H6TLYQB5HXZkY",
-          authDomain: "gamingodyssey-2e642.firebaseapp.com",
-          databaseURL: "https://gamingodyssey-2e642-default-rtdb.firebaseio.com",
           projectId: "gamingodyssey-2e642",
-          storageBucket: "gamingodyssey-2e642.firebasestorage.app",
-          messagingSenderId: "964191300629",
-          appId: "1:964191300629:web:4be869d43fd0afeb00321c",
-          measurementId: "G-VS888VHFJJ"
+          appId: "1:964191300629:web:4be869d43fd0afeb00321c"
         };
-
         const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        // Generate or retrieve a persistent device ID for private memory
-        let deviceId = localStorage.getItem('jarvis_device_id');
-        if (!deviceId) {
-            deviceId = 'device_' + Math.random().toString(36).substr(2, 9);
-            localStorage.setItem('jarvis_device_id', deviceId);
-        }
-        
-        window.currentUserId = deviceId;
-        window.firebaseDb = { db, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, limit };
-        
-        // Start logs immediately
-        window.initPrivateAuditLog(deviceId);
+        window.firebaseDb = { db: getFirestore(app), collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, limit };
+        window.currentUserId = localStorage.getItem('jarvis_device_id') || 'device_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('jarvis_device_id', window.currentUserId);
     </script>
 
     <script>
-        // --- Global Constants ---
-        const GOOGLE_SEARCH_API_KEY = 'AIzaSyBm8SxGHDl9pkrDuZt_VgFQME9a3aRUeXY';
-        const SEARCH_ENGINE_ID = 'd13b9c982e19f4ccf';
-        const GOOGLE_SEARCH_URL = `https://www.googleapis.com/customsearch/v1?key=${GOOGLE_SEARCH_API_KEY}&cx=${SEARCH_ENGINE_ID}`;
         const SHARED_SECRET_TOKEN = "YOUR_SUPER_SECRET_TOKEN_HERE";
-        
-        if (window.pdfjsLib) { pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.worker.min.js'; }
-        
-        let ws; let recognition; let ytPlayer;
-        let isRecording = false; let isMuted = false;
-        let currentLang = "en-US"; let pendingAction = null; 
-        let jarvisVoice = null; let hasUserInteracted = false;
-        let webSearchEnabled = true; // Default ON
-        let userName = "Sir"; // Default if something goes wrong
-        
-        // --- Mobile Tab Logic ---
-        window.switchTab = function(tabName) {
-            if(window.innerWidth > 900) return;
-            const navItems = document.querySelectorAll('.nav-item');
-            navItems.forEach(item => item.classList.remove('active'));
-            const activeIndex = tabName === 'sys' ? 0 : tabName === 'comm' ? 1 : 2;
-            navItems[activeIndex].classList.add('active');
-            document.getElementById('left-panel').classList.remove('active-tab');
-            document.getElementById('main-panel').classList.remove('active-tab');
-            document.getElementById('right-panel').classList.remove('active-tab');
-            if(tabName === 'sys') document.getElementById('left-panel').classList.add('active-tab');
-            if(tabName === 'comm') document.getElementById('main-panel').classList.add('active-tab');
-            if(tabName === 'data') document.getElementById('right-panel').classList.add('active-tab');
-        }
+        let ws, recognition, ytPlayer, isMuted = false, webSearchEnabled = true, pendingAction = null;
+        if (window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.worker.min.js';
 
         document.addEventListener("DOMContentLoaded", () => {
-            const allBootElements = document.querySelectorAll(".hud-panel");
-            const accessOverlay = document.getElementById("access-overlay");
-            const btnAdmin = document.getElementById("btn-admin");
-            const btnGuest = document.getElementById("btn-guest");
-            const accessMainMenu = document.getElementById("access-main-menu");
-            const adminAuth = document.getElementById("admin-auth");
-            const guestAuth = document.getElementById("guest-auth");
-            const btnAdminSubmit = document.getElementById("btn-admin-submit");
-            const btnGuestSubmit = document.getElementById("btn-guest-submit");
-            const adminPassInput = document.getElementById("admin-pass");
-            const guestNameInput = document.getElementById("guest-name");
-            const accessError = document.getElementById("access-error");
-            const btnAdminCancel = document.getElementById("btn-admin-cancel");
-            const btnGuestCancel = document.getElementById("btn-guest-cancel");
-            const jarvisContainer = document.querySelector(".jarvis-container");
+            const els = {
+                msgDisplay: document.getElementById("message-display"),
+                input: document.getElementById("text-input"),
+                micBtn: document.getElementById("mic-button"),
+                sendBtn: document.getElementById("send-button"),
+                uploadBtn: document.getElementById("upload-button"),
+                fileInput: document.getElementById("file-uploader"),
+                modal: document.getElementById("confirmation-modal"),
+                audit: document.getElementById("audit-log"),
+                cam: document.getElementById("camera-feed"),
+                webBtn: document.getElementById("web-search-btn")
+            };
 
-            // --- Access Control Logic ---
-            btnAdmin.addEventListener("click", () => {
-                accessMainMenu.style.display = "none";
-                adminAuth.style.display = "block";
-                accessError.style.display = "none";
-                adminPassInput.focus();
-            });
+            function connectWS() {
+                ws = new WebSocket("ws://localhost:8000/ws");
+                ws.onopen = () => { addJarvisMsg("Online."); send({type:"get_system_stats"}); };
+                ws.onmessage = (e) => {
+                    const m = JSON.parse(e.data);
+                    if(m.type === "llm_chunk") updateLastMsg(m.text);
+                    else if(m.type === "llm_end") { renderMD(); speak(lastMsgText()); }
+                    else if(m.type === "action_confirmation") { pendingAction = m.action_data; document.getElementById("modal-message").innerText = m.action_data.action; els.modal.style.display = "flex"; }
+                    else if(m.type === "action_status") addJarvisMsg(`Action: ${m.status} - ${m.message}`);
+                    else if(m.type === "ui_command") handleUI(m.action, m.params);
+                    else if(m.type === "system_stats") document.getElementById("cpu-stat").innerText = `CPU: ${m.cpu}%`;
+                    else if(m.type === "weather_update") document.getElementById("weather-desc").innerText = m.data.desc;
+                };
+                ws.onclose = () => setTimeout(connectWS, 3000);
+            }
+            function send(data) { if(ws && ws.readyState===1) ws.send(JSON.stringify(data)); }
 
-            btnGuest.addEventListener("click", () => {
-                accessMainMenu.style.display = "none";
-                guestAuth.style.display = "block";
-                accessError.style.display = "none";
-                guestNameInput.focus();
-            });
+            function addJarvisMsg(text) {
+                const d = document.createElement("div"); d.className = "chat-message jarvis-message";
+                d.innerHTML = marked.parse(text); els.msgDisplay.prepend(d);
+            }
+            let lastEl = null, currText = "";
+            function updateLastMsg(chunk) {
+                if(!lastEl) { lastEl = document.createElement("div"); lastEl.className = "chat-message jarvis-message typing"; els.msgDisplay.prepend(lastEl); currText=""; }
+                currText += chunk; lastEl.innerText = currText;
+            }
+            function renderMD() { if(lastEl) { lastEl.innerHTML = marked.parse(currText); lastEl.classList.remove("typing"); lastEl=null; } }
+            function lastMsgText() { return currText; }
 
-            btnAdminCancel.addEventListener("click", () => {
-                adminAuth.style.display = "none";
-                accessMainMenu.style.display = "block";
-                accessError.style.display = "none";
-                adminPassInput.value = "";
-            });
-
-            btnGuestCancel.addEventListener("click", () => {
-                guestAuth.style.display = "none";
-                accessMainMenu.style.display = "block";
-                accessError.style.display = "none";
-                guestNameInput.value = "";
-            });
-
-            btnAdminSubmit.addEventListener("click", verifyAdmin);
-            adminPassInput.addEventListener("keydown", (e) => { if (e.key === "Enter") verifyAdmin(); });
-
-            function verifyAdmin() {
-                if (adminPassInput.value === "jarvis2025") {
-                    userName = "Sir";
-                    grantAccess();
-                } else {
-                    accessError.textContent = "INVALID PASSPHRASE";
-                    accessError.style.display = "block";
-                    // Shake effect
-                    adminPassInput.animate([ { transform: 'translateX(0)' }, { transform: 'translateX(-10px)' }, { transform: 'translateX(10px)' }, { transform: 'translateX(0)' } ], { duration: 300 });
-                }
+            // Image Handler
+            function addUserMsgImage(name, src) {
+                const d = document.createElement("div"); d.className = "chat-message user-message";
+                d.innerHTML = `<div>${name}</div><img src="${src}" style="max-width:200px;border-radius:10px;">`;
+                els.msgDisplay.prepend(d);
             }
 
-            btnGuestSubmit.addEventListener("click", verifyGuest);
-            guestNameInput.addEventListener("keydown", (e) => { if (e.key === "Enter") verifyGuest(); });
-
-            function verifyGuest() {
-                const name = guestNameInput.value.trim();
-                if (name.length > 0) {
-                    userName = name;
-                    grantAccess();
-                } else {
-                    accessError.textContent = "NAME REQUIRED";
-                    accessError.style.display = "block";
-                }
-            }
-
-            function grantAccess() {
-                accessOverlay.style.opacity = "0";
-                setTimeout(() => { accessOverlay.style.display = "none"; }, 500);
-                jarvisContainer.classList.add("access-granted");
-                
-                // Add animations to panels
-                allBootElements.forEach(el => el.classList.add("active-animation"));
-                setTimeout(() => { allBootElements.forEach(el => el.classList.add("booted")); }, 100);
-
-                // Start System
-                initializeJarvisSystem();
-            }
-
-
-            // --- Core System Initialization (Moved inside function) ---
-            const micButton = document.getElementById("mic-button");
-            const muteButton = document.getElementById("mute-button");
-            const clearButton = document.getElementById("clear-button");
-            const textInput = document.getElementById("text-input");
-            const sendButton = document.getElementById("send-button");
-            const webSearchBtn = document.getElementById("web-search-btn");
-            const messageDisplay = document.getElementById("message-display");
-            const cpuStat = document.getElementById("cpu-stat");
-            const memStat = document.getElementById("mem-stat");
-            const auditLog = document.getElementById("audit-log");
-            const confirmationModal = document.getElementById("confirmation-modal");
-            const modalMessage = document.getElementById("modal-message");
-            const modalAllowButton = document.getElementById("modal-allow-button");
-            const modalDenyButton = document.getElementById("modal-deny-button");
-            const webCore = document.getElementById("web-core");
-            const uploadButton = document.getElementById("upload-button");
-            const fileUploader = document.getElementById("file-uploader");
-            const playerModal = document.getElementById("player-modal");
-            const playerTitle = document.getElementById("player-title");
-            const playerPause = document.getElementById("player-pause");
-            const playerClose = document.getElementById("player-close");
-            const playerRewind = document.getElementById("player-rewind");
-            const playerForward = document.getElementById("player-forward");
-            const destructionOverlay = document.getElementById("destruction-overlay");
-            const cameraFeed = document.getElementById("camera-feed");
-            const dynamicClock = document.getElementById("dynamic-clock");
-            const dynamicDate = document.getElementById("dynamic-date");
-            const energyBar = document.getElementById("energy-bar");
-            const armourBar = document.getElementById("armour-bar");
-            const flightStatus = document.getElementById("flight-status");
-            const weaponStatus = document.getElementById("weapon-status");
-            const suitStatus = document.getElementById("suit-status");
-            const particleBg = document.getElementById("particle-background");
-            const weatherDesc = document.getElementById("weather-desc");
-            const weatherTemp = document.getElementById("weather-temp");
-
-            function initializeJarvisSystem() {
-                const welcomeMsg = `At your service ${userName}. How may I serve you today?`;
-
-                function connectWebSocket() {
-                    ws = new WebSocket("wss://venice-postpupillary-coaxially.ngrok-free.dev/ws"); 
-                    ws.onopen = () => {
-                        addJarvisMessage(welcomeMsg, "status");
-                        
-                        // FIX: Explicitly send user configuration to backend
-                        sendMessage({ type: "system_config", user_name: userName }); 
-                        
-                        sendMessage({ type: "get_system_stats" });
-                        sendMessage({ type: "get_weather", location: "Howrah" });
-                        
-                        // Speak welcome message
-                        unlockAudio();
-                    };
-                    ws.onmessage = (event) => {
-                        const msg = JSON.parse(event.data);
-                        switch (msg.type) {
-                            case "llm_chunk": updateLastJarvisMessage(msg.text); break;
-                            case "llm_end": renderMarkdown(); speak(getCurrentJarvisMessageText(), null); break;
-                            case "ui_command": handleUICommand(msg.action, msg.params); break;
-                            case "action_confirmation":
-                                pendingAction = msg.action_data;
-                                modalMessage.textContent = `JARVIS wants to execute: ${pendingAction.action} (${JSON.stringify(pendingAction.params)})`;
-                                confirmationModal.style.display = "flex";
-                                break;
-                            case "action_status":
-                                if (window.firebaseDb) {
-                                    savePrivateLog(msg.action || "Unknown Action", msg.status, JSON.stringify(msg.message));
-                                }
-                                if (msg.status === "fail") { addJarvisMessage(`Action Failed: ${msg.message}`, "error"); } 
-                                else { addJarvisMessage(`Action Success: ${msg.message}`, "status"); }
-                                break;
-                            case "clear_confirmation":
-                                messageDisplay.innerHTML = "";
-                                addJarvisMessage("History and file context cleared.", "status");
-                                break;
-                            case "system_stats":
-                                cpuStat.textContent = `${msg.cpu}%`; memStat.textContent = `${msg.mem}%`;
-                                break;
-                            case "weather_update":
-                                const weather = msg.data;
-                                if (weather && weather.temp) {
-                                    weatherDesc.textContent = `${weather.desc.toUpperCase()}`;
-                                    weatherTemp.textContent = `${weather.temp.toFixed(0)}°C`;
-                                }
-                                break;
-                            case "context_set_confirmation":
-                                addJarvisMessage(`Loaded "${msg.filename}".`, "status");
-                                break;
-                            case "error": addJarvisMessage(`ERROR: ${msg.message}`, "error"); break;
-                        }
-                    };
-                    ws.onclose = () => { setTimeout(connectWebSocket, 3000); };
-                }
-                function sendMessage(message) { if (ws && ws.readyState === WebSocket.OPEN) { ws.send(JSON.stringify(message)); } }
-
-                function addUserMessage(text) {
-                    const msgEl = document.createElement("div");
-                    msgEl.className = "chat-message user-message";
-                    msgEl.textContent = text;
-                    messageDisplay.prepend(msgEl); messageDisplay.scrollTop = 0;
-                }
-                function addJarvisMessage(text, type = "normal") {
-                    const msgEl = document.createElement("div");
-                    msgEl.className = `chat-message jarvis-message ${type}`;
-                    msgEl.innerHTML = marked.parse(text);
-                    messageDisplay.prepend(msgEl); messageDisplay.scrollTop = 0;
-                }
-                let lastJarvisMessageEl = null; let currentResponseText = "";
-                function updateLastJarvisMessage(chunk) {
-                    if (!lastJarvisMessageEl || !messageDisplay.contains(lastJarvisMessageEl)) {
-                        lastJarvisMessageEl = document.createElement("div");
-                        lastJarvisMessageEl.className = "chat-message jarvis-message";
-                        messageDisplay.prepend(lastJarvisMessageEl);
-                        currentResponseText = "";
-                    }
-                    currentResponseText += chunk;
-                    lastJarvisMessageEl.classList.add("typing");
-                    lastJarvisMessageEl.textContent = currentResponseText;
-                }
-                function getCurrentJarvisMessageText() { return lastJarvisMessageEl ? lastJarvisMessageEl.textContent : ""; }
-                function renderMarkdown() {
-                    if (!lastJarvisMessageEl) return;
-                    lastJarvisMessageEl.classList.remove("typing");
-                    lastJarvisMessageEl.innerHTML = marked.parse(currentResponseText);
-                    currentResponseText = "";
-                }
-
-                function submitQuery(text) {
-                    if (!text.trim()) return;
-                    addUserMessage(text); textInput.value = ""; lastJarvisMessageEl = null;
-                    
-                    // Modify query to enforce naming convention if needed, though mostly handled by initial context
-                    sendMessage({
-                        type: "text_query", 
-                        text: text, 
-                        lang: currentLang,
-                        web_search_enabled: webSearchEnabled,
-                        userId: window.currentUserId,
-                        user_name: userName // Added persistent context
-                    });
-                }
-
-                function setupSpeechRecognition() {
-                    window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-                    if (!window.SpeechRecognition) { micButton.disabled = true; micButton.textContent = "N/A"; return; }
-                    recognition = new SpeechRecognition();
-                    recognition.lang = currentLang; recognition.continuous = true; recognition.interimResults = true;
-                    recognition.onstart = () => { isRecording = true; micButton.classList.add("active"); webCore.classList.add("listening"); };
-                    recognition.onend = () => { isRecording = false; micButton.classList.remove("active"); webCore.classList.remove("listening"); };
-                    recognition.onresult = (event) => {
-                        let final_transcript = "";
-                        for (let i = event.resultIndex; i < event.results.length; ++i) {
-                            if (event.results[i].isFinal) { final_transcript += event.results[i][0].transcript; }
-                        }
-                        if (final_transcript) { submitQuery(final_transcript); }
-                    };
-                }
-
-                function loadVoices() {
-                    const voices = window.speechSynthesis.getVoices();
-                    jarvisVoice = voices.find(v => v.name.includes('Google UK English Male')) || voices.find(v => v.name.includes('Microsoft David')) || null;
-                }
-                function speak(text, onEndCallback) {
-                    if (isMuted || !text || !text.trim()) { if (onEndCallback) onEndCallback(); return; }
-                    window.speechSynthesis.cancel();
-                    const tempDiv = document.createElement('div'); tempDiv.innerHTML = marked.parse(text); 
-                    const utterance = new SpeechSynthesisUtterance(tempDiv.textContent || "");
-                    if (jarvisVoice) { utterance.voice = jarvisVoice; }
-                    utterance.lang = "en-GB"; utterance.pitch = 0.9; utterance.rate = 1.0;
-                    if (onEndCallback) { utterance.onend = onEndCallback; }
-                    window.speechSynthesis.speak(utterance);
-                }
-                function unlockAudio() {
-                    if (hasUserInteracted) return;
-                    hasUserInteracted = true;
-                    webCore.classList.add("listening");
-                    setTimeout(() => webCore.classList.remove("listening"), 2000);
-                    speak(welcomeMsg, null);
-                    startCamera();
-                }
-                function playAudio(url) {
-                    if (isMuted || !hasUserInteracted) return;
-                    try { new Audio(url).play().catch(e => console.error(e)); } catch (e) { console.error(e); }
-                }
-                
-                function handleUICommand(action, params) {
-                    if (window.firebaseDb) { savePrivateLog(action, "UI Command", JSON.stringify(params)); }
-                    if (action === "enter_combat_mode") {
-                        addJarvisMessage("Combat Mode Initiated.", "status"); document.body.classList.add("combat-mode"); speak("Combat mode initiated.", () => { playAudio("/audio/combat_on.mp3"); });
-                    } else if (action === "exit_combat_mode") {
-                        addJarvisMessage("Combat Mode Disengaged.", "status"); document.body.classList.remove("combat-mode"); speak("Combat mode disengaged.", () => { playAudio("/audio/combat_off.mp3"); });
-                    } else if (action === "play_song") {
-                        addJarvisMessage(`Searching YouTube for "${params.song_name}"...`, "status"); findAndPlayVideo(params.song_name);
-                    } else if (action === "self_destruct") {
-                        addJarvisMessage("Self-destruct sequence initiated.", "status");
-                        speak("Self-destruct sequence initiated.", () => {
-                            document.body.classList.add("self-destruct"); destructionOverlay.classList.add("active"); playAudio("/audio/self_destruct.mp3");
-                            setTimeout(() => { document.body.classList.remove("self-destruct"); destructionOverlay.classList.remove("active"); addJarvisMessage("System reset.", "status"); }, 5000);
-                        });
-                    }
-                }
-
-                let apiReady = false; window.onYouTubeIframeAPIReady = function() { apiReady = true; }
-                async function findAndPlayVideo(songName) {
-                    try {
-                        const response = await fetch(`${GOOGLE_SEARCH_URL}&q=${encodeURIComponent('youtube ' + songName)}`);
-                        const data = await response.json();
-                        if (data.items && data.items.length > 0) {
-                            const videoLink = data.items.find(item => item.link && item.link.includes("watch?v="));
-                            if (videoLink) {
-                                const videoId = videoLink.link.match(/v=([a-zA-Z0-9_-]{11})/)[1];
-                                playVideoById(videoId, videoLink.title);
-                            }
-                        }
-                    } catch (err) { addJarvisMessage(`Error: ${err.message}`, "error"); }
-                }
-                function playVideoById(videoId, title) {
-                    playerTitle.textContent = title; playerModal.style.display = "flex";
-                    if (!ytPlayer) {
-                        ytPlayer = new YT.Player('player-container', { height: '320', width: '480', videoId: videoId, playerVars: { 'autoplay': 1, 'controls': 1 }, events: { 'onReady': (e) => e.target.playVideo() } });
-                    } else { ytPlayer.loadVideoById(videoId); ytPlayer.playVideo(); }
-                }
-                playerPause.addEventListener("click", () => ytPlayer.getPlayerState() === 1 ? ytPlayer.pauseVideo() : ytPlayer.playVideo());
-                playerClose.addEventListener("click", () => { ytPlayer.stopVideo(); playerModal.style.display = "none"; });
-
-                uploadButton.addEventListener("click", () => { fileUploader.click(); });
-                fileUploader.addEventListener("change", async (event) => {
-                    const file = event.target.files[0]; if (!file) return;
-                    addJarvisMessage(`Reading "${file.name}"...`, "status");
-                    try {
-                        let text = "";
-                        if (file.name.endsWith(".txt")) text = await file.text();
-                        else if (file.name.endsWith(".pdf")) text = await readPdfFile(file);
-                        else if (file.name.endsWith(".docx")) text = await readDocxFile(file);
-                        sendMessage({ type: "set_file_context", filename: file.name, content: text });
-                    } catch (err) { addJarvisMessage(`Error: ${err.message}`, "error"); }
-                    fileUploader.value = "";
-                });
-                function readPdfFile(file) {
-                    return new Promise((resolve) => {
-                        const reader = new FileReader();
-                        reader.onload = async (e) => {
-                            const pdf = await pdfjsLib.getDocument(new Uint8Array(e.target.result)).promise;
-                            let text = "";
-                            for (let i = 1; i <= pdf.numPages; i++) { text += (await (await pdf.getPage(i)).getTextContent()).items.map(s => s.str).join(" ") + "\n"; }
-                            resolve(text);
+            els.fileInput.addEventListener("change", async (e) => {
+                const f = e.target.files[0]; if(!f) return;
+                if(f.type.startsWith("image/")) {
+                    addJarvisMsg("Vision Core analyzing...");
+                    const reader = new FileReader();
+                    reader.onload = (ev) => {
+                        const img = new Image();
+                        img.onload = () => {
+                            const cvs = document.createElement('canvas');
+                            let w=img.width, h=img.height, max=800;
+                            if(w>h && w>max) { h*=max/w; w=max; } else if(h>max) { w*=max/h; h=max; }
+                            cvs.width=w; cvs.height=h;
+                            cvs.getContext('2d').drawImage(img,0,0,w,h);
+                            const data = cvs.toDataURL('image/jpeg', 0.7);
+                            addUserMsgImage(f.name, data);
+                            send({ type: "analyze_image", image: data.split(',')[1], text: "Describe this." });
                         };
-                        reader.readAsArrayBuffer(file);
-                    });
-                }
-                function readDocxFile(file) {
-                    return new Promise((resolve) => {
-                        const reader = new FileReader();
-                        reader.onload = async (e) => resolve((await mammoth.extractRawText({ arrayBuffer: e.target.result })).value);
-                        reader.readAsArrayBuffer(file);
-                    });
-                }
-
-                micButton.addEventListener("click", () => { if (isRecording) { recognition.stop(); } else { recognition.start(); } });
-                sendButton.addEventListener("click", () => { submitQuery(textInput.value); });
-                
-                webSearchBtn.addEventListener("click", () => {
-                    webSearchEnabled = !webSearchEnabled;
-                    webSearchBtn.classList.toggle("active", webSearchEnabled);
-                });
-
-                textInput.addEventListener("keydown", (event) => { if (event.key === "Enter") { submitQuery(textInput.value); } });
-                muteButton.addEventListener("click", () => { isMuted = !isMuted; muteButton.classList.toggle("active", isMuted); if (isMuted) { window.speechSynthesis.cancel(); } });
-                clearButton.addEventListener("click", () => { messageDisplay.innerHTML = ""; sendMessage({ type: "clear_history" }); });
-                
-                modalAllowButton.addEventListener("click", () => {
-                    if (pendingAction) {
-                        sendMessage({ type: "execute_action", token: SHARED_SECRET_TOKEN, action_data: pendingAction });
-                        pendingAction = null; confirmationModal.style.display = "none";
+                        img.src = ev.target.result;
+                    };
+                    reader.readAsDataURL(f);
+                } else {
+                    // Docs
+                    let txt = "";
+                    if(f.name.endsWith(".txt")) txt = await f.text();
+                    else if(f.name.endsWith(".pdf")) {
+                         const pdf = await pdfjsLib.getDocument(await f.arrayBuffer()).promise;
+                         for(let i=1; i<=pdf.numPages; i++) txt += (await (await pdf.getPage(i)).getTextContent()).items.map(s=>s.str).join(" ");
                     }
-                });
-                modalDenyButton.addEventListener("click", () => {
-                    sendMessage({ type: "deny_action" });
-                    pendingAction = null; confirmationModal.style.display = "none";
-                });
-
-                function updateAuditLog(logEntries) {
-                    auditLog.innerHTML = "";
-                    if (!logEntries) return;
-                    logEntries.forEach(entry => {
-                        const div = document.createElement("div"); div.className = "log-entry";
-                        div.innerHTML = `<strong>${entry.action}</strong><br><span style="font-size:0.8em">${entry.timestamp ? new Date(entry.timestamp.seconds * 1000).toLocaleTimeString() : ''}</span>`;
-                        auditLog.appendChild(div);
-                    });
+                    send({type: "set_file_context", filename: f.name, content: txt});
+                    addJarvisMsg(`Read ${f.name}`);
                 }
-                
-                function startCamera() { if (navigator.mediaDevices) navigator.mediaDevices.getUserMedia({ video: true }).then(s => { cameraFeed.srcObject = s; cameraFeed.play(); }).catch(e => console.log(e)); }
-                function updateClock() { const now = new Date(); dynamicClock.textContent = now.toLocaleTimeString(); dynamicDate.textContent = now.toLocaleDateString(); }
-                function updateSuitStatus() {
-                    energyBar.style.width = `${85 + Math.random() * 10}%`; armourBar.style.width = `${98 + Math.random() * 2}%`;
-                }
-                function generateParticles() { for(let i=0; i<50; i++) { let p = document.createElement("div"); p.className = "particle"; p.style.top = Math.random()*100+"%"; p.style.left = Math.random()*100+"%"; particleBg.appendChild(p); } }
+                els.fileInput.value = "";
+            });
 
-                window.initPrivateAuditLog = function(userId) {
-                    const { db, collection, query, orderBy, onSnapshot, limit } = window.firebaseDb;
-                    onSnapshot(query(collection(db, "users", userId, "audit_log"), orderBy("timestamp", "desc"), limit(20)), (s) => {
-                        const logs = []; s.forEach((d) => logs.push(d.data())); updateAuditLog(logs);
-                    });
-                };
-                window.savePrivateLog = async function(action, status, params) {
-                    const { db, collection, addDoc, serverTimestamp } = window.firebaseDb;
-                    await addDoc(collection(db, "users", window.currentUserId, "audit_log"), { action, status, params, timestamp: serverTimestamp() });
-                };
-
-                connectWebSocket(); setupSpeechRecognition(); window.speechSynthesis.onvoiceschanged = loadVoices; loadVoices();
-                updateClock(); updateSuitStatus(); generateParticles();
-                setInterval(updateClock, 1000); setInterval(updateSuitStatus, 3000);
+            // UI & Commands
+            function submit() {
+                const t = els.input.value; if(!t) return;
+                const d = document.createElement("div"); d.className="chat-message user-message"; d.innerText=t;
+                els.msgDisplay.prepend(d); els.input.value="";
+                send({type: "text_query", text: t, web_search_enabled: webSearchEnabled});
             }
+            els.sendBtn.onclick = submit;
+            els.input.onkeydown = (e) => { if(e.key==="Enter") submit(); };
+            els.uploadBtn.onclick = () => els.fileInput.click();
+            
+            document.getElementById("modal-allow-button").onclick = () => {
+                send({type: "execute_action", action_data: pendingAction, token: SHARED_SECRET_TOKEN});
+                els.modal.style.display="none";
+            };
+            document.getElementById("modal-deny-button").onclick = () => {
+                send({type: "deny_action"}); els.modal.style.display="none";
+            };
+
+            // Speech
+            if(window.SpeechRecognition || window.webkitSpeechRecognition) {
+                recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                recognition.continuous=false;
+                recognition.onresult = (e) => { els.input.value = e.results[0][0].transcript; submit(); };
+                els.micBtn.onclick = () => recognition.start();
+            }
+
+            function speak(txt) {
+                if(isMuted) return;
+                window.speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(txt.replace(/[*_`]/g, ""));
+                window.speechSynthesis.speak(u);
+            }
+            document.getElementById("mute-button").onclick = () => isMuted = !isMuted;
+            
+            // Camera
+            navigator.mediaDevices.getUserMedia({video:true}).then(s => els.cam.srcObject=s).catch(e=>console.log(e));
+            
+            // Log Sync
+            if(window.firebaseDb) {
+                const {db, collection, query, orderBy, onSnapshot, limit} = window.firebaseDb;
+                onSnapshot(query(collection(db,"users",window.currentUserId,"audit_log"), orderBy("timestamp","desc"), limit(10)), s => {
+                    els.audit.innerHTML = "";
+                    s.forEach(d => { const div=document.createElement("div"); div.innerText=`${d.data().action} - ${d.data().status}`; els.audit.appendChild(div); });
+                });
+            }
+
+            // Youtube
+            window.onYouTubeIframeAPIReady = () => {};
+            function handleUI(act, p) {
+                if(act==="enter_combat_mode") document.body.classList.add("combat-mode");
+                if(act==="exit_combat_mode") document.body.classList.remove("combat-mode");
+                if(act==="play_song") {
+                   fetch(`${GOOGLE_SEARCH_URL}&q=youtube ${p.song_name}`).then(r=>r.json()).then(d=>{
+                       const id = d.items[0].link.match(/v=([a-zA-Z0-9_-]{11})/)[1];
+                       document.getElementById("player-modal").style.display="flex";
+                       new YT.Player('player-container', {videoId:id, playerVars:{'autoplay':1}});
+                   });
+                }
+            }
+            document.getElementById("player-close").onclick = () => { document.getElementById("player-modal").style.display="none"; document.getElementById("player-container").innerHTML=""; };
+
+            setInterval(() => {
+                document.getElementById("dynamic-clock").innerText = new Date().toLocaleTimeString();
+                const p = document.createElement("div"); p.className="particle"; 
+                p.style.left=Math.random()*100+"%"; p.style.top=Math.random()*100+"%";
+                document.getElementById("particle-background").appendChild(p);
+            }, 1000);
+
+            connectWS();
         });
     </script>
 </body>
