@@ -4,7 +4,7 @@
     <link rel="icon" type="image/png" href="jarvis.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
-    <title>J.A.R.V.I.S. HUD V3.2 - Guest Control</title>
+    <title>J.A.R.V.I.S. HUD V3.2 - Unrestricted</title>
     
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
@@ -61,22 +61,8 @@
             transition: all 0.5s ease; position: relative; overflow: hidden;
             opacity: 0; transform: translateY(20px) scale(0.98);
         }
-        .hud-panel.active-animation {
-             animation: flicker 10s linear infinite;
-        }
-        .hud-panel::before, .hud-panel::after {
-            content: ''; position: absolute; width: 2px; height: 0;
-            background: var(--primary-glow); box-shadow: 0 0 10px var(--primary-glow);
-            animation: scan-border 4s linear infinite;
-        }
-        .hud-panel::before { top: 0; left: 0; }
-        .hud-panel::after { bottom: 0; right: 0; animation-delay: 2s; }
-        @keyframes scan-border { 0% { height: 0; } 50% { height: 100%; } 100% { height: 0; opacity: 0; } }
-        @keyframes flicker {
-            0%, 100% { opacity: 1; } 50.0% { opacity: 1; } 50.1% { opacity: 0.9; }
-            50.2% { opacity: 1; } 50.3% { opacity: 0.95; } 50.4% { opacity: 1; }
-        }
-        .booted { opacity: 1; transform: translateY(0) scale(1); }
+        /* Instant boot since auth is gone, but keeping animation class for effect */
+        .hud-panel.booted { opacity: 1; transform: translateY(0) scale(1); }
 
         h1, h2, h3, h4 { font-family: 'Orbitron', sans-serif; color: var(--primary-glow); transition: all 0.5s ease; }
         h3 { border-bottom: 1px solid var(--border-color); padding-bottom: 5px; margin-bottom: 10px; }
@@ -95,13 +81,12 @@
         body.combat-mode #arc-reactor, body.combat-mode #suit-svg path { --primary-glow: var(--danger-glow); }
         body.combat-mode #web-search-btn.active { color: var(--danger-glow); box-shadow: 0 0 10px var(--danger-glow); }
 
-        /* --- 5. Main Layout (Desktop Default) --- */
-        .jarvis-container { display: flex; height: 100vh; width: 100vw; padding: 1rem; gap: 1rem; opacity: 0; transition: opacity 1s ease; pointer-events: none; }
-        .jarvis-container.access-granted { opacity: 1; pointer-events: all; }
+        /* --- 5. Main Layout --- */
+        .jarvis-container { display: flex; height: 100vh; width: 100vw; padding: 1rem; gap: 1rem; opacity: 1; pointer-events: all; }
 
-        .side-panel { flex: 0 0 300px; display: flex; flex-direction: column; gap: 1rem; z-index: 10; transition: transform 0.1s ease-out; }
-        .main-panel { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; transition: transform 0.1s ease-out; }
-        .right-panel { flex: 0 0 300px; display: flex; flex-direction: column; gap: 1rem; z-index: 10; transition: transform 0.1s ease-out; }
+        .side-panel { flex: 0 0 300px; display: flex; flex-direction: column; gap: 1rem; z-index: 10; }
+        .main-panel { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+        .right-panel { flex: 0 0 300px; display: flex; flex-direction: column; gap: 1rem; z-index: 10; }
 
         /* --- 6. Left Panel (Suit Status) --- */
         #suit-status-panel { flex-grow: 1; display: flex; flex-direction: column; }
@@ -125,17 +110,6 @@
         #camera-panel { flex-grow: 1; display: flex; flex-direction: column; padding: 0; }
         #camera-feed { width: 100%; height: 100%; object-fit: cover; border-radius: 15px; transform: scaleX(-1); background: #000; }
         
-        /* New Styles for Guest Limitation */
-        #guest-counter-display {
-            border: 1px solid var(--warning-glow);
-            border-radius: 10px; padding: 10px; text-align: center;
-            margin-top: 10px; background: rgba(255, 170, 0, 0.1);
-        }
-        #response-count {
-            font-size: 2rem; color: var(--warning-glow); font-family: 'Orbitron';
-            text-shadow: 0 0 10px var(--warning-glow);
-        }
-
         /* --- 8. Main Panel (Chat) --- */
         #core-container { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; justify-content: center; align-items: center; overflow: hidden; z-index: 1; border-radius: 15px; }
         #web-core { width: 300px; height: 300px; border-radius: 50%; background: radial-gradient(circle, var(--primary-glow) 0%, var(--bg-color) 70%); box-shadow: 0 0 30px var(--primary-glow), 0 0 60px var(--primary-glow), 0 0 90px var(--secondary-glow); animation: pulse 3s infinite ease-in-out; position: relative; opacity: 0.2; animation-play-state: paused; transition: all 0.5s ease; }
@@ -169,11 +143,9 @@
         .jarvis-message.error { border-color: var(--danger-glow); color: var(--danger-glow); }
         .jarvis-message.status { border-color: var(--warning-glow); color: var(--warning-glow); font-style: italic; text-align: center; align-self: center; }
         
-        /* Typing Indicator */
         .jarvis-message.typing::after { content: '▋'; display: inline-block; margin-left: 5px; opacity: 1; animation: blink 0.7s infinite; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-        /* Styles for MARKDOWN content */
         .jarvis-message pre { background: #020a17; border: 1px solid var(--primary-glow); padding: 1em; border-radius: 5px; margin: 1em 0; overflow-x: auto; font-family: 'Courier New', Courier, monospace; color: #e0e0e0; }
         .jarvis-message code { font-family: 'Courier New', Courier, monospace; background: #020a17; padding: 2px 4px; border-radius: 3px; }
         .jarvis-message b, .jarvis-message strong { color: var(--primary-glow); font-weight: bold; }
@@ -195,17 +167,6 @@
         #mute-button.active { background-color: var(--secondary-glow); border-color: var(--secondary-glow); }
         #clear-button, #upload-button { border-color: var(--warning-glow); color: var(--warning-glow); }
         
-        /* Logout Button Specifics */
-        #logout-btn {
-            position: fixed; top: 15px; right: 15px; z-index: 1100;
-            padding: 0.5rem 1rem; font-size: 0.8rem;
-            border-color: var(--danger-glow); color: var(--danger-glow);
-            box-shadow: 0 0 5px var(--danger-glow) inset, 0 0 5px var(--danger-glow);
-            text-shadow: 0 0 3px var(--danger-glow);
-            display: none; /* Hidden until logged in */
-        }
-        #logout-btn:hover { background: var(--danger-glow); color: var(--bg-color); }
-
         /* Web Search Button Styling */
         #web-search-btn {
             display: flex; align-items: center; justify-content: center;
@@ -226,42 +187,13 @@
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); justify-content: center; align-items: center; z-index: 200; }
         .modal-content { background: var(--glass-bg); padding: 2rem; border-radius: 15px; border: 1px solid var(--primary-glow); box-shadow: 0 0 30px var(--primary-glow); text-align: center; }
 
-        /* ACCESS OVERLAY STYLES */
-        #access-overlay {
-            display: flex; flex-direction: column; z-index: 9999;
-            background: rgba(13, 10, 31, 0.98);
-        }
-        .access-box {
-            min-width: 300px; max-width: 500px; width: 90%;
-            border: 2px solid var(--primary-glow);
-            box-shadow: 0 0 50px var(--primary-glow) inset, 0 0 50px var(--primary-glow);
-        }
-        .access-title { margin-bottom: 2rem; font-family: 'Orbitron'; text-shadow: 0 0 10px var(--primary-glow); }
-        #access-options { display: flex; flex-direction: column; gap: 1rem; width: 100%; }
-        .large-btn { width: 100%; padding: 1.5rem; font-size: 1.2rem; letter-spacing: 2px; }
-        .access-input {
-            width: 100%; padding: 1rem; margin-bottom: 1rem;
-            background: rgba(0,0,0,0.5); border: 1px solid var(--primary-glow);
-            color: var(--primary-glow); font-family: 'Orbitron'; font-size: 1.2rem;
-            text-align: center; border-radius: 10px; outline: none;
-        }
-        .access-input:focus { box-shadow: 0 0 20px var(--primary-glow); }
+        /* Video Player Fix */
+        #player-container { width: 100%; height: 320px; background: #000; margin-bottom: 10px; }
         
-        /* Cooldown Overlay */
-        #cooldown-overlay .modal-content {
-            border-color: var(--danger-glow);
-            box-shadow: 0 0 30px var(--danger-glow);
-        }
-        #cooldown-timer {
-            font-size: 3rem; font-family: 'Orbitron';
-            color: var(--danger-glow); margin: 20px 0;
-            text-shadow: 0 0 15px var(--danger-glow);
-        }
-
-        /* Mobile Navigation (Hidden on Desktop) */
+        /* Mobile Navigation */
         #mobile-nav { display: none; }
 
-        /* --- 9. Responsive / Mobile Optimization (FIXED) --- */
+        /* --- 9. Responsive / Mobile Optimization --- */
         @media (max-width: 900px) {
             html, body { height: 100dvh; width: 100vw; overflow: hidden; position: fixed; }
             .jarvis-container { display: flex; flex-direction: column; height: 100dvh; width: 100%; padding: 0; gap: 0; padding-bottom: 60px; }
@@ -280,7 +212,6 @@
             .nav-item { color: var(--text-secondary); font-family: 'Orbitron'; font-size: 0.8rem; text-align: center; padding: 10px; flex-grow: 1; cursor: pointer; border-top: 2px solid transparent; transition: all 0.3s; }
             .nav-item.active { color: var(--primary-glow); text-shadow: 0 0 10px var(--primary-glow); background: linear-gradient(0deg, rgba(0,255,255,0.1), transparent); border-top: 2px solid var(--primary-glow); }
             #player-container { width: 100%; height: 200px; }
-            #logout-btn { top: 10px; right: 10px; padding: 5px 10px; font-size: 0.7rem; }
         }
     </style>
 </head>
@@ -288,53 +219,6 @@
     
     <div id="particle-background"></div>
     <div id="scanlines"></div>
-
-    <button id="logout-btn" class="control-button">LOGOUT</button>
-
-    <div id="access-overlay" class="modal-overlay">
-        <div class="modal-content access-box">
-            <h1 class="access-title">SYSTEM ACCESS</h1>
-            
-            <div id="access-main-menu">
-                <div id="access-options">
-                    <button id="btn-admin" class="control-button large-btn">ADMIN ACCESS</button>
-                    <button id="btn-guest" class="control-button large-btn">GUEST ACCESS</button>
-                </div>
-            </div>
-
-            <div id="admin-auth" style="display: none;">
-                <h3 style="margin-bottom: 1rem; border:none;">SECURITY CLEARANCE</h3>
-                <p style="margin-bottom: 0.5rem; color: var(--text-secondary);">ENTER PASSPHRASE</p>
-                <input type="password" id="admin-pass" class="access-input" placeholder="********">
-                <div style="display: flex; gap: 1rem; justify-content: center;">
-                    <button id="btn-admin-submit" class="control-button">VERIFY</button>
-                    <button id="btn-admin-cancel" class="control-button" style="border-color: var(--danger-glow); color: var(--danger-glow);">BACK</button>
-                </div>
-            </div>
-
-            <div id="guest-auth" style="display: none;">
-                <h3 style="margin-bottom: 1rem; border:none;">VISITOR IDENTIFICATION</h3>
-                <p style="margin-bottom: 0.5rem; color: var(--text-secondary);">STATE YOUR NAME</p>
-                <input type="text" id="guest-name" class="access-input" placeholder="Name">
-                <div style="display: flex; gap: 1rem; justify-content: center;">
-                    <button id="btn-guest-submit" class="control-button">PROCEED</button>
-                    <button id="btn-guest-cancel" class="control-button" style="border-color: var(--danger-glow); color: var(--danger-glow);">BACK</button>
-                </div>
-            </div>
-
-            <p id="access-error" style="color: var(--danger-glow); margin-top: 1rem; display: none; font-weight: bold; text-shadow: 0 0 5px var(--danger-glow);">ACCESS DENIED</p>
-        </div>
-    </div>
-
-    <div id="cooldown-overlay" class="modal-overlay">
-        <div class="modal-content">
-            <h3 style="color: var(--danger-glow);">LIMIT REACHED</h3>
-            <p style="margin-bottom: 1rem;">Guest Token Expired. System cooling down.</p>
-            <div id="cooldown-timer">00:00:00</div>
-            <p style="font-size: 0.8rem; color: var(--text-secondary);">Access will restore automatically.</p>
-            <button id="cooldown-logout" class="control-button" style="margin-top: 20px;">LOGOUT</button>
-        </div>
-    </div>
 
     <div class="jarvis-container">
         <div class="side-panel" id="left-panel">
@@ -391,11 +275,6 @@
                     <div class="status-item"> <h4>CPU</h4> <p id="cpu-stat">--%</p> </div>
                     <div class="status-item"> <h4>MEM</h4> <p id="mem-stat">--%</p> </div>
                 </div>
-                
-                <div id="guest-counter-display" style="display: none;">
-                     <h4 style="margin-top:0; color:var(--warning-glow);">RESPONSES LEFT</h4>
-                     <p id="response-count">100</p>
-                </div>
 
                 <div class="status-text" style="margin-top: 15px;">
                     <span>WEATHER:</span> <span id="weather-desc">LOADING...</span>
@@ -429,6 +308,7 @@
             </div>
         </div>
     </div>
+    
     <div id="player-modal" class="modal-overlay">
         <div class="modal-content">
             <h3 id="player-title">Now Playing...</h3>
@@ -441,6 +321,7 @@
             </div>
         </div>
     </div>
+    
     <div id="destruction-overlay"></div>
 
     <script type="module">
@@ -461,7 +342,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Generate or retrieve a persistent device ID for private memory
+        // Generate or retrieve a persistent device ID (No Login Required)
         let deviceId = localStorage.getItem('jarvis_device_id');
         if (!deviceId) {
             deviceId = 'device_' + Math.random().toString(36).substr(2, 9);
@@ -482,19 +363,14 @@
         const GOOGLE_SEARCH_URL = `https://www.googleapis.com/customsearch/v1?key=${GOOGLE_SEARCH_API_KEY}&cx=${SEARCH_ENGINE_ID}`;
         const SHARED_SECRET_TOKEN = "YOUR_SUPER_SECRET_TOKEN_HERE";
         
-        // --- Guest Limitation Constants ---
-        const GUEST_MAX_RESPONSES = 100;
-        const GUEST_COOLDOWN_MS = 6 * 60 * 60 * 1000; // 6 Hours in Milliseconds
-
         if (window.pdfjsLib) { pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.worker.min.js'; }
         
         let ws; let recognition; let ytPlayer;
         let isRecording = false; let isMuted = false;
         let currentLang = "en-US"; let pendingAction = null; 
         let jarvisVoice = null; let hasUserInteracted = false;
-        let webSearchEnabled = true; // Default ON
-        let userName = "Sir"; // Default if something goes wrong
-        let userRole = "admin"; // 'admin' or 'guest'
+        let webSearchEnabled = true; 
+        let userName = "Sir"; // Default User Name
         
         // --- Mobile Tab Logic ---
         window.switchTab = function(tabName) {
@@ -513,236 +389,13 @@
 
         document.addEventListener("DOMContentLoaded", () => {
             const allBootElements = document.querySelectorAll(".hud-panel");
-            const accessOverlay = document.getElementById("access-overlay");
-            const btnAdmin = document.getElementById("btn-admin");
-            const btnGuest = document.getElementById("btn-guest");
-            const accessMainMenu = document.getElementById("access-main-menu");
-            const adminAuth = document.getElementById("admin-auth");
-            const guestAuth = document.getElementById("guest-auth");
-            const btnAdminSubmit = document.getElementById("btn-admin-submit");
-            const btnGuestSubmit = document.getElementById("btn-guest-submit");
-            const adminPassInput = document.getElementById("admin-pass");
-            const guestNameInput = document.getElementById("guest-name");
-            const accessError = document.getElementById("access-error");
-            const btnAdminCancel = document.getElementById("btn-admin-cancel");
-            const btnGuestCancel = document.getElementById("btn-guest-cancel");
             const jarvisContainer = document.querySelector(".jarvis-container");
-            const logoutBtn = document.getElementById("logout-btn");
-            const guestCounterDisplay = document.getElementById("guest-counter-display");
-            const responseCountEl = document.getElementById("response-count");
-            const cooldownOverlay = document.getElementById("cooldown-overlay");
-            const cooldownTimerEl = document.getElementById("cooldown-timer");
-            const cooldownLogoutBtn = document.getElementById("cooldown-logout");
 
-            // --- Session Check on Load ---
-            checkSession();
-
-            function checkSession() {
-                const storedSession = localStorage.getItem('jarvis_auth_session');
-                if (storedSession) {
-                    const sessionData = JSON.parse(storedSession);
-                    userName = sessionData.name;
-                    userRole = sessionData.role;
-                    grantAccess(false); // Skip animation if reloading
-                }
-            }
-
-            function setSession(name, role) {
-                localStorage.setItem('jarvis_auth_session', JSON.stringify({ name: name, role: role }));
-            }
-
-            // --- Access Control Logic ---
-            btnAdmin.addEventListener("click", () => {
-                accessMainMenu.style.display = "none";
-                adminAuth.style.display = "block";
-                accessError.style.display = "none";
-                adminPassInput.focus();
-            });
-
-            btnGuest.addEventListener("click", () => {
-                accessMainMenu.style.display = "none";
-                guestAuth.style.display = "block";
-                accessError.style.display = "none";
-                guestNameInput.focus();
-            });
-
-            btnAdminCancel.addEventListener("click", () => {
-                adminAuth.style.display = "none";
-                accessMainMenu.style.display = "block";
-                accessError.style.display = "none";
-                adminPassInput.value = "";
-            });
-
-            btnGuestCancel.addEventListener("click", () => {
-                guestAuth.style.display = "none";
-                accessMainMenu.style.display = "block";
-                accessError.style.display = "none";
-                guestNameInput.value = "";
-            });
-
-            // Logout Logic
-            logoutBtn.addEventListener("click", performLogout);
-            cooldownLogoutBtn.addEventListener("click", performLogout);
-
-            function performLogout() {
-                localStorage.removeItem('jarvis_auth_session');
-                location.reload();
-            }
-
-            btnAdminSubmit.addEventListener("click", verifyAdmin);
-            adminPassInput.addEventListener("keydown", (e) => { if (e.key === "Enter") verifyAdmin(); });
-
-            function verifyAdmin() {
-                if (adminPassInput.value === "jarvis2025") {
-                    userName = "Sir";
-                    userRole = "admin";
-                    setSession(userName, userRole);
-                    grantAccess(true);
-                } else {
-                    accessError.textContent = "INVALID PASSPHRASE";
-                    accessError.style.display = "block";
-                    adminPassInput.animate([ { transform: 'translateX(0)' }, { transform: 'translateX(-10px)' }, { transform: 'translateX(10px)' }, { transform: 'translateX(0)' } ], { duration: 300 });
-                }
-            }
-
-            btnGuestSubmit.addEventListener("click", verifyGuest);
-            guestNameInput.addEventListener("keydown", (e) => { if (e.key === "Enter") verifyGuest(); });
-
-            function verifyGuest() {
-                const name = guestNameInput.value.trim();
-                if (name.length > 0) {
-                    userName = name;
-                    userRole = "guest";
-                    
-                    // Check if this specific guest is currently in cooldown
-                    if(checkGuestCooldown(userName)) {
-                        return; // UI is handled inside the function
-                    }
-
-                    setSession(userName, userRole);
-                    grantAccess(true);
-                } else {
-                    accessError.textContent = "NAME REQUIRED";
-                    accessError.style.display = "block";
-                }
-            }
-
-            function grantAccess(animate = true) {
-                accessOverlay.style.opacity = "0";
-                setTimeout(() => { accessOverlay.style.display = "none"; }, 500);
-                jarvisContainer.classList.add("access-granted");
-                logoutBtn.style.display = "block";
-
-                // Setup Guest UI if applicable
-                if (userRole === "guest") {
-                    guestCounterDisplay.style.display = "block";
-                    updateGuestUI();
-                } else {
-                    guestCounterDisplay.style.display = "none";
-                }
-                
-                if (animate) {
-                    allBootElements.forEach(el => el.classList.add("active-animation"));
-                    setTimeout(() => { allBootElements.forEach(el => el.classList.add("booted")); }, 100);
-                } else {
-                    allBootElements.forEach(el => { el.classList.add("booted"); el.style.opacity=1; el.style.transform='none'; });
-                }
-
-                // Start System
+            // --- Immediate Boot Sequence (No Auth) ---
+            setTimeout(() => {
+                allBootElements.forEach(el => el.classList.add("booted"));
                 initializeJarvisSystem();
-            }
-
-            // --- Guest Limitation Logic ---
-            function getGuestData(name) {
-                const key = `jarvis_guest_data_${name.toLowerCase()}`;
-                const raw = localStorage.getItem(key);
-                if (raw) return JSON.parse(raw);
-                return { count: GUEST_MAX_RESPONSES, cooldownUntil: 0 };
-            }
-
-            function saveGuestData(name, data) {
-                const key = `jarvis_guest_data_${name.toLowerCase()}`;
-                localStorage.setItem(key, JSON.stringify(data));
-            }
-
-            function updateGuestUI() {
-                if(userRole !== 'guest') return;
-                const data = getGuestData(userName);
-                responseCountEl.textContent = data.count;
-            }
-
-            function checkGuestCooldown(name) {
-                const data = getGuestData(name);
-                const now = Date.now();
-
-                // Check if cooldown has expired
-                if (data.cooldownUntil > 0 && now > data.cooldownUntil) {
-                    data.count = GUEST_MAX_RESPONSES;
-                    data.cooldownUntil = 0;
-                    saveGuestData(name, data);
-                    return false; // Access Granted
-                }
-
-                // Check if active cooldown
-                if (data.cooldownUntil > 0 && now < data.cooldownUntil) {
-                    startCooldownTimer(data.cooldownUntil);
-                    return true; // Access Denied
-                }
-
-                return false;
-            }
-
-            function decrementGuestLimit() {
-                if (userRole !== 'guest') return;
-                
-                const data = getGuestData(userName);
-                if (data.count > 0) {
-                    data.count--;
-                    saveGuestData(userName, data);
-                    updateGuestUI();
-                }
-
-                if (data.count <= 0) {
-                    // Activate Cooldown
-                    data.cooldownUntil = Date.now() + GUEST_COOLDOWN_MS;
-                    saveGuestData(userName, data);
-                    startCooldownTimer(data.cooldownUntil);
-                }
-            }
-
-            let cooldownInterval;
-            function startCooldownTimer(targetTime) {
-                accessOverlay.style.display = 'none'; // Hide login if open
-                cooldownOverlay.style.display = 'flex';
-                
-                // Clear any existing interval
-                if (cooldownInterval) clearInterval(cooldownInterval);
-
-                const updateTimer = () => {
-                    const now = Date.now();
-                    const diff = targetTime - now;
-
-                    if (diff <= 0) {
-                        clearInterval(cooldownInterval);
-                        cooldownOverlay.style.display = 'none';
-                        // Reset logic happens on next interaction or reload
-                        // Force reload to reset state
-                        location.reload();
-                        return;
-                    }
-
-                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-                    cooldownTimerEl.textContent = 
-                        `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                };
-
-                updateTimer();
-                cooldownInterval = setInterval(updateTimer, 1000);
-            }
-
+            }, 500);
 
             // --- Core System Initialization ---
             const micButton = document.getElementById("mic-button");
@@ -774,17 +427,11 @@
             const dynamicDate = document.getElementById("dynamic-date");
             const energyBar = document.getElementById("energy-bar");
             const armourBar = document.getElementById("armour-bar");
-            const flightStatus = document.getElementById("flight-status");
-            const weaponStatus = document.getElementById("weapon-status");
-            const suitStatus = document.getElementById("suit-status");
             const particleBg = document.getElementById("particle-background");
             const weatherDesc = document.getElementById("weather-desc");
             const weatherTemp = document.getElementById("weather-temp");
 
             function initializeJarvisSystem() {
-                // If in cooldown, stop everything
-                if(userRole === 'guest' && checkGuestCooldown(userName)) return;
-
                 const welcomeMsg = `At your service ${userName}. How may I serve you today?`;
 
                 function connectWebSocket() {
@@ -805,8 +452,6 @@
                             case "llm_end": 
                                 renderMarkdown(); 
                                 speak(getCurrentJarvisMessageText(), null); 
-                                // Decrement Guest Limit Here
-                                if(userRole === 'guest') decrementGuestLimit();
                                 break;
                             case "ui_command": handleUICommand(msg.action, msg.params); break;
                             case "action_confirmation":
@@ -880,9 +525,6 @@
                 function submitQuery(text) {
                     if (!text.trim()) return;
                     
-                    // Pre-check for guest limit before sending
-                    if (userRole === 'guest' && checkGuestCooldown(userName)) return;
-
                     addUserMessage(text); textInput.value = ""; lastJarvisMessageEl = null;
                     
                     sendMessage({
@@ -956,6 +598,7 @@
                 }
 
                 let apiReady = false; window.onYouTubeIframeAPIReady = function() { apiReady = true; }
+                
                 async function findAndPlayVideo(songName) {
                     try {
                         const response = await fetch(`${GOOGLE_SEARCH_URL}&q=${encodeURIComponent('youtube ' + songName)}`);
@@ -965,18 +608,45 @@
                             if (videoLink) {
                                 const videoId = videoLink.link.match(/v=([a-zA-Z0-9_-]{11})/)[1];
                                 playVideoById(videoId, videoLink.title);
+                            } else {
+                                addJarvisMessage("No direct video link found.", "error");
                             }
                         }
                     } catch (err) { addJarvisMessage(`Error: ${err.message}`, "error"); }
                 }
+
                 function playVideoById(videoId, title) {
-                    playerTitle.textContent = title; playerModal.style.display = "flex";
-                    if (!ytPlayer) {
-                        ytPlayer = new YT.Player('player-container', { height: '320', width: '480', videoId: videoId, playerVars: { 'autoplay': 1, 'controls': 1 }, events: { 'onReady': (e) => e.target.playVideo() } });
-                    } else { ytPlayer.loadVideoById(videoId); ytPlayer.playVideo(); }
+                    playerTitle.textContent = title; 
+                    playerModal.style.display = "flex";
+                    
+                    if (!window.YT || !window.YT.Player) {
+                        addJarvisMessage("YouTube API not loaded yet.", "error");
+                        return;
+                    }
+
+                    if (ytPlayer) {
+                        ytPlayer.loadVideoById(videoId);
+                        ytPlayer.playVideo();
+                    } else {
+                        // Creating player with strict origin and dimensions
+                        ytPlayer = new YT.Player('player-container', {
+                            height: '100%',
+                            width: '100%',
+                            videoId: videoId,
+                            playerVars: { 
+                                'autoplay': 1, 
+                                'controls': 1,
+                                'origin': window.location.origin // Critical fix for modern API restrictions
+                            },
+                            events: { 
+                                'onReady': (e) => e.target.playVideo() 
+                            }
+                        });
+                    }
                 }
-                playerPause.addEventListener("click", () => ytPlayer.getPlayerState() === 1 ? ytPlayer.pauseVideo() : ytPlayer.playVideo());
-                playerClose.addEventListener("click", () => { ytPlayer.stopVideo(); playerModal.style.display = "none"; });
+                
+                playerPause.addEventListener("click", () => ytPlayer && ytPlayer.getPlayerState() === 1 ? ytPlayer.pauseVideo() : ytPlayer.playVideo());
+                playerClose.addEventListener("click", () => { if(ytPlayer) ytPlayer.stopVideo(); playerModal.style.display = "none"; });
 
                 uploadButton.addEventListener("click", () => { fileUploader.click(); });
                 fileUploader.addEventListener("change", async (event) => {
