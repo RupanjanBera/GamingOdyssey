@@ -358,9 +358,6 @@
 
     <script>
         // --- Global Constants ---
-        const GOOGLE_SEARCH_API_KEY = 'AIzaSyBm8SxGHDl9pkrDuZt_VgFQME9a3aRUeXY';
-        const SEARCH_ENGINE_ID = 'd13b9c982e19f4ccf';
-        const GOOGLE_SEARCH_URL = `https://www.googleapis.com/customsearch/v1?key=${GOOGLE_SEARCH_API_KEY}&cx=${SEARCH_ENGINE_ID}`;
         const SHARED_SECRET_TOKEN = "YOUR_SUPER_SECRET_TOKEN_HERE";
         
         if (window.pdfjsLib) { pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.worker.min.js'; }
@@ -582,12 +579,17 @@
                 
                 function handleUICommand(action, params) {
                     if (window.firebaseDb) { savePrivateLog(action, "UI Command", JSON.stringify(params)); }
+                    
                     if (action === "enter_combat_mode") {
                         addJarvisMessage("Combat Mode Initiated.", "status"); document.body.classList.add("combat-mode"); speak("Combat mode initiated.", () => { playAudio("/audio/combat_on.mp3"); });
                     } else if (action === "exit_combat_mode") {
                         addJarvisMessage("Combat Mode Disengaged.", "status"); document.body.classList.remove("combat-mode"); speak("Combat mode disengaged.", () => { playAudio("/audio/combat_off.mp3"); });
-                    } else if (action === "play_song") {
-                        addJarvisMessage(`Searching YouTube for "${params.song_name}"...`, "status"); findAndPlayVideo(params.song_name);
+                    
+                    // --- CHANGED: Now accepts direct ID from backend ---
+                    } else if (action === "play_youtube_id") {
+                         playVideoById(params.video_id, params.title);
+                         addJarvisMessage(`Playing: ${params.title}`, "status");
+
                     } else if (action === "self_destruct") {
                         addJarvisMessage("Self-destruct sequence initiated.", "status");
                         speak("Self-destruct sequence initiated.", () => {
@@ -599,22 +601,6 @@
 
                 let apiReady = false; window.onYouTubeIframeAPIReady = function() { apiReady = true; }
                 
-                async function findAndPlayVideo(songName) {
-                    try {
-                        const response = await fetch(`${GOOGLE_SEARCH_URL}&q=${encodeURIComponent('youtube ' + songName)}`);
-                        const data = await response.json();
-                        if (data.items && data.items.length > 0) {
-                            const videoLink = data.items.find(item => item.link && item.link.includes("watch?v="));
-                            if (videoLink) {
-                                const videoId = videoLink.link.match(/v=([a-zA-Z0-9_-]{11})/)[1];
-                                playVideoById(videoId, videoLink.title);
-                            } else {
-                                addJarvisMessage("No direct video link found.", "error");
-                            }
-                        }
-                    } catch (err) { addJarvisMessage(`Error: ${err.message}`, "error"); }
-                }
-
                 function playVideoById(videoId, title) {
                     playerTitle.textContent = title; 
                     playerModal.style.display = "flex";
