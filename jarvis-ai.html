@@ -4,9 +4,8 @@
     <link rel="icon" type="image/png" href="jarvis.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
-    <title>J.A.R.V.I.S.</title>
+    <title>J.A.R.V.I.S. HUD V3.2 - Unrestricted</title>
     
-    <script src="https://www.youtube.com/iframe_api"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.18/mammoth.browser.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -314,9 +313,6 @@
             <h3 id="player-title">Now Playing...</h3>
             <div id="player-container"></div>
             <div id="player-controls">
-                <button id="player-rewind" class="control-button">« 10s</button>
-                <button id="player-pause" class="control-button">PAUSE</button>
-                <button id="player-forward" class="control-button">10s »</button>
                 <button id="player-close" class="control-button">CLOSE</button>
             </div>
         </div>
@@ -362,7 +358,7 @@
         
         if (window.pdfjsLib) { pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.worker.min.js'; }
         
-        let ws; let recognition; let ytPlayer;
+        let ws; let recognition; 
         let isRecording = false; let isMuted = false;
         let currentLang = "en-US"; let pendingAction = null; 
         let jarvisVoice = null; let hasUserInteracted = false;
@@ -414,10 +410,8 @@
             const fileUploader = document.getElementById("file-uploader");
             const playerModal = document.getElementById("player-modal");
             const playerTitle = document.getElementById("player-title");
-            const playerPause = document.getElementById("player-pause");
             const playerClose = document.getElementById("player-close");
-            const playerRewind = document.getElementById("player-rewind");
-            const playerForward = document.getElementById("player-forward");
+            const playerContainer = document.getElementById("player-container");
             const destructionOverlay = document.getElementById("destruction-overlay");
             const cameraFeed = document.getElementById("camera-feed");
             const dynamicClock = document.getElementById("dynamic-clock");
@@ -585,9 +579,15 @@
                     } else if (action === "exit_combat_mode") {
                         addJarvisMessage("Combat Mode Disengaged.", "status"); document.body.classList.remove("combat-mode"); speak("Combat mode disengaged.", () => { playAudio("/audio/combat_off.mp3"); });
                     
-                    // --- CHANGED: Now accepts direct ID from backend ---
+                    // --- VIDEO PLAYER LOGIC (Standard Embed) ---
                     } else if (action === "play_youtube_id") {
-                         playVideoById(params.video_id, params.title);
+                         playerTitle.textContent = params.title;
+                         playerModal.style.display = "flex";
+                         
+                         // Standard Iframe Embed (Robust)
+                         const embedUrl = `https://www.youtube.com/embed/${params.video_id}?autoplay=1&controls=1`;
+                         playerContainer.innerHTML = `<iframe width="100%" height="100%" src="${embedUrl}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+                         
                          addJarvisMessage(`Playing: ${params.title}`, "status");
 
                     } else if (action === "self_destruct") {
@@ -599,40 +599,10 @@
                     }
                 }
 
-                let apiReady = false; window.onYouTubeIframeAPIReady = function() { apiReady = true; }
-                
-                function playVideoById(videoId, title) {
-                    playerTitle.textContent = title; 
-                    playerModal.style.display = "flex";
-                    
-                    if (!window.YT || !window.YT.Player) {
-                        addJarvisMessage("YouTube API not loaded yet.", "error");
-                        return;
-                    }
-
-                    if (ytPlayer) {
-                        ytPlayer.loadVideoById(videoId);
-                        ytPlayer.playVideo();
-                    } else {
-                        // Creating player with strict origin and dimensions
-                        ytPlayer = new YT.Player('player-container', {
-                            height: '100%',
-                            width: '100%',
-                            videoId: videoId,
-                            playerVars: { 
-                                'autoplay': 1, 
-                                'controls': 1,
-                                'origin': window.location.origin // Critical fix for modern API restrictions
-                            },
-                            events: { 
-                                'onReady': (e) => e.target.playVideo() 
-                            }
-                        });
-                    }
-                }
-                
-                playerPause.addEventListener("click", () => ytPlayer && ytPlayer.getPlayerState() === 1 ? ytPlayer.pauseVideo() : ytPlayer.playVideo());
-                playerClose.addEventListener("click", () => { if(ytPlayer) ytPlayer.stopVideo(); playerModal.style.display = "none"; });
+                playerClose.addEventListener("click", () => { 
+                    playerContainer.innerHTML = ""; // Stop video by clearing Iframe
+                    playerModal.style.display = "none"; 
+                });
 
                 uploadButton.addEventListener("click", () => { fileUploader.click(); });
                 fileUploader.addEventListener("change", async (event) => {
@@ -726,4 +696,3 @@
     </script>
 </body>
 </html>
-
