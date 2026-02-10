@@ -1253,13 +1253,13 @@
             }, 500);
         }
 
-        // 7. ENHANCED POLAROID ENGINE
+       // 7. ENHANCED POLAROID ENGINE
         const photos = [
-            "https://gamingodyssey.in/Screenshot_20250830-115635.png/white?text=Our+First+Memory",
-            "https://gamingodyssey.in/IMG_20251211_122559769.jpg/white?text=Cute+Day",
-            "https://gamingodyssey.in/IMG_20251211_122633760.jpg/white?text=Funny+Faces+🥰",
-            "https://gamingodyssey.in/IMG_20251211_122744539.jpg/white?text=Precious+Moments",
-            "https://gamingodyssey.in/IMG_20251210_131301406.jpg/white?text=Forever+Together"
+            "https://gamingodyssey.in/Screenshot_20250830-115635.png",
+            "https://gamingodyssey.in/IMG_20251211_122559769.jpg",
+            "https://gamingodyssey.in/IMG_20251211_122633760.jpg",
+            "https://gamingodyssey.in/IMG_20251211_122744539.jpg",
+            "https://gamingodyssey.in/IMG_20251210_131301406.jpg"
         ];
         let photoIdx = 0;
         
@@ -1270,12 +1270,27 @@
             photos.forEach((src, i) => {
                 const div = document.createElement('div');
                 div.className = `polaroid-card ${i === 0 ? 'active' : ''}`;
-                div.innerHTML = `<img src="${src}" alt="Memory ${i+1}">`;
                 
+                const img = document.createElement('img');
+                // Clean the URL to ensure no broken query strings prevent loading
+                img.src = src.split('?')[0]; 
+                img.alt = `Memory ${i+1}`;
+                
+                // Fallback if the link is broken or blocked by the server
+                img.onerror = function() {
+                    this.src = "https://placehold.co/300x400/ff7eb3/white?text=Photo+Not+Found";
+                };
+                
+                div.appendChild(img);
+                
+                // Initial stack appearance
                 if(i !== 0) {
                     const angle = (Math.random() * 10) - 5;
                     div.style.transform = `rotate(${angle}deg) scale(0.85)`;
                     div.style.opacity = '0.7';
+                    div.style.zIndex = '1';
+                } else {
+                    div.style.zIndex = '5';
                 }
                 
                 container.appendChild(div);
@@ -1287,37 +1302,35 @@
             if (cards.length === 0) return;
             
             const current = cards[photoIdx];
-            
-            // Fly out current
-            current.style.transform = "translateX(150px) rotate(25deg) scale(0.7)";
+            const nextIdx = (photoIdx + 1) % cards.length;
+            const next = cards[nextIdx];
+
+            // 1. Throw the current card away
+            current.style.transition = "all 0.6s ease-in";
+            current.style.transform = "translateX(250px) rotate(40deg) scale(0.5)";
             current.style.opacity = '0';
-            current.classList.remove('active');
             current.style.zIndex = '1';
+            current.classList.remove('active');
 
-            // Move to next
-            photoIdx = (photoIdx + 1) % cards.length;
-            const next = cards[photoIdx];
+            // 2. Bring the next card to the front
+            setTimeout(() => {
+                // Reset the previous card's position so it sits at the bottom of the stack
+                current.style.transition = "none"; 
+                const angle = (Math.random() * 10) - 5;
+                current.style.transform = `rotate(${angle}deg) scale(0.85)`;
+                current.style.opacity = '0.7';
 
-            // If looped, reset
-            if (photoIdx === 0) {
-                cards.forEach((c, i) => {
-                    c.style.transition = 'all 0.8s var(--ease-elastic)';
-                    c.style.opacity = i === 0 ? '1' : '0.7';
-                    c.style.transform = i === 0 ? 'rotate(-3deg) scale(1)' : `rotate(${(Math.random() * 10) - 5}deg) scale(0.85)`;
-                    c.style.zIndex = i === 0 ? '5' : '1';
-                });
-                cards[0].classList.add('active');
-                return;
-            }
-
-            // Show next
-            next.classList.add('active');
-            next.style.transform = 'rotate(-3deg) scale(1)';
-            next.style.opacity = '1';
-            next.style.zIndex = '5';
-        }
-
-        // 8. ENHANCED CHAT ENGINE
+                // Activate next card
+                next.classList.add('active');
+                next.style.transition = "all 0.8s var(--ease-elastic)";
+                next.style.transform = 'rotate(-3deg) scale(1)';
+                next.style.opacity = '1';
+                next.style.zIndex = '5';
+                
+                photoIdx = nextIdx;
+            }, 300);
+        }    
+     // 8. ENHANCED CHAT ENGINE
         const msgs = [
             "Don't forget to rest well... ❤️",
             "The 'R' in my name stands for 'Right for you' 😉",
