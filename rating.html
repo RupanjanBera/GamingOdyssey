@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Feedback</title>
+    <style>
+        :root {
+            --primary: #f5b301;
+            --bg-color: rgba(20, 20, 25, 0.85);
+            --text-main: #ffffff;
+            --text-muted: #a0a0a0;
+            --bar-bg: #333;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-main);
+            /* UPDATE YOUR BACKGROUND IMAGE URL HERE */
+            background: url('https://images.unsplash.com/photo-1557682250-33bd709cbe85?q=80&w=2029&auto=format&fit=crop') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px 20px;
+            backdrop-filter: blur(5px);
+        }
+
+        .container {
+            background: var(--bg-color);
+            max-width: 800px;
+            width: 100%;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        h2 { margin-top: 0; border-bottom: 1px solid #444; padding-bottom: 10px; }
+
+        /* Rating Overview Section */
+        .rating-overview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .overall-rating {
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .overall-rating h1 {
+            font-size: 4rem;
+            margin: 0;
+            color: var(--primary);
+        }
+
+        .stars-display {
+            font-size: 1.5rem;
+            color: var(--primary);
+            letter-spacing: 2px;
+        }
+
+        .rating-bars {
+            flex: 2;
+            min-width: 250px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .bar-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+        }
+
+        .bar-container {
+            flex: 1;
+            height: 10px;
+            background: var(--bar-bg);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        /* Feedback Form Section */
+        .feedback-form {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+        }
+
+        /* Interactive Star Rating Input */
+        .star-input {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+            margin-bottom: 15px;
+        }
+
+        .star-input input { display: none; }
+        
+        .star-input label {
+            font-size: 2rem;
+            color: var(--bar-bg);
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .star-input label:hover,
+        .star-input label:hover ~ label,
+        .star-input input:checked ~ label {
+            color: var(--primary);
+        }
+
+        textarea {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid #444;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        button {
+            background: var(--primary);
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover { background: #e0a300; }
+
+        /* Reviews List Section */
+        .reviews-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .review-card {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .review-date { color: var(--text-muted); }
+        .review-text { line-height: 1.5; }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Joydeep's Penis Peace Monument Memorial</h2>
+
+        <div class="rating-overview">
+            <div class="overall-rating">
+                <h1 id="avg-score">0.0</h1>
+                <div class="stars-display" id="avg-stars">☆☆☆☆☆</div>
+                <div style="color: var(--text-muted); margin-top: 5px;" id="total-reviews">0 reviews</div>
+            </div>
+            
+            <div class="rating-bars" id="bars-container">
+                </div>
+        </div>
+
+        <div class="feedback-form">
+            <h3>Leave a Review</h3>
+            <div class="star-input">
+                <input type="radio" id="star5" name="rating" value="5"><label for="star5">★</label>
+                <input type="radio" id="star4" name="rating" value="4"><label for="star4">★</label>
+                <input type="radio" id="star3" name="rating" value="3"><label for="star3">★</label>
+                <input type="radio" id="star2" name="rating" value="2"><label for="star2">★</label>
+                <input type="radio" id="star1" name="rating" value="1"><label for="star1">★</label>
+            </div>
+            <textarea id="review-text" placeholder="Write your feedback here..."></textarea>
+            <button onclick="submitReview()">Submit Feedback</button>
+        </div>
+
+        <h3>Recent Reviews</h3>
+        <div class="reviews-list" id="reviews-container">
+            </div>
+    </div>
+
+    <script>
+        // Initialize state (Load from local storage or use dummy data)
+        let reviews = JSON.parse(localStorage.getItem('site_reviews')) || [
+            { rating: 5, text: "Absolutely fantastic experience!", date: new Date().toLocaleDateString() },
+            { rating: 4, text: "Really good, but could use a tiny bit of improvement.", date: new Date().toLocaleDateString() }
+        ];
+
+        function updateUI() {
+            const total = reviews.length;
+            let sum = 0;
+            let counts = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+
+            // Calculate totals and counts
+            reviews.forEach(r => {
+                sum += r.rating;
+                counts[r.rating] = (counts[r.rating] || 0) + 1;
+            });
+
+            const avg = total === 0 ? 0 : (sum / total).toFixed(1);
+
+            // Update Overall Stats
+            document.getElementById('avg-score').innerText = avg;
+            document.getElementById('total-reviews').innerText = `${total} review${total !== 1 ? 's' : ''}`;
+            document.getElementById('avg-stars').innerText = getStarString(Math.round(avg));
+
+            // Update Bars
+            const barsContainer = document.getElementById('bars-container');
+            barsContainer.innerHTML = '';
+            for (let i = 5; i >= 1; i--) {
+                const percentage = total === 0 ? 0 : Math.round((counts[i] / total) * 100);
+                barsContainer.innerHTML += `
+                    <div class="bar-row">
+                        <span>${i} ★</span>
+                        <div class="bar-container">
+                            <div class="bar-fill" style="width: ${percentage}%"></div>
+                        </div>
+                        <span style="min-width: 40px; text-align: right;">${percentage}%</span>
+                    </div>
+                `;
+            }
+
+            // Update Reviews List
+            const reviewsContainer = document.getElementById('reviews-container');
+            reviewsContainer.innerHTML = '';
+            
+            if (reviews.length === 0) {
+                reviewsContainer.innerHTML = '<p style="color: #a0a0a0;">No reviews yet. Be the first!</p>';
+            } else {
+                // Show newest first
+                [...reviews].reverse().forEach(review => {
+                    reviewsContainer.innerHTML += `
+                        <div class="review-card">
+                            <div class="review-header">
+                                <span style="color: var(--primary); letter-spacing: 2px;">${getStarString(review.rating)}</span>
+                                <span class="review-date">${review.date}</span>
+                            </div>
+                            <div class="review-text">${review.text}</div>
+                        </div>
+                    `;
+                });
+            }
+        }
+
+        function submitReview() {
+            const ratingInput = document.querySelector('input[name="rating"]:checked');
+            const textInput = document.getElementById('review-text');
+
+            if (!ratingInput) {
+                alert("Please select a star rating.");
+                return;
+            }
+            if (textInput.value.trim() === '') {
+                alert("Please write some feedback.");
+                return;
+            }
+
+            // Add new review to array
+            const newReview = {
+                rating: parseInt(ratingInput.value),
+                text: textInput.value.trim(),
+                date: new Date().toLocaleDateString()
+            };
+
+            reviews.push(newReview);
+            
+            // Save to local storage
+            localStorage.setItem('site_reviews', JSON.stringify(reviews));
+
+            // Reset form
+            ratingInput.checked = false;
+            textInput.value = '';
+
+            // Refresh UI
+            updateUI();
+        }
+
+        function getStarString(rating) {
+            return '★'.repeat(rating) + '☆'.repeat(5 - rating);
+        }
+
+        // Initial render
+        updateUI();
+    </script>
+</body>
+</html>
